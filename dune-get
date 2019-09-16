@@ -1,0 +1,10 @@
+((config
+  ((root_packages (((name owl-onnx)))) (excludes (((name owl-onnx))))
+   (pins ()) (remotes (git://github.com/dune-universe/opam-overlays.git))
+   (branch master)))
+ (deps
+  ((opamverse ())
+   (duniverse
+    (((dir owl-base) (upstream https://github.com/owlbarn/owl.git)
+      (ref ((t 0.6.0) (commit c799b04066745312ca411a1448bfd50d4ebf170e)))
+      (provided_packages (((name owl-base) (version (0.6.0)))))))))))
