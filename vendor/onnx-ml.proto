@@ -59,40 +59,40 @@ package onnx;
 enum Version {
   // proto3 requires the first enum value to be zero.
   // We add this just to appease the compiler.
-  _START_VERSION = 0;
+  START_VERSION = 0;
   // The version field is always serialized and we will use it to store the
   // version that the  graph is generated from. This helps us set up version
   // control. 
   // For the IR, we are using simple numbers starting with with 0x00000001, 
   // which was the version we published on Oct 10, 2017.
-  IR_VERSION_2017_10_10 = 0x0000000000000001;
+  IR_VERSION_2017_10_10 = 1;
 
   // IR_VERSION 2 published on Oct 30, 2017
   // - Added type discriminator to AttributeProto to support proto3 users
-  IR_VERSION_2017_10_30 = 0x0000000000000002;
+  IR_VERSION_2017_10_30 = 2;
 
   // IR VERSION 3 published on Nov 3, 2017
   // - For operator versioning:
   //    - Added new message OperatorSetIdProto
   //    - Added opset_import in ModelProto
   // - For vendor extensions, added domain in NodeProto
-  IR_VERSION_2017_11_3 = 0x0000000000000003;
+  IR_VERSION_2017_11_3 = 3;
 
   // IR VERSION 4 published on Jan 22, 2019
   // - Relax constraint that initializers should be a subset of graph inputs
   // - Add type BFLOAT16
-  IR_VERSION_2019_1_22 = 0x0000000000000004;
+  IR_VERSION_2019_1_22 = 4;
 
   // IR VERSION 5 published on March 18, 2019
   // - Add message TensorAnnotation.
   // - Add quantization annotation in GraphProto to map tensor with its scale and zero point quantization parameters.
-  IR_VERSION_2019_3_18 = 0x0000000000000005;
+  IR_VERSION_2019_3_18 = 5;
 
   // IR VERSION 6 published on <TBD>
   // - Add support for sparse tensor constants stored in model.
   //   - Add message SparseTensorProto
   //   - Add sparse initializers
-  IR_VERSION = 0x0000000000000006;
+  IR_VERSION = 6;
 }
 
 // Attributes
