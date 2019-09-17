@@ -4,6 +4,7 @@
  *)
 
 type t =
+  | NOOP
   | Add of Owl_onnx_ops_math.Add.t
   | Sub of Owl_onnx_ops_math.Sub.t
   | Mul of Owl_onnx_ops_math.Mul.t
@@ -14,3 +15,4 @@ let op_type = function
   | Sub _ -> Owl_onnx_ops_math.Sub.op_type
   | Mul _ -> Owl_onnx_ops_math.Mul.op_type
   | Div _ -> Owl_onnx_ops_math.Div.op_type
+  | _     -> failwith "owl_onnx_ops_base.op_type"
