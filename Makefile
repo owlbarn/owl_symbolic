@@ -32,6 +32,10 @@ doc:
 	opam install -y odoc
 	dune build @doc
 
+.PHONY: format
+format:
+	dune build @fmt --auto-promote
+
 push:
 	git commit -am "coding onnx converter ..." && \
 	git push origin `git branch | grep \* | cut -d ' ' -f2`

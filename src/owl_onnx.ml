@@ -14,5 +14,4 @@
  *     2. https://github.com/onnx/onnx/
  *)
 
-
 module Specs = Owl_onnx_specs

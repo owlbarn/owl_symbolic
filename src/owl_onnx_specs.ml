@@ -3,9 +3,7 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-
 (* Module aliases *)
 
 module PB = Onnx_pb
-
 module PP = Onnx_pp
