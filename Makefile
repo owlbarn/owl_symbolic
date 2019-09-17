@@ -24,8 +24,6 @@ install: build
 .PHONY: uninstall
 uninstall:
 	dune uninstall
-	$(RM) $(OPAM_STUBS)/dllowl_stubs.so
-	$(RM) $(OPAM_STUBS)/dllowl_opencl_stubs.so
 
 .PHONY: doc
 doc:

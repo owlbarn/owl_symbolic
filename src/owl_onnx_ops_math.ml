@@ -6,8 +6,8 @@
 module Add = struct
   type t =
     { mutable name : string
-    ; mutable input : string array
-    ; mutable output : string array
+    ; mutable input : string list
+    ; mutable output : string list
     }
 
   let op_type = "Add"
@@ -21,8 +21,8 @@ end
 module Sub = struct
   type t =
     { mutable name : string
-    ; mutable input : string array
-    ; mutable output : string array
+    ; mutable input : string list
+    ; mutable output : string list
     }
 
   let op_type = "Sub"
@@ -36,8 +36,8 @@ end
 module Mul = struct
   type t =
     { mutable name : string
-    ; mutable input : string array
-    ; mutable output : string array
+    ; mutable input : string list
+    ; mutable output : string list
     }
 
   let op_type = "Mul"
@@ -51,8 +51,8 @@ end
 module Div = struct
   type t =
     { mutable name : string
-    ; mutable input : string array
-    ; mutable output : string array
+    ; mutable input : string list
+    ; mutable output : string list
     }
 
   let op_type = "Div"
