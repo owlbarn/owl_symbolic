@@ -21,6 +21,7 @@ module Make (M : Sig) = struct
   let name (x : t) = x.name
   let op_type () = M.op_type
   let doc_string () = M.doc_string
-  let of_onnx (x : t) = ()
+  let of_onnx (x : t) =
+    Owl_onnx_spcs.PB.
   let to_onnx (x : t) = ()
 end
