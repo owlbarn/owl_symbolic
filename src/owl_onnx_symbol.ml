@@ -10,7 +10,6 @@ type t =
   | Mul of Owl_onnx_ops_math.Mul.t
   | Div of Owl_onnx_ops_math.Div.t
 
-
 let name = function
   | Add x -> Owl_onnx_ops_math.Add.(x.name)
   | Sub x -> Owl_onnx_ops_math.Sub.(x.name)

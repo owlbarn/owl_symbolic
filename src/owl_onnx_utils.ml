@@ -3,7 +3,6 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-
 let _global_name_counter = ref 0
 
 let generate_suffix () =

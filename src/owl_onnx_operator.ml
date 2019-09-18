@@ -5,7 +5,6 @@
 
 open Owl_onnx_utils
 
-
 let add x y =
   let suffix = generate_suffix () in
   let name = Printf.sprintf "add_%i" suffix in

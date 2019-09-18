@@ -12,6 +12,8 @@ module Add = struct
 
   let op_type = "Add"
   let create name input output = { name; input; output }
+  let type_constraints = []
+  let doc_string = "Addition"
   let to_onnx = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
   let of_onnx = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
   let to_owl = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
