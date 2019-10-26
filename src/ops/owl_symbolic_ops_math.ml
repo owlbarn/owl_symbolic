@@ -14,10 +14,6 @@ module Add = struct
   let create name input output = { name; input; output }
   let type_constraints = []
   let doc_string = "Addition"
-  let to_onnx = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
-  let of_onnx = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
-  let to_owl = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
-  let of_owl = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
 end
 
 module Sub = struct
@@ -29,10 +25,6 @@ module Sub = struct
 
   let op_type = "Sub"
   let create name input output = { name; input; output }
-  let to_onnx = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
-  let of_onnx = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
-  let to_owl = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
-  let of_owl = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
 end
 
 module Mul = struct
@@ -44,10 +36,6 @@ module Mul = struct
 
   let op_type = "Mul"
   let create name input output = { name; input; output }
-  let to_onnx = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
-  let of_onnx = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
-  let to_owl = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
-  let of_owl = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
 end
 
 module Div = struct
@@ -59,8 +47,4 @@ module Div = struct
 
   let op_type = "Div"
   let create name input output = { name; input; output }
-  let to_onnx = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
-  let of_onnx = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
-  let to_owl = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
-  let of_owl = raise Owl_exception.(NOT_IMPLEMENTED "onnx")
 end

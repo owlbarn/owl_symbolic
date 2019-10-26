@@ -1,3 +1,7 @@
+(copy_files# generated/*)
+
+(copy_files# ops/*)
+
 (library
  (name owl_onnx)
  (public_name owl-onnx)

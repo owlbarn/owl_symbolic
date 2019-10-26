@@ -23,4 +23,4 @@ let op_type = function
   | Sub _ -> Owl_symbolic_ops_math.Sub.op_type
   | Mul _ -> Owl_symbolic_ops_math.Mul.op_type
   | Div _ -> Owl_symbolic_ops_math.Div.op_type
-  | _     -> failwith "owl_onnx_symbol.op_type"
+  | _     -> failwith "owl_symbolic_symbol.op_type"
