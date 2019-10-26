@@ -9,9 +9,9 @@
  * using ONNX protobuf. By so doing, we can offload computations defined by
  * Owl to various accelerators.
  *
- * Refer to 
+ * Refer to
  *     1. https://onnx.ai/
  *     2. https://github.com/onnx/onnx/
  *)
 
-module Specs = Owl_onnx_specs
+module Specs = Owl_symbolic_specs
