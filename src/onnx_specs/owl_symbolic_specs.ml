@@ -7,3 +7,4 @@
 
 module PB = Onnx_pb
 module PP = Onnx_pp
+module PT = Onnx_types

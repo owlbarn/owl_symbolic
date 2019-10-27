@@ -7,7 +7,7 @@
 (library
  (name owl_onnx)
  (public_name owl-onnx)
- (libraries owl-base integers ocaml-protoc))
+ (libraries owl owl-base integers ocaml-protoc))
 
 (documentation
  (package owl-onnx))
