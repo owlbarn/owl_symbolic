@@ -15,3 +15,5 @@
  *)
 
 module Specs = Owl_symbolic_specs
+
+module ONNX_Engine = Owl_symbolic_engine.Make (Owl_symbolic_engine_onnx)

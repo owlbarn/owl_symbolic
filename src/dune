@@ -1,4 +1,4 @@
-(copy_files# generated/*)
+(copy_files# onnx_specs/*)
 
 (copy_files# engines/*)
 
