@@ -1,2 +1,1 @@
-;;
-t = Onnx_types.node_proto
+type t = Onnx_types.graph_proto

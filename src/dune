@@ -1,5 +1,7 @@
 (copy_files# generated/*)
 
+(copy_files# engines/*)
+
 (copy_files# ops/*)
 
 (library
