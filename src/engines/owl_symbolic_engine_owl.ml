@@ -4,28 +4,25 @@
  *)
 
 open Owl_symbolic_types
-
 module G = Owl_computation_cpu_engine.Make (Owl_base_dense_ndarray.S)
 open G
 
 type t = G.Type.t
 
 let of_symbolic (_sym_graph : Owl_symbolic_types.symbolic_graph) =
-  let attr = {
-    op = Noop;
-    freeze = true;
-    reuse = false;
-    state = Valid;
-    shape = [||];
-    value = [||];
-    block = None
-  } in
+  let attr =
+    { op = Noop
+    ; freeze = true
+    ; reuse = false
+    ; state = Valid
+    ; shape = [||]
+    ; value = [||]
+    ; block = None
+    }
+  in
   Owl_graph.node attr
 
 
-let to_symbolic (_onnx_graph : t) =
-  {symbols = [||]}
-
-let eval_arr (_onnx_graph: t) = ()
-
-let eval_flt (_onnx_graph: t) = ()
+let to_symbolic (_onnx_graph : t) = { symbols = [||] }
+let eval_arr (_onnx_graph : t) = ()
+let eval_flt (_onnx_graph : t) = ()

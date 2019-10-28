@@ -17,5 +17,4 @@ let of_symbolic sym_graph =
   default_graph
 
 
-let to_symbolic (_onnx_graph : t) =
-  {symbols = [||]}
+let to_symbolic (_onnx_graph : t) = { symbols = [||] }
