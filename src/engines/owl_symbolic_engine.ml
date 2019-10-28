@@ -3,6 +3,7 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
+(*
 module Make (S : Owl_symbolic_engine_sig.Sig) = struct
 
   module Symbolic = S
@@ -12,3 +13,4 @@ module Make (S : Owl_symbolic_engine_sig.Sig) = struct
   let of_symbolic = S.of_symbolic
 
 end
+*)

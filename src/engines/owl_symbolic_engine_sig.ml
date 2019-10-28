@@ -3,6 +3,7 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
+(*
 open Owl_symbolic_types
 
 module type Sig = sig
@@ -14,3 +15,4 @@ module type Sig = sig
   val to_symbolic : t -> symbolic_graph
 
 end
+*)

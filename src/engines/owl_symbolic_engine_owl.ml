@@ -25,3 +25,7 @@ let of_symbolic (_sym_graph : Owl_symbolic_types.symbolic_graph) =
 
 let to_symbolic (_onnx_graph : t) =
   {symbols = [||]}
+
+let eval_arr (_onnx_graph: t) = ()
+
+let eval_flt (_onnx_graph: t) = ()
