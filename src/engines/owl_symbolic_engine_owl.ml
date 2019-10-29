@@ -4,7 +4,7 @@
  *)
 
 open Owl_symbolic_types
-module G = Owl_computation_cpu_engine.Make (Owl_base_dense_ndarray.S)
+module G = Owl_computation_cpu_engine.Make (Owl_dense_ndarray.S)
 open G
 
 type t = G.Type.t

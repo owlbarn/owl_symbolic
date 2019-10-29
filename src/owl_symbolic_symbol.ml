@@ -9,6 +9,13 @@ type t =
   | Sub of Owl_symbolic_ops_math.Sub.t
   | Mul of Owl_symbolic_ops_math.Mul.t
   | Div of Owl_symbolic_ops_math.Div.t
+  | Sin of Owl_symbolic_ops_math.Sin.t
+  | Cos of Owl_symbolic_ops_math.Cos.t
+  | Pow of Owl_symbolic_ops_math.Pow.t
+  | One of Owl_symbolic_ops_math.One.t
+  | Ones of Owl_symbolic_ops_math.Ones.t 
+  | Float of Owl_symbolic_ops_math.Float.t
+
 
 let name = function
   | Add x -> Owl_symbolic_ops_math.Add.(x.name)

@@ -15,3 +15,11 @@ let add x y =
   let output = [ o_name ] in
   let o = Owl_symbolic_ops_math.Add.create name input output in
   Owl_symbolic_symbol.Add o
+
+let construct _x = ()
+
+let print _x = ()
+
+let derive _x = ()
+
+let replace _x _y = ()
