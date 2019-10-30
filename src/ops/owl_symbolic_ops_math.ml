@@ -121,10 +121,11 @@ module Var = struct
     { mutable name   : string
     ; mutable input  : string list
     ; mutable output : string list
+    ; mutable value  : string
     }
 
   let op_type = "Var"
-  let create name input output = { name; input; output }
+  let create name input output value = { name; input; output; value }
 end
 
 (** Is `output` necessary? *)

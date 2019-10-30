@@ -69,3 +69,12 @@ let sin x =
   let output = [ o_name ] in
   let o = Owl_symbolic_ops_math.Sin.create name input output in
   Owl_symbolic_symbol.Sin o
+
+let var s =
+  let suffix = generate_suffix () in
+  let name = Printf.sprintf "sin_%i" suffix in
+  let o_name = "x" in
+  let input = [ ] in
+  let output = [ o_name ] in
+  let o = Owl_symbolic_ops_math.Var.create name input output s in
+  Owl_symbolic_symbol.Var o
