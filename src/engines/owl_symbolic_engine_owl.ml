@@ -9,7 +9,13 @@ open G
 
 type t = G.Type.t
 
-let of_symbolic (_sym_graph : Owl_symbolic_types.symbolic_graph) =
+let to_symbolic (_cgraph : t) = { symbols = [||] }
+
+let eval_arr (_sym_graph : symbolic_graph) = ()
+
+let eval_flt (_sym_graph : symbolic_graph) = ()
+
+let of_symbolic (_sym_graph : symbolic_graph) =
   let attr =
     { op = Noop
     ; freeze = true
@@ -23,6 +29,3 @@ let of_symbolic (_sym_graph : Owl_symbolic_types.symbolic_graph) =
   Owl_graph.node attr
 
 
-let to_symbolic (_onnx_graph : t) = { symbols = [||] }
-let eval_arr (_onnx_graph : t) = ()
-let eval_flt (_onnx_graph : t) = ()
