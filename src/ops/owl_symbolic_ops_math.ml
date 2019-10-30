@@ -116,4 +116,15 @@ module Float = struct
   let create name input output value = { name; input; output; value }
 end
 
+module Var = struct
+  type t =
+    { mutable name   : string
+    ; mutable input  : string list
+    ; mutable output : string list
+    }
+
+  let op_type = "Var"
+  let create name input output = { name; input; output }
+end
+
 (** Is `output` necessary? *)

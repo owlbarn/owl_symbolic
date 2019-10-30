@@ -13,6 +13,7 @@ type t =
   | Cos of Owl_symbolic_ops_math.Cos.t
   | Pow of Owl_symbolic_ops_math.Pow.t
   | One of Owl_symbolic_ops_math.One.t
+  | Var of Owl_symbolic_ops_math.Var.t
   | Ones of Owl_symbolic_ops_math.Ones.t 
   | Float of Owl_symbolic_ops_math.Float.t
 
@@ -26,6 +27,7 @@ let name = function
   | Cos x -> Owl_symbolic_ops_math.Cos.(x.name)
   | Pow x -> Owl_symbolic_ops_math.Pow.(x.name)
   | One x -> Owl_symbolic_ops_math.One.(x.name)
+  | Var x -> Owl_symbolic_ops_math.Var.(x.name)
   | Ones x -> Owl_symbolic_ops_math.Ones.(x.name)
   | Float x -> Owl_symbolic_ops_math.Float.(x.name)
   | _     -> failwith "owl_symbolic_symbol.name"

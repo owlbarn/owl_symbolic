@@ -5,6 +5,8 @@
 
 open Owl_symbolic_utils
 
+(** Signatures: unit/graph -> graph ... -> graph *)
+
 let one () = 
   let suffix = generate_suffix () in 
   let name = Printf.sprintf "one_%i" suffix in
@@ -13,7 +15,8 @@ let one () =
   let output = [ o_name ] in
   let o = Owl_symbolic_ops_math.One.create name input output in
   Owl_symbolic_symbol.One o
-
+  (* let node = Owl_symbolic_symbol.One o in 
+  make_graph node null_graph *)
 
 let ones () = 
   let suffix = generate_suffix () in 
@@ -66,11 +69,3 @@ let sin x =
   let output = [ o_name ] in
   let o = Owl_symbolic_ops_math.Sin.create name input output in
   Owl_symbolic_symbol.Sin o
-
-let construct _x = ()
-
-let print _x = ()
-
-let derive _x = ()
-
-let replace _x _y = ()
