@@ -22,6 +22,12 @@ let name = function
   | Sub x -> Owl_symbolic_ops_math.Sub.(x.name)
   | Mul x -> Owl_symbolic_ops_math.Mul.(x.name)
   | Div x -> Owl_symbolic_ops_math.Div.(x.name)
+  | Sin x -> Owl_symbolic_ops_math.Sin.(x.name)
+  | Cos x -> Owl_symbolic_ops_math.Cos.(x.name)
+  | Pow x -> Owl_symbolic_ops_math.Pow.(x.name)
+  | One x -> Owl_symbolic_ops_math.One.(x.name)
+  | Ones x -> Owl_symbolic_ops_math.Ones.(x.name)
+  | Float x -> Owl_symbolic_ops_math.Float.(x.name)
   | _     -> failwith "owl_symbolic_symbol.name"
 
 

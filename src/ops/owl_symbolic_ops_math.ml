@@ -109,10 +109,11 @@ module Float = struct
     { mutable name   : string
     ; mutable input  : string list
     ; mutable output : string list
+    ; mutable value  : float
     }
 
   let op_type = "Float"
-  let create name input output = { name; input; output }
+  let create name input output value = { name; input; output; value }
 end
 
 (** Is `output` necessary? *)
