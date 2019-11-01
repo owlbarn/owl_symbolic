@@ -9,6 +9,8 @@ open Owl_symbolic_graph
 
 (** Signatures: unit/graph -> graph ... -> graph *)
 
+(** TODO: The design of `make_graph` feels like wrong... 
+  * check owl.to_symbolic *)
 let one () = 
   let suffix = generate_suffix () in 
   let name = Printf.sprintf "one_%i" suffix in
