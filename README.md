@@ -1,7 +1,6 @@
-# owl_onnx
+# Owl Symbolic Library
 
-
-# Example 
+## Example 
 
 ```ocaml
 #require "owl-onnx";;
