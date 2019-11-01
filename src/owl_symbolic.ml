@@ -15,4 +15,7 @@
  *)
 
 module Specs = Owl_symbolic_specs
+
+module Op = Owl_symbolic_operator 
+
 module ONNX_Engine = Owl_symbolic_engine_onnx

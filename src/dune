@@ -5,9 +5,9 @@
 (copy_files# ops/*)
 
 (library
- (name owl_onnx)
- (public_name owl-onnx)
+ (name owl_symbolic)
+ (public_name owl-symbolic)
  (libraries owl-base integers ocaml-protoc))
 
 (documentation
- (package owl-onnx))
+ (package owl-symbolic))

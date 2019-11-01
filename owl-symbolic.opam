@@ -18,4 +18,4 @@ depends: [
   "ocaml-protoc" {with-test}
   "alcotest" {with-test}
 ]
-synopsis: "Owl's ONNX Converter"
+synopsis: "Owl's Symbolic Library"

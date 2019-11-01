@@ -4,9 +4,9 @@ Example
 -------
 
 ```ocaml
-#require "owl-onnx";;
-open Owl_onnx;; 
+#require "owl-symbolic";;
+open Owl_symbolic;; 
 
-let x = Owl_symbolic_operator.(add (flt 3.) (sin (ones [|3;3|])));;
-let y = Owl_symbolic.ONNX_Engine.of_symbolic x;;
+let x = Op.(add (flt 3.) (sin (ones [|3;3|])));;
+let y = ONNX_Engine.of_symbolic x
 ```

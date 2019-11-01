@@ -11,7 +11,7 @@ build: depends
 
 .PHONY: test
 test: depends
-	dune runtest -j 1 --no-buffer -p owl-onnx
+	dune runtest -j 1 --no-buffer -p owl-symbolic
 
 .PHONY: clean
 clean:
