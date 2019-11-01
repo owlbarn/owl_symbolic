@@ -16,17 +16,16 @@ let one () =
   let input = [ ] in
   let output = [ o_name ] in
   let o = Owl_symbolic_ops_math.One.create name input output in
-  (* Owl_symbolic_symbol.One o *)
   let node = Owl_symbolic_symbol.One o in 
   make_graph node [|null_graph|]
 
-let ones () = 
+let ones shape = 
   let suffix = generate_suffix () in 
   let name = Printf.sprintf "ones_%i" suffix in
   let o_name = "a" in 
   let input = [ ] in
   let output = [ o_name ] in
-  let o = Owl_symbolic_ops_math.Ones.create name input output in
+  let o = Owl_symbolic_ops_math.Ones.create ~shape name input output in
   let node = Owl_symbolic_symbol.Ones o in 
   make_graph node [|null_graph|]
 
@@ -76,12 +75,12 @@ let sin x =
   let node = Owl_symbolic_symbol.Sin o in 
   make_graph node [|x |]
 
-let var s =
+let var id =
   let suffix = generate_suffix () in
-  let name = Printf.sprintf "sin_%i" suffix in
+  let name = Printf.sprintf "var_%i" suffix in
   let o_name = "x" in
   let input = [ ] in
   let output = [ o_name ] in
-  let o = Owl_symbolic_ops_math.Var.create name input output s in
+  let o = Owl_symbolic_ops_math.Var.create name input output id in
   let node = Owl_symbolic_symbol.Var o  in 
   make_graph node [| null_graph |]

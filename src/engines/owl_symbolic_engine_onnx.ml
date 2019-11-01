@@ -11,6 +11,26 @@ module S = Owl_symbolic_symbol
 
 type t = Onnx_types.graph_proto
 
+(** Routines for building const tensor proto *)
+
+let make_tensorproto_one sym =
+  let name = S.name sym in
+  PT.default_tensor_proto ~name ~int32_data:[Int32.one] ()
+
+let make_tensorproto_ones sym = 
+  let name = S.name sym in 
+  let shp  = S.shape sym in
+  let dims = Array.map Int64.of_int shp |> Array.to_list in
+  let int32_data = Array.make (Owl_symbolic_utils.nelem shp) (Int32.one) 
+    |> Array.to_list in
+  PT.default_tensor_proto ~name ~dims ~int32_data ()
+
+let make_tensorproto_float sym = 
+  let name = S.name sym in 
+  let float_data = [S.value sym] in
+  PT.default_tensor_proto ~name ~float_data ()
+
+(** Main entry *)
 
 let of_symbolic (sym_graph : symbolic_graph) =
   let syms = G.iterate sym_graph in
@@ -35,14 +55,10 @@ let of_symbolic (sym_graph : symbolic_graph) =
     (* build constant inputs : TensorProto *)
     let op_typ = Owl_symbolic_symbol.op_type n in
     let constant = match op_typ with
-      | "One"    -> [PT.default_tensor_proto 
-        ~name ~int32_data:[Int32.one] ()]
-      | "Ones"   -> [PT.default_tensor_proto 
-        ~name ~int32_data:[Int32.one] ()]
-      | "Float"  -> [PT.default_tensor_proto 
-        ~name ~float_data:[1.] ()]
-      | "Tensor" -> []
-      | _ -> []
+      | "One"   -> [make_tensorproto_one n]
+      | "Ones"  -> [make_tensorproto_ones n]
+      | "Float" -> [make_tensorproto_float n]
+      | _       -> []
     in
     initialiser := List.append !initialiser constant;
     ()

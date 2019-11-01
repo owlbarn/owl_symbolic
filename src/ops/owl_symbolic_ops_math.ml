@@ -98,10 +98,11 @@ module Ones = struct
     { mutable name   : string
     ; mutable input  : string list
     ; mutable output : string list
+    ; mutable shape  : int array
     }
 
   let op_type = "Ones"
-  let create name input output = { name; input; output }
+  let create ?(shape = [||]) name input output  = { name; input; output; shape }
 end
 
 module Float = struct
@@ -121,11 +122,12 @@ module Var = struct
     { mutable name   : string
     ; mutable input  : string list
     ; mutable output : string list
-    ; mutable value  : string
+    ; mutable shape  : int array
+    ; mutable id     : string (* Not name, but like "x" or "y" *)
     }
 
   let op_type = "Var"
-  let create name input output value = { name; input; output; value }
+  let create ?(shape = [||]) name input output id = { name; input; output; shape; id }
 end
 
 (** Is `output` necessary? *)

@@ -8,3 +8,6 @@ let _global_name_counter = ref 0
 let generate_suffix () =
   _global_name_counter := !_global_name_counter + 1;
   !_global_name_counter
+
+let nelem shp = 
+  Array.fold_left ( * )  1 shp 

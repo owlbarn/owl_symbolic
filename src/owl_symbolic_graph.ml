@@ -18,18 +18,20 @@ let make_graph (n : Owl_symbolic_symbol.t) (inputs : symbolic_graph array) =
     in
     { symbols = Array.append [|n|] nodes }
 
+
 let name (g : symbolic_graph) = 
     let header = g.symbols.(0) in 
     Owl_symbolic_symbol.name header
 
-(** Return an array of nodes *)
+
+(* Return an array of nodes *)
 let iterate (g : symbolic_graph) =
     g.symbols
 
 (** Targeted operations on the graph *)
 
-let print _x = ()
+let print _g = ()
 
-let derive _x = ()
+let derive _g = ()
 
-let replace _x _y = ()
+let replace _g _m _r = ()

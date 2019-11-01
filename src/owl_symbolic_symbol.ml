@@ -62,9 +62,22 @@ let output = function
   | _       -> failwith "owl_symbolic_symbol.output"
 
 
+let shape = function
+  | Ones x  -> Owl_symbolic_ops_math.Ones.(x.shape)
+  | Var  x  -> Owl_symbolic_ops_math.Var.(x.shape)
+  | _       -> failwith "owl_symbolic_symbol.shape" 
+
+
+let value = function
+  | Float x -> Owl_symbolic_ops_math.Float.(x.value)
+  | _       -> failwith "owl_symbolic_symbol.float"
+
+
 let op_type = function
   | Add _ -> Owl_symbolic_ops_math.Add.op_type
   | Sub _ -> Owl_symbolic_ops_math.Sub.op_type
   | Mul _ -> Owl_symbolic_ops_math.Mul.op_type
   | Div _ -> Owl_symbolic_ops_math.Div.op_type
   | _     -> failwith "owl_symbolic_symbol.op_type"
+
+(** Question: what if I want to move one math symbol to another group such as , say, nn? *)
