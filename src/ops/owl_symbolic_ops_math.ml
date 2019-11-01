@@ -73,8 +73,8 @@ end
 
 module Pow = struct
   type t =
-    { mutable name   : string
-    ; mutable input  : string list
+    { mutable name : string
+    ; mutable input : string list
     ; mutable output : string list
     }
 
@@ -95,22 +95,22 @@ end
 
 module Ones = struct
   type t =
-    { mutable name   : string
-    ; mutable input  : string list
+    { mutable name : string
+    ; mutable input : string list
     ; mutable output : string list
-    ; mutable shape  : int array
+    ; mutable shape : int array
     }
 
   let op_type = "Ones"
-  let create ?(shape = [||]) name input output  = { name; input; output; shape }
+  let create ?(shape = [||]) name input output = { name; input; output; shape }
 end
 
 module Float = struct
   type t =
-    { mutable name   : string
-    ; mutable input  : string list
+    { mutable name : string
+    ; mutable input : string list
     ; mutable output : string list
-    ; mutable value  : float
+    ; mutable value : float
     }
 
   let op_type = "Float"
@@ -119,11 +119,11 @@ end
 
 module Var = struct
   type t =
-    { mutable name   : string
-    ; mutable input  : string list
+    { mutable name : string
+    ; mutable input : string list
     ; mutable output : string list
-    ; mutable shape  : int array
-    ; mutable id     : string (* Not name, but like "x" or "y" *)
+    ; mutable shape : int array
+    ; mutable id : string (* Not name, but like "x" or "y" *)
     }
 
   let op_type = "Var"

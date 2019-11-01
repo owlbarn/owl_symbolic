@@ -5,18 +5,17 @@
 
 type t =
   | NOOP
-  | Add of Owl_symbolic_ops_math.Add.t
-  | Sub of Owl_symbolic_ops_math.Sub.t
-  | Mul of Owl_symbolic_ops_math.Mul.t
-  | Div of Owl_symbolic_ops_math.Div.t
-  | Sin of Owl_symbolic_ops_math.Sin.t
-  | Cos of Owl_symbolic_ops_math.Cos.t
-  | Pow of Owl_symbolic_ops_math.Pow.t
-  | One of Owl_symbolic_ops_math.One.t
-  | Var of Owl_symbolic_ops_math.Var.t
-  | Ones of Owl_symbolic_ops_math.Ones.t 
+  | Add   of Owl_symbolic_ops_math.Add.t
+  | Sub   of Owl_symbolic_ops_math.Sub.t
+  | Mul   of Owl_symbolic_ops_math.Mul.t
+  | Div   of Owl_symbolic_ops_math.Div.t
+  | Sin   of Owl_symbolic_ops_math.Sin.t
+  | Cos   of Owl_symbolic_ops_math.Cos.t
+  | Pow   of Owl_symbolic_ops_math.Pow.t
+  | One   of Owl_symbolic_ops_math.One.t
+  | Var   of Owl_symbolic_ops_math.Var.t
+  | Ones  of Owl_symbolic_ops_math.Ones.t
   | Float of Owl_symbolic_ops_math.Float.t
-
 
 let name = function
   | Add x   -> Owl_symbolic_ops_math.Add.(x.name)
@@ -31,6 +30,7 @@ let name = function
   | Ones x  -> Owl_symbolic_ops_math.Ones.(x.name)
   | Float x -> Owl_symbolic_ops_math.Float.(x.name)
   | _       -> failwith "owl_symbolic_symbol.name"
+
 
 let input = function
   | Add x   -> Owl_symbolic_ops_math.Add.(x.input)
@@ -63,9 +63,9 @@ let output = function
 
 
 let shape = function
-  | Ones x  -> Owl_symbolic_ops_math.Ones.(x.shape)
-  | Var  x  -> Owl_symbolic_ops_math.Var.(x.shape)
-  | _       -> failwith "owl_symbolic_symbol.shape" 
+  | Ones x -> Owl_symbolic_ops_math.Ones.(x.shape)
+  | Var x  -> Owl_symbolic_ops_math.Var.(x.shape)
+  | _      -> failwith "owl_symbolic_symbol.shape"
 
 
 let value = function
@@ -79,5 +79,6 @@ let op_type = function
   | Mul _ -> Owl_symbolic_ops_math.Mul.op_type
   | Div _ -> Owl_symbolic_ops_math.Div.op_type
   | _     -> failwith "owl_symbolic_symbol.op_type"
+
 
 (** Question: what if I want to move one math symbol to another group such as , say, nn? *)
