@@ -1,13 +1,13 @@
 (copy_files# onnx_specs/*)
 
-(copy_files# engines/*)
+(copy_files# engines/owl_symbolic_engine_onnx.ml)
 
 (copy_files# ops/*)
 
 (library
  (name owl_onnx)
  (public_name owl-onnx)
- (libraries owl owl-base integers ocaml-protoc))
+ (libraries owl-base integers ocaml-protoc))
 
 (documentation
  (package owl-onnx))

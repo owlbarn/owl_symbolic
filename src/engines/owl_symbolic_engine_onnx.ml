@@ -81,3 +81,11 @@ let of_symbolic (sym_graph : symbolic_graph) =
 
 
 let to_symbolic (_onnx_graph : t) = { symbols = [||] }
+
+
+let serialise (onnx_graph : t ) filename = 
+  let encoder = Pbrt.Encoder.create () in
+  PB.encode_graph_proto onnx_graph encoder;
+  let oc = open_out filename in 
+  output_bytes oc (Pbrt.Encoder.to_bytes encoder);
+  close_out oc
