@@ -11,6 +11,7 @@ module S = Owl_symbolic_symbol
 
 type t = Onnx_types.graph_proto
 
+
 (** Routines for building const tensor proto *)
 
 let make_tensorproto_one sym =
@@ -29,6 +30,7 @@ let make_tensorproto_float sym =
   let name = S.name sym in 
   let float_data = [S.value sym] in
   PT.default_tensor_proto ~name ~float_data ()
+
 
 (** Main entry *)
 
@@ -53,18 +55,23 @@ let of_symbolic (sym_graph : symbolic_graph) =
     node.(i) <- nproto;
 
     (* build constant inputs : TensorProto *)
-    let op_typ = Owl_symbolic_symbol.op_type n in
-    let constant = match op_typ with
-      | "One"   -> [make_tensorproto_one n]
-      | "Ones"  -> [make_tensorproto_ones n]
-      | "Float" -> [make_tensorproto_float n]
+    let constant = match n with
+      | One _   -> [make_tensorproto_one n]
+      | Ones _  -> [make_tensorproto_ones n]
+      | Float _ -> [make_tensorproto_float n]
       | _       -> []
     in
     initialiser := List.append !initialiser constant;
-    ()
+    
     (* inputs and outputs : ValueInforProto *)
-
+    let input_valinfo = match n with 
+      | Var _ -> [PT.default_value_info_proto ~name ()]
+      | _     -> []
+    in
+    input := List.append !input input_valinfo;
+    output := [PT.default_value_info_proto ~name:(G.name sym_graph) ()]
   done;
+
   (* result *)
   let node = Array.to_list node in
   let initialiser = !initialiser in 
