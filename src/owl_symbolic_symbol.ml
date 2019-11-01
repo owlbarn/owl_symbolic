@@ -19,18 +19,47 @@ type t =
 
 
 let name = function
-  | Add x -> Owl_symbolic_ops_math.Add.(x.name)
-  | Sub x -> Owl_symbolic_ops_math.Sub.(x.name)
-  | Mul x -> Owl_symbolic_ops_math.Mul.(x.name)
-  | Div x -> Owl_symbolic_ops_math.Div.(x.name)
-  | Sin x -> Owl_symbolic_ops_math.Sin.(x.name)
-  | Cos x -> Owl_symbolic_ops_math.Cos.(x.name)
-  | Pow x -> Owl_symbolic_ops_math.Pow.(x.name)
-  | One x -> Owl_symbolic_ops_math.One.(x.name)
-  | Var x -> Owl_symbolic_ops_math.Var.(x.name)
-  | Ones x -> Owl_symbolic_ops_math.Ones.(x.name)
+  | Add x   -> Owl_symbolic_ops_math.Add.(x.name)
+  | Sub x   -> Owl_symbolic_ops_math.Sub.(x.name)
+  | Mul x   -> Owl_symbolic_ops_math.Mul.(x.name)
+  | Div x   -> Owl_symbolic_ops_math.Div.(x.name)
+  | Sin x   -> Owl_symbolic_ops_math.Sin.(x.name)
+  | Cos x   -> Owl_symbolic_ops_math.Cos.(x.name)
+  | Pow x   -> Owl_symbolic_ops_math.Pow.(x.name)
+  | One x   -> Owl_symbolic_ops_math.One.(x.name)
+  | Var x   -> Owl_symbolic_ops_math.Var.(x.name)
+  | Ones x  -> Owl_symbolic_ops_math.Ones.(x.name)
   | Float x -> Owl_symbolic_ops_math.Float.(x.name)
-  | _     -> failwith "owl_symbolic_symbol.name"
+  | _       -> failwith "owl_symbolic_symbol.name"
+
+let input = function
+  | Add x   -> Owl_symbolic_ops_math.Add.(x.input)
+  | Sub x   -> Owl_symbolic_ops_math.Sub.(x.input)
+  | Mul x   -> Owl_symbolic_ops_math.Mul.(x.input)
+  | Div x   -> Owl_symbolic_ops_math.Div.(x.input)
+  | Sin x   -> Owl_symbolic_ops_math.Sin.(x.input)
+  | Cos x   -> Owl_symbolic_ops_math.Cos.(x.input)
+  | Pow x   -> Owl_symbolic_ops_math.Pow.(x.input)
+  | One x   -> Owl_symbolic_ops_math.One.(x.input)
+  | Var x   -> Owl_symbolic_ops_math.Var.(x.input)
+  | Ones x  -> Owl_symbolic_ops_math.Ones.(x.input)
+  | Float x -> Owl_symbolic_ops_math.Float.(x.input)
+  | _       -> failwith "owl_symbolic_symbol.input"
+
+
+let output = function
+  | Add x   -> Owl_symbolic_ops_math.Add.(x.output)
+  | Sub x   -> Owl_symbolic_ops_math.Sub.(x.output)
+  | Mul x   -> Owl_symbolic_ops_math.Mul.(x.output)
+  | Div x   -> Owl_symbolic_ops_math.Div.(x.output)
+  | Sin x   -> Owl_symbolic_ops_math.Sin.(x.output)
+  | Cos x   -> Owl_symbolic_ops_math.Cos.(x.output)
+  | Pow x   -> Owl_symbolic_ops_math.Pow.(x.output)
+  | One x   -> Owl_symbolic_ops_math.One.(x.output)
+  | Var x   -> Owl_symbolic_ops_math.Var.(x.output)
+  | Ones x  -> Owl_symbolic_ops_math.Ones.(x.output)
+  | Float x -> Owl_symbolic_ops_math.Float.(x.output)
+  | _       -> failwith "owl_symbolic_symbol.output"
 
 
 let op_type = function

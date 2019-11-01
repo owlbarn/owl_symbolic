@@ -22,6 +22,10 @@ let name (g : symbolic_graph) =
     let header = g.symbols.(0) in 
     Owl_symbolic_symbol.name header
 
+(** Return an array of nodes *)
+let iterate (g : symbolic_graph) =
+    g.symbols
+
 (** Targeted operations on the graph *)
 
 let print _x = ()
