@@ -3,7 +3,7 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-(* open Owl_symbolic_types *)
+(*open Owl_symbolic_types *)
 open Owl_symbolic_specs
 module G = Owl_symbolic_graph
 module S = Owl_symbolic_symbol

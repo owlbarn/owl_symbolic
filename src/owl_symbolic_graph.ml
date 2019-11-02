@@ -11,7 +11,7 @@ open Owl_graph
 (** NOTE: I have Tree structure in mind when coding all these... *)
 let make_graph (attr : Owl_symbolic_symbol.t) (inputs : symbolic_graph array) =
   let child = node attr in
-  connect inputs [|child|];
+  connect_ancestors inputs [|child|];
   child
 
 let null_graph =

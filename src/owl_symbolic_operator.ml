@@ -10,26 +10,15 @@ open Owl_symbolic_graph
 
 (** TODO: The design of `make_graph` feels like wrong... 
   * check owl.to_symbolic *)
-let one () =
+let integer value =
   let suffix = generate_suffix () in
-  let name = Printf.sprintf "one_%i" suffix in
+  let name = Printf.sprintf "integer_%i" suffix in
   let o_name = "a" in
   let input = [] in
   let output = [ o_name ] in
-  let o = Owl_symbolic_ops_math.One.create name input output in
-  let node = Owl_symbolic_symbol.One o in
-  make_graph node [| null_graph |]
-
-
-let ones shape =
-  let suffix = generate_suffix () in
-  let name = Printf.sprintf "ones_%i" suffix in
-  let o_name = "a" in
-  let input = [] in
-  let output = [ o_name ] in
-  let o = Owl_symbolic_ops_math.Ones.create ~shape name input output in
-  let node = Owl_symbolic_symbol.Ones o in
-  make_graph node [| null_graph |]
+  let o = Owl_symbolic_ops_math.Int.create name input output value in
+  let node = Owl_symbolic_symbol.Int o in
+  make_graph node [| |]
 
 
 let flt x =
@@ -41,7 +30,52 @@ let flt x =
   let value = x in
   let o = Owl_symbolic_ops_math.Float.create name input output value in
   let node = Owl_symbolic_symbol.Float o in
-  make_graph node [| null_graph |]
+  make_graph node [| |]
+
+
+let complex r i =
+  let suffix = generate_suffix () in
+  let name = Printf.sprintf "complex_%i" suffix in
+  let o_name = "a" in
+  let input = [] in
+  let output = [ o_name ] in
+  let o = Owl_symbolic_ops_math.Complex.create name input output r i in
+  let node = Owl_symbolic_symbol.Complex o in
+  make_graph node [| |]
+
+
+let tensor ?(id="") shape =
+  let suffix = generate_suffix () in
+  let name = Printf.sprintf "tensor_%i" suffix in
+  let o_name = "a" in
+  let input = [] in
+  let output = [ o_name ] in
+  let o = Owl_symbolic_ops_math.Tensor.create ~shape name input output id in
+  let node = Owl_symbolic_symbol.Tensor o in
+  make_graph node [| |]
+
+
+let expconst () =
+  let suffix = generate_suffix () in
+  let name = Printf.sprintf "expconst_%i" suffix in
+  let o_name = "a" in
+  let input = [] in
+  let output = [ o_name ] in
+  let o = Owl_symbolic_ops_math.ExpConst.create name input output in
+  let node = Owl_symbolic_symbol.ExpConst o in
+  make_graph node [| |]
+
+
+let symbol id =
+  let suffix = generate_suffix () in
+  let name = Printf.sprintf "var_%i" suffix in
+  let o_name = "x" in
+  let input = [] in
+  let output = [ o_name ] in
+  let o = Owl_symbolic_ops_math.Symbol.create name input output id in
+  let node = Owl_symbolic_symbol.Symbol o in
+  make_graph node [| |]
+
 
 
 let add x y =
@@ -80,14 +114,3 @@ let sin x =
   let o = Owl_symbolic_ops_math.Sin.create name input output in
   let node = Owl_symbolic_symbol.Sin o in
   make_graph node [| x |]
-
-
-let var id =
-  let suffix = generate_suffix () in
-  let name = Printf.sprintf "var_%i" suffix in
-  let o_name = "x" in
-  let input = [] in
-  let output = [ o_name ] in
-  let o = Owl_symbolic_ops_math.Var.create name input output id in
-  let node = Owl_symbolic_symbol.Var o in
-  make_graph node [| null_graph |]

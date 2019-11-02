@@ -5,10 +5,10 @@
 
 (*
  * The operations included: 
- * (1) Numbers: Integers, Rational, Float. E.g. in "exp = x + y - 0.1" the 0.1 is a float;
+ * (1) Numbers: Integers, Complex, Float. E.g. in "exp = x + y - 0.1" the 0.1 is a float;
  * note that its not related to the tensor type (float or double etc.)
  * Tensor is also what we need.
- * (2) Special constant: ExpConst, ImgUnit (imaginary unit i)
+ * (2) Special constant: ExpConst
  * (3) Symbol. It's not specified when defined. You can just define "Symbol 'x'" in the symbolic grpah.
  * Only before evaluation (conversion) should the symbol be replaced with float, int, tensor, etc. 
  * (4) Unary Op: Sin, Cos, Exp
@@ -17,17 +17,21 @@
 
 type t =
   | NOOP
+  | Int   of Owl_symbolic_ops_math.Int.t
+  | Complex of Owl_symbolic_ops_math.Complex.t
+  | Float of Owl_symbolic_ops_math.Float.t
+  | Tensor of Owl_symbolic_ops_math.Tensor.t
+  | ExpConst of Owl_symbolic_ops_math.ExpConst.t
+  | Symbol of Owl_symbolic_ops_math.Symbol.t
+  | Sin   of Owl_symbolic_ops_math.Sin.t
+  | Cos   of Owl_symbolic_ops_math.Cos.t
+  | Exp   of Owl_symbolic_ops_math.Exp.t
   | Add   of Owl_symbolic_ops_math.Add.t
   | Sub   of Owl_symbolic_ops_math.Sub.t
   | Mul   of Owl_symbolic_ops_math.Mul.t
   | Div   of Owl_symbolic_ops_math.Div.t
-  | Sin   of Owl_symbolic_ops_math.Sin.t
-  | Cos   of Owl_symbolic_ops_math.Cos.t
   | Pow   of Owl_symbolic_ops_math.Pow.t
-  | One   of Owl_symbolic_ops_math.One.t
-  | Var   of Owl_symbolic_ops_math.Var.t
-  | Ones  of Owl_symbolic_ops_math.Ones.t
-  | Float of Owl_symbolic_ops_math.Float.t
+  
 
 let name = function
   | Add x   -> Owl_symbolic_ops_math.Add.(x.name)
@@ -37,9 +41,6 @@ let name = function
   | Sin x   -> Owl_symbolic_ops_math.Sin.(x.name)
   | Cos x   -> Owl_symbolic_ops_math.Cos.(x.name)
   | Pow x   -> Owl_symbolic_ops_math.Pow.(x.name)
-  | One x   -> Owl_symbolic_ops_math.One.(x.name)
-  | Var x   -> Owl_symbolic_ops_math.Var.(x.name)
-  | Ones x  -> Owl_symbolic_ops_math.Ones.(x.name)
   | Float x -> Owl_symbolic_ops_math.Float.(x.name)
   | _       -> failwith "owl_symbolic_symbol.name"
 
@@ -52,9 +53,6 @@ let input = function
   | Sin x   -> Owl_symbolic_ops_math.Sin.(x.input)
   | Cos x   -> Owl_symbolic_ops_math.Cos.(x.input)
   | Pow x   -> Owl_symbolic_ops_math.Pow.(x.input)
-  | One x   -> Owl_symbolic_ops_math.One.(x.input)
-  | Var x   -> Owl_symbolic_ops_math.Var.(x.input)
-  | Ones x  -> Owl_symbolic_ops_math.Ones.(x.input)
   | Float x -> Owl_symbolic_ops_math.Float.(x.input)
   | _       -> failwith "owl_symbolic_symbol.input"
 
@@ -67,16 +65,11 @@ let output = function
   | Sin x   -> Owl_symbolic_ops_math.Sin.(x.output)
   | Cos x   -> Owl_symbolic_ops_math.Cos.(x.output)
   | Pow x   -> Owl_symbolic_ops_math.Pow.(x.output)
-  | One x   -> Owl_symbolic_ops_math.One.(x.output)
-  | Var x   -> Owl_symbolic_ops_math.Var.(x.output)
-  | Ones x  -> Owl_symbolic_ops_math.Ones.(x.output)
   | Float x -> Owl_symbolic_ops_math.Float.(x.output)
   | _       -> failwith "owl_symbolic_symbol.output"
 
 
 let shape = function
-  | Ones x -> Owl_symbolic_ops_math.Ones.(x.shape)
-  | Var x  -> Owl_symbolic_ops_math.Var.(x.shape)
   | _      -> failwith "owl_symbolic_symbol.shape"
 
 
