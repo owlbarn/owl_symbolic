@@ -3,6 +3,18 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
+(*
+ * The operations included: 
+ * (1) Numbers: Integers, Rational, Float. E.g. in "exp = x + y - 0.1" the 0.1 is a float;
+ * note that its not related to the tensor type (float or double etc.)
+ * Tensor is also what we need.
+ * (2) Special constant: ExpConst, ImgUnit (imaginary unit i)
+ * (3) Symbol. It's not specified when defined. You can just define "Symbol 'x'" in the symbolic grpah.
+ * Only before evaluation (conversion) should the symbol be replaced with float, int, tensor, etc. 
+ * (4) Unary Op: Sin, Cos, Exp
+ * (5) Binary Op: +, -, *, /, pow
+ *)
+
 type t =
   | NOOP
   | Add   of Owl_symbolic_ops_math.Add.t

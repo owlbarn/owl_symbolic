@@ -3,7 +3,7 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-open Owl_symbolic_types
+(* open Owl_symbolic_types *)
 open Owl_symbolic_specs
 module G = Owl_symbolic_graph
 module S = Owl_symbolic_symbol
@@ -35,9 +35,9 @@ let make_tensorproto_float sym =
 
 (** Main entry *)
 
-let of_symbolic (sym_graph : symbolic_graph) =
+(* let of_symbolic (sym_graph : symbolic_graph) =
   let syms = G.iterate sym_graph in
-  let len = Array.length syms in
+  let len = G.length sym_graph in
   let default_node = PT.default_node_proto () in
   let node = Array.make len default_node in
   let initialiser = ref [] in
@@ -78,9 +78,9 @@ let of_symbolic (sym_graph : symbolic_graph) =
     PT.default_graph_proto ~node ~initializer_:initialiser ~input ~output ()
   in
   default_graph
+*)
 
-
-let to_symbolic (_onnx_graph : t) = { symbols = [||] }
+let to_symbolic (_onnx_graph : t) = G.null_graph
 
 
 let serialise (onnx_graph : t ) filename = 
