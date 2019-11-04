@@ -17,21 +17,20 @@
 
 type t =
   | NOOP
-  | Int   of Owl_symbolic_ops_math.Int.t
+  | Int of Owl_symbolic_ops_math.Int.t
   | Complex of Owl_symbolic_ops_math.Complex.t
   | Float of Owl_symbolic_ops_math.Float.t
   | Tensor of Owl_symbolic_ops_math.Tensor.t
   | ExpConst of Owl_symbolic_ops_math.ExpConst.t
   | Symbol of Owl_symbolic_ops_math.Symbol.t
-  | Sin   of Owl_symbolic_ops_math.Sin.t
-  | Cos   of Owl_symbolic_ops_math.Cos.t
-  | Exp   of Owl_symbolic_ops_math.Exp.t
-  | Add   of Owl_symbolic_ops_math.Add.t
-  | Sub   of Owl_symbolic_ops_math.Sub.t
-  | Mul   of Owl_symbolic_ops_math.Mul.t
-  | Div   of Owl_symbolic_ops_math.Div.t
-  | Pow   of Owl_symbolic_ops_math.Pow.t
-  
+  | Sin of Owl_symbolic_ops_math.Sin.t
+  | Cos of Owl_symbolic_ops_math.Cos.t
+  | Exp of Owl_symbolic_ops_math.Exp.t
+  | Add of Owl_symbolic_ops_math.Add.t
+  | Sub of Owl_symbolic_ops_math.Sub.t
+  | Mul of Owl_symbolic_ops_math.Mul.t
+  | Div of Owl_symbolic_ops_math.Div.t
+  | Pow of Owl_symbolic_ops_math.Pow.t
 
 let name = function
   | Add x   -> Owl_symbolic_ops_math.Add.(x.name)
@@ -70,7 +69,7 @@ let output = function
 
 
 let shape = function
-  | _      -> failwith "owl_symbolic_symbol.shape"
+  | _ -> failwith "owl_symbolic_symbol.shape"
 
 
 let value = function

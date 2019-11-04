@@ -43,29 +43,30 @@ let of_symbolic (sym_graph : symbolic_graph) =
   let initialiser = ref [] in
   let input = ref [] in
   let output = ref [] in
-  G.iterate (fun node -> 
-    (* build nodeprotos *)
-    let n = Owl_graph.attr node in 
-    let name = S.name n in
-    let ninput = S.input n in
-    let noutput = S.output n in
-    let _nproto = PT.default_node_proto ~name ~input:ninput ~output:noutput () in 
-    (* build constant inputs : TensorProto *)
-    (* let constant =
-      match n with
-      | Float _ -> [ make_tensorproto_float n ]
-      | _       -> []
-    in
-    initialiser := List.append !initialiser constant;
-    (* inputs and outputs : ValueInforProto *)
-    let input_valinfo =
-      match n with
-      | Symbol _ -> [ PT.default_value_info_proto ~name () ]
-      | _     -> []
-    in
-    input := List.append !input input_valinfo; *)
-    output := [ PT.default_value_info_proto ~name:(G.name sym_graph) () ]
-  ) sym_graph;
+  G.iterate
+    (fun node ->
+      (* build nodeprotos *)
+      let n = Owl_graph.attr node in
+      let name = S.name n in
+      let ninput = S.input n in
+      let noutput = S.output n in
+      let _nproto = PT.default_node_proto ~name ~input:ninput ~output:noutput () in
+      (* build constant inputs : TensorProto *)
+      let constant =
+        match n with
+        | Float _ -> [ make_tensorproto_float n ]
+        | _       -> []
+      in
+      initialiser := List.append !initialiser constant;
+      (* inputs and outputs : ValueInforProto *)
+      let input_valinfo =
+        match n with
+        | Symbol _ -> [ PT.default_value_info_proto ~name () ]
+        | _        -> []
+      in
+      input := List.append !input input_valinfo;
+      output := [ PT.default_value_info_proto ~name:(G.name sym_graph) () ])
+    sym_graph;
   (* result *)
   let node = Array.to_list node in
   let initialiser = !initialiser in
@@ -76,12 +77,12 @@ let of_symbolic (sym_graph : symbolic_graph) =
   in
   default_graph
 
+
 let to_symbolic (_onnx_graph : t) = G.null_graph
 
-
-let serialise (onnx_graph : t ) filename = 
+let serialise (onnx_graph : t) filename =
   let encoder = Pbrt.Encoder.create () in
   PB.encode_graph_proto onnx_graph encoder;
-  let oc = open_out filename in 
+  let oc = open_out filename in
   output_bytes oc (Pbrt.Encoder.to_bytes encoder);
   close_out oc

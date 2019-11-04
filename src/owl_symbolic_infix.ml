@@ -3,7 +3,5 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-
 let ( + ) = Owl_symbolic_operator.add
-
 let ( * ) = Owl_symbolic_operator.pow

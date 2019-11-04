@@ -18,7 +18,7 @@ let integer value =
   let output = [ o_name ] in
   let o = Owl_symbolic_ops_math.Int.create name input output value in
   let node = Owl_symbolic_symbol.Int o in
-  make_graph node [| |]
+  make_graph node [||]
 
 
 let flt x =
@@ -30,7 +30,7 @@ let flt x =
   let value = x in
   let o = Owl_symbolic_ops_math.Float.create name input output value in
   let node = Owl_symbolic_symbol.Float o in
-  make_graph node [| |]
+  make_graph node [||]
 
 
 let complex r i =
@@ -41,10 +41,10 @@ let complex r i =
   let output = [ o_name ] in
   let o = Owl_symbolic_ops_math.Complex.create name input output r i in
   let node = Owl_symbolic_symbol.Complex o in
-  make_graph node [| |]
+  make_graph node [||]
 
 
-let tensor ?(id="") shape =
+let tensor ?(id = "") shape =
   let suffix = generate_suffix () in
   let name = Printf.sprintf "tensor_%i" suffix in
   let o_name = "a" in
@@ -52,7 +52,7 @@ let tensor ?(id="") shape =
   let output = [ o_name ] in
   let o = Owl_symbolic_ops_math.Tensor.create ~shape name input output id in
   let node = Owl_symbolic_symbol.Tensor o in
-  make_graph node [| |]
+  make_graph node [||]
 
 
 let expconst () =
@@ -63,7 +63,7 @@ let expconst () =
   let output = [ o_name ] in
   let o = Owl_symbolic_ops_math.ExpConst.create name input output in
   let node = Owl_symbolic_symbol.ExpConst o in
-  make_graph node [| |]
+  make_graph node [||]
 
 
 let symbol id =
@@ -74,8 +74,7 @@ let symbol id =
   let output = [ o_name ] in
   let o = Owl_symbolic_ops_math.Symbol.create name input output id in
   let node = Owl_symbolic_symbol.Symbol o in
-  make_graph node [| |]
-
+  make_graph node [||]
 
 
 let add x y =

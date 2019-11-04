@@ -141,7 +141,6 @@ module Symbol = struct
   let create name input output id = { name; input; output; id }
 end
 
-
 module Int = struct
   type t =
     { mutable name : string
@@ -156,16 +155,15 @@ end
 
 module Complex = struct
   type t =
-    { mutable name   : string
-    ; mutable input  : string list
+    { mutable name : string
+    ; mutable input : string list
     ; mutable output : string list
-    ; mutable real   : float
-    ; mutable img    : float
+    ; mutable real : float
+    ; mutable img : float
     }
 
   let op_type = "Complex"
   let create name input output real img = { name; input; output; real; img }
 end
-
 
 (** Is `output` necessary? *)

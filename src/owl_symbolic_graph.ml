@@ -4,27 +4,28 @@
  *)
 
 open Owl_symbolic_types
-open Owl_graph 
+open Owl_graph
 
 (** A series of graph operations. *)
 
 (** NOTE: I have Tree structure in mind when coding all these... *)
 let make_graph (attr : Owl_symbolic_symbol.t) (inputs : symbolic_graph array) =
   let child = node attr in
-  connect_ancestors inputs [|child|];
+  connect_ancestors inputs [| child |];
   child
 
+
 let null_graph =
-  let attr = Owl_symbolic_symbol.NOOP in 
+  let attr = Owl_symbolic_symbol.NOOP in
   node attr
 
+
 (** The name of the graph is the name of root *)
-let name = Owl_graph.name 
+let name = Owl_graph.name
 
 (* Return an array of nodes *)
-let iterate f (g : symbolic_graph) = iter_ancestors f [|g|]
-
-let length (g : symbolic_graph) = Owl_graph.length [|g|]
+let iterate f (g : symbolic_graph) = iter_ancestors f [| g |]
+let length (g : symbolic_graph) = Owl_graph.length [| g |]
 
 (** Targeted operations on the graph *)
 
