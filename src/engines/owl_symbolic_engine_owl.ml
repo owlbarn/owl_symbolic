@@ -5,8 +5,7 @@
 
 module G = Owl_computation_cpu_engine.Make (Owl_dense_ndarray.S)
 open G
-
-(* open Owl_graph *)
+open Owl_graph
 
 type t = G.graph
 
@@ -24,10 +23,12 @@ let get_const_value (attr : Symbol.Shape.Type.attr) =
 
 (** Main entry *)
 
-(* let to_symbolic (cgraph : t) =
+let to_symbolic (cgraph : t) =
   let outputs = G.get_outputs cgraph in
-  (* 0th iterations: name each node *)
+  (* name each node properly *)
   iter_ancestors
+    ~order:DFS
+    ~traversal:PostOrder
     (fun node ->
       let name = Owl_graph.name node in
       let name =
@@ -39,32 +40,47 @@ let get_const_value (attr : Symbol.Shape.Type.attr) =
       in
       Owl_graph.set_name node name)
     outputs;
-  (* 1st iteration : on owl_cgraph *)
-  let sym_graph = ref Owl_symbolic_graph.null_graph in
+  (* NOTE: change the length *)
+  let syms = Hashtbl.create 100 in
+  (* iterate Owl CGraph in topology order *)
   iter_ancestors
+    ~order:DFS
+    ~traversal:PostOrder
     (fun node ->
-      let cgraph_attr : Symbol.Shape.Type.attr = Owl_graph.attr node in
+      let cnode_attr : Symbol.Shape.Type.attr = Owl_graph.attr node in
       let name = Owl_graph.name node in
-      let cgraph_inputs = Owl_graph.children node in
-      let sym =
-        match cgraph_attr.op with
-        | Const    ->
-          let value = get_const_value cgraph_attr in
-          Owl_symbolic_operator.flt value
-        (* This is WRONG!!! *)
-        | Sin      -> 
-          let inputs = find_node_in_array [||] cgraph_inputs in 
-          Owl_symbolic_operator.sin inputs.(0)
-        | Pow      -> Owl_symbolic_operator.pow !sym_graph !sym_graph
-        | Var      -> Owl_symbolic_operator.symbol name
-        | Ones shp -> Owl_symbolic_operator.tensor shp
-        | _        -> failwith "not supported"
+      (* find in dict the input sym nodes of current sym *)
+      let sym_inputs =
+        Array.map
+          (fun n ->
+            let n = Owl_graph.name n in
+            try Hashtbl.find syms n with
+            | Not_found -> failwith "owl_to_symbolic: input node not found.")
+          (Owl_graph.parents node)
       in
-      sym_graph := sym)
+      (* build the current symbol *)
+      let sym =
+        match cnode_attr.op with
+        | Const ->
+          let value = get_const_value cnode_attr in
+          Owl_symbolic_operator.flt ~name value
+        | Sin   -> Owl_symbolic_operator.sin ~name sym_inputs.(0)
+        | Add   -> Owl_symbolic_operator.add sym_inputs.(0) sym_inputs.(1)
+        | _     -> failwith "Node type not supported."
+      in
+      Hashtbl.add syms name sym)
     outputs;
-  !sym_graph
+  (* choose only the output symbols to be in the graph *)
+  let output_sym_nodes =
+    Array.map
+      (fun n ->
+        let name = Owl_graph.name n in
+        Hashtbl.find syms name)
+      outputs
+  in
+  Owl_symbolic_graph.make_graph output_sym_nodes ""
 
-
+(*
 let of_symbolic (_sym_graph : symbolic_graph) =
   let attr =
     { op = Noop

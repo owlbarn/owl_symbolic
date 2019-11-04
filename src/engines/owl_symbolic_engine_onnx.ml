@@ -35,8 +35,8 @@ let make_tensorproto_float sym =
 
 (** Main entry *)
 
-let of_symbolic (sym_nodes : Owl_symbolic_graph.symbolic_node) =
-  let len = G.length sym_nodes in
+let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
+  let len = G.length sym_graph in
   let default_node = PT.default_node_proto () in
   let node = Array.make len default_node in
   let initialiser = ref [] in
@@ -64,8 +64,9 @@ let of_symbolic (sym_nodes : Owl_symbolic_graph.symbolic_node) =
         | _        -> []
       in
       input := List.append !input input_valinfo;
-      output := [ PT.default_value_info_proto ~name:(G.name sym_nodes) () ])
-    sym_nodes;
+      (* TOOD: find the correct output *)
+      output := [ PT.default_value_info_proto ~name:"" () ])
+    sym_graph;
   (* result *)
   let node = Array.to_list node in
   let initialiser = !initialiser in

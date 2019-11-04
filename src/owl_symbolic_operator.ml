@@ -6,13 +6,20 @@
 open Owl_symbolic_utils
 open Owl_symbolic_graph
 
-(** Signatures: unit/graph -> graph ... -> graph *)
+(** Signatures: node -> node ... -> node *)
 
-(** TODO: The design of `make_graph` feels like wrong... 
-  * check owl.to_symbolic *)
-let integer value =
+let noop =
+  let sym = Owl_symbolic_symbol.NOOP in
+  make_node sym [||]
+
+
+let integer ?name value =
   let suffix = generate_suffix () in
-  let name = Printf.sprintf "integer_%i" suffix in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "integer_%i" suffix
+  in
   let o_name = "a" in
   let input = [] in
   let output = [ o_name ] in
@@ -21,9 +28,13 @@ let integer value =
   make_node sym [||]
 
 
-let flt x =
+let flt ?name x =
   let suffix = generate_suffix () in
-  let name = Printf.sprintf "float_%i" suffix in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "float_%i" suffix
+  in
   let o_name = "a" in
   let input = [] in
   let output = [ o_name ] in
@@ -33,9 +44,13 @@ let flt x =
   make_node sym [||]
 
 
-let complex r i =
+let complex ?name r i =
   let suffix = generate_suffix () in
-  let name = Printf.sprintf "complex_%i" suffix in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "complex_%i" suffix
+  in
   let o_name = "a" in
   let input = [] in
   let output = [ o_name ] in
@@ -44,9 +59,13 @@ let complex r i =
   make_node sym [||]
 
 
-let tensor ?(id = "") shape =
+let tensor ?name ?(id = "") shape =
   let suffix = generate_suffix () in
-  let name = Printf.sprintf "tensor_%i" suffix in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "tensor_%i" suffix
+  in
   let o_name = "a" in
   let input = [] in
   let output = [ o_name ] in
@@ -55,9 +74,13 @@ let tensor ?(id = "") shape =
   make_node sym [||]
 
 
-let expconst () =
+let expconst ?name () =
   let suffix = generate_suffix () in
-  let name = Printf.sprintf "expconst_%i" suffix in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "expconst_%i" suffix
+  in
   let o_name = "a" in
   let input = [] in
   let output = [ o_name ] in
@@ -66,9 +89,13 @@ let expconst () =
   make_node sym [||]
 
 
-let symbol id =
+let symbol ?name id =
   let suffix = generate_suffix () in
-  let name = Printf.sprintf "var_%i" suffix in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "var_%i" suffix
+  in
   let o_name = "x" in
   let input = [] in
   let output = [ o_name ] in
@@ -77,9 +104,13 @@ let symbol id =
   make_node sym [||]
 
 
-let add x y =
+let add ?name x y =
   let suffix = generate_suffix () in
-  let name = Printf.sprintf "add_%i" suffix in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "add_%i" suffix
+  in
   let x_name = Owl_symbolic_graph.name x in
   let y_name = Owl_symbolic_graph.name y in
   let o_name = "z" in
@@ -90,9 +121,13 @@ let add x y =
   make_node sym [| x; y |]
 
 
-let pow x y =
+let pow ?name x y =
   let suffix = generate_suffix () in
-  let name = Printf.sprintf "pow_%i" suffix in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "pow_%i" suffix
+  in
   let x_name = Owl_symbolic_graph.name x in
   let y_name = Owl_symbolic_graph.name y in
   let o_name = "z" in
@@ -103,9 +138,13 @@ let pow x y =
   make_node sym [| x; y |]
 
 
-let sin x =
+let sin ?name x =
   let suffix = generate_suffix () in
-  let name = Printf.sprintf "sin_%i" suffix in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "sin_%i" suffix
+  in
   let x_name = Owl_symbolic_graph.name x in
   let o_name = "y" in
   let input = [ x_name ] in
