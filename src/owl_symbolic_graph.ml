@@ -5,13 +5,18 @@
 
 open Owl_graph
 
-type symbolic_graph = Owl_symbolic_symbol.t Owl_graph.node
+type symbolic_node = Owl_symbolic_symbol.t Owl_graph.node
+
+type symbolic_graph =
+  { sym_nodes : symbolic_node array
+  ; graph_name : string
+  }
 
 (** A series of graph operations. *)
 
 (** NOTE: I have Tree structure in mind when coding all these... *)
-let make_graph (attr : Owl_symbolic_symbol.t) (parents : symbolic_graph array) =
-  let child = node attr in
+let make_node (sym : Owl_symbolic_symbol.t) (parents : symbolic_node array) =
+  let child = node sym in
   connect_ancestors parents [| child |];
   let uniq_parents = Owl_utils_array.unique parents in
   Array.iter (fun parent -> connect_descendants [| parent |] [| child |]) uniq_parents;
@@ -27,8 +32,8 @@ let null_graph =
 let name = Owl_graph.name
 
 (* Return an array of nodes *)
-let iterate f (g : symbolic_graph) = iter_ancestors f [| g |]
-let length (g : symbolic_graph) = Owl_graph.length [| g |]
+let iter f (g : symbolic_node) = iter_ancestors f [| g |]
+let length (g : symbolic_node) = Owl_graph.length [| g |]
 
 (** Targeted operations on the graph *)
 

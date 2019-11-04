@@ -3,10 +3,10 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-open Owl_symbolic_types
 module G = Owl_computation_cpu_engine.Make (Owl_dense_ndarray.S)
 open G
-open Owl_graph
+
+(* open Owl_graph *)
 
 type t = G.graph
 
@@ -24,7 +24,7 @@ let get_const_value (attr : Symbol.Shape.Type.attr) =
 
 (** Main entry *)
 
-let to_symbolic (cgraph : t) =
+(* let to_symbolic (cgraph : t) =
   let outputs = G.get_outputs cgraph in
   (* 0th iterations: name each node *)
   iter_ancestors
@@ -43,16 +43,18 @@ let to_symbolic (cgraph : t) =
   let sym_graph = ref Owl_symbolic_graph.null_graph in
   iter_ancestors
     (fun node ->
-      let attr : Symbol.Shape.Type.attr = Owl_graph.attr node in
+      let cgraph_attr : Symbol.Shape.Type.attr = Owl_graph.attr node in
       let name = Owl_graph.name node in
-      let _inputs = Array.map (fun n -> Owl_graph.name n) (Owl_graph.parents node) in
+      let cgraph_inputs = Owl_graph.children node in
       let sym =
-        match attr.op with
+        match cgraph_attr.op with
         | Const    ->
-          let value = get_const_value attr in
+          let value = get_const_value cgraph_attr in
           Owl_symbolic_operator.flt value
         (* This is WRONG!!! *)
-        | Sin      -> Owl_symbolic_operator.sin !sym_graph
+        | Sin      -> 
+          let inputs = find_node_in_array [||] cgraph_inputs in 
+          Owl_symbolic_operator.sin inputs.(0)
         | Pow      -> Owl_symbolic_operator.pow !sym_graph !sym_graph
         | Var      -> Owl_symbolic_operator.symbol name
         | Ones shp -> Owl_symbolic_operator.tensor shp
@@ -87,3 +89,4 @@ let eval_elt (sym_graph : symbolic_graph) =
   let cgraph_elt = of_symbolic sym_graph |> G.node_to_elt in
   G.eval_elt [| cgraph_elt |];
   G.unpack_elt cgraph_elt
+*)

@@ -17,8 +17,8 @@ let integer value =
   let input = [] in
   let output = [ o_name ] in
   let o = Owl_symbolic_ops_math.Int.create name input output value in
-  let node = Owl_symbolic_symbol.Int o in
-  make_graph node [||]
+  let sym = Owl_symbolic_symbol.Int o in
+  make_node sym [||]
 
 
 let flt x =
@@ -29,8 +29,8 @@ let flt x =
   let output = [ o_name ] in
   let value = x in
   let o = Owl_symbolic_ops_math.Float.create name input output value in
-  let node = Owl_symbolic_symbol.Float o in
-  make_graph node [||]
+  let sym = Owl_symbolic_symbol.Float o in
+  make_node sym [||]
 
 
 let complex r i =
@@ -40,8 +40,8 @@ let complex r i =
   let input = [] in
   let output = [ o_name ] in
   let o = Owl_symbolic_ops_math.Complex.create name input output r i in
-  let node = Owl_symbolic_symbol.Complex o in
-  make_graph node [||]
+  let sym = Owl_symbolic_symbol.Complex o in
+  make_node sym [||]
 
 
 let tensor ?(id = "") shape =
@@ -51,8 +51,8 @@ let tensor ?(id = "") shape =
   let input = [] in
   let output = [ o_name ] in
   let o = Owl_symbolic_ops_math.Tensor.create ~shape name input output id in
-  let node = Owl_symbolic_symbol.Tensor o in
-  make_graph node [||]
+  let sym = Owl_symbolic_symbol.Tensor o in
+  make_node sym [||]
 
 
 let expconst () =
@@ -62,8 +62,8 @@ let expconst () =
   let input = [] in
   let output = [ o_name ] in
   let o = Owl_symbolic_ops_math.ExpConst.create name input output in
-  let node = Owl_symbolic_symbol.ExpConst o in
-  make_graph node [||]
+  let sym = Owl_symbolic_symbol.ExpConst o in
+  make_node sym [||]
 
 
 let symbol id =
@@ -73,8 +73,8 @@ let symbol id =
   let input = [] in
   let output = [ o_name ] in
   let o = Owl_symbolic_ops_math.Symbol.create name input output id in
-  let node = Owl_symbolic_symbol.Symbol o in
-  make_graph node [||]
+  let sym = Owl_symbolic_symbol.Symbol o in
+  make_node sym [||]
 
 
 let add x y =
@@ -86,8 +86,8 @@ let add x y =
   let input = [ x_name; y_name ] in
   let output = [ o_name ] in
   let o = Owl_symbolic_ops_math.Add.create name input output in
-  let node = Owl_symbolic_symbol.Add o in
-  make_graph node [| x; y |]
+  let sym = Owl_symbolic_symbol.Add o in
+  make_node sym [| x; y |]
 
 
 let pow x y =
@@ -99,8 +99,8 @@ let pow x y =
   let input = [ x_name; y_name ] in
   let output = [ o_name ] in
   let o = Owl_symbolic_ops_math.Pow.create name input output in
-  let node = Owl_symbolic_symbol.Pow o in
-  make_graph node [| x; y |]
+  let sym = Owl_symbolic_symbol.Pow o in
+  make_node sym [| x; y |]
 
 
 let sin x =
@@ -111,5 +111,5 @@ let sin x =
   let input = [ x_name ] in
   let output = [ o_name ] in
   let o = Owl_symbolic_ops_math.Sin.create name input output in
-  let node = Owl_symbolic_symbol.Sin o in
-  make_graph node [| x |]
+  let sym = Owl_symbolic_symbol.Sin o in
+  make_node sym [| x |]
