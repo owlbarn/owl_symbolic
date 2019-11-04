@@ -9,9 +9,13 @@ open Owl_graph
 (** A series of graph operations. *)
 
 (** NOTE: I have Tree structure in mind when coding all these... *)
-let make_graph (attr : Owl_symbolic_symbol.t) (inputs : symbolic_graph array) =
+let make_graph (attr : Owl_symbolic_symbol.t) (parents : symbolic_graph array) =
   let child = node attr in
-  connect_ancestors inputs [| child |];
+  connect_ancestors parents [| child |];
+  let uniq_parents = Owl_utils_array.unique parents in
+    Array.iter (fun parent ->
+      connect_descendants [|parent|] [|child|]
+    ) uniq_parents;
   child
 
 

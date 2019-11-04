@@ -33,6 +33,8 @@ type t =
   | Pow of Owl_symbolic_ops_math.Pow.t
 
 let name = function
+  | Float x -> Owl_symbolic_ops_math.Float.(x.name)
+  | Tensor x -> Owl_symbolic_ops_math.Tensor.(x.name)
   | Add x   -> Owl_symbolic_ops_math.Add.(x.name)
   | Sub x   -> Owl_symbolic_ops_math.Sub.(x.name)
   | Mul x   -> Owl_symbolic_ops_math.Mul.(x.name)
@@ -40,11 +42,12 @@ let name = function
   | Sin x   -> Owl_symbolic_ops_math.Sin.(x.name)
   | Cos x   -> Owl_symbolic_ops_math.Cos.(x.name)
   | Pow x   -> Owl_symbolic_ops_math.Pow.(x.name)
-  | Float x -> Owl_symbolic_ops_math.Float.(x.name)
   | _       -> failwith "owl_symbolic_symbol.name"
 
 
 let input = function
+  | Float x -> Owl_symbolic_ops_math.Float.(x.input)
+  | Tensor x -> Owl_symbolic_ops_math.Tensor.(x.input)
   | Add x   -> Owl_symbolic_ops_math.Add.(x.input)
   | Sub x   -> Owl_symbolic_ops_math.Sub.(x.input)
   | Mul x   -> Owl_symbolic_ops_math.Mul.(x.input)
@@ -52,11 +55,12 @@ let input = function
   | Sin x   -> Owl_symbolic_ops_math.Sin.(x.input)
   | Cos x   -> Owl_symbolic_ops_math.Cos.(x.input)
   | Pow x   -> Owl_symbolic_ops_math.Pow.(x.input)
-  | Float x -> Owl_symbolic_ops_math.Float.(x.input)
   | _       -> failwith "owl_symbolic_symbol.input"
 
 
 let output = function
+  | Float x -> Owl_symbolic_ops_math.Float.(x.output)
+  | Tensor x -> Owl_symbolic_ops_math.Tensor.(x.output)
   | Add x   -> Owl_symbolic_ops_math.Add.(x.output)
   | Sub x   -> Owl_symbolic_ops_math.Sub.(x.output)
   | Mul x   -> Owl_symbolic_ops_math.Mul.(x.output)
@@ -64,7 +68,6 @@ let output = function
   | Sin x   -> Owl_symbolic_ops_math.Sin.(x.output)
   | Cos x   -> Owl_symbolic_ops_math.Cos.(x.output)
   | Pow x   -> Owl_symbolic_ops_math.Pow.(x.output)
-  | Float x -> Owl_symbolic_ops_math.Float.(x.output)
   | _       -> failwith "owl_symbolic_symbol.output"
 
 
