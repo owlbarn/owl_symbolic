@@ -5,6 +5,7 @@
 
 (*open Owl_symbolic_types *)
 open Owl_symbolic_specs
+open Owl_symbolic_types
 module G = Owl_symbolic_graph
 module S = Owl_symbolic_symbol
 
@@ -35,27 +36,23 @@ let make_tensorproto_float sym =
 
 (** Main entry *)
 
-(* let of_symbolic (sym_graph : symbolic_graph) =
-  let syms = G.iterate sym_graph in
+let of_symbolic (sym_graph : symbolic_graph) =
   let len = G.length sym_graph in
   let default_node = PT.default_node_proto () in
   let node = Array.make len default_node in
   let initialiser = ref [] in
   let input = ref [] in
   let output = ref [] in
-  for i = 0 to len - 1 do
+  G.iterate (fun node -> 
     (* build nodeprotos *)
-    let n = syms.(i) in
+    let n = Owl_graph.attr node in 
     let name = S.name n in
     let ninput = S.input n in
     let noutput = S.output n in
-    let nproto = PT.default_node_proto ~name ~input:ninput ~output:noutput () in
-    node.(i) <- nproto;
+    let _nproto = PT.default_node_proto ~name ~input:ninput ~output:noutput () in 
     (* build constant inputs : TensorProto *)
-    let constant =
+    (* let constant =
       match n with
-      | One _   -> [ make_tensorproto_one n ]
-      | Ones _  -> [ make_tensorproto_ones n ]
       | Float _ -> [ make_tensorproto_float n ]
       | _       -> []
     in
@@ -63,12 +60,12 @@ let make_tensorproto_float sym =
     (* inputs and outputs : ValueInforProto *)
     let input_valinfo =
       match n with
-      | Var _ -> [ PT.default_value_info_proto ~name () ]
+      | Symbol _ -> [ PT.default_value_info_proto ~name () ]
       | _     -> []
     in
-    input := List.append !input input_valinfo;
+    input := List.append !input input_valinfo; *)
     output := [ PT.default_value_info_proto ~name:(G.name sym_graph) () ]
-  done;
+  ) sym_graph;
   (* result *)
   let node = Array.to_list node in
   let initialiser = !initialiser in
@@ -78,7 +75,6 @@ let make_tensorproto_float sym =
     PT.default_graph_proto ~node ~initializer_:initialiser ~input ~output ()
   in
   default_graph
-*)
 
 let to_symbolic (_onnx_graph : t) = G.null_graph
 
