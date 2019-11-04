@@ -4,7 +4,7 @@
  *)
 
 open Owl_symbolic_types
-module G = Owl_computation_cpu_engine.Make (Owl_base_dense_ndarray.S)
+module G = Owl_computation_cpu_engine.Make (Owl_dense_ndarray.S)
 open G
 open Owl_graph
 
@@ -54,8 +54,8 @@ let to_symbolic (cgraph : t) =
         (* This is WRONG!!! *)
         | Sin      -> Owl_symbolic_operator.sin !sym_graph
         | Pow      -> Owl_symbolic_operator.pow !sym_graph !sym_graph
-        | Var      -> Owl_symbolic_operator.var name
-        | Ones shp -> Owl_symbolic_operator.ones shp
+        | Var      -> Owl_symbolic_operator.symbol name
+        | Ones shp -> Owl_symbolic_operator.tensor shp
         | _        -> failwith "not supported"
       in
       sym_graph := sym)

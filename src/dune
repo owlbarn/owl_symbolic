@@ -7,7 +7,7 @@
 (library
  (name owl_symbolic)
  (public_name owl-symbolic)
- (libraries owl-base integers ocaml-protoc))
+ (libraries owl owl-base integers ocaml-protoc))
 
 (documentation
  (package owl-symbolic))

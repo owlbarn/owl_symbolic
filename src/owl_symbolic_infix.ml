@@ -4,5 +4,4 @@
  *)
 
 let ( + ) = Owl_symbolic_operator.add
-
 let ( ** ) = Owl_symbolic_operator.pow

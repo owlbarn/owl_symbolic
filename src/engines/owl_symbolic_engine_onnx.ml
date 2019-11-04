@@ -5,7 +5,6 @@
 
 (*open Owl_symbolic_types *)
 open Owl_symbolic_specs
-open Owl_symbolic_types
 module G = Owl_symbolic_graph
 module S = Owl_symbolic_symbol
 
@@ -36,7 +35,7 @@ let make_tensorproto_float sym =
 
 (** Main entry *)
 
-let of_symbolic (sym_graph : symbolic_graph) =
+let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
   let len = G.length sym_graph in
   let default_node = PT.default_node_proto () in
   let node = Array.make len default_node in

@@ -3,8 +3,9 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-open Owl_symbolic_types
 open Owl_graph
+
+type symbolic_graph = Owl_symbolic_symbol.t Owl_graph.node
 
 (** A series of graph operations. *)
 
@@ -13,9 +14,7 @@ let make_graph (attr : Owl_symbolic_symbol.t) (parents : symbolic_graph array) =
   let child = node attr in
   connect_ancestors parents [| child |];
   let uniq_parents = Owl_utils_array.unique parents in
-    Array.iter (fun parent ->
-      connect_descendants [|parent|] [|child|]
-    ) uniq_parents;
+  Array.iter (fun parent -> connect_descendants [| parent |] [| child |]) uniq_parents;
   child
 
 

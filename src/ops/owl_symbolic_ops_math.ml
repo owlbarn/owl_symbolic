@@ -3,6 +3,8 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
+open Owl_symbolic_types
+
 module Add = struct
   type t =
     { mutable name : string
@@ -121,12 +123,15 @@ module Tensor = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
+    ; mutable typ : tensor_typ
     ; mutable shape : int array
     ; mutable id : string (* Not name, but like "x" or "y" *)
     }
 
   let op_type = "Tensor"
-  let create ?(shape = [||]) name input output id = { name; input; output; shape; id }
+
+  let create ?(shape = [||]) ?(typ = S) name input output id =
+    { name; input; output; typ; shape; id }
 end
 
 module Symbol = struct

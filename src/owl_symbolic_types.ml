@@ -3,6 +3,6 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-type symbolic_graph = Owl_symbolic_symbol.t Owl_graph.node
+type tensor_typ = S | D | C | Z
 
-(** flt, int, ... *)
+(** flt, int, ... ? *)
