@@ -7,6 +7,8 @@ depend depends:
 
 .PHONY: build
 build: depends
+	# NOTE: Ugly temorary Hack
+	-mv duniverse _duniverse 
 	dune build @install
 
 .PHONY: test

@@ -81,11 +81,16 @@ let value = function
 
 
 let op_type = function
-  | Add _ -> Owl_symbolic_ops_math.Add.op_type
-  | Sub _ -> Owl_symbolic_ops_math.Sub.op_type
-  | Mul _ -> Owl_symbolic_ops_math.Mul.op_type
-  | Div _ -> Owl_symbolic_ops_math.Div.op_type
-  | _     -> failwith "owl_symbolic_symbol.op_type"
+  | Float _  -> Owl_symbolic_ops_math.Float.op_type
+  | Tensor _ -> Owl_symbolic_ops_math.Tensor.op_type
+  | Add _    -> Owl_symbolic_ops_math.Add.op_type
+  | Sub _    -> Owl_symbolic_ops_math.Sub.op_type
+  | Mul _    -> Owl_symbolic_ops_math.Mul.op_type
+  | Div _    -> Owl_symbolic_ops_math.Div.op_type
+  | Sin _    -> Owl_symbolic_ops_math.Sin.op_type
+  | Cos _    -> Owl_symbolic_ops_math.Cos.op_type
+  | Pow _    -> Owl_symbolic_ops_math.Pow.op_type
+  | _        -> failwith "owl_symbolic_symbol.op_type"
 
 
 (** Question: what if I want to move one math symbol to another group such as , say, nn? *)

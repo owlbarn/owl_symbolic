@@ -5,30 +5,39 @@
 
 open Owl_graph
 
-type symbolic_graph = Owl_symbolic_symbol.t Owl_graph.node
+type symbolic_node = Owl_symbolic_symbol.t Owl_graph.node
+
+type symbolic_graph =
+  { mutable sym_nodes : symbolic_node array
+  ; mutable name : string
+  }
 
 (** A series of graph operations. *)
 
-(** NOTE: I have Tree structure in mind when coding all these... *)
-let make_graph (attr : Owl_symbolic_symbol.t) (parents : symbolic_graph array) =
-  let child = node attr in
+let make_node (sym : Owl_symbolic_symbol.t) (parents : symbolic_node array) =
+  let child = node sym in
   connect_ancestors parents [| child |];
   let uniq_parents = Owl_utils_array.unique parents in
   Array.iter (fun parent -> connect_descendants [| parent |] [| child |]) uniq_parents;
   child
 
 
-let null_graph =
-  let attr = Owl_symbolic_symbol.NOOP in
-  node attr
+let make_graph nodes name = { sym_nodes = nodes; name }
+let null_graph = { sym_nodes = [||]; name = "" }
+
+(* !!! notice the target is sym! *)
+
+(** The name of node *)
+let name sym_node =
+  let sym = Owl_graph.attr sym_node in
+  Owl_symbolic_symbol.name sym
 
 
-(** The name of the graph is the name of root *)
-let name = Owl_graph.name
+let iter f (g : symbolic_graph) =
+  iter_ancestors ~order:DFS ~traversal:PostOrder f g.sym_nodes
 
-(* Return an array of nodes *)
-let iterate f (g : symbolic_graph) = iter_ancestors f [| g |]
-let length (g : symbolic_graph) = Owl_graph.length [| g |]
+
+let length (g : symbolic_graph) = g.sym_nodes |> Owl_graph.length
 
 (** Targeted operations on the graph *)
 
