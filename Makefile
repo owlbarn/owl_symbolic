@@ -34,6 +34,10 @@ doc:
 format:
 	dune build @fmt --auto-promote
 
+.PHONY: example
+example:
+	dune build @example/all 
+
 push:
 	git commit -am "coding onnx converter ..." && \
 	git push origin `git branch | grep \* | cut -d ' ' -f2`
