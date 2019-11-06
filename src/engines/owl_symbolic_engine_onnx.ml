@@ -42,38 +42,37 @@ let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
   let initialiser = ref [] in
   let input = ref [] in
   let output = ref [] in
-
-  let i = ref 0 in 
-  G.iter 
+  let i = ref 0 in
+  G.iter
     (fun n ->
       (* build nodeprotos *)
       let sym = Owl_graph.attr n in
       let name = S.name sym in
       let ninput = S.input sym in
       let noutput = S.output sym in
-      let op_type = S.op_type sym in 
-      
+      let op_type = S.op_type sym in
       (* build node attributes *)
-      let attr_name = name ^ "_attr" in 
-      let attr = 
-        match sym with 
-        | Float _ -> 
-          let _v = S.value sym in 
-          PT.default_attribute_proto 
-          ~name:attr_name ~type_:PT.Float ~f:1.0 ()
-        | Int _   -> 
-          PT.default_attribute_proto 
-          ~name:attr_name ~type_:PT.Int ~i:(Int64.of_int 1) ()
-        | Tensor _ ->  
-          let t = PT.default_tensor_proto () in 
-          PT.default_attribute_proto 
-          ~name:attr_name ~type_:PT.Tensor ~t:(Some t) ()
-        | _ -> PT.default_attribute_proto ~name:attr_name ()
+      let attr_name = name ^ "_attr" in
+      let attr =
+        match sym with
+        | Float _  ->
+          let _v = S.value sym in
+          PT.default_attribute_proto ~name:attr_name ~type_:PT.Float ~f:1.0 ()
+        | Int _    ->
+          PT.default_attribute_proto ~name:attr_name ~type_:PT.Int ~i:(Int64.of_int 1) ()
+        | Tensor _ ->
+          let t = PT.default_tensor_proto () in
+          PT.default_attribute_proto ~name:attr_name ~type_:PT.Tensor ~t:(Some t) ()
+        | _        -> PT.default_attribute_proto ~name:attr_name ()
       in
-      let nproto = PT.default_node_proto 
-        ~name ~input:ninput ~output:noutput
-        ~op_type ~attribute:[attr]
-        () 
+      let nproto =
+        PT.default_node_proto
+          ~name
+          ~input:ninput
+          ~output:noutput
+          ~op_type
+          ~attribute:[ attr ]
+          ()
       in
       node.(!i) <- nproto;
       i := !i + 1;
