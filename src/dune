@@ -1,6 +1,6 @@
 (copy_files# onnx_specs/*)
 
-(copy_files# engines/*)
+(copy_files# engines/owl_symbolic_engine_onnx.ml)
 
 (copy_files# ops/*)
 
