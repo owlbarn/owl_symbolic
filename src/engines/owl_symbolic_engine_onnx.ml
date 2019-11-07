@@ -9,6 +9,9 @@ module S = Owl_symbolic_symbol
 
 type t = Onnx_types.graph_proto
 
+let make_onnx_attr () = 
+  PT.default_attribute_proto ()
+
 let make_onnx_node op_type input_names output_names name attr =
   PT.default_node_proto 
     ~input:input_names ~output:output_names ~name
@@ -19,9 +22,6 @@ let make_onnx_graph (nodes : PT.node_proto array) (_output_names : string) =
   PT.default_graph_proto ~node:nodes ()
 
 
-let make_onnx_attr () = 
-  PT.default_attribute_proto ()
-    
 
 (** Core function. Converts symbolic nodes to onnx nodes. *)
 let sym_nodes_to_onnx (sym_nodes : G.symbolic_node array) =

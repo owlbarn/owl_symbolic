@@ -41,8 +41,8 @@ let length (g : symbolic_graph) = g.sym_nodes |> Owl_graph.length
 
 (** Targeted operations on the graph *)
 
-(** Pretty print a symbolic tree (not graph) to terminal *)
-let print _g = ()
+(** Print a symbolic tree (not graph) to terminal *)
+let to_dot _g = ()
 
 (** Derivative of symbolic tree *)
 let derive _g = ()

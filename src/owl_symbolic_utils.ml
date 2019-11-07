@@ -11,7 +11,3 @@ let generate_suffix () =
 
 
 let nelem shp = Array.fold_left ( * ) 1 shp
-
-(** TODO *)
-
-let to_dot () = ()
