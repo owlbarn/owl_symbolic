@@ -17,9 +17,31 @@ let make_onnx_node op_type input_names output_names name attr =
     ~input:input_names ~output:output_names ~name
      ~op_type ~attribute:attr ()
 
-let make_onnx_graph (nodes : PT.node_proto array) (_output_names : string) =
-  let nodes = Array.to_list nodes in
-  PT.default_graph_proto ~node:nodes ()
+let make_onnx_graph ?(name="owl_sym_graph") 
+  (nodes : Onnx_types.node_proto array) 
+  (initializer_ : Onnx_types.tensor_proto array)
+  (inputs  : Onnx_types.value_info_proto array) 
+  (outputs : Onnx_types.value_info_proto array)
+  =
+  let node = Array.to_list nodes in
+  let input = Array.to_list inputs in 
+  let output = Array.to_list outputs in 
+  let initializer_ = Array.to_list initializer_ in 
+  let doc_string = "" in
+  let sparse_initializer = [] in
+  let value_info = [] in 
+  let quantization_annotation = [] in
+  PT.default_graph_proto
+    ~name
+    ~node
+    ~initializer_
+    ~input
+    ~output 
+    ~doc_string 
+    ~sparse_initializer
+    ~value_info
+    ~quantization_annotation 
+    ()
 
 
 let make_onnx_model graph =
@@ -38,6 +60,7 @@ let make_onnx_model graph =
     ~opset_import ~metadata_props 
     ~graph
     ()
+
 
 (** Core function. Converts symbolic nodes to onnx nodes. *)
 let sym_nodes_to_onnx (sym_nodes : G.symbolic_node array) =
@@ -74,13 +97,22 @@ let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
     (* Step 1: convert symbolic nodes to  *)
     let symnodes = sym_graph.sym_nodes in 
     let nodes = sym_nodes_to_onnx symnodes in 
-    (* The inpput/output names should be specifiled *)
-    let output_names = "" in 
-    (* Steps 2- N: more processing such as rewriting complex nodes *)
-    (* Final Step: make graph *)
-    let graph = make_onnx_graph nodes output_names in 
+    (* Steps 1.x : more processing such as rewriting complex nodes *)
+
+    (* Step 2: inpput/output  *)
+    let inputs = [||] in
+
+
+    let outputs = [||] in
+
+    (* Step 3: initializers *)
+
+    let initializer_ = [||] in
 
     (* Maybe some post-processing steps *)
+
+    (* Final Step: make graph and model *)
+    let graph = make_onnx_graph nodes initializer_ inputs outputs in 
     make_onnx_model graph
 
 
