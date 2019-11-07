@@ -22,6 +22,22 @@ let make_onnx_graph (nodes : PT.node_proto array) (_output_names : string) =
   PT.default_graph_proto ~node:nodes ()
 
 
+let make_onnx_model graph =
+  let ir_version = Int64.of_int 1 in 
+  let producer_name = "owl" in
+  let producer_version = "0.6.0" in 
+  let domain = "xyz.ocaml" in 
+  let model_version = Int64.of_int 0 in 
+  let doc_string = "" in 
+  let graph = Some graph in
+  let opset_import = [] in 
+  let metadata_props = [] in 
+  PT.default_model_proto ~ir_version 
+    ~producer_name ~producer_version 
+    ~domain ~model_version ~doc_string
+    ~opset_import ~metadata_props 
+    ~graph
+    ()
 
 (** Core function. Converts symbolic nodes to onnx nodes. *)
 let sym_nodes_to_onnx (sym_nodes : G.symbolic_node array) =
@@ -62,16 +78,18 @@ let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
     let output_names = "" in 
     (* Steps 2- N: more processing such as rewriting complex nodes *)
     (* Final Step: make graph *)
-    make_onnx_graph nodes output_names
+    let graph = make_onnx_graph nodes output_names in 
+
     (* Maybe some post-processing steps *)
+    make_onnx_model graph
 
 
 let to_symbolic (_onnx_graph : t) = G.null_graph
 
 
-let serialise (onnx_graph : t) filename =
+let serialise (onnx_model : Onnx_types.model_proto) filename =
   let encoder = Pbrt.Encoder.create () in
-  PB.encode_graph_proto onnx_graph encoder;
+  PB.encode_model_proto onnx_model encoder;
   let oc = open_out filename in
   output_bytes oc (Pbrt.Encoder.to_bytes encoder);
   close_out oc
