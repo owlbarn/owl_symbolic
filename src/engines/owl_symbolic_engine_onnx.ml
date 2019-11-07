@@ -3,108 +3,71 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-(*open Owl_symbolic_types *)
 open Owl_symbolic_specs
 module G = Owl_symbolic_graph
 module S = Owl_symbolic_symbol
 
 type t = Onnx_types.graph_proto
 
-(** Routines for building const tensor proto *)
+let make_onnx_node op_type input_names output_names name attr =
+  PT.default_node_proto 
+    ~input:input_names ~output:output_names ~name
+     ~op_type ~attribute:attr ()
 
-let make_tensorproto_one sym =
-  let name = S.name sym in
-  PT.default_tensor_proto ~name ~int32_data:[ Int32.one ] ()
-
-
-let make_tensorproto_ones sym =
-  let name = S.name sym in
-  let shp = S.shape sym in
-  let dims = Array.map Int64.of_int shp |> Array.to_list in
-  let int32_data =
-    Array.make (Owl_symbolic_utils.nelem shp) Int32.one |> Array.to_list
-  in
-  PT.default_tensor_proto ~name ~dims ~int32_data ()
+let make_onnx_graph (nodes : PT.node_proto array) (_output_names : string) =
+  let nodes = Array.to_list nodes in
+  PT.default_graph_proto ~node:nodes ()
 
 
-let make_tensorproto_float sym =
-  let name = S.name sym in
-  let float_data = [ S.value sym ] in
-  PT.default_tensor_proto ~name ~float_data ()
+let make_onnx_attr () = 
+  PT.default_attribute_proto ()
+    
+
+(** Core function. Converts symbolic nodes to onnx nodes. *)
+let sym_nodes_to_onnx (sym_nodes : G.symbolic_node array) =
+
+  let nodes = Array.make (Array.length sym_nodes) (PT.default_node_proto ()) in
+
+  (* Assume a one-to-one projection; might be changed later *)
+  Array.iteri (fun i sym_node -> 
+    let sym = Owl_graph.attr sym_node in
+    let sym_attrs = [|""|] in (* S.get_attrs sym in *)
+    let onnx_attrs = ref [] in 
+    Array.iter (fun _a -> 
+    (* match symbolic attribute and make onnx attribute;
+     * target attr: dtype, T, shape, value *)
+      let a = make_onnx_attr () in 
+      onnx_attrs := List.append !onnx_attrs [a]
+    ) sym_attrs;
+    let onnx_attrs = !onnx_attrs in
+
+    let name = S.name sym in 
+    let op_type = S.op_type sym in
+    let input_names = S.input sym in 
+    let output_names = S.output sym in (* output should be node names *)
+
+    let n = make_onnx_node op_type input_names 
+      output_names name onnx_attrs in 
+    nodes.(i) <- n
+  ) sym_nodes;
+  nodes 
 
 
-(** Main entry *)
-
-let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
-  let len = G.length sym_graph in
-  let default_node = PT.default_node_proto () in
-  let node = Array.make len default_node in
-  let initialiser = ref [] in
-  let input = ref [] in
-  let output = ref [] in
-  let i = ref 0 in
-  G.iter
-    (fun n ->
-      (* build nodeprotos *)
-      let sym = Owl_graph.attr n in
-      let name = S.name sym in
-      let ninput = S.input sym in
-      let noutput = S.output sym in
-      let op_type = S.op_type sym in
-      (* build node attributes *)
-      let attr_name = name ^ "_attr" in
-      let attr =
-        match sym with
-        | Float _  ->
-          let _v = S.value sym in
-          PT.default_attribute_proto ~name:attr_name ~type_:PT.Float ~f:1.0 ()
-        | Int _    ->
-          PT.default_attribute_proto ~name:attr_name ~type_:PT.Int ~i:(Int64.of_int 1) ()
-        | Tensor _ ->
-          let t = PT.default_tensor_proto () in
-          PT.default_attribute_proto ~name:attr_name ~type_:PT.Tensor ~t:(Some t) ()
-        | _        -> PT.default_attribute_proto ~name:attr_name ()
-      in
-      let nproto =
-        PT.default_node_proto
-          ~name
-          ~input:ninput
-          ~output:noutput
-          ~op_type
-          ~attribute:[ attr ]
-          ()
-      in
-      node.(!i) <- nproto;
-      i := !i + 1;
-      (* build constant inputs : TensorProto *)
-      let constant =
-        match sym with
-        | Float _ -> [ make_tensorproto_float sym ]
-        | _       -> []
-      in
-      initialiser := List.append !initialiser constant;
-      (* inputs and outputs : ValueInforProto *)
-      let input_valinfo =
-        match sym with
-        | Symbol _ -> [ PT.default_value_info_proto ~name () ]
-        | _        -> []
-      in
-      input := List.append !input input_valinfo;
-      (* TOOD: find the correct output *)
-      output := [ PT.default_value_info_proto ~name:"" () ])
-    sym_graph;
-  (* result *)
-  let node = Array.to_list node in
-  let initialiser = !initialiser in
-  let input = !input in
-  let output = !output in
-  let default_graph =
-    PT.default_graph_proto ~node ~initializer_:initialiser ~input ~output ()
-  in
-  default_graph
+(** Main entry of conversion *)
+let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) = 
+    (* Step 1: convert symbolic nodes to  *)
+    let symnodes = sym_graph.sym_nodes in 
+    let nodes = sym_nodes_to_onnx symnodes in 
+    (* The inpput/output names should be specifiled *)
+    let output_names = "" in 
+    (* Steps 2- N: more processing such as rewriting complex nodes *)
+    (* Final Step: make graph *)
+    make_onnx_graph nodes output_names
+    (* Maybe some post-processing steps *)
 
 
 let to_symbolic (_onnx_graph : t) = G.null_graph
+
 
 let serialise (onnx_graph : t) filename =
   let encoder = Pbrt.Encoder.create () in
