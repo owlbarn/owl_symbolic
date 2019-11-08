@@ -6,8 +6,68 @@
 open Owl_symbolic_specs
 module G = Owl_symbolic_graph
 module S = Owl_symbolic_symbol
+module T = Owl_symbolic_types
 
 type t = Onnx_types.graph_proto
+
+let data_type_map =   
+  let dict = Hashtbl.create 20 in
+  Hashtbl.add dict (T.SDT_Float) 1;
+  Hashtbl.add dict (T.SDT_Uint8) 2;
+  Hashtbl.add dict (T.SDT_Int8)  3;
+  Hashtbl.add dict (T.SDT_Uint16) 4;
+  Hashtbl.add dict (T.SDT_Int16) 5;
+  Hashtbl.add dict (T.SDT_Int32) 6;
+  Hashtbl.add dict (T.SDT_Int64) 7;
+  Hashtbl.add dict (T.SDT_String) 8;
+  Hashtbl.add dict (T.SDT_Bool) 9;
+  Hashtbl.add dict (T.SDT_Float16) 10;
+  Hashtbl.add dict (T.SDT_Double) 11;
+  Hashtbl.add dict (T.SDT_Uint32) 12;
+  Hashtbl.add dict (T.SDT_Uint64) 13;
+  Hashtbl.add dict (T.SDT_Complex32) 14;
+  Hashtbl.add dict (T.SDT_Complex64) 15;  
+  dict
+
+
+let map_data_type_to_int32 typ = 
+  try
+    Hashtbl.find data_type_map typ |> Int32.of_int 
+  with Not_found -> 
+    Int32.of_int 0 (* DataType:  UNDEFINED = 0 *)
+
+
+(* TODO: this still does not include all possible cases *)
+let make_onnx_io name elem_type shape =
+  let dim = Array.map (fun d ->
+      let value = PT.Dim_value (Int64.of_int d) in 
+      PT.default_tensor_shape_proto_dimension ~value ()
+    ) shape |> Array.to_list
+  in
+  let shape = if (Array.length shape = 0) then None else 
+    let shape = PT.default_tensor_shape_proto ~dim () in  
+    Some shape 
+  in 
+  let type_proto_tensor = PT.default_type_proto_tensor ~shape ~elem_type () in 
+  let value = PT.Tensor_type type_proto_tensor in 
+  let type_ = Some (PT.default_type_proto ~value ()) in 
+  PT.default_value_info_proto ~name ~type_ ()
+
+
+let make_onnx_initializers_raw name data_type shape raw_data = 
+  let dims = Array.map Int64.of_int shape |> Array.to_list in 
+  let segment = None in
+  let doc_string = "" in
+  PT.default_tensor_proto ~dims ~data_type 
+    ~segment ~name ~doc_string
+    ~raw_data 
+    ()
+
+let make_onnx_initializers_float _name _data_type _shape _float_data = ()
+
+
+let make_onnx_initializers_int32 _name _data_type _shape _int32_data = ()
+
 
 let make_onnx_attr () = 
   PT.default_attribute_proto ()
@@ -100,14 +160,36 @@ let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
     (* Steps 1.x : more processing such as rewriting complex nodes *)
 
     (* Step 2: inpput/output  *)
-    let inputs = [||] in
+    
+    (* required information: shape, element_type, node_name. *)
+    let inputs = Array.map (fun _sym_node ->
+      let nodename = "" in
+      let elem_type = Int32.of_int 1 in
+      let shape = [||] in
+      make_onnx_io nodename elem_type shape 
+    ) (G.get_input_nodes sym_graph)
+    in
 
 
-    let outputs = [||] in
+    let outputs = Array.map (fun _sym_node ->
+      let nodename = "" in
+      let elem_type = Int32.of_int 1 in
+      let shape = [||] in
+      make_onnx_io nodename elem_type shape
+    ) (G.get_output_nodes sym_graph)
+    in
 
-    (* Step 3: initializers *)
+    (* Step 3: initializers, corresponding to each input *)
 
-    let initializer_ = [||] in
+    let initializer_ = Array.map (fun _sym_node ->
+      let nodename = "" in
+      let elem_type = Int32.of_int 1 in
+      let shape = [||] in
+      (* TODO: dummy data *)
+      let raw_data = Bytes.of_string "" in 
+      make_onnx_initializers_raw nodename elem_type shape raw_data
+    ) (G.get_input_nodes sym_graph)
+    in
 
     (* Maybe some post-processing steps *)
 

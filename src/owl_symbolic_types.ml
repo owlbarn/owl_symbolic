@@ -19,6 +19,23 @@ type tensor = {
   tensor_content : bytes option;
 }
 
+type sym_data_type = 
+  | SDT_Float 
+  | SDT_Double
+  | SDT_Complex32
+  | SDT_Complex64
+  | SDT_Bool
+  | SDT_String
+  | SDT_Int8
+  | SDT_Int16
+  | SDT_Int32
+  | SDT_Int64
+  | SDT_Uint8
+  | SDT_Uint16
+  | SDT_Uint32 
+  | SDT_Uint64
+  | SDT_Float16
+
 type attrvalue =
   | ATTR_Nil
   | ATTR_Int      of int
