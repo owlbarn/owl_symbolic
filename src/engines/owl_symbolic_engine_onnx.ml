@@ -10,29 +10,26 @@ module T = Owl_symbolic_types
 
 type t = Onnx_types.graph_proto
 
-let data_type_map =
-  let dict = Hashtbl.create 20 in
-  Hashtbl.add dict T.SDT_Float 1;
-  Hashtbl.add dict T.SDT_Uint8 2;
-  Hashtbl.add dict T.SDT_Int8 3;
-  Hashtbl.add dict T.SDT_Uint16 4;
-  Hashtbl.add dict T.SDT_Int16 5;
-  Hashtbl.add dict T.SDT_Int32 6;
-  Hashtbl.add dict T.SDT_Int64 7;
-  Hashtbl.add dict T.SDT_String 8;
-  Hashtbl.add dict T.SDT_Bool 9;
-  Hashtbl.add dict T.SDT_Float16 10;
-  Hashtbl.add dict T.SDT_Double 11;
-  Hashtbl.add dict T.SDT_Uint32 12;
-  Hashtbl.add dict T.SDT_Uint64 13;
-  Hashtbl.add dict T.SDT_Complex32 14;
-  Hashtbl.add dict T.SDT_Complex64 15;
-  dict
-
-
 let map_data_type_to_int32 typ =
-  try Hashtbl.find data_type_map typ |> Int32.of_int with
-  | Not_found -> Int32.of_int 0
+  let n = 
+    match typ with 
+    | T.SDT_Float -> 1
+    | T.SDT_Uint8 -> 2
+    | T.SDT_Int8 -> 3
+    | T.SDT_Uint16 -> 4
+    | T.SDT_Int16 -> 5
+    | T.SDT_Int32 -> 6
+    | T.SDT_Int64 -> 7
+    | T.SDT_String -> 8
+    | T.SDT_Bool -> 9
+    | T.SDT_Float16 -> 10
+    | T.SDT_Double -> 11
+    | T.SDT_Uint32 -> 12
+    | T.SDT_Uint64 -> 13
+    | T.SDT_Complex32 -> 14
+    | T.SDT_Complex64 -> 15
+  in
+  Int32.of_int n
 
 
 (* DataType:  UNDEFINED = 0 *)
