@@ -54,7 +54,7 @@ let get_attrvalue_int v =
 let get_attrvalue_float v =
   match v with
   | ATTR_Float f -> f
-  | _            -> failwith "get_attrvalue_int: incorrect attr type"
+  | _            -> failwith "get_attrvalue_float: incorrect attr type"
 
 
 let get_attrvalue_shape v =
