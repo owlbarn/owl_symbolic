@@ -69,8 +69,25 @@ let make_onnx_initializers_float _name _data_type _shape _float_data = ()
 let make_onnx_initializers_int32 _name _data_type _shape _int32_data = ()
 
 
-let make_onnx_attr _sym_attr =
-  PT.default_attribute_proto ()
+let make_onnx_attr (sym_attr : string * T.attrvalue) =
+  (* target attr: dtype, T, shape, value *)
+  let attr_name, attr_value = sym_attr in 
+  
+  match attr_name with
+  | "shape" ->
+    let name = "kernel_shape" in 
+    let type_= PT.Ints in 
+    let shape = T.get_attrvalue_shape attr_value 
+      |> Array.map Int64.of_int
+      |> Array.to_list 
+    in 
+    PT.default_attribute_proto ~name ~type_ ~ints:shape ()
+  | "axis" -> 
+    let name = "axis" in 
+    let type_ = PT.Int in 
+    let value = T.get_attrvalue_int attr_value  |> Int64.of_int in 
+    PT.default_attribute_proto ~name ~type_ ~i:value ()
+  | _ -> failwith ("make_onnx_attr: unsupported attr type: " ^ attr_name)
 
 let make_onnx_node op_type input_names output_names name attr =
   PT.default_node_proto 
@@ -130,11 +147,10 @@ let sym_nodes_to_onnx (sym_nodes : G.symbolic_node array) =
     let sym = Owl_graph.attr sym_node in
     let sym_attrs = S.sym_attrs sym in
     let onnx_attrs = ref [] in 
-    Array.iter (fun a -> 
-    (* match symbolic attribute and make onnx attribute;
-     * target attr: dtype, T, shape, value *)
-      let a = make_onnx_attr a in 
-      onnx_attrs := List.append !onnx_attrs [a]
+    Array.iter (fun sym_attr_pair -> 
+    (* match symbolic attribute and make onnx attribute *)
+      let onnx_attr = make_onnx_attr sym_attr_pair in 
+      onnx_attrs := List.append !onnx_attrs [ onnx_attr ]
     ) sym_attrs;
     let onnx_attrs = !onnx_attrs in
 

@@ -10,7 +10,7 @@ module Add = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
-    ; mutable attrs : attrvalue array
+    ; mutable attrs : (string * attrvalue) array
     }
 
   let op_type = "Add"
@@ -24,7 +24,7 @@ module Sub = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
-    ; mutable attrs : attrvalue array
+    ; mutable attrs : (string * attrvalue) array
     }
 
   let op_type = "Sub"
@@ -36,7 +36,7 @@ module Mul = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
-    ; mutable attrs : attrvalue array
+    ; mutable attrs : (string * attrvalue) array
     }
 
   let op_type = "Mul"
@@ -48,7 +48,7 @@ module Div = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
-    ; mutable attrs : attrvalue array
+    ; mutable attrs : (string * attrvalue) array
     }
 
   let op_type = "Div"
@@ -60,7 +60,7 @@ module Sin = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
-    ; mutable attrs : attrvalue array
+    ; mutable attrs : (string * attrvalue) array
     }
 
   let op_type = "Sin"
@@ -72,7 +72,7 @@ module Cos = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
-    ; mutable attrs : attrvalue array
+    ; mutable attrs : (string * attrvalue) array
     }
 
   let op_type = "Cos"
@@ -84,7 +84,7 @@ module Exp = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
-    ; mutable attrs : attrvalue array
+    ; mutable attrs : (string * attrvalue) array
     }
 
   let op_type = "Exp"
@@ -96,7 +96,7 @@ module Pow = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
-    ; mutable attrs : attrvalue array
+    ; mutable attrs : (string * attrvalue) array
     }
 
   let op_type = "Pow"
@@ -108,7 +108,7 @@ module ExpConst = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
-    ; mutable attrs : attrvalue array
+    ; mutable attrs : (string * attrvalue) array
     }
 
   let op_type = "ExpConst"
@@ -120,7 +120,7 @@ module Float = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
-    ; mutable attrs : attrvalue array
+    ; mutable attrs : (string * attrvalue) array
     ; mutable value : float
     }
 
@@ -133,7 +133,7 @@ module Tensor = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
-    ; mutable attrs : attrvalue array
+    ; mutable attrs : (string * attrvalue) array
     ; mutable typ : sym_data_type
     ; mutable shape : int array
     ; mutable id : string (* Not name, but like "x" or "y" *)
@@ -150,7 +150,7 @@ module Placeholder = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
-    ; mutable attrs : attrvalue array
+    ; mutable attrs : (string * attrvalue) array
     ; mutable typ : sym_data_type
     ; mutable shape : int array
     ; mutable id : string (* Not name, but like "x" or "y" *)
@@ -165,7 +165,7 @@ module Int = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
-    ; mutable attrs : attrvalue array
+    ; mutable attrs : (string * attrvalue) array
     ; mutable value : int
     }
 
@@ -178,7 +178,7 @@ module Complex = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
-    ; mutable attrs : attrvalue array
+    ; mutable attrs : (string * attrvalue) array
     ; mutable real : float
     ; mutable img : float
     }

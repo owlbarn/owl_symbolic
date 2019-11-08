@@ -42,4 +42,25 @@ type attrvalue =
   | ATTR_List     of attrvalue array
   | ATTR_Namelist of {name : string; attr: (string * attrvalue) array}
 
+let get_attrvalue_int v = 
+  match v with 
+  | ATTR_Int i -> i 
+  | _            -> 
+    failwith "get_attrvalue_int: incorrect attr type"
+
+let get_attrvalue_float v = 
+  match v with 
+  | ATTR_Float f -> f 
+  | _            -> 
+    failwith "get_attrvalue_int: incorrect attr type"
+
+let get_attrvalue_shape v = 
+  match v with 
+  | ATTR_Shape s -> s 
+  | _            -> 
+    failwith "get_attrvalue_shape: incorrect attr type"
+
+
+
+
 (** flt, int, ... ? *)
