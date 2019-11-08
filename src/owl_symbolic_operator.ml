@@ -5,6 +5,7 @@
 
 open Owl_symbolic_utils
 open Owl_symbolic_graph
+open Owl_symbolic_types
 
 (** Signatures: node -> node ... -> node *)
 
@@ -94,7 +95,7 @@ let expconst ?name () =
   make_node sym [||]
 
 
-let symbol ?name id =
+let placeholder ?(shape=[||]) ?(typ=SDT_Float) ?name id =
   let suffix = generate_suffix () in
   let name =
     match name with
@@ -105,8 +106,8 @@ let symbol ?name id =
   let input = [] in
   let output = [ o_name ] in
   let attrs  = [||] in
-  let o = Owl_symbolic_ops_math.Symbol.create name input output attrs id in
-  let sym = Owl_symbolic_symbol.Symbol o in
+  let o = Owl_symbolic_ops_math.Placeholder.create name input output attrs typ shape id in
+  let sym = Owl_symbolic_symbol.Placeholder o in
   make_node sym [||]
 
 

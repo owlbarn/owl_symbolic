@@ -69,7 +69,7 @@ let make_onnx_initializers_float _name _data_type _shape _float_data = ()
 let make_onnx_initializers_int32 _name _data_type _shape _int32_data = ()
 
 
-let make_onnx_attr () = 
+let make_onnx_attr _sym_attr =
   PT.default_attribute_proto ()
 
 let make_onnx_node op_type input_names output_names name attr =
@@ -124,18 +124,16 @@ let make_onnx_model graph =
 
 (** Core function. Converts symbolic nodes to onnx nodes. *)
 let sym_nodes_to_onnx (sym_nodes : G.symbolic_node array) =
-
   let nodes = Array.make (Array.length sym_nodes) (PT.default_node_proto ()) in
-
   (* Assume a one-to-one projection; might be changed later *)
   Array.iteri (fun i sym_node -> 
     let sym = Owl_graph.attr sym_node in
     let sym_attrs = S.sym_attrs sym in
     let onnx_attrs = ref [] in 
-    Array.iter (fun _a -> 
+    Array.iter (fun a -> 
     (* match symbolic attribute and make onnx attribute;
      * target attr: dtype, T, shape, value *)
-      let a = make_onnx_attr () in 
+      let a = make_onnx_attr a in 
       onnx_attrs := List.append !onnx_attrs [a]
     ) sym_attrs;
     let onnx_attrs = !onnx_attrs in

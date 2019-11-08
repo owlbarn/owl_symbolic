@@ -134,28 +134,30 @@ module Tensor = struct
     ; mutable input : string list
     ; mutable output : string list
     ; mutable attrs : attrvalue array
-    ; mutable typ : tensor_typ
+    ; mutable typ : sym_data_type
     ; mutable shape : int array
     ; mutable id : string (* Not name, but like "x" or "y" *)
     }
 
   let op_type = "Tensor"
 
-  let create ?(shape = [||]) ?(typ = S) name input output attrs id =
+  let create ?(shape = [||]) ?(typ = SDT_Float) name input output attrs id =
     { name; input; output; attrs; typ; shape; id }
 end
 
-module Symbol = struct
+module Placeholder = struct
   type t =
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
     ; mutable attrs : attrvalue array
+    ; mutable typ : sym_data_type
+    ; mutable shape : int array
     ; mutable id : string (* Not name, but like "x" or "y" *)
     }
 
   let op_type = "Symbol"
-  let create name input output attrs id = { name; input; output; attrs; id }
+  let create name input output attrs typ shape id = { name; input; output; attrs; typ; shape; id }
 end
 
 module Int = struct

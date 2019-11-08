@@ -24,7 +24,7 @@ type t =
   | Float of Float.t
   | Tensor of Tensor.t
   | ExpConst of ExpConst.t
-  | Symbol of Symbol.t
+  | Placeholder of Placeholder.t
   | Sin of Sin.t
   | Cos of Cos.t
   | Exp of Exp.t
