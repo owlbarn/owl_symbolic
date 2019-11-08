@@ -39,8 +39,8 @@ type attrvalue =
   | ATTR_Shape of int array
   | ATTR_String of string
   | ATTR_Tensor of tensor
-  | ATTR_List of attrvalue array
-  | ATTR_Namelist of
+  | ATTR_Array of attrvalue array
+  | ATTR_NameArray of
       { name : string
       ; attr : (string * attrvalue) array
       }

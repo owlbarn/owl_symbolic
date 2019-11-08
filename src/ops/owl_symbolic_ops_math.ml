@@ -10,7 +10,7 @@ open Owl_symbolic_types
 module Add = struct
   type t =
     { mutable name : string
-    ; mutable input : string list
+    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     }
 
@@ -23,7 +23,7 @@ end
 module Sub = struct
   type t =
     { mutable name : string
-    ; mutable input : string list
+    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     }
 
@@ -34,7 +34,7 @@ end
 module Mul = struct
   type t =
     { mutable name : string
-    ; mutable input : string list
+    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     }
 
@@ -45,7 +45,7 @@ end
 module Div = struct
   type t =
     { mutable name : string
-    ; mutable input : string list
+    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     }
 
@@ -56,7 +56,7 @@ end
 module Sin = struct
   type t =
     { mutable name : string
-    ; mutable input : string list
+    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     }
 
@@ -67,7 +67,7 @@ end
 module Cos = struct
   type t =
     { mutable name : string
-    ; mutable input : string list
+    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     }
 
@@ -78,7 +78,7 @@ end
 module Exp = struct
   type t =
     { mutable name : string
-    ; mutable input : string list
+    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     }
 
@@ -89,7 +89,7 @@ end
 module Pow = struct
   type t =
     { mutable name : string
-    ; mutable input : string list
+    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     }
 
@@ -100,7 +100,7 @@ end
 module ExpConst = struct
   type t =
     { mutable name : string
-    ; mutable input : string list
+    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     }
 
@@ -111,7 +111,7 @@ end
 module Float = struct
   type t =
     { mutable name : string
-    ; mutable input : string list
+    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     ; mutable value : float
     }
@@ -123,7 +123,7 @@ end
 module Tensor = struct
   type t =
     { mutable name : string
-    ; mutable input : string list
+    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     ; mutable typ : sym_data_type
     ; mutable shape : int array
@@ -138,22 +138,20 @@ end
 module Variable = struct
   type t =
     { mutable name : string
-    ; mutable input : string list
+    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     ; mutable typ : sym_data_type
     ; mutable shape : int array
     }
 
   let op_type = "Variable"
-
-  let create name input attrs typ shape =
-    { name; input; attrs; typ; shape }
+  let create name input attrs typ shape = { name; input; attrs; typ; shape }
 end
 
 module Int = struct
   type t =
     { mutable name : string
-    ; mutable input : string list
+    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     ; mutable value : int
     }
@@ -165,7 +163,7 @@ end
 module Complex = struct
   type t =
     { mutable name : string
-    ; mutable input : string list
+    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     ; mutable real : float
     ; mutable img : float

@@ -30,10 +30,11 @@ let iter f (g : symbolic_graph) =
 
 
 let iter_print (g : symbolic_graph) =
-  iter (fun sym_node ->
-    let a = Owl_graph.attr sym_node in
-    Printf.fprintf stderr "%s\n" (Owl_symbolic_symbol.name a)  
-  ) g 
+  iter
+    (fun sym_node ->
+      let a = Owl_graph.attr sym_node in
+      Printf.fprintf stderr "%s\n" (Owl_symbolic_symbol.name a))
+    g
 
 
 (* !!! notice the target is sym! *)
@@ -41,7 +42,7 @@ let iter_print (g : symbolic_graph) =
 (* or `get_input_syms`? *)
 let get_input_nodes sym_graph =
   (* get all the "symbol" nodes in sym_graph *)
-  let inputs = ref [] in
+  let inputs = ref [||] in
   iter
     (fun sym_node ->
       let sym = Owl_graph.attr sym_node in
@@ -50,9 +51,9 @@ let get_input_nodes sym_graph =
       then
         (* TODO: maybe need a copy of node instead of just node; 
          * it's about performance *)
-        inputs := List.append !inputs [ sym_node ])
+        inputs := Array.append !inputs [| sym_node |])
     sym_graph;
-  !inputs |> Array.of_list
+  !inputs
 
 
 let get_output_nodes sym_graph =
@@ -68,9 +69,10 @@ let name sym_node =
 
 
 let length (g : symbolic_graph) =
-  let cnt = ref 0 in 
+  let cnt = ref 0 in
   iter (fun _ -> cnt := !cnt + 1) g;
   !cnt
+
 
 (** Targeted operations on the graph *)
 

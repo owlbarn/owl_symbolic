@@ -35,45 +35,32 @@ type t =
   | Pow of Pow.t
 
 let name = function
-  | Float x       -> Float.(x.name)
-  | Tensor x      -> Tensor.(x.name)
-  | Add x         -> Add.(x.name)
-  | Sub x         -> Sub.(x.name)
-  | Mul x         -> Mul.(x.name)
-  | Div x         -> Div.(x.name)
-  | Sin x         -> Sin.(x.name)
-  | Cos x         -> Cos.(x.name)
-  | Pow x         -> Pow.(x.name)
+  | Float x    -> Float.(x.name)
+  | Tensor x   -> Tensor.(x.name)
+  | Add x      -> Add.(x.name)
+  | Sub x      -> Sub.(x.name)
+  | Mul x      -> Mul.(x.name)
+  | Div x      -> Div.(x.name)
+  | Sin x      -> Sin.(x.name)
+  | Cos x      -> Cos.(x.name)
+  | Pow x      -> Pow.(x.name)
   | Variable x -> Variable.(x.name)
-  | _             -> failwith "owl_symbolic_symbol.name"
+  | _          -> failwith "owl_symbolic_symbol.name"
 
 
 let input = function
-  | Float x  -> Float.(x.input)
-  | Tensor x -> Tensor.(x.input)
-  | Add x    -> Add.(x.input)
-  | Sub x    -> Sub.(x.input)
-  | Mul x    -> Mul.(x.input)
-  | Div x    -> Div.(x.input)
-  | Sin x    -> Sin.(x.input)
-  | Cos x    -> Cos.(x.input)
-  | Pow x    -> Pow.(x.input)
+  | Float x    -> Float.(x.input)
+  | Tensor x   -> Tensor.(x.input)
+  | Add x      -> Add.(x.input)
+  | Sub x      -> Sub.(x.input)
+  | Mul x      -> Mul.(x.input)
+  | Div x      -> Div.(x.input)
+  | Sin x      -> Sin.(x.input)
+  | Cos x      -> Cos.(x.input)
+  | Pow x      -> Pow.(x.input)
   | Variable x -> Variable.(x.input)
-  | _        -> failwith "owl_symbolic_symbol.input"
+  | _          -> failwith "owl_symbolic_symbol.input"
 
-(*
-let output = function
-  | Float x  -> Float.(x.output)
-  | Tensor x -> Tensor.(x.output)
-  | Add x    -> Add.(x.output)
-  | Sub x    -> Sub.(x.output)
-  | Mul x    -> Mul.(x.output)
-  | Div x    -> Div.(x.output)
-  | Sin x    -> Sin.(x.output)
-  | Cos x    -> Cos.(x.output)
-  | Pow x    -> Pow.(x.output)
-  | _        -> failwith "owl_symbolic_symbol.output"
-*)
 
 let shape = function
   | _ -> failwith "owl_symbolic_symbol.shape"
@@ -85,28 +72,28 @@ let value = function
 
 
 let op_type = function
-  | Float _       -> Float.op_type
-  | Tensor _      -> Tensor.op_type
-  | Add _         -> Add.op_type
-  | Sub _         -> Sub.op_type
-  | Mul _         -> Mul.op_type
-  | Div _         -> Div.op_type
-  | Sin _         -> Sin.op_type
-  | Cos _         -> Cos.op_type
-  | Pow _         -> Pow.op_type
-  | Variable _    -> Variable.op_type
-  | _             -> failwith "owl_symbolic_symbol.op_type"
+  | Float _    -> Float.op_type
+  | Tensor _   -> Tensor.op_type
+  | Add _      -> Add.op_type
+  | Sub _      -> Sub.op_type
+  | Mul _      -> Mul.op_type
+  | Div _      -> Div.op_type
+  | Sin _      -> Sin.op_type
+  | Cos _      -> Cos.op_type
+  | Pow _      -> Pow.op_type
+  | Variable _ -> Variable.op_type
+  | _          -> failwith "owl_symbolic_symbol.op_type"
 
 
 let sym_attrs = function
-  | Float x       -> Float.(x.attrs)
-  | Tensor x      -> Tensor.(x.attrs)
-  | Add x         -> Add.(x.attrs)
-  | Sub x         -> Sub.(x.attrs)
-  | Mul x         -> Mul.(x.attrs)
-  | Div x         -> Div.(x.attrs)
-  | Sin x         -> Sin.(x.attrs)
-  | Cos x         -> Cos.(x.attrs)
-  | Pow x         -> Pow.(x.attrs)
+  | Float x    -> Float.(x.attrs)
+  | Tensor x   -> Tensor.(x.attrs)
+  | Add x      -> Add.(x.attrs)
+  | Sub x      -> Sub.(x.attrs)
+  | Mul x      -> Mul.(x.attrs)
+  | Div x      -> Div.(x.attrs)
+  | Sin x      -> Sin.(x.attrs)
+  | Cos x      -> Cos.(x.attrs)
+  | Pow x      -> Pow.(x.attrs)
   | Variable x -> Variable.(x.attrs)
-  | _             -> failwith "owl_symbolic_symbol.sym_attrs: unsupported symbol."
+  | _          -> failwith "owl_symbolic_symbol.sym_attrs: unsupported symbol."
