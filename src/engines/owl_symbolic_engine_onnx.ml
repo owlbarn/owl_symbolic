@@ -162,6 +162,12 @@ let sym_nodes_to_onnx (sym_nodes : G.symbolic_node array) =
     (fun i sym_node ->
       let sym = Owl_graph.attr sym_node in
       let sym_attrs = S.sym_attrs sym in
+
+      (* Attributes might be later adjusted in specific nodes. 
+       * For example, "kernel_shape" is specific to onnx-conv, while in a symbolic node 
+       * we could only have "shape"; or in a symbolic node we also have "foobar" attr, 
+       * but we don't want that to be translated to onnx attribute.
+       *)
       let onnx_attrs = ref [] in
       Array.iter
         (fun sym_attr_pair ->
@@ -170,6 +176,7 @@ let sym_nodes_to_onnx (sym_nodes : G.symbolic_node array) =
           onnx_attrs := List.append !onnx_attrs [ onnx_attr ])
         sym_attrs;
       let onnx_attrs = !onnx_attrs in
+
       let name = S.name sym in
       let op_type = S.op_type sym in
       let input_names = S.input sym in

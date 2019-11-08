@@ -3,7 +3,7 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-open Owl_symbolic_utils
+open Owl_symbolic_namespace
 open Owl_symbolic_graph
 open Owl_symbolic_types
 
