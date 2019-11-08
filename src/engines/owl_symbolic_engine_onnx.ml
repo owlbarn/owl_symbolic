@@ -108,7 +108,7 @@ let make_onnx_graph
   let input = Array.to_list inputs in
   let output = Array.to_list outputs in
   let initializer_ = Array.to_list initializer_ in
-  let doc_string = "" in
+  let doc_string = "owl symbolic graph" in
   let sparse_initializer = [] in
   let value_info = [] in
   let quantization_annotation = [] in
