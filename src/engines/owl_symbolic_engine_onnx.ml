@@ -185,6 +185,20 @@ let sym_nodes_to_onnx (sym_nodes : G.symbolic_node array) =
   nodes
 
 
+let build_io_from_sym sym_node = 
+  let sym = Owl_graph.attr sym_node in 
+  let nodename = S.name sym in
+  let attrs = S.sym_attrs sym in
+  let elem_type = ref Int32.one  in
+  let shape = ref [||] in 
+  Array.iter (fun (k, v) -> 
+    if k = "dtype" then 
+      elem_type := T.get_attrvalue_type v |> map_data_type_to_int32 ;
+    if k = "shape" then 
+       shape := T.get_attrvalue_shape v
+  ) attrs;
+  make_onnx_io nodename !elem_type !shape
+
 (** Main entry of conversion *)
 let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
   (* Step 1: convert symbolic nodes to  *)
@@ -195,23 +209,10 @@ let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
   (* Step 2: inpput/output  *)
 
   (* required information: shape, element_type, node_name. *)
-  let inputs =
-    Array.map
-      (fun _sym_node ->
-        let nodename = "" in
-        let elem_type = Int32.of_int 1 in
-        let shape = [||] in
-        make_onnx_io nodename elem_type shape)
-      (G.get_input_nodes sym_graph)
-  in
-  let outputs =
-    Array.map
-      (fun _sym_node ->
-        let nodename = "" in
-        let elem_type = Int32.of_int 1 in
-        let shape = [||] in
-        make_onnx_io nodename elem_type shape)
-      (G.get_output_nodes sym_graph)
+  let inputs = Array.map build_io_from_sym 
+    (G.get_input_nodes sym_graph) in
+  let outputs = Array.map build_io_from_sym 
+    (G.get_output_nodes sym_graph)
   in
   (* Step 3: initializers, corresponding to each input *)
   let initializer_ =

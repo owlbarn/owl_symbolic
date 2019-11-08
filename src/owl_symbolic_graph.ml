@@ -31,6 +31,7 @@ let iter f (g : symbolic_graph) =
 
 (* !!! notice the target is sym! *)
 
+(* or `get_input_syms`? *)
 let get_input_nodes sym_graph =
   (* get all the "symbol" nodes in sym_graph *)
   let inputs = ref [] in

@@ -57,6 +57,12 @@ let get_attrvalue_float v =
   | _            -> failwith "get_attrvalue_float: incorrect attr type"
 
 
+let get_attrvalue_type v =
+  match v with
+  | ATTR_Type typ -> typ
+  | _             -> failwith "get_attrvalue_type: incorrect attr type"
+
+
 let get_attrvalue_shape v =
   match v with
   | ATTR_Shape s -> s
