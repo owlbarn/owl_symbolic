@@ -61,7 +61,7 @@ let input = function
   | Variable x -> Variable.(x.input)
   | _        -> failwith "owl_symbolic_symbol.input"
 
-
+(*
 let output = function
   | Float x  -> Float.(x.output)
   | Tensor x -> Tensor.(x.output)
@@ -73,7 +73,7 @@ let output = function
   | Cos x    -> Cos.(x.output)
   | Pow x    -> Pow.(x.output)
   | _        -> failwith "owl_symbolic_symbol.output"
-
+*)
 
 let shape = function
   | _ -> failwith "owl_symbolic_symbol.shape"
