@@ -3,6 +3,8 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
+(* TODO: type restrain must be reflected here *)
+
 open Owl_symbolic_types
 
 module Add = struct
@@ -157,7 +159,9 @@ module Placeholder = struct
     }
 
   let op_type = "Symbol"
-  let create name input output attrs typ shape id = { name; input; output; attrs; typ; shape; id }
+
+  let create name input output attrs typ shape id =
+    { name; input; output; attrs; typ; shape; id }
 end
 
 module Int = struct

@@ -27,15 +27,12 @@ let null_graph = { sym_nodes = [||]; name = "" }
 
 (* !!! notice the target is sym! *)
 
-
-let get_input_nodes _sym_graph = 
+let get_input_nodes _sym_graph =
   (* get all the "symbol" nodes in sym_graph *)
   [||]
 
 
 let get_output_nodes _sym_graph = [||]
-
-
 
 (** The name of node *)
 let name sym_node =

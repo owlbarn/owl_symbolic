@@ -15,7 +15,7 @@
  * (5) Binary Op: +, -, *, /, pow
  *)
 
-open  Owl_symbolic_ops_math
+open Owl_symbolic_ops_math
 
 type t =
   | NOOP
@@ -105,4 +105,4 @@ let sym_attrs = function
   | Sin x    -> Sin.(x.attrs)
   | Cos x    -> Cos.(x.attrs)
   | Pow x    -> Pow.(x.attrs)
-  | _  -> failwith "owl_symbolic_symbol.sym_attrs: unsupported symbol."
+  | _        -> failwith "owl_symbolic_symbol.sym_attrs: unsupported symbol."
