@@ -95,7 +95,7 @@ let expconst ?name () =
   make_node sym [||]
 
 
-let placeholder ?(shape = [||]) ?(typ = SDT_Float) ?name id =
+let variable ?(shape = [||]) ?(typ = SDT_Float) ?name id =
   let suffix = generate_suffix () in
   let name =
     match name with
@@ -107,9 +107,9 @@ let placeholder ?(shape = [||]) ?(typ = SDT_Float) ?name id =
   let output = [ o_name ] in
   let attrs = [||] in
   let o =
-    Owl_symbolic_ops_math.Placeholder.create name input output attrs typ shape id
+    Owl_symbolic_ops_math.Variable.create name input output attrs typ shape id
   in
-  let sym = Owl_symbolic_symbol.Placeholder o in
+  let sym = Owl_symbolic_symbol.Variable o in
   make_node sym [||]
 
 

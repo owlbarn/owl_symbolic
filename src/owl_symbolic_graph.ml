@@ -29,6 +29,13 @@ let iter f (g : symbolic_graph) =
   iter_ancestors ~order:DFS ~traversal:PostOrder f g.sym_nodes
 
 
+let iter_print (g : symbolic_graph) =
+  iter (fun sym_node ->
+    let a = Owl_graph.attr sym_node in
+    Printf.fprintf stderr "%s\n" (Owl_symbolic_symbol.name a)  
+  ) g 
+
+
 (* !!! notice the target is sym! *)
 
 (* or `get_input_syms`? *)
@@ -39,7 +46,7 @@ let get_input_nodes sym_graph =
     (fun sym_node ->
       let sym = Owl_graph.attr sym_node in
       let op_typ = Owl_symbolic_symbol.op_type sym in
-      if op_typ = "Placeholder"
+      if op_typ = "Variable"
       then
         (* TODO: maybe need a copy of node instead of just node; 
          * it's about performance *)
@@ -60,7 +67,10 @@ let name sym_node =
   Owl_symbolic_symbol.name sym
 
 
-let length (g : symbolic_graph) = g.sym_nodes |> Owl_graph.length
+let length (g : symbolic_graph) =
+  let cnt = ref 0 in 
+  iter (fun _ -> cnt := !cnt + 1) g;
+  !cnt
 
 (** Targeted operations on the graph *)
 

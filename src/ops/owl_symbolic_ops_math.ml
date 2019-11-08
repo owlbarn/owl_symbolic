@@ -147,7 +147,7 @@ module Tensor = struct
     { name; input; output; attrs; typ; shape; id }
 end
 
-module Placeholder = struct
+module Variable = struct
   type t =
     { mutable name : string
     ; mutable input : string list
@@ -158,7 +158,7 @@ module Placeholder = struct
     ; mutable id : string (* Not name, but like "x" or "y" *)
     }
 
-  let op_type = "Symbol"
+  let op_type = "Variable"
 
   let create name input output attrs typ shape id =
     { name; input; output; attrs; typ; shape; id }

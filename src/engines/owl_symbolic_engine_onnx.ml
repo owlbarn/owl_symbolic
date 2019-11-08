@@ -149,11 +149,13 @@ let make_onnx_model graph =
 
 
 (** Core function. Converts symbolic nodes to onnx nodes. *)
-let sym_nodes_to_onnx (sym_nodes : G.symbolic_node array) =
-  let nodes = Array.make (Array.length sym_nodes) (PT.default_node_proto ()) in
+let sym_nodes_to_onnx (sym_graph : G.symbolic_graph) =
+  let n = G.length sym_graph in
+  let nodes = Array.make n (PT.default_node_proto ()) in
   (* Assume a one-to-one projection; might be changed later *)
-  Array.iteri
-    (fun i sym_node ->
+  let i = ref 0 in
+  G.iter
+    (fun sym_node ->
       let sym = Owl_graph.attr sym_node in
       let name = S.name sym in
       let input_names = S.input sym in
@@ -180,8 +182,9 @@ let sym_nodes_to_onnx (sym_nodes : G.symbolic_node array) =
         | _       -> typ
       in
       let n = make_onnx_node op_type input_names output_names name onnx_attrs in
-      nodes.(i) <- n)
-    sym_nodes;
+      nodes.(!i) <- n;
+      i := !i + 1)
+    sym_graph;
   nodes
 
 
@@ -202,8 +205,7 @@ let build_io_from_sym sym_node =
 (** Main entry of conversion *)
 let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
   (* Step 1: convert symbolic nodes to  *)
-  let symnodes = sym_graph.sym_nodes in
-  let nodes = sym_nodes_to_onnx symnodes in
+  let nodes = sym_nodes_to_onnx sym_graph in
   (* Steps 1.x : more processing such as rewriting complex nodes *)
 
   (* Step 2: inpput/output  *)

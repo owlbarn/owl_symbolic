@@ -24,7 +24,7 @@ type t =
   | Float of Float.t
   | Tensor of Tensor.t
   | ExpConst of ExpConst.t
-  | Placeholder of Placeholder.t
+  | Variable of Variable.t
   | Sin of Sin.t
   | Cos of Cos.t
   | Exp of Exp.t
@@ -44,7 +44,7 @@ let name = function
   | Sin x         -> Sin.(x.name)
   | Cos x         -> Cos.(x.name)
   | Pow x         -> Pow.(x.name)
-  | Placeholder x -> Placeholder.(x.name)
+  | Variable x -> Variable.(x.name)
   | _             -> failwith "owl_symbolic_symbol.name"
 
 
@@ -58,6 +58,7 @@ let input = function
   | Sin x    -> Sin.(x.input)
   | Cos x    -> Cos.(x.input)
   | Pow x    -> Pow.(x.input)
+  | Variable x -> Variable.(x.input)
   | _        -> failwith "owl_symbolic_symbol.input"
 
 
@@ -93,7 +94,7 @@ let op_type = function
   | Sin _         -> Sin.op_type
   | Cos _         -> Cos.op_type
   | Pow _         -> Pow.op_type
-  | Placeholder _ -> Placeholder.op_type
+  | Variable _    -> Variable.op_type
   | _             -> failwith "owl_symbolic_symbol.op_type"
 
 
@@ -107,5 +108,5 @@ let sym_attrs = function
   | Sin x         -> Sin.(x.attrs)
   | Cos x         -> Cos.(x.attrs)
   | Pow x         -> Pow.(x.attrs)
-  | Placeholder x -> Placeholder.(x.attrs)
+  | Variable x -> Variable.(x.attrs)
   | _             -> failwith "owl_symbolic_symbol.sym_attrs: unsupported symbol."
