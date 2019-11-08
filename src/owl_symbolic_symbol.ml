@@ -35,16 +35,17 @@ type t =
   | Pow of Pow.t
 
 let name = function
-  | Float x  -> Float.(x.name)
-  | Tensor x -> Tensor.(x.name)
-  | Add x    -> Add.(x.name)
-  | Sub x    -> Sub.(x.name)
-  | Mul x    -> Mul.(x.name)
-  | Div x    -> Div.(x.name)
-  | Sin x    -> Sin.(x.name)
-  | Cos x    -> Cos.(x.name)
-  | Pow x    -> Pow.(x.name)
-  | _        -> failwith "owl_symbolic_symbol.name"
+  | Float x       -> Float.(x.name)
+  | Tensor x      -> Tensor.(x.name)
+  | Add x         -> Add.(x.name)
+  | Sub x         -> Sub.(x.name)
+  | Mul x         -> Mul.(x.name)
+  | Div x         -> Div.(x.name)
+  | Sin x         -> Sin.(x.name)
+  | Cos x         -> Cos.(x.name)
+  | Pow x         -> Pow.(x.name)
+  | Placeholder x -> Placeholder.(x.name)
+  | _             -> failwith "owl_symbolic_symbol.name"
 
 
 let input = function
@@ -83,26 +84,28 @@ let value = function
 
 
 let op_type = function
-  | Float _  -> Float.op_type
-  | Tensor _ -> Tensor.op_type
-  | Add _    -> Add.op_type
-  | Sub _    -> Sub.op_type
-  | Mul _    -> Mul.op_type
-  | Div _    -> Div.op_type
-  | Sin _    -> Sin.op_type
-  | Cos _    -> Cos.op_type
-  | Pow _    -> Pow.op_type
-  | _        -> failwith "owl_symbolic_symbol.op_type"
+  | Float _       -> Float.op_type
+  | Tensor _      -> Tensor.op_type
+  | Add _         -> Add.op_type
+  | Sub _         -> Sub.op_type
+  | Mul _         -> Mul.op_type
+  | Div _         -> Div.op_type
+  | Sin _         -> Sin.op_type
+  | Cos _         -> Cos.op_type
+  | Pow _         -> Pow.op_type
+  | Placeholder _ -> Placeholder.op_type
+  | _             -> failwith "owl_symbolic_symbol.op_type"
 
 
 let sym_attrs = function
-  | Float x  -> Float.(x.attrs)
-  | Tensor x -> Tensor.(x.attrs)
-  | Add x    -> Add.(x.attrs)
-  | Sub x    -> Sub.(x.attrs)
-  | Mul x    -> Mul.(x.attrs)
-  | Div x    -> Div.(x.attrs)
-  | Sin x    -> Sin.(x.attrs)
-  | Cos x    -> Cos.(x.attrs)
-  | Pow x    -> Pow.(x.attrs)
-  | _        -> failwith "owl_symbolic_symbol.sym_attrs: unsupported symbol."
+  | Float x       -> Float.(x.attrs)
+  | Tensor x      -> Tensor.(x.attrs)
+  | Add x         -> Add.(x.attrs)
+  | Sub x         -> Sub.(x.attrs)
+  | Mul x         -> Mul.(x.attrs)
+  | Div x         -> Div.(x.attrs)
+  | Sin x         -> Sin.(x.attrs)
+  | Cos x         -> Cos.(x.attrs)
+  | Pow x         -> Pow.(x.attrs)
+  | Placeholder x -> Placeholder.(x.attrs)
+  | _             -> failwith "owl_symbolic_symbol.sym_attrs: unsupported symbol."

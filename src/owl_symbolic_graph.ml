@@ -25,23 +25,38 @@ let make_node (sym : Owl_symbolic_symbol.t) (parents : symbolic_node array) =
 let make_graph nodes name = { sym_nodes = nodes; name }
 let null_graph = { sym_nodes = [||]; name = "" }
 
+let iter f (g : symbolic_graph) =
+  iter_ancestors ~order:DFS ~traversal:PostOrder f g.sym_nodes
+
+
 (* !!! notice the target is sym! *)
 
-let get_input_nodes _sym_graph =
+let get_input_nodes sym_graph =
   (* get all the "symbol" nodes in sym_graph *)
-  [||]
+  let inputs = ref [] in
+  iter
+    (fun sym_node ->
+      let sym = Owl_graph.attr sym_node in
+      let op_typ = Owl_symbolic_symbol.op_type sym in
+      if op_typ = "Placeholder"
+      then
+        (* TODO: maybe need a copy of node instead of just node; 
+         * it's about performance *)
+        inputs := List.append !inputs [ sym_node ])
+    sym_graph;
+  !inputs |> Array.of_list
 
 
-let get_output_nodes _sym_graph = [||]
+let get_output_nodes sym_graph =
+  (* Assume only one output node in graph; note performance issue *)
+  let root_node = sym_graph.sym_nodes.(0) in
+  [| root_node |]
+
 
 (** The name of node *)
 let name sym_node =
   let sym = Owl_graph.attr sym_node in
   Owl_symbolic_symbol.name sym
-
-
-let iter f (g : symbolic_graph) =
-  iter_ancestors ~order:DFS ~traversal:PostOrder f g.sym_nodes
 
 
 let length (g : symbolic_graph) = g.sym_nodes |> Owl_graph.length

@@ -11,25 +11,22 @@ module T = Owl_symbolic_types
 type t = Onnx_types.graph_proto
 
 let map_data_type_to_int32 typ =
-  let n = 
-    match typ with 
-    | T.SDT_Float -> 1
-    | T.SDT_Uint8 -> 2
-    | T.SDT_Int8 -> 3
-    | T.SDT_Uint16 -> 4
-    | T.SDT_Int16 -> 5
-    | T.SDT_Int32 -> 6
-    | T.SDT_Int64 -> 7
-    | T.SDT_String -> 8
-    | T.SDT_Bool -> 9
-    | T.SDT_Float16 -> 10
-    | T.SDT_Double -> 11
-    | T.SDT_Uint32 -> 12
-    | T.SDT_Uint64 -> 13
-    | T.SDT_Complex32 -> 14
-    | T.SDT_Complex64 -> 15
-  in
-  Int32.of_int n
+  match typ with
+  | T.SDT_Float     -> Int32.of_int 1
+  | T.SDT_Uint8     -> Int32.of_int 2
+  | T.SDT_Int8      -> Int32.of_int 3
+  | T.SDT_Uint16    -> Int32.of_int 4
+  | T.SDT_Int16     -> Int32.of_int 5
+  | T.SDT_Int32     -> Int32.of_int 6
+  | T.SDT_Int64     -> Int32.of_int 7
+  | T.SDT_String    -> Int32.of_int 8
+  | T.SDT_Bool      -> Int32.of_int 9
+  | T.SDT_Float16   -> Int32.of_int 10
+  | T.SDT_Double    -> Int32.of_int 11
+  | T.SDT_Uint32    -> Int32.of_int 12
+  | T.SDT_Uint64    -> Int32.of_int 13
+  | T.SDT_Complex32 -> Int32.of_int 14
+  | T.SDT_Complex64 -> Int32.of_int 15
 
 
 (* DataType:  UNDEFINED = 0 *)
@@ -158,13 +155,15 @@ let sym_nodes_to_onnx (sym_nodes : G.symbolic_node array) =
   Array.iteri
     (fun i sym_node ->
       let sym = Owl_graph.attr sym_node in
-      let sym_attrs = S.sym_attrs sym in
-
+      let name = S.name sym in
+      let input_names = S.input sym in
+      let output_names = [ name ] in
       (* Attributes might be later adjusted in specific nodes. 
        * For example, "kernel_shape" is specific to onnx-conv, while in a symbolic node 
        * we could only have "shape"; or in a symbolic node we also have "foobar" attr, 
        * but we don't want that to be translated to onnx attribute.
        *)
+      let sym_attrs = S.sym_attrs sym in
       let onnx_attrs = ref [] in
       Array.iter
         (fun sym_attr_pair ->
@@ -173,11 +172,13 @@ let sym_nodes_to_onnx (sym_nodes : G.symbolic_node array) =
           onnx_attrs := List.append !onnx_attrs [ onnx_attr ])
         sym_attrs;
       let onnx_attrs = !onnx_attrs in
-
-      let name = S.name sym in
-      let op_type = S.op_type sym in
-      let input_names = S.input sym in
-      let output_names = [ name ] in
+      let typ = S.op_type sym in
+      let op_type =
+        match sym with
+        | Float _ -> "Constant"
+        | Int _   -> "Constant"
+        | _       -> typ
+      in
       let n = make_onnx_node op_type input_names output_names name onnx_attrs in
       nodes.(i) <- n)
     sym_nodes;
