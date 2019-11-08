@@ -3,4 +3,4 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-let nelem shp = Array.fold_left ( * ) 1 shp
+let nelt shp = Array.fold_left ( * ) 1 shp

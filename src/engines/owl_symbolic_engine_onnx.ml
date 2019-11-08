@@ -32,7 +32,7 @@ let map_data_type_to_int32 typ =
 (* DataType:  UNDEFINED = 0 *)
 
 (* TODO: this still does not include all possible cases *)
-let make_onnx_io name elem_type shape =
+let make_onnx_io name elt_type shape =
   let dim =
     Array.map
       (fun d ->
@@ -48,7 +48,7 @@ let make_onnx_io name elem_type shape =
       let shape = PT.default_tensor_shape_proto ~dim () in
       Some shape)
   in
-  let type_proto_tensor = PT.default_type_proto_tensor ~shape ~elem_type () in
+  let type_proto_tensor = PT.default_type_proto_tensor ~shape ~elem_type:elt_type () in
   let value = PT.Tensor_type type_proto_tensor in
   let type_ = Some (PT.default_type_proto ~value ()) in
   PT.default_value_info_proto ~name ~type_ ()
@@ -189,15 +189,15 @@ let build_io_from_sym sym_node =
   let sym = Owl_graph.attr sym_node in 
   let nodename = S.name sym in
   let attrs = S.sym_attrs sym in
-  let elem_type = ref Int32.one  in
+  let elt_type = ref Int32.one  in
   let shape = ref [||] in 
   Array.iter (fun (k, v) -> 
     if k = "dtype" then 
-      elem_type := T.get_attrvalue_type v |> map_data_type_to_int32 ;
+      elt_type := T.get_attrvalue_type v |> map_data_type_to_int32 ;
     if k = "shape" then 
        shape := T.get_attrvalue_shape v
   ) attrs;
-  make_onnx_io nodename !elem_type !shape
+  make_onnx_io nodename !elt_type !shape
 
 (** Main entry of conversion *)
 let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
@@ -219,11 +219,11 @@ let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
     Array.map
       (fun _sym_node ->
         let nodename = "" in
-        let elem_type = Int32.of_int 1 in
+        let elt_type = Int32.of_int 1 in
         let shape = [||] in
         (* TODO: dummy data *)
         let raw_data = Bytes.of_string "" in
-        make_onnx_initializers_raw nodename elem_type shape raw_data)
+        make_onnx_initializers_raw nodename elt_type shape raw_data)
       (G.get_input_nodes sym_graph)
   in
   (* Maybe some post-processing steps *)
