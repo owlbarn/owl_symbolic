@@ -10,10 +10,11 @@ module Add = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
+    ; mutable attrs : attrvalue array
     }
 
   let op_type = "Add"
-  let create name input output = { name; input; output }
+  let create name input output attrs = { name; input; output; attrs }
   let type_constraints = []
   let doc_string = "Addition"
 end
@@ -23,10 +24,11 @@ module Sub = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
+    ; mutable attrs : attrvalue array
     }
 
   let op_type = "Sub"
-  let create name input output = { name; input; output }
+  let create name input output attrs = { name; input; output; attrs }
 end
 
 module Mul = struct
@@ -34,10 +36,11 @@ module Mul = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
+    ; mutable attrs : attrvalue array
     }
 
   let op_type = "Mul"
-  let create name input output = { name; input; output }
+  let create name input output attrs = { name; input; output; attrs }
 end
 
 module Div = struct
@@ -45,10 +48,11 @@ module Div = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
+    ; mutable attrs : attrvalue array
     }
 
   let op_type = "Div"
-  let create name input output = { name; input; output }
+  let create name input output attrs = { name; input; output; attrs }
 end
 
 module Sin = struct
@@ -56,10 +60,11 @@ module Sin = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
+    ; mutable attrs : attrvalue array
     }
 
   let op_type = "Sin"
-  let create name input output = { name; input; output }
+  let create name input output attrs = { name; input; output; attrs }
 end
 
 module Cos = struct
@@ -67,10 +72,11 @@ module Cos = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
+    ; mutable attrs : attrvalue array
     }
 
   let op_type = "Cos"
-  let create name input output = { name; input; output }
+  let create name input output attrs = { name; input; output; attrs }
 end
 
 module Exp = struct
@@ -78,10 +84,11 @@ module Exp = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
+    ; mutable attrs : attrvalue array
     }
 
   let op_type = "Exp"
-  let create name input output = { name; input; output }
+  let create name input output attrs = { name; input; output; attrs }
 end
 
 module Pow = struct
@@ -89,10 +96,11 @@ module Pow = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
+    ; mutable attrs : attrvalue array
     }
 
   let op_type = "Pow"
-  let create name input output = { name; input; output }
+  let create name input output attrs = { name; input; output; attrs }
 end
 
 module ExpConst = struct
@@ -100,10 +108,11 @@ module ExpConst = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
+    ; mutable attrs : attrvalue array
     }
 
   let op_type = "ExpConst"
-  let create name input output = { name; input; output }
+  let create name input output attrs = { name; input; output; attrs }
 end
 
 module Float = struct
@@ -111,11 +120,12 @@ module Float = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
+    ; mutable attrs : attrvalue array
     ; mutable value : float
     }
 
   let op_type = "Float"
-  let create name input output value = { name; input; output; value }
+  let create name input output attrs value = { name; input; output; attrs; value }
 end
 
 module Tensor = struct
@@ -123,6 +133,7 @@ module Tensor = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
+    ; mutable attrs : attrvalue array
     ; mutable typ : tensor_typ
     ; mutable shape : int array
     ; mutable id : string (* Not name, but like "x" or "y" *)
@@ -130,8 +141,8 @@ module Tensor = struct
 
   let op_type = "Tensor"
 
-  let create ?(shape = [||]) ?(typ = S) name input output id =
-    { name; input; output; typ; shape; id }
+  let create ?(shape = [||]) ?(typ = S) name input output attrs id =
+    { name; input; output; attrs; typ; shape; id }
 end
 
 module Symbol = struct
@@ -139,11 +150,12 @@ module Symbol = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
+    ; mutable attrs : attrvalue array
     ; mutable id : string (* Not name, but like "x" or "y" *)
     }
 
   let op_type = "Symbol"
-  let create name input output id = { name; input; output; id }
+  let create name input output attrs id = { name; input; output; attrs; id }
 end
 
 module Int = struct
@@ -151,11 +163,12 @@ module Int = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
+    ; mutable attrs : attrvalue array
     ; mutable value : int
     }
 
   let op_type = "Int"
-  let create name input output value = { name; input; output; value }
+  let create name input output attrs value = { name; input; output; attrs; value }
 end
 
 module Complex = struct
@@ -163,12 +176,13 @@ module Complex = struct
     { mutable name : string
     ; mutable input : string list
     ; mutable output : string list
+    ; mutable attrs : attrvalue array
     ; mutable real : float
     ; mutable img : float
     }
 
   let op_type = "Complex"
-  let create name input output real img = { name; input; output; real; img }
+  let create name input output attrs real img = { name; input; output; attrs; real; img }
 end
 
 (** Is `output` necessary? *)

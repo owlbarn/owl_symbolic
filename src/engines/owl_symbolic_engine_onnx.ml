@@ -130,7 +130,7 @@ let sym_nodes_to_onnx (sym_nodes : G.symbolic_node array) =
   (* Assume a one-to-one projection; might be changed later *)
   Array.iteri (fun i sym_node -> 
     let sym = Owl_graph.attr sym_node in
-    let sym_attrs = [|""|] in (* S.get_attrs sym in *)
+    let sym_attrs = S.sym_attrs sym in
     let onnx_attrs = ref [] in 
     Array.iter (fun _a -> 
     (* match symbolic attribute and make onnx attribute;
@@ -143,7 +143,7 @@ let sym_nodes_to_onnx (sym_nodes : G.symbolic_node array) =
     let name = S.name sym in 
     let op_type = S.op_type sym in
     let input_names = S.input sym in 
-    let output_names = S.output sym in (* output should be node names *)
+    let output_names = [ name ] in
 
     let n = make_onnx_node op_type input_names 
       output_names name onnx_attrs in 

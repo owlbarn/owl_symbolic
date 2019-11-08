@@ -15,59 +15,61 @@
  * (5) Binary Op: +, -, *, /, pow
  *)
 
+open  Owl_symbolic_ops_math
+
 type t =
   | NOOP
-  | Int of Owl_symbolic_ops_math.Int.t
-  | Complex of Owl_symbolic_ops_math.Complex.t
-  | Float of Owl_symbolic_ops_math.Float.t
-  | Tensor of Owl_symbolic_ops_math.Tensor.t
-  | ExpConst of Owl_symbolic_ops_math.ExpConst.t
-  | Symbol of Owl_symbolic_ops_math.Symbol.t
-  | Sin of Owl_symbolic_ops_math.Sin.t
-  | Cos of Owl_symbolic_ops_math.Cos.t
-  | Exp of Owl_symbolic_ops_math.Exp.t
-  | Add of Owl_symbolic_ops_math.Add.t
-  | Sub of Owl_symbolic_ops_math.Sub.t
-  | Mul of Owl_symbolic_ops_math.Mul.t
-  | Div of Owl_symbolic_ops_math.Div.t
-  | Pow of Owl_symbolic_ops_math.Pow.t
+  | Int of Int.t
+  | Complex of Complex.t
+  | Float of Float.t
+  | Tensor of Tensor.t
+  | ExpConst of ExpConst.t
+  | Symbol of Symbol.t
+  | Sin of Sin.t
+  | Cos of Cos.t
+  | Exp of Exp.t
+  | Add of Add.t
+  | Sub of Sub.t
+  | Mul of Mul.t
+  | Div of Div.t
+  | Pow of Pow.t
 
 let name = function
-  | Float x  -> Owl_symbolic_ops_math.Float.(x.name)
-  | Tensor x -> Owl_symbolic_ops_math.Tensor.(x.name)
-  | Add x    -> Owl_symbolic_ops_math.Add.(x.name)
-  | Sub x    -> Owl_symbolic_ops_math.Sub.(x.name)
-  | Mul x    -> Owl_symbolic_ops_math.Mul.(x.name)
-  | Div x    -> Owl_symbolic_ops_math.Div.(x.name)
-  | Sin x    -> Owl_symbolic_ops_math.Sin.(x.name)
-  | Cos x    -> Owl_symbolic_ops_math.Cos.(x.name)
-  | Pow x    -> Owl_symbolic_ops_math.Pow.(x.name)
+  | Float x  -> Float.(x.name)
+  | Tensor x -> Tensor.(x.name)
+  | Add x    -> Add.(x.name)
+  | Sub x    -> Sub.(x.name)
+  | Mul x    -> Mul.(x.name)
+  | Div x    -> Div.(x.name)
+  | Sin x    -> Sin.(x.name)
+  | Cos x    -> Cos.(x.name)
+  | Pow x    -> Pow.(x.name)
   | _        -> failwith "owl_symbolic_symbol.name"
 
 
 let input = function
-  | Float x  -> Owl_symbolic_ops_math.Float.(x.input)
-  | Tensor x -> Owl_symbolic_ops_math.Tensor.(x.input)
-  | Add x    -> Owl_symbolic_ops_math.Add.(x.input)
-  | Sub x    -> Owl_symbolic_ops_math.Sub.(x.input)
-  | Mul x    -> Owl_symbolic_ops_math.Mul.(x.input)
-  | Div x    -> Owl_symbolic_ops_math.Div.(x.input)
-  | Sin x    -> Owl_symbolic_ops_math.Sin.(x.input)
-  | Cos x    -> Owl_symbolic_ops_math.Cos.(x.input)
-  | Pow x    -> Owl_symbolic_ops_math.Pow.(x.input)
+  | Float x  -> Float.(x.input)
+  | Tensor x -> Tensor.(x.input)
+  | Add x    -> Add.(x.input)
+  | Sub x    -> Sub.(x.input)
+  | Mul x    -> Mul.(x.input)
+  | Div x    -> Div.(x.input)
+  | Sin x    -> Sin.(x.input)
+  | Cos x    -> Cos.(x.input)
+  | Pow x    -> Pow.(x.input)
   | _        -> failwith "owl_symbolic_symbol.input"
 
 
 let output = function
-  | Float x  -> Owl_symbolic_ops_math.Float.(x.output)
-  | Tensor x -> Owl_symbolic_ops_math.Tensor.(x.output)
-  | Add x    -> Owl_symbolic_ops_math.Add.(x.output)
-  | Sub x    -> Owl_symbolic_ops_math.Sub.(x.output)
-  | Mul x    -> Owl_symbolic_ops_math.Mul.(x.output)
-  | Div x    -> Owl_symbolic_ops_math.Div.(x.output)
-  | Sin x    -> Owl_symbolic_ops_math.Sin.(x.output)
-  | Cos x    -> Owl_symbolic_ops_math.Cos.(x.output)
-  | Pow x    -> Owl_symbolic_ops_math.Pow.(x.output)
+  | Float x  -> Float.(x.output)
+  | Tensor x -> Tensor.(x.output)
+  | Add x    -> Add.(x.output)
+  | Sub x    -> Sub.(x.output)
+  | Mul x    -> Mul.(x.output)
+  | Div x    -> Div.(x.output)
+  | Sin x    -> Sin.(x.output)
+  | Cos x    -> Cos.(x.output)
+  | Pow x    -> Pow.(x.output)
   | _        -> failwith "owl_symbolic_symbol.output"
 
 
@@ -76,21 +78,31 @@ let shape = function
 
 
 let value = function
-  | Float x -> Owl_symbolic_ops_math.Float.(x.value)
+  | Float x -> Float.(x.value)
   | _       -> failwith "owl_symbolic_symbol.float"
 
 
 let op_type = function
-  | Float _  -> Owl_symbolic_ops_math.Float.op_type
-  | Tensor _ -> Owl_symbolic_ops_math.Tensor.op_type
-  | Add _    -> Owl_symbolic_ops_math.Add.op_type
-  | Sub _    -> Owl_symbolic_ops_math.Sub.op_type
-  | Mul _    -> Owl_symbolic_ops_math.Mul.op_type
-  | Div _    -> Owl_symbolic_ops_math.Div.op_type
-  | Sin _    -> Owl_symbolic_ops_math.Sin.op_type
-  | Cos _    -> Owl_symbolic_ops_math.Cos.op_type
-  | Pow _    -> Owl_symbolic_ops_math.Pow.op_type
+  | Float _  -> Float.op_type
+  | Tensor _ -> Tensor.op_type
+  | Add _    -> Add.op_type
+  | Sub _    -> Sub.op_type
+  | Mul _    -> Mul.op_type
+  | Div _    -> Div.op_type
+  | Sin _    -> Sin.op_type
+  | Cos _    -> Cos.op_type
+  | Pow _    -> Pow.op_type
   | _        -> failwith "owl_symbolic_symbol.op_type"
 
 
-(** Question: what if I want to move one math symbol to another group such as , say, nn? *)
+let sym_attrs = function
+  | Float x  -> Float.(x.attrs)
+  | Tensor x -> Tensor.(x.attrs)
+  | Add x    -> Add.(x.attrs)
+  | Sub x    -> Sub.(x.attrs)
+  | Mul x    -> Mul.(x.attrs)
+  | Div x    -> Div.(x.attrs)
+  | Sin x    -> Sin.(x.attrs)
+  | Cos x    -> Cos.(x.attrs)
+  | Pow x    -> Pow.(x.attrs)
+  | _  -> failwith "owl_symbolic_symbol.sym_attrs: unsupported symbol."

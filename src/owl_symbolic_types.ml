@@ -40,7 +40,7 @@ type attrvalue =
   | ATTR_Nil
   | ATTR_Int      of int
   | ATTR_Bool     of bool
-  | ATTR_Type     of string
+  | ATTR_Type     of sym_data_type
   | ATTR_Float    of float
   | ATTR_Shape    of int array
   | ATTR_String   of string
