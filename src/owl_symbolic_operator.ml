@@ -7,7 +7,7 @@ open Owl_symbolic_namespace
 open Owl_symbolic_graph
 open Owl_symbolic_types
 
-(** Signatures: node -> node ... -> node *)
+(* TODO: check user-defined name is uniq in the whole graph *)
 
 let noop =
   let sym = Owl_symbolic_symbol.NOOP in

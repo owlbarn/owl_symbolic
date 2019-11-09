@@ -63,12 +63,19 @@ let input = function
 
 
 let shape = function
-  | _ -> failwith "owl_symbolic_symbol.shape"
+  | Variable x -> Variable.(x.shape)
+  | Tensor x   -> Tensor.(x.shape)
+  | _          -> [||]
 
 
-let value = function
+let float_value = function
   | Float x -> Float.(x.value)
-  | _       -> failwith "owl_symbolic_symbol.float"
+  | _       -> failwith "owl_symbolic_symbol.float_value"
+
+
+let int_value = function
+  | Int x -> Int.(x.value)
+  | _       -> failwith "owl_symbolic_symbol.int_value"
 
 
 let op_type = function
