@@ -179,7 +179,7 @@ let build_onnx_nodes (sym_graph : G.symbolic_graph) =
       if not (G.is_variable op_type) then (
         let name = S.name sym in
         let input_names = S.input sym in
-        let output_names = [ "result" ] in (* or the same as name? *)
+        let output_names = [ name ] in
         (* Attributes might be later adjusted in specific nodes. 
         * For example, "kernel_shape" is specific to onnx-conv, while in a symbolic node 
         * we could only have "shape"; or in a symbolic node we also have "foobar" attr, 
@@ -239,12 +239,13 @@ let build_onnx_inputs sym_graph =
 
 
 let build_onnx_outputs sym_graph = 
-  Array.map (fun _sym_node -> 
-    let nodename = "result" in (* default output valueinfoproto name to be "result" *)
+  Array.map (fun sym_node -> 
+    let sym = Owl_graph.attr sym_node in 
+    let nodename = S.name sym in (* default output valueinfoproto name to be "result" *)
     let elt_type = Int32.one in (* assume only float dtype *)
     let shape = [|3;3|] in (* should be got using shape inference *)
     make_onnx_io nodename elt_type shape
-  ) (G.get_input_nodes sym_graph)
+  ) (G.get_output_nodes sym_graph)
 
 
 (** Main entry of conversion *)
