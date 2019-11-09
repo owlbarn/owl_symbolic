@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
 ### Eval option 1: onnxruntime 
 import numpy as np 
