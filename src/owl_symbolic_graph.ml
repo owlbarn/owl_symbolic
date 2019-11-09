@@ -56,7 +56,7 @@ let get_input_nodes sym_graph =
   !inputs
 
 
-let is_variable op_type = op_type = "Variable" 
+let is_variable op_type = op_type = "Variable"
 
 let get_output_nodes sym_graph =
   (* Assume only one output node in graph; note performance issue *)

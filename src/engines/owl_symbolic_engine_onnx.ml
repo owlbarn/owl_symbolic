@@ -41,13 +41,7 @@ let make_onnx_io name elt_type shape =
       shape
     |> Array.to_list
   in
-  let shape =
-    if Array.length shape = 0
-    then None
-    else (
-      let shape = PT.default_tensor_shape_proto ~dim () in
-      Some shape)
-  in
+  let shape = Some (PT.default_tensor_shape_proto ~dim ()) in
   let type_proto_tensor = PT.default_type_proto_tensor ~shape ~elem_type:elt_type () in
   let value = PT.Tensor_type type_proto_tensor in
   let type_ = Some (PT.default_type_proto ~value ()) in
@@ -55,11 +49,17 @@ let make_onnx_io name elt_type shape =
 
 
 let make_onnx_tensor_float f = 
-  let _float_data = [ f ] in
-  let _dims = [Int64.one] in 
-  let _data_type = map_data_type_to_int32 T.SDT_Float in
-  (* PT.default_tensor_proto ~dims ~float_data ~data_type () *)
-  PT.default_tensor_proto () 
+  let float_data = [ f ] in
+  let dims = [Int64.one] in 
+  let data_type = map_data_type_to_int32 T.SDT_Float in
+  PT.default_tensor_proto ~dims ~float_data ~data_type ()
+
+
+let make_onnx_tensor_int i = 
+  let int32_data = [ Int32.of_int i ] in
+  let dims = [Int64.one] in 
+  let data_type = map_data_type_to_int32 T.SDT_Int32 in
+  PT.default_tensor_proto ~dims ~int32_data ~data_type ()
 
 
 let make_onnx_initializers_raw name data_type shape raw_data =
@@ -72,9 +72,9 @@ let make_onnx_initializers_raw name data_type shape raw_data =
 let make_onnx_initializers_float _name _data_type _shape _float_data = ()
 let make_onnx_initializers_int32 _name _data_type _shape _int32_data = ()
 
+
 (** Create onnx attribute from the symbolic attribute *)
 let make_onnx_attr (sym_attr : string * T.attrvalue) =
-  (* target attr: dtype, T, value *)
   let sym_attr_name, sym_attr_value = sym_attr in
   (* TODO: filter out attributes that should be ignored. *)
   let _ignored_attrs = [| "_class"; "_output" |] in
@@ -167,6 +167,38 @@ let make_onnx_model graph =
     ()
 
 
+let map_sym_optyp_to_onnx sym_optyp = 
+  match sym_optyp with
+  | "Float"  -> "Constant"
+  | "Tensor" -> "Constant"
+  | _        -> sym_optyp
+
+
+(** Attributes scheme: https://github.com/onnx/onnx/blob/master/docs/Operators.md *)
+let build_onnx_attrs sym = 
+  let onnx_attrs = 
+    match sym with
+    | S.Float _ -> 
+      (* create "value" attribute for constant *)
+      let name = "value" in
+      let (type_ : PT.attribute_proto_attribute_type) = PT.Tensor in 
+      let v = S.float_value sym in
+      let tensor = Some (make_onnx_tensor_float v) in 
+      let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
+      [ a_value ]
+    | S.Int _ -> 
+      (* create "value" attribute for constant *)
+      let name = "value" in
+      let (type_ : PT.attribute_proto_attribute_type) = PT.Tensor in 
+      let v = S.int_value sym in
+      let tensor = Some (make_onnx_tensor_int v) in 
+      let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
+      [ a_value ]
+    | _         -> [ ]
+  in
+  onnx_attrs
+
+
 (** Core function. Converts symbolic nodes to onnx nodes. *)
 let build_onnx_nodes (sym_graph : G.symbolic_graph) =
   (* Not one-to-one projection *)
@@ -175,37 +207,13 @@ let build_onnx_nodes (sym_graph : G.symbolic_graph) =
     (fun sym_node ->
       let sym = Owl_graph.attr sym_node in
       let op_type = S.op_type sym in
-
       if not (G.is_variable op_type) then (
         let name = S.name sym in
         let input_names = S.input sym in
         let output_names = [ name ] in
-        (* Attributes might be later adjusted in specific nodes. 
-        * For example, "kernel_shape" is specific to onnx-conv, while in a symbolic node 
-        * we could only have "shape"; or in a symbolic node we also have "foobar" attr, 
-        * but we don't want that to be translated to onnx attribute.
-        *)
-        let sym_attrs = S.sym_attrs sym in
-        let onnx_attrs = ref [] in
-        Array.iter
-          (fun sym_attr_pair ->
-            (* match symbolic attribute and make onnx attribute *)
-            let onnx_attr = make_onnx_attr sym_attr_pair in
-            onnx_attrs := List.append !onnx_attrs [ onnx_attr ])
-          sym_attrs;
-        (* let typ = S.op_type sym in
-        let op_type =
-          match sym with
-          | Float _ -> 
-            let v = S.float_value sym in 
-            let onnx_attr = make_onnx_attr ("float_value", T.ATTR_Float v) in
-            onnx_attrs := List.append !onnx_attrs [ onnx_attr ];
-            "Constant"
-          | Int _   -> 
-            "Constant"
-          | _       -> typ
-        in *)
-        let onnx_attrs = !onnx_attrs in
+        let op_type = map_sym_optyp_to_onnx op_type in
+        (* Build onnx attributes  *)
+        let onnx_attrs = build_onnx_attrs sym in 
         let n = make_onnx_node op_type input_names output_names name onnx_attrs in
         nodes := Array.append [|n|] !nodes
       ))
@@ -243,7 +251,7 @@ let build_onnx_outputs sym_graph =
     let sym = Owl_graph.attr sym_node in 
     let nodename = S.name sym in (* default output valueinfoproto name to be "result" *)
     let elt_type = Int32.one in (* assume only float dtype *)
-    let shape = [|3;3|] in (* should be got using shape inference *)
+    let shape = [||] in (* !!!TODO: should be got using shape inference *)
     make_onnx_io nodename elt_type shape
   ) (G.get_output_nodes sym_graph)
 

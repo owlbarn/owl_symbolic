@@ -75,7 +75,7 @@ let float_value = function
 
 let int_value = function
   | Int x -> Int.(x.value)
-  | _       -> failwith "owl_symbolic_symbol.int_value"
+  | _     -> failwith "owl_symbolic_symbol.int_value"
 
 
 let op_type = function
