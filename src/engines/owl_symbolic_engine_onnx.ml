@@ -179,7 +179,7 @@ let build_onnx_nodes (sym_graph : G.symbolic_graph) =
       if not (G.is_variable op_type) then (
         let name = S.name sym in
         let input_names = S.input sym in
-        let output_names = [ name ] in
+        let output_names = [ "result" ] in (* or the same as name? *)
         (* Attributes might be later adjusted in specific nodes. 
         * For example, "kernel_shape" is specific to onnx-conv, while in a symbolic node 
         * we could only have "shape"; or in a symbolic node we also have "foobar" attr, 
