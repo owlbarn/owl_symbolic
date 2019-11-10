@@ -114,7 +114,7 @@ module ExpConst = struct
     }
 
   let op_type = "ExpConst"
-  let create name input attrs = { name; input; attrs; out_shape = None }
+  let create name input attrs = { name; input; attrs; out_shape = Some [||] }
 end
 
 module Float = struct
@@ -127,7 +127,7 @@ module Float = struct
     }
 
   let op_type = "Float"
-  let create name input attrs value = { name; input; attrs; value; out_shape = None }
+  let create name input attrs value = { name; input; attrs; value; out_shape = Some [||] }
 end
 
 module Tensor = struct
@@ -172,7 +172,7 @@ module Int = struct
     }
 
   let op_type = "Int"
-  let create name input attrs value = { name; input; attrs; value; out_shape = None }
+  let create name input attrs value = { name; input; attrs; value; out_shape = Some [||] }
 end
 
 module Complex = struct
