@@ -50,14 +50,14 @@ let make_onnx_io name elt_type shape =
 
 let make_onnx_tensor_float f = 
   let float_data = [ f ] in
-  let dims = [Int64.one] in 
+  let dims = [] in 
   let data_type = map_data_type_to_int32 T.SDT_Float in
   PT.default_tensor_proto ~dims ~float_data ~data_type ()
 
 
 let make_onnx_tensor_int i = 
   let int32_data = [ Int32.of_int i ] in
-  let dims = [Int64.one] in 
+  let dims = [] in 
   let data_type = map_data_type_to_int32 T.SDT_Int32 in
   PT.default_tensor_proto ~dims ~int32_data ~data_type ()
 
