@@ -1,32 +1,21 @@
 (** onnx.proto Binary Encoding *)
 
+
 (** {2 Protobuf Encoding} *)
 
 val encode_version : Onnx_types.version -> Pbrt.Encoder.t -> unit
 (** [encode_version v encoder] encodes [v] with the given [encoder] *)
 
-val encode_attribute_proto_attribute_type
-  :  Onnx_types.attribute_proto_attribute_type
-  -> Pbrt.Encoder.t
-  -> unit
+val encode_attribute_proto_attribute_type : Onnx_types.attribute_proto_attribute_type -> Pbrt.Encoder.t -> unit
 (** [encode_attribute_proto_attribute_type v encoder] encodes [v] with the given [encoder] *)
 
-val encode_tensor_proto_segment
-  :  Onnx_types.tensor_proto_segment
-  -> Pbrt.Encoder.t
-  -> unit
+val encode_tensor_proto_segment : Onnx_types.tensor_proto_segment -> Pbrt.Encoder.t -> unit
 (** [encode_tensor_proto_segment v encoder] encodes [v] with the given [encoder] *)
 
-val encode_string_string_entry_proto
-  :  Onnx_types.string_string_entry_proto
-  -> Pbrt.Encoder.t
-  -> unit
+val encode_string_string_entry_proto : Onnx_types.string_string_entry_proto -> Pbrt.Encoder.t -> unit
 (** [encode_string_string_entry_proto v encoder] encodes [v] with the given [encoder] *)
 
-val encode_tensor_proto_data_location
-  :  Onnx_types.tensor_proto_data_location
-  -> Pbrt.Encoder.t
-  -> unit
+val encode_tensor_proto_data_location : Onnx_types.tensor_proto_data_location -> Pbrt.Encoder.t -> unit
 (** [encode_tensor_proto_data_location v encoder] encodes [v] with the given [encoder] *)
 
 val encode_tensor_proto : Onnx_types.tensor_proto -> Pbrt.Encoder.t -> unit
@@ -35,16 +24,10 @@ val encode_tensor_proto : Onnx_types.tensor_proto -> Pbrt.Encoder.t -> unit
 val encode_sparse_tensor_proto : Onnx_types.sparse_tensor_proto -> Pbrt.Encoder.t -> unit
 (** [encode_sparse_tensor_proto v encoder] encodes [v] with the given [encoder] *)
 
-val encode_tensor_shape_proto_dimension_value
-  :  Onnx_types.tensor_shape_proto_dimension_value
-  -> Pbrt.Encoder.t
-  -> unit
+val encode_tensor_shape_proto_dimension_value : Onnx_types.tensor_shape_proto_dimension_value -> Pbrt.Encoder.t -> unit
 (** [encode_tensor_shape_proto_dimension_value v encoder] encodes [v] with the given [encoder] *)
 
-val encode_tensor_shape_proto_dimension
-  :  Onnx_types.tensor_shape_proto_dimension
-  -> Pbrt.Encoder.t
-  -> unit
+val encode_tensor_shape_proto_dimension : Onnx_types.tensor_shape_proto_dimension -> Pbrt.Encoder.t -> unit
 (** [encode_tensor_shape_proto_dimension v encoder] encodes [v] with the given [encoder] *)
 
 val encode_tensor_shape_proto : Onnx_types.tensor_shape_proto -> Pbrt.Encoder.t -> unit
@@ -80,42 +63,31 @@ val encode_graph_proto : Onnx_types.graph_proto -> Pbrt.Encoder.t -> unit
 val encode_node_proto : Onnx_types.node_proto -> Pbrt.Encoder.t -> unit
 (** [encode_node_proto v encoder] encodes [v] with the given [encoder] *)
 
-val encode_operator_set_id_proto
-  :  Onnx_types.operator_set_id_proto
-  -> Pbrt.Encoder.t
-  -> unit
+val encode_operator_set_id_proto : Onnx_types.operator_set_id_proto -> Pbrt.Encoder.t -> unit
 (** [encode_operator_set_id_proto v encoder] encodes [v] with the given [encoder] *)
 
 val encode_model_proto : Onnx_types.model_proto -> Pbrt.Encoder.t -> unit
 (** [encode_model_proto v encoder] encodes [v] with the given [encoder] *)
 
-val encode_tensor_proto_data_type
-  :  Onnx_types.tensor_proto_data_type
-  -> Pbrt.Encoder.t
-  -> unit
+val encode_tensor_proto_data_type : Onnx_types.tensor_proto_data_type -> Pbrt.Encoder.t -> unit
 (** [encode_tensor_proto_data_type v encoder] encodes [v] with the given [encoder] *)
+
 
 (** {2 Protobuf Decoding} *)
 
 val decode_version : Pbrt.Decoder.t -> Onnx_types.version
 (** [decode_version decoder] decodes a [version] value from [decoder] *)
 
-val decode_attribute_proto_attribute_type
-  :  Pbrt.Decoder.t
-  -> Onnx_types.attribute_proto_attribute_type
+val decode_attribute_proto_attribute_type : Pbrt.Decoder.t -> Onnx_types.attribute_proto_attribute_type
 (** [decode_attribute_proto_attribute_type decoder] decodes a [attribute_proto_attribute_type] value from [decoder] *)
 
 val decode_tensor_proto_segment : Pbrt.Decoder.t -> Onnx_types.tensor_proto_segment
 (** [decode_tensor_proto_segment decoder] decodes a [tensor_proto_segment] value from [decoder] *)
 
-val decode_string_string_entry_proto
-  :  Pbrt.Decoder.t
-  -> Onnx_types.string_string_entry_proto
+val decode_string_string_entry_proto : Pbrt.Decoder.t -> Onnx_types.string_string_entry_proto
 (** [decode_string_string_entry_proto decoder] decodes a [string_string_entry_proto] value from [decoder] *)
 
-val decode_tensor_proto_data_location
-  :  Pbrt.Decoder.t
-  -> Onnx_types.tensor_proto_data_location
+val decode_tensor_proto_data_location : Pbrt.Decoder.t -> Onnx_types.tensor_proto_data_location
 (** [decode_tensor_proto_data_location decoder] decodes a [tensor_proto_data_location] value from [decoder] *)
 
 val decode_tensor_proto : Pbrt.Decoder.t -> Onnx_types.tensor_proto
@@ -124,14 +96,10 @@ val decode_tensor_proto : Pbrt.Decoder.t -> Onnx_types.tensor_proto
 val decode_sparse_tensor_proto : Pbrt.Decoder.t -> Onnx_types.sparse_tensor_proto
 (** [decode_sparse_tensor_proto decoder] decodes a [sparse_tensor_proto] value from [decoder] *)
 
-val decode_tensor_shape_proto_dimension_value
-  :  Pbrt.Decoder.t
-  -> Onnx_types.tensor_shape_proto_dimension_value
+val decode_tensor_shape_proto_dimension_value : Pbrt.Decoder.t -> Onnx_types.tensor_shape_proto_dimension_value
 (** [decode_tensor_shape_proto_dimension_value decoder] decodes a [tensor_shape_proto_dimension_value] value from [decoder] *)
 
-val decode_tensor_shape_proto_dimension
-  :  Pbrt.Decoder.t
-  -> Onnx_types.tensor_shape_proto_dimension
+val decode_tensor_shape_proto_dimension : Pbrt.Decoder.t -> Onnx_types.tensor_shape_proto_dimension
 (** [decode_tensor_shape_proto_dimension decoder] decodes a [tensor_shape_proto_dimension] value from [decoder] *)
 
 val decode_tensor_shape_proto : Pbrt.Decoder.t -> Onnx_types.tensor_shape_proto
