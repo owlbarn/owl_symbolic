@@ -104,3 +104,23 @@ let sym_attrs = function
   | Pow x      -> Pow.(x.attrs)
   | Variable x -> Variable.(x.attrs)
   | _          -> failwith "owl_symbolic_symbol.sym_attrs: unsupported symbol."
+
+
+let get_out_shape = function
+  | Tensor x   -> Tensor.(x.out_shape)
+  | Variable x -> Variable.(x.out_shape)
+  | Sin x      -> Sin.(x.out_shape)
+  | Add x      -> Add.(x.out_shape)
+  | Float x    -> Float.(x.out_shape)
+  | Int x      -> Int.(x.out_shape)
+  | _          -> failwith "get_out_shape: unsupported op."
+
+
+let set_out_shape sym shape =
+  match sym with
+  | Tensor x   -> x.out_shape <- shape (* ? the out_shape and shape of tensor ?*)
+  | Variable x -> x.out_shape <- shape
+  | Sin x      -> x.out_shape <- shape
+  | Add x      -> x.out_shape <- shape
+  | Float x    -> x.out_shape <- shape
+  | _          -> failwith "set_out_shape: unsupported op."

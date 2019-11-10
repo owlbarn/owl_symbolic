@@ -48,16 +48,16 @@ let make_onnx_io name elt_type shape =
   PT.default_value_info_proto ~name ~type_ ()
 
 
-let make_onnx_tensor_float f = 
+let make_onnx_tensor_float f =
   let float_data = [ f ] in
-  let dims = [] in 
+  let dims = [] in
   let data_type = map_data_type_to_int32 T.SDT_Float in
   PT.default_tensor_proto ~dims ~float_data ~data_type ()
 
 
-let make_onnx_tensor_int i = 
+let make_onnx_tensor_int i =
   let int32_data = [ Int32.of_int i ] in
-  let dims = [] in 
+  let dims = [] in
   let data_type = map_data_type_to_int32 T.SDT_Int32 in
   PT.default_tensor_proto ~dims ~int32_data ~data_type ()
 
@@ -71,7 +71,6 @@ let make_onnx_initializers_raw name data_type shape raw_data =
 
 let make_onnx_initializers_float _name _data_type _shape _float_data = ()
 let make_onnx_initializers_int32 _name _data_type _shape _int32_data = ()
-
 
 (** Create onnx attribute from the symbolic attribute *)
 let make_onnx_attr (sym_attr : string * T.attrvalue) =
@@ -92,12 +91,11 @@ let make_onnx_attr (sym_attr : string * T.attrvalue) =
     let type_ = PT.Int in
     let value = T.get_attrvalue_int sym_attr_value |> Int64.of_int in
     PT.default_attribute_proto ~name ~type_ ~i:value ()
-
   | "float_value" ->
-    let name = "value" in 
-    let (type_ : PT.attribute_proto_attribute_type) = PT.Tensor in 
-    let fvalue = T.get_attrvalue_float sym_attr_value in 
-    let tensor = Some (make_onnx_tensor_float fvalue) in 
+    let name = "value" in
+    let (type_ : PT.attribute_proto_attribute_type) = PT.Tensor in
+    let fvalue = T.get_attrvalue_float sym_attr_value in
+    let tensor = Some (make_onnx_tensor_float fvalue) in
     PT.default_attribute_proto ~name ~type_ ~t:tensor ()
   | _ -> failwith ("make_onnx_attr: unsupported attr type: " ^ sym_attr_name)
 
@@ -143,15 +141,14 @@ let make_onnx_graph
 
 let make_onnx_model graph =
   (* NOTE: IR version and opset matters. *)
-  let ir_version = Int64.of_int 6 in 
+  let ir_version = Int64.of_int 6 in
   let producer_name = "owl" in
   let producer_version = "0.6.0" in
   let domain = "xyz.ocaml" in
   let model_version = Int64.of_int 0 in
   let doc_string = "owl-symbolic" in
   let graph = Some graph in
-  let opset = PT.default_operator_set_id_proto 
-    ~version:(Int64.of_int 11) () in
+  let opset = PT.default_operator_set_id_proto ~version:(Int64.of_int 11) () in
   let opset_import = [ opset ] in
   let metadata_props = [] in
   PT.default_model_proto
@@ -167,34 +164,34 @@ let make_onnx_model graph =
     ()
 
 
-let map_sym_optyp_to_onnx sym_optyp = 
+let map_sym_optyp_to_onnx sym_optyp =
   match sym_optyp with
-  | "Float"  -> "Constant"
+  | "Float" -> "Constant"
   | "Tensor" -> "Constant"
-  | _        -> sym_optyp
+  | _ -> sym_optyp
 
 
 (** Attributes scheme: https://github.com/onnx/onnx/blob/master/docs/Operators.md *)
-let build_onnx_attrs sym = 
-  let onnx_attrs = 
+let build_onnx_attrs sym =
+  let onnx_attrs =
     match sym with
-    | S.Float _ -> 
+    | S.Float _ ->
       (* create "value" attribute for constant *)
       let name = "value" in
-      let (type_ : PT.attribute_proto_attribute_type) = PT.Tensor in 
+      let (type_ : PT.attribute_proto_attribute_type) = PT.Tensor in
       let v = S.float_value sym in
-      let tensor = Some (make_onnx_tensor_float v) in 
+      let tensor = Some (make_onnx_tensor_float v) in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
-    | S.Int _ -> 
+    | S.Int _ ->
       (* create "value" attribute for constant *)
       let name = "value" in
-      let (type_ : PT.attribute_proto_attribute_type) = PT.Tensor in 
+      let (type_ : PT.attribute_proto_attribute_type) = PT.Tensor in
       let v = S.int_value sym in
-      let tensor = Some (make_onnx_tensor_int v) in 
+      let tensor = Some (make_onnx_tensor_int v) in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
-    | _         -> [ ]
+    | _ -> []
   in
   onnx_attrs
 
@@ -207,16 +204,16 @@ let build_onnx_nodes (sym_graph : G.symbolic_graph) =
     (fun sym_node ->
       let sym = Owl_graph.attr sym_node in
       let op_type = S.op_type sym in
-      if not (G.is_variable op_type) then (
+      if not (G.is_variable op_type)
+      then (
         let name = S.name sym in
         let input_names = S.input sym in
         let output_names = [ name ] in
         let op_type = map_sym_optyp_to_onnx op_type in
         (* Build onnx attributes  *)
-        let onnx_attrs = build_onnx_attrs sym in 
+        let onnx_attrs = build_onnx_attrs sym in
         let n = make_onnx_node op_type input_names output_names name onnx_attrs in
-        nodes := Array.append [|n|] !nodes
-      ))
+        nodes := Array.append [| n |] !nodes))
     sym_graph;
   !nodes
 
@@ -227,33 +224,45 @@ let _build_io_value_info sym_node =
   let attrs = S.sym_attrs sym in
   let elt_type = ref Int32.one in
   let _shape = ref (S.shape sym) in
-  let shape = ref [|2; 2|] in
+  let shape = ref [| 2; 2 |] in
   Array.iter
     (fun (k, v) ->
-      if k = "dtype" then elt_type := T.get_attrvalue_type v |> map_data_type_to_int32;
-      (*if k = "shape" then shape := T.get_attrvalue_shape v *)
-    ) attrs;
+      if k = "dtype"
+      then
+        elt_type := T.get_attrvalue_type v |> map_data_type_to_int32
+        (*if k = "shape" then shape := T.get_attrvalue_shape v *))
+    attrs;
   make_onnx_io nodename !elt_type !shape
 
 
-let build_onnx_inputs sym_graph = 
-  Array.map (fun sym_node -> 
-    let sym = Owl_graph.attr sym_node in
-    let nodename = S.name sym in
-    let elt_type = Int32.one in (* assume only float dtype *)
-    let shape = S.shape sym in 
-    make_onnx_io nodename elt_type shape
-  ) (G.get_input_nodes sym_graph)
+let build_onnx_inputs sym_graph =
+  Array.map
+    (fun sym_node ->
+      let sym = Owl_graph.attr sym_node in
+      let nodename = S.name sym in
+      let elt_type = Int32.one in
+      (* assume only float dtype *)
+      let shape = S.shape sym in
+      make_onnx_io nodename elt_type shape)
+    (G.get_input_nodes sym_graph)
 
 
-let build_onnx_outputs sym_graph = 
-  Array.map (fun sym_node -> 
-    let sym = Owl_graph.attr sym_node in 
-    let nodename = S.name sym in (* default output valueinfoproto name to be "result" *)
-    let elt_type = Int32.one in (* assume only float dtype *)
-    let shape = [||] in (* !!!TODO: should be got using shape inference *)
-    make_onnx_io nodename elt_type shape
-  ) (G.get_output_nodes sym_graph)
+let build_onnx_outputs sym_graph =
+  Array.map
+    (fun sym_node ->
+      let sym = Owl_graph.attr sym_node in
+      let nodename = S.name sym in
+      (* default output valueinfoproto name to be "result" *)
+      let elt_type = Int32.one in
+      (* assume only float dtype *)
+      let shape = S.get_out_shape sym in
+      let shape =
+        match shape with
+        | Some s -> s
+        | None   -> failwith "build_onnx_outputs: non specified output shape."
+      in
+      make_onnx_io nodename elt_type shape)
+    (G.get_output_nodes sym_graph)
 
 
 (** Main entry of conversion *)
@@ -263,9 +272,8 @@ let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
   (* Steps 1.x : more processing such as rewriting complex nodes *)
 
   (* Step 2: inpput/output  *)
-  let inputs = build_onnx_inputs sym_graph in 
+  let inputs = build_onnx_inputs sym_graph in
   let outputs = build_onnx_outputs sym_graph in
-
   (* Step 3: initializers, corresponding to each input *)
   (* let initializer_ =
     Array.map
@@ -278,7 +286,7 @@ let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
         make_onnx_initializers_raw nodename elt_type shape raw_data)
       (G.get_input_nodes sym_graph)
   in *)
-  let initializer_ = [||] in 
+  let initializer_ = [||] in
   (* Maybe some post-processing steps *)
 
   (* Final Step: make graph and model *)
@@ -287,7 +295,6 @@ let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
 
 
 let to_symbolic (_onnx_graph : t) = G.null_graph
-
 
 let serialise (onnx_model : Onnx_types.model_proto) filename =
   let encoder = Pbrt.Encoder.create () in
