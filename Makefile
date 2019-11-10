@@ -38,6 +38,9 @@ format:
 example:
 	dune build @example/all 
 
+loc:
+	cloc src/
+
 push:
 	git commit -am "coding onnx converter ..." && \
 	git push origin `git branch | grep \* | cut -d ' ' -f2`
