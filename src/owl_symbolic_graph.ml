@@ -4,8 +4,6 @@
  *)
 
 open Owl_graph
-module S = Owl_symbolic_symbol
-module SH = Owl_symbolic_shape
 
 type symbolic_node = Owl_symbolic_symbol.t Owl_graph.node
 
@@ -22,10 +20,13 @@ let make_node (sym : Owl_symbolic_symbol.t) (parents : symbolic_node array) =
   if Array.length parents > 0
   then (
     let in_shapes =
-      Array.map (fun sym_node -> S.get_out_shape (Owl_graph.attr sym_node)) parents
+      Array.map (fun sym_node ->
+        Owl_graph.attr sym_node |> 
+        Owl_symbolic_symbol.get_out_shape
+      ) parents
     in
-    let shape = SH.infer_shape in_shapes sym in
-    S.set_out_shape sym shape.(0)
+    let shape = Owl_symbolic_shape.infer_shape in_shapes sym in
+    Owl_symbolic_symbol.set_out_shape sym shape.(0)
     (* Currently only use the first shape *));
   connect_ancestors parents [| child |];
   let uniq_parents = Owl_utils_array.unique parents in
