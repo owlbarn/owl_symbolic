@@ -1,5 +1,6 @@
 (** onnx.proto Types *)
 
+[@@@warning "-30"]
 
 
 (** {2 Types} *)
