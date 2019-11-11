@@ -5,26 +5,25 @@
 
 open Owl_symbolic_specs
 open Owl_symbolic_types
-
 module S = Owl_symbolic_symbol
 
 type t = Onnx_types.graph_proto
 
 let map_data_type_to_int32 typ =
   match typ with
-  | SDT_Float -> Int32.of_int 1
-  | SDT_Uint8 -> Int32.of_int 2
-  | SDT_Int8 -> Int32.of_int 3
-  | SDT_Uint16 -> Int32.of_int 4
-  | SDT_Int16 -> Int32.of_int 5
-  | SDT_Int32 -> Int32.of_int 6
-  | SDT_Int64 -> Int32.of_int 7
-  | SDT_String -> Int32.of_int 8
-  | SDT_Bool -> Int32.of_int 9
-  | SDT_Float16 -> Int32.of_int 10
-  | SDT_Double -> Int32.of_int 11
-  | SDT_Uint32 -> Int32.of_int 12
-  | SDT_Uint64 -> Int32.of_int 13
+  | SDT_Float     -> Int32.of_int 1
+  | SDT_Uint8     -> Int32.of_int 2
+  | SDT_Int8      -> Int32.of_int 3
+  | SDT_Uint16    -> Int32.of_int 4
+  | SDT_Int16     -> Int32.of_int 5
+  | SDT_Int32     -> Int32.of_int 6
+  | SDT_Int64     -> Int32.of_int 7
+  | SDT_String    -> Int32.of_int 8
+  | SDT_Bool      -> Int32.of_int 9
+  | SDT_Float16   -> Int32.of_int 10
+  | SDT_Double    -> Int32.of_int 11
+  | SDT_Uint32    -> Int32.of_int 12
+  | SDT_Uint64    -> Int32.of_int 13
   | SDT_Complex32 -> Int32.of_int 14
   | SDT_Complex64 -> Int32.of_int 15
 
@@ -77,7 +76,7 @@ let make_onnx_attr (sym_attr : string * attrvalue) =
   (* TODO: filter out attributes that should be ignored. *)
   let _ignored_attrs = [| "_class"; "_output" |] in
   match sym_attr_name with
-  | "shape" ->
+  | "shape"       ->
     let name = Some "shape" in
     (* it's "kernel_shape" in onnx conv *)
     let type_ = Some PT.Ints in
@@ -85,7 +84,7 @@ let make_onnx_attr (sym_attr : string * attrvalue) =
       get_attrvalue_shape sym_attr_value |> Array.map Int64.of_int |> Array.to_list
     in
     PT.default_attribute_proto ~name ~type_ ~ints:shape ()
-  | "axis" ->
+  | "axis"        ->
     let name = Some "axis" in
     let type_ = Some PT.Int in
     let value = Some (get_attrvalue_int sym_attr_value |> Int64.of_int) in
@@ -96,7 +95,7 @@ let make_onnx_attr (sym_attr : string * attrvalue) =
     let fvalue = get_attrvalue_float sym_attr_value in
     let tensor = Some (make_onnx_tensor_float fvalue) in
     PT.default_attribute_proto ~name ~type_ ~t:tensor ()
-  | _ -> failwith ("make_onnx_attr: unsupported attr type: " ^ sym_attr_name)
+  | _             -> failwith ("make_onnx_attr: unsupported attr type: " ^ sym_attr_name)
 
 
 let make_onnx_node op_type input_names output_names name attr =
@@ -163,9 +162,9 @@ let make_onnx_model graph =
 
 let map_sym_optyp_to_onnx sym_optyp =
   match sym_optyp with
-  | "Float" -> "Constant"
+  | "Float"  -> "Constant"
   | "Tensor" -> "Constant"
-  | _ -> sym_optyp
+  | _        -> sym_optyp
 
 
 (** Attributes scheme: https://github.com/onnx/onnx/blob/master/docs/Operators.md *)
@@ -180,7 +179,7 @@ let build_onnx_attrs sym =
       let tensor = Some (make_onnx_tensor_float v) in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
-    | S.Int _ ->
+    | S.Int _   ->
       (* create "value" attribute for constant *)
       let name = Some "value" in
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
@@ -188,7 +187,7 @@ let build_onnx_attrs sym =
       let tensor = Some (make_onnx_tensor_int v) in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
-    | _ -> []
+    | _         -> []
   in
   onnx_attrs
 
@@ -209,7 +208,7 @@ let build_onnx_nodes (sym_graph : Owl_symbolic_graph.symbolic_graph) =
         let op_type = Some (map_sym_optyp_to_onnx op_type) in
         (* Build onnx attributes  *)
         let onnx_attrs = build_onnx_attrs sym in
-        let name = Some name in 
+        let name = Some name in
         let n = make_onnx_node op_type input_names output_names name onnx_attrs in
         nodes := Array.append [| n |] !nodes))
     sym_graph;

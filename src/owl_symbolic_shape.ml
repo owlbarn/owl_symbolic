@@ -16,7 +16,7 @@ let _infer_shape_03 input_shapes =
   let s1 = input_shapes.(1) in
   match s0, s1 with
   | Some s0, Some s1 -> [| Some Owl_utils_infer_shape.(broadcast1 s0 s1) |]
-  | _, _                 -> [| None |]
+  | _, _             -> [| None |]
 
 
 let infer_shape input_shapes sym =
