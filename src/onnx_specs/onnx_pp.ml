@@ -29,8 +29,8 @@ let rec pp_attribute_proto_attribute_type fmt (v:Onnx_types.attribute_proto_attr
 let rec pp_tensor_proto_segment fmt (v:Onnx_types.tensor_proto_segment) = 
   let pp_i fmt () =
     Format.pp_open_vbox fmt 1;
-    Pbrt.Pp.pp_record_field "begin_" Pbrt.Pp.pp_int64 fmt v.Onnx_types.begin_;
-    Pbrt.Pp.pp_record_field "end_" Pbrt.Pp.pp_int64 fmt v.Onnx_types.end_;
+    Pbrt.Pp.pp_record_field "begin_" (Pbrt.Pp.pp_option Pbrt.Pp.pp_int64) fmt v.Onnx_types.begin_;
+    Pbrt.Pp.pp_record_field "end_" (Pbrt.Pp.pp_option Pbrt.Pp.pp_int64) fmt v.Onnx_types.end_;
     Format.pp_close_box fmt ()
   in
   Pbrt.Pp.pp_brk pp_i fmt ()
@@ -38,8 +38,8 @@ let rec pp_tensor_proto_segment fmt (v:Onnx_types.tensor_proto_segment) =
 let rec pp_string_string_entry_proto fmt (v:Onnx_types.string_string_entry_proto) = 
   let pp_i fmt () =
     Format.pp_open_vbox fmt 1;
-    Pbrt.Pp.pp_record_field "key" Pbrt.Pp.pp_string fmt v.Onnx_types.key;
-    Pbrt.Pp.pp_record_field "value" Pbrt.Pp.pp_string fmt v.Onnx_types.value;
+    Pbrt.Pp.pp_record_field "key" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.key;
+    Pbrt.Pp.pp_record_field "value" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.value;
     Format.pp_close_box fmt ()
   in
   Pbrt.Pp.pp_brk pp_i fmt ()
@@ -53,17 +53,17 @@ let rec pp_tensor_proto fmt (v:Onnx_types.tensor_proto) =
   let pp_i fmt () =
     Format.pp_open_vbox fmt 1;
     Pbrt.Pp.pp_record_field "dims" (Pbrt.Pp.pp_list Pbrt.Pp.pp_int64) fmt v.Onnx_types.dims;
-    Pbrt.Pp.pp_record_field "data_type" Pbrt.Pp.pp_int32 fmt v.Onnx_types.data_type;
+    Pbrt.Pp.pp_record_field "data_type" (Pbrt.Pp.pp_option Pbrt.Pp.pp_int32) fmt v.Onnx_types.data_type;
     Pbrt.Pp.pp_record_field "segment" (Pbrt.Pp.pp_option pp_tensor_proto_segment) fmt v.Onnx_types.segment;
     Pbrt.Pp.pp_record_field "float_data" (Pbrt.Pp.pp_list Pbrt.Pp.pp_float) fmt v.Onnx_types.float_data;
     Pbrt.Pp.pp_record_field "int32_data" (Pbrt.Pp.pp_list Pbrt.Pp.pp_int32) fmt v.Onnx_types.int32_data;
     Pbrt.Pp.pp_record_field "string_data" (Pbrt.Pp.pp_list Pbrt.Pp.pp_bytes) fmt v.Onnx_types.string_data;
     Pbrt.Pp.pp_record_field "int64_data" (Pbrt.Pp.pp_list Pbrt.Pp.pp_int64) fmt v.Onnx_types.int64_data;
-    Pbrt.Pp.pp_record_field "name" Pbrt.Pp.pp_string fmt v.Onnx_types.name;
-    Pbrt.Pp.pp_record_field "doc_string" Pbrt.Pp.pp_string fmt v.Onnx_types.doc_string;
-    Pbrt.Pp.pp_record_field "raw_data" Pbrt.Pp.pp_bytes fmt v.Onnx_types.raw_data;
+    Pbrt.Pp.pp_record_field "name" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.name;
+    Pbrt.Pp.pp_record_field "doc_string" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.doc_string;
+    Pbrt.Pp.pp_record_field "raw_data" (Pbrt.Pp.pp_option Pbrt.Pp.pp_bytes) fmt v.Onnx_types.raw_data;
     Pbrt.Pp.pp_record_field "external_data" (Pbrt.Pp.pp_list pp_string_string_entry_proto) fmt v.Onnx_types.external_data;
-    Pbrt.Pp.pp_record_field "data_location" pp_tensor_proto_data_location fmt v.Onnx_types.data_location;
+    Pbrt.Pp.pp_record_field "data_location" (Pbrt.Pp.pp_option pp_tensor_proto_data_location) fmt v.Onnx_types.data_location;
     Pbrt.Pp.pp_record_field "double_data" (Pbrt.Pp.pp_list Pbrt.Pp.pp_float) fmt v.Onnx_types.double_data;
     Pbrt.Pp.pp_record_field "uint64_data" (Pbrt.Pp.pp_list Pbrt.Pp.pp_int64) fmt v.Onnx_types.uint64_data;
     Format.pp_close_box fmt ()
@@ -89,7 +89,7 @@ and pp_tensor_shape_proto_dimension fmt (v:Onnx_types.tensor_shape_proto_dimensi
   let pp_i fmt () =
     Format.pp_open_vbox fmt 1;
     Pbrt.Pp.pp_record_field "value" pp_tensor_shape_proto_dimension_value fmt v.Onnx_types.value;
-    Pbrt.Pp.pp_record_field "denotation" Pbrt.Pp.pp_string fmt v.Onnx_types.denotation;
+    Pbrt.Pp.pp_record_field "denotation" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.denotation;
     Format.pp_close_box fmt ()
   in
   Pbrt.Pp.pp_brk pp_i fmt ()
@@ -105,7 +105,7 @@ let rec pp_tensor_shape_proto fmt (v:Onnx_types.tensor_shape_proto) =
 let rec pp_type_proto_tensor fmt (v:Onnx_types.type_proto_tensor) = 
   let pp_i fmt () =
     Format.pp_open_vbox fmt 1;
-    Pbrt.Pp.pp_record_field "elem_type" Pbrt.Pp.pp_int32 fmt v.Onnx_types.elem_type;
+    Pbrt.Pp.pp_record_field "elem_type" (Pbrt.Pp.pp_option Pbrt.Pp.pp_int32) fmt v.Onnx_types.elem_type;
     Pbrt.Pp.pp_record_field "shape" (Pbrt.Pp.pp_option pp_tensor_shape_proto) fmt v.Onnx_types.shape;
     Format.pp_close_box fmt ()
   in
@@ -121,7 +121,7 @@ and pp_type_proto fmt (v:Onnx_types.type_proto) =
   let pp_i fmt () =
     Format.pp_open_vbox fmt 1;
     Pbrt.Pp.pp_record_field "value" pp_type_proto_value fmt v.Onnx_types.value;
-    Pbrt.Pp.pp_record_field "denotation" Pbrt.Pp.pp_string fmt v.Onnx_types.denotation;
+    Pbrt.Pp.pp_record_field "denotation" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.denotation;
     Format.pp_close_box fmt ()
   in
   Pbrt.Pp.pp_brk pp_i fmt ()
@@ -137,7 +137,7 @@ and pp_type_proto_sequence fmt (v:Onnx_types.type_proto_sequence) =
 and pp_type_proto_map fmt (v:Onnx_types.type_proto_map) = 
   let pp_i fmt () =
     Format.pp_open_vbox fmt 1;
-    Pbrt.Pp.pp_record_field "key_type" Pbrt.Pp.pp_int32 fmt v.Onnx_types.key_type;
+    Pbrt.Pp.pp_record_field "key_type" (Pbrt.Pp.pp_option Pbrt.Pp.pp_int32) fmt v.Onnx_types.key_type;
     Pbrt.Pp.pp_record_field "value_type" (Pbrt.Pp.pp_option pp_type_proto) fmt v.Onnx_types.value_type;
     Format.pp_close_box fmt ()
   in
@@ -146,9 +146,9 @@ and pp_type_proto_map fmt (v:Onnx_types.type_proto_map) =
 let rec pp_value_info_proto fmt (v:Onnx_types.value_info_proto) = 
   let pp_i fmt () =
     Format.pp_open_vbox fmt 1;
-    Pbrt.Pp.pp_record_field "name" Pbrt.Pp.pp_string fmt v.Onnx_types.name;
+    Pbrt.Pp.pp_record_field "name" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.name;
     Pbrt.Pp.pp_record_field "type_" (Pbrt.Pp.pp_option pp_type_proto) fmt v.Onnx_types.type_;
-    Pbrt.Pp.pp_record_field "doc_string" Pbrt.Pp.pp_string fmt v.Onnx_types.doc_string;
+    Pbrt.Pp.pp_record_field "doc_string" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.doc_string;
     Format.pp_close_box fmt ()
   in
   Pbrt.Pp.pp_brk pp_i fmt ()
@@ -156,7 +156,7 @@ let rec pp_value_info_proto fmt (v:Onnx_types.value_info_proto) =
 let rec pp_tensor_annotation fmt (v:Onnx_types.tensor_annotation) = 
   let pp_i fmt () =
     Format.pp_open_vbox fmt 1;
-    Pbrt.Pp.pp_record_field "tensor_name" Pbrt.Pp.pp_string fmt v.Onnx_types.tensor_name;
+    Pbrt.Pp.pp_record_field "tensor_name" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.tensor_name;
     Pbrt.Pp.pp_record_field "quant_parameter_tensor_names" (Pbrt.Pp.pp_list pp_string_string_entry_proto) fmt v.Onnx_types.quant_parameter_tensor_names;
     Format.pp_close_box fmt ()
   in
@@ -165,13 +165,13 @@ let rec pp_tensor_annotation fmt (v:Onnx_types.tensor_annotation) =
 let rec pp_attribute_proto fmt (v:Onnx_types.attribute_proto) = 
   let pp_i fmt () =
     Format.pp_open_vbox fmt 1;
-    Pbrt.Pp.pp_record_field "name" Pbrt.Pp.pp_string fmt v.Onnx_types.name;
-    Pbrt.Pp.pp_record_field "ref_attr_name" Pbrt.Pp.pp_string fmt v.Onnx_types.ref_attr_name;
-    Pbrt.Pp.pp_record_field "doc_string" Pbrt.Pp.pp_string fmt v.Onnx_types.doc_string;
-    Pbrt.Pp.pp_record_field "type_" pp_attribute_proto_attribute_type fmt v.Onnx_types.type_;
-    Pbrt.Pp.pp_record_field "f" Pbrt.Pp.pp_float fmt v.Onnx_types.f;
-    Pbrt.Pp.pp_record_field "i" Pbrt.Pp.pp_int64 fmt v.Onnx_types.i;
-    Pbrt.Pp.pp_record_field "s" Pbrt.Pp.pp_bytes fmt v.Onnx_types.s;
+    Pbrt.Pp.pp_record_field "name" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.name;
+    Pbrt.Pp.pp_record_field "ref_attr_name" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.ref_attr_name;
+    Pbrt.Pp.pp_record_field "doc_string" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.doc_string;
+    Pbrt.Pp.pp_record_field "type_" (Pbrt.Pp.pp_option pp_attribute_proto_attribute_type) fmt v.Onnx_types.type_;
+    Pbrt.Pp.pp_record_field "f" (Pbrt.Pp.pp_option Pbrt.Pp.pp_float) fmt v.Onnx_types.f;
+    Pbrt.Pp.pp_record_field "i" (Pbrt.Pp.pp_option Pbrt.Pp.pp_int64) fmt v.Onnx_types.i;
+    Pbrt.Pp.pp_record_field "s" (Pbrt.Pp.pp_option Pbrt.Pp.pp_bytes) fmt v.Onnx_types.s;
     Pbrt.Pp.pp_record_field "t" (Pbrt.Pp.pp_option pp_tensor_proto) fmt v.Onnx_types.t;
     Pbrt.Pp.pp_record_field "g" (Pbrt.Pp.pp_option pp_graph_proto) fmt v.Onnx_types.g;
     Pbrt.Pp.pp_record_field "sparse_tensor" (Pbrt.Pp.pp_option pp_sparse_tensor_proto) fmt v.Onnx_types.sparse_tensor;
@@ -189,10 +189,10 @@ and pp_graph_proto fmt (v:Onnx_types.graph_proto) =
   let pp_i fmt () =
     Format.pp_open_vbox fmt 1;
     Pbrt.Pp.pp_record_field "node" (Pbrt.Pp.pp_list pp_node_proto) fmt v.Onnx_types.node;
-    Pbrt.Pp.pp_record_field "name" Pbrt.Pp.pp_string fmt v.Onnx_types.name;
+    Pbrt.Pp.pp_record_field "name" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.name;
     Pbrt.Pp.pp_record_field "initializer_" (Pbrt.Pp.pp_list pp_tensor_proto) fmt v.Onnx_types.initializer_;
     Pbrt.Pp.pp_record_field "sparse_initializer" (Pbrt.Pp.pp_list pp_sparse_tensor_proto) fmt v.Onnx_types.sparse_initializer;
-    Pbrt.Pp.pp_record_field "doc_string" Pbrt.Pp.pp_string fmt v.Onnx_types.doc_string;
+    Pbrt.Pp.pp_record_field "doc_string" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.doc_string;
     Pbrt.Pp.pp_record_field "input" (Pbrt.Pp.pp_list pp_value_info_proto) fmt v.Onnx_types.input;
     Pbrt.Pp.pp_record_field "output" (Pbrt.Pp.pp_list pp_value_info_proto) fmt v.Onnx_types.output;
     Pbrt.Pp.pp_record_field "value_info" (Pbrt.Pp.pp_list pp_value_info_proto) fmt v.Onnx_types.value_info;
@@ -206,11 +206,11 @@ and pp_node_proto fmt (v:Onnx_types.node_proto) =
     Format.pp_open_vbox fmt 1;
     Pbrt.Pp.pp_record_field "input" (Pbrt.Pp.pp_list Pbrt.Pp.pp_string) fmt v.Onnx_types.input;
     Pbrt.Pp.pp_record_field "output" (Pbrt.Pp.pp_list Pbrt.Pp.pp_string) fmt v.Onnx_types.output;
-    Pbrt.Pp.pp_record_field "name" Pbrt.Pp.pp_string fmt v.Onnx_types.name;
-    Pbrt.Pp.pp_record_field "op_type" Pbrt.Pp.pp_string fmt v.Onnx_types.op_type;
-    Pbrt.Pp.pp_record_field "domain" Pbrt.Pp.pp_string fmt v.Onnx_types.domain;
+    Pbrt.Pp.pp_record_field "name" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.name;
+    Pbrt.Pp.pp_record_field "op_type" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.op_type;
+    Pbrt.Pp.pp_record_field "domain" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.domain;
     Pbrt.Pp.pp_record_field "attribute" (Pbrt.Pp.pp_list pp_attribute_proto) fmt v.Onnx_types.attribute;
-    Pbrt.Pp.pp_record_field "doc_string" Pbrt.Pp.pp_string fmt v.Onnx_types.doc_string;
+    Pbrt.Pp.pp_record_field "doc_string" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.doc_string;
     Format.pp_close_box fmt ()
   in
   Pbrt.Pp.pp_brk pp_i fmt ()
@@ -218,8 +218,8 @@ and pp_node_proto fmt (v:Onnx_types.node_proto) =
 let rec pp_operator_set_id_proto fmt (v:Onnx_types.operator_set_id_proto) = 
   let pp_i fmt () =
     Format.pp_open_vbox fmt 1;
-    Pbrt.Pp.pp_record_field "domain" Pbrt.Pp.pp_string fmt v.Onnx_types.domain;
-    Pbrt.Pp.pp_record_field "version" Pbrt.Pp.pp_int64 fmt v.Onnx_types.version;
+    Pbrt.Pp.pp_record_field "domain" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.domain;
+    Pbrt.Pp.pp_record_field "version" (Pbrt.Pp.pp_option Pbrt.Pp.pp_int64) fmt v.Onnx_types.version;
     Format.pp_close_box fmt ()
   in
   Pbrt.Pp.pp_brk pp_i fmt ()
@@ -227,13 +227,13 @@ let rec pp_operator_set_id_proto fmt (v:Onnx_types.operator_set_id_proto) =
 let rec pp_model_proto fmt (v:Onnx_types.model_proto) = 
   let pp_i fmt () =
     Format.pp_open_vbox fmt 1;
-    Pbrt.Pp.pp_record_field "ir_version" Pbrt.Pp.pp_int64 fmt v.Onnx_types.ir_version;
+    Pbrt.Pp.pp_record_field "ir_version" (Pbrt.Pp.pp_option Pbrt.Pp.pp_int64) fmt v.Onnx_types.ir_version;
     Pbrt.Pp.pp_record_field "opset_import" (Pbrt.Pp.pp_list pp_operator_set_id_proto) fmt v.Onnx_types.opset_import;
-    Pbrt.Pp.pp_record_field "producer_name" Pbrt.Pp.pp_string fmt v.Onnx_types.producer_name;
-    Pbrt.Pp.pp_record_field "producer_version" Pbrt.Pp.pp_string fmt v.Onnx_types.producer_version;
-    Pbrt.Pp.pp_record_field "domain" Pbrt.Pp.pp_string fmt v.Onnx_types.domain;
-    Pbrt.Pp.pp_record_field "model_version" Pbrt.Pp.pp_int64 fmt v.Onnx_types.model_version;
-    Pbrt.Pp.pp_record_field "doc_string" Pbrt.Pp.pp_string fmt v.Onnx_types.doc_string;
+    Pbrt.Pp.pp_record_field "producer_name" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.producer_name;
+    Pbrt.Pp.pp_record_field "producer_version" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.producer_version;
+    Pbrt.Pp.pp_record_field "domain" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.domain;
+    Pbrt.Pp.pp_record_field "model_version" (Pbrt.Pp.pp_option Pbrt.Pp.pp_int64) fmt v.Onnx_types.model_version;
+    Pbrt.Pp.pp_record_field "doc_string" (Pbrt.Pp.pp_option Pbrt.Pp.pp_string) fmt v.Onnx_types.doc_string;
     Pbrt.Pp.pp_record_field "graph" (Pbrt.Pp.pp_option pp_graph_proto) fmt v.Onnx_types.graph;
     Pbrt.Pp.pp_record_field "metadata_props" (Pbrt.Pp.pp_list pp_string_string_entry_proto) fmt v.Onnx_types.metadata_props;
     Format.pp_close_box fmt ()

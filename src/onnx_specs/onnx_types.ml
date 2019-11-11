@@ -26,13 +26,13 @@ type attribute_proto_attribute_type =
   | Sparse_tensors 
 
 type tensor_proto_segment = {
-  begin_ : int64;
-  end_ : int64;
+  begin_ : int64 option;
+  end_ : int64 option;
 }
 
 type string_string_entry_proto = {
-  key : string;
-  value : string;
+  key : string option;
+  value : string option;
 }
 
 type tensor_proto_data_location =
@@ -41,17 +41,17 @@ type tensor_proto_data_location =
 
 type tensor_proto = {
   dims : int64 list;
-  data_type : int32;
+  data_type : int32 option;
   segment : tensor_proto_segment option;
   float_data : float list;
   int32_data : int32 list;
   string_data : bytes list;
   int64_data : int64 list;
-  name : string;
-  doc_string : string;
-  raw_data : bytes;
+  name : string option;
+  doc_string : string option;
+  raw_data : bytes option;
   external_data : string_string_entry_proto list;
-  data_location : tensor_proto_data_location;
+  data_location : tensor_proto_data_location option;
   double_data : float list;
   uint64_data : int64 list;
 }
@@ -68,7 +68,7 @@ type tensor_shape_proto_dimension_value =
 
 and tensor_shape_proto_dimension = {
   value : tensor_shape_proto_dimension_value;
-  denotation : string;
+  denotation : string option;
 }
 
 type tensor_shape_proto = {
@@ -76,7 +76,7 @@ type tensor_shape_proto = {
 }
 
 type type_proto_tensor = {
-  elem_type : int32;
+  elem_type : int32 option;
   shape : tensor_shape_proto option;
 }
 
@@ -87,7 +87,7 @@ type type_proto_value =
 
 and type_proto = {
   value : type_proto_value;
-  denotation : string;
+  denotation : string option;
 }
 
 and type_proto_sequence = {
@@ -95,29 +95,29 @@ and type_proto_sequence = {
 }
 
 and type_proto_map = {
-  key_type : int32;
+  key_type : int32 option;
   value_type : type_proto option;
 }
 
 type value_info_proto = {
-  name : string;
+  name : string option;
   type_ : type_proto option;
-  doc_string : string;
+  doc_string : string option;
 }
 
 type tensor_annotation = {
-  tensor_name : string;
+  tensor_name : string option;
   quant_parameter_tensor_names : string_string_entry_proto list;
 }
 
 type attribute_proto = {
-  name : string;
-  ref_attr_name : string;
-  doc_string : string;
-  type_ : attribute_proto_attribute_type;
-  f : float;
-  i : int64;
-  s : bytes;
+  name : string option;
+  ref_attr_name : string option;
+  doc_string : string option;
+  type_ : attribute_proto_attribute_type option;
+  f : float option;
+  i : int64 option;
+  s : bytes option;
   t : tensor_proto option;
   g : graph_proto option;
   sparse_tensor : sparse_tensor_proto option;
@@ -131,10 +131,10 @@ type attribute_proto = {
 
 and graph_proto = {
   node : node_proto list;
-  name : string;
+  name : string option;
   initializer_ : tensor_proto list;
   sparse_initializer : sparse_tensor_proto list;
-  doc_string : string;
+  doc_string : string option;
   input : value_info_proto list;
   output : value_info_proto list;
   value_info : value_info_proto list;
@@ -144,26 +144,26 @@ and graph_proto = {
 and node_proto = {
   input : string list;
   output : string list;
-  name : string;
-  op_type : string;
-  domain : string;
+  name : string option;
+  op_type : string option;
+  domain : string option;
   attribute : attribute_proto list;
-  doc_string : string;
+  doc_string : string option;
 }
 
 type operator_set_id_proto = {
-  domain : string;
-  version : int64;
+  domain : string option;
+  version : int64 option;
 }
 
 type model_proto = {
-  ir_version : int64;
+  ir_version : int64 option;
   opset_import : operator_set_id_proto list;
-  producer_name : string;
-  producer_version : string;
-  domain : string;
-  model_version : int64;
-  doc_string : string;
+  producer_name : string option;
+  producer_version : string option;
+  domain : string option;
+  model_version : int64 option;
+  doc_string : string option;
   graph : graph_proto option;
   metadata_props : string_string_entry_proto list;
 }
@@ -192,16 +192,16 @@ let rec default_version () = (Start_version:version)
 let rec default_attribute_proto_attribute_type () = (Undefined:attribute_proto_attribute_type)
 
 let rec default_tensor_proto_segment 
-  ?begin_:((begin_:int64) = 0L)
-  ?end_:((end_:int64) = 0L)
+  ?begin_:((begin_:int64 option) = None)
+  ?end_:((end_:int64 option) = None)
   () : tensor_proto_segment  = {
   begin_;
   end_;
 }
 
 let rec default_string_string_entry_proto 
-  ?key:((key:string) = "")
-  ?value:((value:string) = "")
+  ?key:((key:string option) = None)
+  ?value:((value:string option) = None)
   () : string_string_entry_proto  = {
   key;
   value;
@@ -211,17 +211,17 @@ let rec default_tensor_proto_data_location () = (Default:tensor_proto_data_locat
 
 let rec default_tensor_proto 
   ?dims:((dims:int64 list) = [])
-  ?data_type:((data_type:int32) = 0l)
+  ?data_type:((data_type:int32 option) = None)
   ?segment:((segment:tensor_proto_segment option) = None)
   ?float_data:((float_data:float list) = [])
   ?int32_data:((int32_data:int32 list) = [])
   ?string_data:((string_data:bytes list) = [])
   ?int64_data:((int64_data:int64 list) = [])
-  ?name:((name:string) = "")
-  ?doc_string:((doc_string:string) = "")
-  ?raw_data:((raw_data:bytes) = Bytes.create 0)
+  ?name:((name:string option) = None)
+  ?doc_string:((doc_string:string option) = None)
+  ?raw_data:((raw_data:bytes option) = None)
   ?external_data:((external_data:string_string_entry_proto list) = [])
-  ?data_location:((data_location:tensor_proto_data_location) = default_tensor_proto_data_location ())
+  ?data_location:((data_location:tensor_proto_data_location option) = None)
   ?double_data:((double_data:float list) = [])
   ?uint64_data:((uint64_data:int64 list) = [])
   () : tensor_proto  = {
@@ -255,7 +255,7 @@ let rec default_tensor_shape_proto_dimension_value () : tensor_shape_proto_dimen
 
 and default_tensor_shape_proto_dimension 
   ?value:((value:tensor_shape_proto_dimension_value) = Dim_value (0L))
-  ?denotation:((denotation:string) = "")
+  ?denotation:((denotation:string option) = None)
   () : tensor_shape_proto_dimension  = {
   value;
   denotation;
@@ -268,7 +268,7 @@ let rec default_tensor_shape_proto
 }
 
 let rec default_type_proto_tensor 
-  ?elem_type:((elem_type:int32) = 0l)
+  ?elem_type:((elem_type:int32 option) = None)
   ?shape:((shape:tensor_shape_proto option) = None)
   () : type_proto_tensor  = {
   elem_type;
@@ -279,7 +279,7 @@ let rec default_type_proto_value () : type_proto_value = Tensor_type (default_ty
 
 and default_type_proto 
   ?value:((value:type_proto_value) = Tensor_type (default_type_proto_tensor ()))
-  ?denotation:((denotation:string) = "")
+  ?denotation:((denotation:string option) = None)
   () : type_proto  = {
   value;
   denotation;
@@ -292,7 +292,7 @@ and default_type_proto_sequence
 }
 
 and default_type_proto_map 
-  ?key_type:((key_type:int32) = 0l)
+  ?key_type:((key_type:int32 option) = None)
   ?value_type:((value_type:type_proto option) = None)
   () : type_proto_map  = {
   key_type;
@@ -300,9 +300,9 @@ and default_type_proto_map
 }
 
 let rec default_value_info_proto 
-  ?name:((name:string) = "")
+  ?name:((name:string option) = None)
   ?type_:((type_:type_proto option) = None)
-  ?doc_string:((doc_string:string) = "")
+  ?doc_string:((doc_string:string option) = None)
   () : value_info_proto  = {
   name;
   type_;
@@ -310,7 +310,7 @@ let rec default_value_info_proto
 }
 
 let rec default_tensor_annotation 
-  ?tensor_name:((tensor_name:string) = "")
+  ?tensor_name:((tensor_name:string option) = None)
   ?quant_parameter_tensor_names:((quant_parameter_tensor_names:string_string_entry_proto list) = [])
   () : tensor_annotation  = {
   tensor_name;
@@ -318,13 +318,13 @@ let rec default_tensor_annotation
 }
 
 let rec default_attribute_proto 
-  ?name:((name:string) = "")
-  ?ref_attr_name:((ref_attr_name:string) = "")
-  ?doc_string:((doc_string:string) = "")
-  ?type_:((type_:attribute_proto_attribute_type) = default_attribute_proto_attribute_type ())
-  ?f:((f:float) = 0.)
-  ?i:((i:int64) = 0L)
-  ?s:((s:bytes) = Bytes.create 0)
+  ?name:((name:string option) = None)
+  ?ref_attr_name:((ref_attr_name:string option) = None)
+  ?doc_string:((doc_string:string option) = None)
+  ?type_:((type_:attribute_proto_attribute_type option) = None)
+  ?f:((f:float option) = None)
+  ?i:((i:int64 option) = None)
+  ?s:((s:bytes option) = None)
   ?t:((t:tensor_proto option) = None)
   ?g:((g:graph_proto option) = None)
   ?sparse_tensor:((sparse_tensor:sparse_tensor_proto option) = None)
@@ -355,10 +355,10 @@ let rec default_attribute_proto
 
 and default_graph_proto 
   ?node:((node:node_proto list) = [])
-  ?name:((name:string) = "")
+  ?name:((name:string option) = None)
   ?initializer_:((initializer_:tensor_proto list) = [])
   ?sparse_initializer:((sparse_initializer:sparse_tensor_proto list) = [])
-  ?doc_string:((doc_string:string) = "")
+  ?doc_string:((doc_string:string option) = None)
   ?input:((input:value_info_proto list) = [])
   ?output:((output:value_info_proto list) = [])
   ?value_info:((value_info:value_info_proto list) = [])
@@ -378,11 +378,11 @@ and default_graph_proto
 and default_node_proto 
   ?input:((input:string list) = [])
   ?output:((output:string list) = [])
-  ?name:((name:string) = "")
-  ?op_type:((op_type:string) = "")
-  ?domain:((domain:string) = "")
+  ?name:((name:string option) = None)
+  ?op_type:((op_type:string option) = None)
+  ?domain:((domain:string option) = None)
   ?attribute:((attribute:attribute_proto list) = [])
-  ?doc_string:((doc_string:string) = "")
+  ?doc_string:((doc_string:string option) = None)
   () : node_proto  = {
   input;
   output;
@@ -394,21 +394,21 @@ and default_node_proto
 }
 
 let rec default_operator_set_id_proto 
-  ?domain:((domain:string) = "")
-  ?version:((version:int64) = 0L)
+  ?domain:((domain:string option) = None)
+  ?version:((version:int64 option) = None)
   () : operator_set_id_proto  = {
   domain;
   version;
 }
 
 let rec default_model_proto 
-  ?ir_version:((ir_version:int64) = 0L)
+  ?ir_version:((ir_version:int64 option) = None)
   ?opset_import:((opset_import:operator_set_id_proto list) = [])
-  ?producer_name:((producer_name:string) = "")
-  ?producer_version:((producer_version:string) = "")
-  ?domain:((domain:string) = "")
-  ?model_version:((model_version:int64) = 0L)
-  ?doc_string:((doc_string:string) = "")
+  ?producer_name:((producer_name:string option) = None)
+  ?producer_version:((producer_version:string option) = None)
+  ?domain:((domain:string option) = None)
+  ?model_version:((model_version:int64 option) = None)
+  ?doc_string:((doc_string:string option) = None)
   ?graph:((graph:graph_proto option) = None)
   ?metadata_props:((metadata_props:string_string_entry_proto list) = [])
   () : model_proto  = {

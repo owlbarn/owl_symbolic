@@ -1,55 +1,55 @@
 [@@@ocaml.warning "-27-30-39"]
 
 type tensor_proto_segment_mutable = {
-  mutable begin_ : int64;
-  mutable end_ : int64;
+  mutable begin_ : int64 option;
+  mutable end_ : int64 option;
 }
 
 let default_tensor_proto_segment_mutable () : tensor_proto_segment_mutable = {
-  begin_ = 0L;
-  end_ = 0L;
+  begin_ = None;
+  end_ = None;
 }
 
 type string_string_entry_proto_mutable = {
-  mutable key : string;
-  mutable value : string;
+  mutable key : string option;
+  mutable value : string option;
 }
 
 let default_string_string_entry_proto_mutable () : string_string_entry_proto_mutable = {
-  key = "";
-  value = "";
+  key = None;
+  value = None;
 }
 
 type tensor_proto_mutable = {
   mutable dims : int64 list;
-  mutable data_type : int32;
+  mutable data_type : int32 option;
   mutable segment : Onnx_types.tensor_proto_segment option;
   mutable float_data : float list;
   mutable int32_data : int32 list;
   mutable string_data : bytes list;
   mutable int64_data : int64 list;
-  mutable name : string;
-  mutable doc_string : string;
-  mutable raw_data : bytes;
+  mutable name : string option;
+  mutable doc_string : string option;
+  mutable raw_data : bytes option;
   mutable external_data : Onnx_types.string_string_entry_proto list;
-  mutable data_location : Onnx_types.tensor_proto_data_location;
+  mutable data_location : Onnx_types.tensor_proto_data_location option;
   mutable double_data : float list;
   mutable uint64_data : int64 list;
 }
 
 let default_tensor_proto_mutable () : tensor_proto_mutable = {
   dims = [];
-  data_type = 0l;
+  data_type = None;
   segment = None;
   float_data = [];
   int32_data = [];
   string_data = [];
   int64_data = [];
-  name = "";
-  doc_string = "";
-  raw_data = Bytes.create 0;
+  name = None;
+  doc_string = None;
+  raw_data = None;
   external_data = [];
-  data_location = Onnx_types.default_tensor_proto_data_location ();
+  data_location = None;
   double_data = [];
   uint64_data = [];
 }
@@ -68,12 +68,12 @@ let default_sparse_tensor_proto_mutable () : sparse_tensor_proto_mutable = {
 
 type tensor_shape_proto_dimension_mutable = {
   mutable value : Onnx_types.tensor_shape_proto_dimension_value;
-  mutable denotation : string;
+  mutable denotation : string option;
 }
 
 let default_tensor_shape_proto_dimension_mutable () : tensor_shape_proto_dimension_mutable = {
   value = Onnx_types.Dim_value (0L);
-  denotation = "";
+  denotation = None;
 }
 
 type tensor_shape_proto_mutable = {
@@ -85,23 +85,23 @@ let default_tensor_shape_proto_mutable () : tensor_shape_proto_mutable = {
 }
 
 type type_proto_tensor_mutable = {
-  mutable elem_type : int32;
+  mutable elem_type : int32 option;
   mutable shape : Onnx_types.tensor_shape_proto option;
 }
 
 let default_type_proto_tensor_mutable () : type_proto_tensor_mutable = {
-  elem_type = 0l;
+  elem_type = None;
   shape = None;
 }
 
 type type_proto_mutable = {
   mutable value : Onnx_types.type_proto_value;
-  mutable denotation : string;
+  mutable denotation : string option;
 }
 
 let default_type_proto_mutable () : type_proto_mutable = {
   value = Onnx_types.Tensor_type (Onnx_types.default_type_proto_tensor ());
-  denotation = "";
+  denotation = None;
 }
 
 type type_proto_sequence_mutable = {
@@ -113,45 +113,45 @@ let default_type_proto_sequence_mutable () : type_proto_sequence_mutable = {
 }
 
 type type_proto_map_mutable = {
-  mutable key_type : int32;
+  mutable key_type : int32 option;
   mutable value_type : Onnx_types.type_proto option;
 }
 
 let default_type_proto_map_mutable () : type_proto_map_mutable = {
-  key_type = 0l;
+  key_type = None;
   value_type = None;
 }
 
 type value_info_proto_mutable = {
-  mutable name : string;
+  mutable name : string option;
   mutable type_ : Onnx_types.type_proto option;
-  mutable doc_string : string;
+  mutable doc_string : string option;
 }
 
 let default_value_info_proto_mutable () : value_info_proto_mutable = {
-  name = "";
+  name = None;
   type_ = None;
-  doc_string = "";
+  doc_string = None;
 }
 
 type tensor_annotation_mutable = {
-  mutable tensor_name : string;
+  mutable tensor_name : string option;
   mutable quant_parameter_tensor_names : Onnx_types.string_string_entry_proto list;
 }
 
 let default_tensor_annotation_mutable () : tensor_annotation_mutable = {
-  tensor_name = "";
+  tensor_name = None;
   quant_parameter_tensor_names = [];
 }
 
 type attribute_proto_mutable = {
-  mutable name : string;
-  mutable ref_attr_name : string;
-  mutable doc_string : string;
-  mutable type_ : Onnx_types.attribute_proto_attribute_type;
-  mutable f : float;
-  mutable i : int64;
-  mutable s : bytes;
+  mutable name : string option;
+  mutable ref_attr_name : string option;
+  mutable doc_string : string option;
+  mutable type_ : Onnx_types.attribute_proto_attribute_type option;
+  mutable f : float option;
+  mutable i : int64 option;
+  mutable s : bytes option;
   mutable t : Onnx_types.tensor_proto option;
   mutable g : Onnx_types.graph_proto option;
   mutable sparse_tensor : Onnx_types.sparse_tensor_proto option;
@@ -164,13 +164,13 @@ type attribute_proto_mutable = {
 }
 
 let default_attribute_proto_mutable () : attribute_proto_mutable = {
-  name = "";
-  ref_attr_name = "";
-  doc_string = "";
-  type_ = Onnx_types.default_attribute_proto_attribute_type ();
-  f = 0.;
-  i = 0L;
-  s = Bytes.create 0;
+  name = None;
+  ref_attr_name = None;
+  doc_string = None;
+  type_ = None;
+  f = None;
+  i = None;
+  s = None;
   t = None;
   g = None;
   sparse_tensor = None;
@@ -184,10 +184,10 @@ let default_attribute_proto_mutable () : attribute_proto_mutable = {
 
 type graph_proto_mutable = {
   mutable node : Onnx_types.node_proto list;
-  mutable name : string;
+  mutable name : string option;
   mutable initializer_ : Onnx_types.tensor_proto list;
   mutable sparse_initializer : Onnx_types.sparse_tensor_proto list;
-  mutable doc_string : string;
+  mutable doc_string : string option;
   mutable input : Onnx_types.value_info_proto list;
   mutable output : Onnx_types.value_info_proto list;
   mutable value_info : Onnx_types.value_info_proto list;
@@ -196,10 +196,10 @@ type graph_proto_mutable = {
 
 let default_graph_proto_mutable () : graph_proto_mutable = {
   node = [];
-  name = "";
+  name = None;
   initializer_ = [];
   sparse_initializer = [];
-  doc_string = "";
+  doc_string = None;
   input = [];
   output = [];
   value_info = [];
@@ -209,53 +209,53 @@ let default_graph_proto_mutable () : graph_proto_mutable = {
 type node_proto_mutable = {
   mutable input : string list;
   mutable output : string list;
-  mutable name : string;
-  mutable op_type : string;
-  mutable domain : string;
+  mutable name : string option;
+  mutable op_type : string option;
+  mutable domain : string option;
   mutable attribute : Onnx_types.attribute_proto list;
-  mutable doc_string : string;
+  mutable doc_string : string option;
 }
 
 let default_node_proto_mutable () : node_proto_mutable = {
   input = [];
   output = [];
-  name = "";
-  op_type = "";
-  domain = "";
+  name = None;
+  op_type = None;
+  domain = None;
   attribute = [];
-  doc_string = "";
+  doc_string = None;
 }
 
 type operator_set_id_proto_mutable = {
-  mutable domain : string;
-  mutable version : int64;
+  mutable domain : string option;
+  mutable version : int64 option;
 }
 
 let default_operator_set_id_proto_mutable () : operator_set_id_proto_mutable = {
-  domain = "";
-  version = 0L;
+  domain = None;
+  version = None;
 }
 
 type model_proto_mutable = {
-  mutable ir_version : int64;
+  mutable ir_version : int64 option;
   mutable opset_import : Onnx_types.operator_set_id_proto list;
-  mutable producer_name : string;
-  mutable producer_version : string;
-  mutable domain : string;
-  mutable model_version : int64;
-  mutable doc_string : string;
+  mutable producer_name : string option;
+  mutable producer_version : string option;
+  mutable domain : string option;
+  mutable model_version : int64 option;
+  mutable doc_string : string option;
   mutable graph : Onnx_types.graph_proto option;
   mutable metadata_props : Onnx_types.string_string_entry_proto list;
 }
 
 let default_model_proto_mutable () : model_proto_mutable = {
-  ir_version = 0L;
+  ir_version = None;
   opset_import = [];
-  producer_name = "";
-  producer_version = "";
-  domain = "";
-  model_version = 0L;
-  doc_string = "";
+  producer_name = None;
+  producer_version = None;
+  domain = None;
+  model_version = None;
+  doc_string = None;
   graph = None;
   metadata_props = [];
 }
@@ -297,12 +297,12 @@ let rec decode_tensor_proto_segment d =
     | None -> (
     ); continue__ := false
     | Some (1, Pbrt.Varint) -> begin
-      v.begin_ <- Pbrt.Decoder.int64_as_varint d;
+      v.begin_ <- Some (Pbrt.Decoder.int64_as_varint d);
     end
     | Some (1, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(tensor_proto_segment), field(1)" pk
     | Some (2, Pbrt.Varint) -> begin
-      v.end_ <- Pbrt.Decoder.int64_as_varint d;
+      v.end_ <- Some (Pbrt.Decoder.int64_as_varint d);
     end
     | Some (2, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(tensor_proto_segment), field(2)" pk
@@ -321,12 +321,12 @@ let rec decode_string_string_entry_proto d =
     | None -> (
     ); continue__ := false
     | Some (1, Pbrt.Bytes) -> begin
-      v.key <- Pbrt.Decoder.string d;
+      v.key <- Some (Pbrt.Decoder.string d);
     end
     | Some (1, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(string_string_entry_proto), field(1)" pk
     | Some (2, Pbrt.Bytes) -> begin
-      v.value <- Pbrt.Decoder.string d;
+      v.value <- Some (Pbrt.Decoder.string d);
     end
     | Some (2, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(string_string_entry_proto), field(2)" pk
@@ -358,13 +358,13 @@ let rec decode_tensor_proto d =
       v.float_data <- List.rev v.float_data;
       v.dims <- List.rev v.dims;
     ); continue__ := false
-    | Some (1, Pbrt.Bytes) -> begin
-      v.dims <- Pbrt.Decoder.packed_fold (fun l d -> (Pbrt.Decoder.int64_as_varint d)::l) [] d;
+    | Some (1, Pbrt.Varint) -> begin
+      v.dims <- (Pbrt.Decoder.int64_as_varint d) :: v.dims;
     end
     | Some (1, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(tensor_proto), field(1)" pk
     | Some (2, Pbrt.Varint) -> begin
-      v.data_type <- Pbrt.Decoder.int32_as_varint d;
+      v.data_type <- Some (Pbrt.Decoder.int32_as_varint d);
     end
     | Some (2, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(tensor_proto), field(2)" pk
@@ -394,17 +394,17 @@ let rec decode_tensor_proto d =
     | Some (7, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(tensor_proto), field(7)" pk
     | Some (8, Pbrt.Bytes) -> begin
-      v.name <- Pbrt.Decoder.string d;
+      v.name <- Some (Pbrt.Decoder.string d);
     end
     | Some (8, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(tensor_proto), field(8)" pk
     | Some (12, Pbrt.Bytes) -> begin
-      v.doc_string <- Pbrt.Decoder.string d;
+      v.doc_string <- Some (Pbrt.Decoder.string d);
     end
     | Some (12, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(tensor_proto), field(12)" pk
     | Some (9, Pbrt.Bytes) -> begin
-      v.raw_data <- Pbrt.Decoder.bytes d;
+      v.raw_data <- Some (Pbrt.Decoder.bytes d);
     end
     | Some (9, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(tensor_proto), field(9)" pk
@@ -414,7 +414,7 @@ let rec decode_tensor_proto d =
     | Some (13, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(tensor_proto), field(13)" pk
     | Some (14, Pbrt.Varint) -> begin
-      v.data_location <- decode_tensor_proto_data_location d;
+      v.data_location <- Some (decode_tensor_proto_data_location d);
     end
     | Some (14, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(tensor_proto), field(14)" pk
@@ -465,8 +465,8 @@ let rec decode_sparse_tensor_proto d =
     end
     | Some (2, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(sparse_tensor_proto), field(2)" pk
-    | Some (3, Pbrt.Bytes) -> begin
-      v.dims <- Pbrt.Decoder.packed_fold (fun l d -> (Pbrt.Decoder.int64_as_varint d)::l) [] d;
+    | Some (3, Pbrt.Varint) -> begin
+      v.dims <- (Pbrt.Decoder.int64_as_varint d) :: v.dims;
     end
     | Some (3, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(sparse_tensor_proto), field(3)" pk
@@ -511,7 +511,7 @@ and decode_tensor_shape_proto_dimension d =
     | Some (2, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(tensor_shape_proto_dimension), field(2)" pk
     | Some (3, Pbrt.Bytes) -> begin
-      v.denotation <- Pbrt.Decoder.string d;
+      v.denotation <- Some (Pbrt.Decoder.string d);
     end
     | Some (3, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(tensor_shape_proto_dimension), field(3)" pk
@@ -549,7 +549,7 @@ let rec decode_type_proto_tensor d =
     | None -> (
     ); continue__ := false
     | Some (1, Pbrt.Varint) -> begin
-      v.elem_type <- Pbrt.Decoder.int32_as_varint d;
+      v.elem_type <- Some (Pbrt.Decoder.int32_as_varint d);
     end
     | Some (1, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(type_proto_tensor), field(1)" pk
@@ -604,7 +604,7 @@ and decode_type_proto d =
     | Some (5, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(type_proto), field(5)" pk
     | Some (6, Pbrt.Bytes) -> begin
-      v.denotation <- Pbrt.Decoder.string d;
+      v.denotation <- Some (Pbrt.Decoder.string d);
     end
     | Some (6, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(type_proto), field(6)" pk
@@ -641,7 +641,7 @@ and decode_type_proto_map d =
     | None -> (
     ); continue__ := false
     | Some (1, Pbrt.Varint) -> begin
-      v.key_type <- Pbrt.Decoder.int32_as_varint d;
+      v.key_type <- Some (Pbrt.Decoder.int32_as_varint d);
     end
     | Some (1, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(type_proto_map), field(1)" pk
@@ -665,7 +665,7 @@ let rec decode_value_info_proto d =
     | None -> (
     ); continue__ := false
     | Some (1, Pbrt.Bytes) -> begin
-      v.name <- Pbrt.Decoder.string d;
+      v.name <- Some (Pbrt.Decoder.string d);
     end
     | Some (1, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(value_info_proto), field(1)" pk
@@ -675,7 +675,7 @@ let rec decode_value_info_proto d =
     | Some (2, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(value_info_proto), field(2)" pk
     | Some (3, Pbrt.Bytes) -> begin
-      v.doc_string <- Pbrt.Decoder.string d;
+      v.doc_string <- Some (Pbrt.Decoder.string d);
     end
     | Some (3, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(value_info_proto), field(3)" pk
@@ -696,7 +696,7 @@ let rec decode_tensor_annotation d =
       v.quant_parameter_tensor_names <- List.rev v.quant_parameter_tensor_names;
     ); continue__ := false
     | Some (1, Pbrt.Bytes) -> begin
-      v.tensor_name <- Pbrt.Decoder.string d;
+      v.tensor_name <- Some (Pbrt.Decoder.string d);
     end
     | Some (1, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(tensor_annotation), field(1)" pk
@@ -726,37 +726,37 @@ let rec decode_attribute_proto d =
       v.floats <- List.rev v.floats;
     ); continue__ := false
     | Some (1, Pbrt.Bytes) -> begin
-      v.name <- Pbrt.Decoder.string d;
+      v.name <- Some (Pbrt.Decoder.string d);
     end
     | Some (1, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(attribute_proto), field(1)" pk
     | Some (21, Pbrt.Bytes) -> begin
-      v.ref_attr_name <- Pbrt.Decoder.string d;
+      v.ref_attr_name <- Some (Pbrt.Decoder.string d);
     end
     | Some (21, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(attribute_proto), field(21)" pk
     | Some (13, Pbrt.Bytes) -> begin
-      v.doc_string <- Pbrt.Decoder.string d;
+      v.doc_string <- Some (Pbrt.Decoder.string d);
     end
     | Some (13, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(attribute_proto), field(13)" pk
     | Some (20, Pbrt.Varint) -> begin
-      v.type_ <- decode_attribute_proto_attribute_type d;
+      v.type_ <- Some (decode_attribute_proto_attribute_type d);
     end
     | Some (20, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(attribute_proto), field(20)" pk
     | Some (2, Pbrt.Bits32) -> begin
-      v.f <- Pbrt.Decoder.float_as_bits32 d;
+      v.f <- Some (Pbrt.Decoder.float_as_bits32 d);
     end
     | Some (2, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(attribute_proto), field(2)" pk
     | Some (3, Pbrt.Varint) -> begin
-      v.i <- Pbrt.Decoder.int64_as_varint d;
+      v.i <- Some (Pbrt.Decoder.int64_as_varint d);
     end
     | Some (3, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(attribute_proto), field(3)" pk
     | Some (4, Pbrt.Bytes) -> begin
-      v.s <- Pbrt.Decoder.bytes d;
+      v.s <- Some (Pbrt.Decoder.bytes d);
     end
     | Some (4, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(attribute_proto), field(4)" pk
@@ -775,13 +775,13 @@ let rec decode_attribute_proto d =
     end
     | Some (22, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(attribute_proto), field(22)" pk
-    | Some (7, Pbrt.Bytes) -> begin
-      v.floats <- Pbrt.Decoder.packed_fold (fun l d -> (Pbrt.Decoder.float_as_bits32 d)::l) [] d;
+    | Some (7, Pbrt.Bits32) -> begin
+      v.floats <- (Pbrt.Decoder.float_as_bits32 d) :: v.floats;
     end
     | Some (7, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(attribute_proto), field(7)" pk
-    | Some (8, Pbrt.Bytes) -> begin
-      v.ints <- Pbrt.Decoder.packed_fold (fun l d -> (Pbrt.Decoder.int64_as_varint d)::l) [] d;
+    | Some (8, Pbrt.Varint) -> begin
+      v.ints <- (Pbrt.Decoder.int64_as_varint d) :: v.ints;
     end
     | Some (8, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(attribute_proto), field(8)" pk
@@ -846,7 +846,7 @@ and decode_graph_proto d =
     | Some (1, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(graph_proto), field(1)" pk
     | Some (2, Pbrt.Bytes) -> begin
-      v.name <- Pbrt.Decoder.string d;
+      v.name <- Some (Pbrt.Decoder.string d);
     end
     | Some (2, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(graph_proto), field(2)" pk
@@ -861,7 +861,7 @@ and decode_graph_proto d =
     | Some (15, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(graph_proto), field(15)" pk
     | Some (10, Pbrt.Bytes) -> begin
-      v.doc_string <- Pbrt.Decoder.string d;
+      v.doc_string <- Some (Pbrt.Decoder.string d);
     end
     | Some (10, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(graph_proto), field(10)" pk
@@ -920,17 +920,17 @@ and decode_node_proto d =
     | Some (2, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(node_proto), field(2)" pk
     | Some (3, Pbrt.Bytes) -> begin
-      v.name <- Pbrt.Decoder.string d;
+      v.name <- Some (Pbrt.Decoder.string d);
     end
     | Some (3, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(node_proto), field(3)" pk
     | Some (4, Pbrt.Bytes) -> begin
-      v.op_type <- Pbrt.Decoder.string d;
+      v.op_type <- Some (Pbrt.Decoder.string d);
     end
     | Some (4, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(node_proto), field(4)" pk
     | Some (7, Pbrt.Bytes) -> begin
-      v.domain <- Pbrt.Decoder.string d;
+      v.domain <- Some (Pbrt.Decoder.string d);
     end
     | Some (7, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(node_proto), field(7)" pk
@@ -940,7 +940,7 @@ and decode_node_proto d =
     | Some (5, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(node_proto), field(5)" pk
     | Some (6, Pbrt.Bytes) -> begin
-      v.doc_string <- Pbrt.Decoder.string d;
+      v.doc_string <- Some (Pbrt.Decoder.string d);
     end
     | Some (6, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(node_proto), field(6)" pk
@@ -964,12 +964,12 @@ let rec decode_operator_set_id_proto d =
     | None -> (
     ); continue__ := false
     | Some (1, Pbrt.Bytes) -> begin
-      v.domain <- Pbrt.Decoder.string d;
+      v.domain <- Some (Pbrt.Decoder.string d);
     end
     | Some (1, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(operator_set_id_proto), field(1)" pk
     | Some (2, Pbrt.Varint) -> begin
-      v.version <- Pbrt.Decoder.int64_as_varint d;
+      v.version <- Some (Pbrt.Decoder.int64_as_varint d);
     end
     | Some (2, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(operator_set_id_proto), field(2)" pk
@@ -990,7 +990,7 @@ let rec decode_model_proto d =
       v.opset_import <- List.rev v.opset_import;
     ); continue__ := false
     | Some (1, Pbrt.Varint) -> begin
-      v.ir_version <- Pbrt.Decoder.int64_as_varint d;
+      v.ir_version <- Some (Pbrt.Decoder.int64_as_varint d);
     end
     | Some (1, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(model_proto), field(1)" pk
@@ -1000,27 +1000,27 @@ let rec decode_model_proto d =
     | Some (8, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(model_proto), field(8)" pk
     | Some (2, Pbrt.Bytes) -> begin
-      v.producer_name <- Pbrt.Decoder.string d;
+      v.producer_name <- Some (Pbrt.Decoder.string d);
     end
     | Some (2, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(model_proto), field(2)" pk
     | Some (3, Pbrt.Bytes) -> begin
-      v.producer_version <- Pbrt.Decoder.string d;
+      v.producer_version <- Some (Pbrt.Decoder.string d);
     end
     | Some (3, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(model_proto), field(3)" pk
     | Some (4, Pbrt.Bytes) -> begin
-      v.domain <- Pbrt.Decoder.string d;
+      v.domain <- Some (Pbrt.Decoder.string d);
     end
     | Some (4, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(model_proto), field(4)" pk
     | Some (5, Pbrt.Varint) -> begin
-      v.model_version <- Pbrt.Decoder.int64_as_varint d;
+      v.model_version <- Some (Pbrt.Decoder.int64_as_varint d);
     end
     | Some (5, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(model_proto), field(5)" pk
     | Some (6, Pbrt.Bytes) -> begin
-      v.doc_string <- Pbrt.Decoder.string d;
+      v.doc_string <- Some (Pbrt.Decoder.string d);
     end
     | Some (6, pk) -> 
       Pbrt.Decoder.unexpected_payload "Message(model_proto), field(6)" pk
@@ -1096,17 +1096,33 @@ let rec encode_attribute_proto_attribute_type (v:Onnx_types.attribute_proto_attr
   | Onnx_types.Sparse_tensors -> Pbrt.Encoder.int_as_varint 12 encoder
 
 let rec encode_tensor_proto_segment (v:Onnx_types.tensor_proto_segment) encoder = 
-  Pbrt.Encoder.key (1, Pbrt.Varint) encoder; 
-  Pbrt.Encoder.int64_as_varint v.Onnx_types.begin_ encoder;
-  Pbrt.Encoder.key (2, Pbrt.Varint) encoder; 
-  Pbrt.Encoder.int64_as_varint v.Onnx_types.end_ encoder;
+  begin match v.Onnx_types.begin_ with
+  | Some x -> 
+    Pbrt.Encoder.key (1, Pbrt.Varint) encoder; 
+    Pbrt.Encoder.int64_as_varint x encoder;
+  | None -> ();
+  end;
+  begin match v.Onnx_types.end_ with
+  | Some x -> 
+    Pbrt.Encoder.key (2, Pbrt.Varint) encoder; 
+    Pbrt.Encoder.int64_as_varint x encoder;
+  | None -> ();
+  end;
   ()
 
 let rec encode_string_string_entry_proto (v:Onnx_types.string_string_entry_proto) encoder = 
-  Pbrt.Encoder.key (1, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.key encoder;
-  Pbrt.Encoder.key (2, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.value encoder;
+  begin match v.Onnx_types.key with
+  | Some x -> 
+    Pbrt.Encoder.key (1, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
+  begin match v.Onnx_types.value with
+  | Some x -> 
+    Pbrt.Encoder.key (2, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
   ()
 
 let rec encode_tensor_proto_data_location (v:Onnx_types.tensor_proto_data_location) encoder =
@@ -1115,14 +1131,16 @@ let rec encode_tensor_proto_data_location (v:Onnx_types.tensor_proto_data_locati
   | Onnx_types.External -> Pbrt.Encoder.int_as_varint 1 encoder
 
 let rec encode_tensor_proto (v:Onnx_types.tensor_proto) encoder = 
-  Pbrt.Encoder.key (1, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.nested (fun encoder ->
-    List.iter (fun x -> 
-      Pbrt.Encoder.int64_as_varint x encoder;
-    ) v.Onnx_types.dims;
-  ) encoder;
-  Pbrt.Encoder.key (2, Pbrt.Varint) encoder; 
-  Pbrt.Encoder.int32_as_varint v.Onnx_types.data_type encoder;
+  List.iter (fun x -> 
+    Pbrt.Encoder.key (1, Pbrt.Varint) encoder; 
+    Pbrt.Encoder.int64_as_varint x encoder;
+  ) v.Onnx_types.dims;
+  begin match v.Onnx_types.data_type with
+  | Some x -> 
+    Pbrt.Encoder.key (2, Pbrt.Varint) encoder; 
+    Pbrt.Encoder.int32_as_varint x encoder;
+  | None -> ();
+  end;
   begin match v.Onnx_types.segment with
   | Some x -> 
     Pbrt.Encoder.key (3, Pbrt.Bytes) encoder; 
@@ -1151,18 +1169,34 @@ let rec encode_tensor_proto (v:Onnx_types.tensor_proto) encoder =
       Pbrt.Encoder.int64_as_varint x encoder;
     ) v.Onnx_types.int64_data;
   ) encoder;
-  Pbrt.Encoder.key (8, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.name encoder;
-  Pbrt.Encoder.key (12, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.doc_string encoder;
-  Pbrt.Encoder.key (9, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.bytes v.Onnx_types.raw_data encoder;
+  begin match v.Onnx_types.name with
+  | Some x -> 
+    Pbrt.Encoder.key (8, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
+  begin match v.Onnx_types.doc_string with
+  | Some x -> 
+    Pbrt.Encoder.key (12, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
+  begin match v.Onnx_types.raw_data with
+  | Some x -> 
+    Pbrt.Encoder.key (9, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.bytes x encoder;
+  | None -> ();
+  end;
   List.iter (fun x -> 
     Pbrt.Encoder.key (13, Pbrt.Bytes) encoder; 
     Pbrt.Encoder.nested (encode_string_string_entry_proto x) encoder;
   ) v.Onnx_types.external_data;
-  Pbrt.Encoder.key (14, Pbrt.Varint) encoder; 
-  encode_tensor_proto_data_location v.Onnx_types.data_location encoder;
+  begin match v.Onnx_types.data_location with
+  | Some x -> 
+    Pbrt.Encoder.key (14, Pbrt.Varint) encoder; 
+    encode_tensor_proto_data_location x encoder;
+  | None -> ();
+  end;
   Pbrt.Encoder.key (10, Pbrt.Bytes) encoder; 
   Pbrt.Encoder.nested (fun encoder ->
     List.iter (fun x -> 
@@ -1190,12 +1224,10 @@ let rec encode_sparse_tensor_proto (v:Onnx_types.sparse_tensor_proto) encoder =
     Pbrt.Encoder.nested (encode_tensor_proto x) encoder;
   | None -> ();
   end;
-  Pbrt.Encoder.key (3, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.nested (fun encoder ->
-    List.iter (fun x -> 
-      Pbrt.Encoder.int64_as_varint x encoder;
-    ) v.Onnx_types.dims;
-  ) encoder;
+  List.iter (fun x -> 
+    Pbrt.Encoder.key (3, Pbrt.Varint) encoder; 
+    Pbrt.Encoder.int64_as_varint x encoder;
+  ) v.Onnx_types.dims;
   ()
 
 let rec encode_tensor_shape_proto_dimension_value (v:Onnx_types.tensor_shape_proto_dimension_value) encoder = 
@@ -1217,8 +1249,12 @@ and encode_tensor_shape_proto_dimension (v:Onnx_types.tensor_shape_proto_dimensi
     Pbrt.Encoder.key (2, Pbrt.Bytes) encoder; 
     Pbrt.Encoder.string x encoder;
   end;
-  Pbrt.Encoder.key (3, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.denotation encoder;
+  begin match v.Onnx_types.denotation with
+  | Some x -> 
+    Pbrt.Encoder.key (3, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
   ()
 
 let rec encode_tensor_shape_proto (v:Onnx_types.tensor_shape_proto) encoder = 
@@ -1229,8 +1265,12 @@ let rec encode_tensor_shape_proto (v:Onnx_types.tensor_shape_proto) encoder =
   ()
 
 let rec encode_type_proto_tensor (v:Onnx_types.type_proto_tensor) encoder = 
-  Pbrt.Encoder.key (1, Pbrt.Varint) encoder; 
-  Pbrt.Encoder.int32_as_varint v.Onnx_types.elem_type encoder;
+  begin match v.Onnx_types.elem_type with
+  | Some x -> 
+    Pbrt.Encoder.key (1, Pbrt.Varint) encoder; 
+    Pbrt.Encoder.int32_as_varint x encoder;
+  | None -> ();
+  end;
   begin match v.Onnx_types.shape with
   | Some x -> 
     Pbrt.Encoder.key (2, Pbrt.Bytes) encoder; 
@@ -1264,8 +1304,12 @@ and encode_type_proto (v:Onnx_types.type_proto) encoder =
     Pbrt.Encoder.key (5, Pbrt.Bytes) encoder; 
     Pbrt.Encoder.nested (encode_type_proto_map x) encoder;
   end;
-  Pbrt.Encoder.key (6, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.denotation encoder;
+  begin match v.Onnx_types.denotation with
+  | Some x -> 
+    Pbrt.Encoder.key (6, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
   ()
 
 and encode_type_proto_sequence (v:Onnx_types.type_proto_sequence) encoder = 
@@ -1278,8 +1322,12 @@ and encode_type_proto_sequence (v:Onnx_types.type_proto_sequence) encoder =
   ()
 
 and encode_type_proto_map (v:Onnx_types.type_proto_map) encoder = 
-  Pbrt.Encoder.key (1, Pbrt.Varint) encoder; 
-  Pbrt.Encoder.int32_as_varint v.Onnx_types.key_type encoder;
+  begin match v.Onnx_types.key_type with
+  | Some x -> 
+    Pbrt.Encoder.key (1, Pbrt.Varint) encoder; 
+    Pbrt.Encoder.int32_as_varint x encoder;
+  | None -> ();
+  end;
   begin match v.Onnx_types.value_type with
   | Some x -> 
     Pbrt.Encoder.key (2, Pbrt.Bytes) encoder; 
@@ -1289,21 +1337,33 @@ and encode_type_proto_map (v:Onnx_types.type_proto_map) encoder =
   ()
 
 let rec encode_value_info_proto (v:Onnx_types.value_info_proto) encoder = 
-  Pbrt.Encoder.key (1, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.name encoder;
+  begin match v.Onnx_types.name with
+  | Some x -> 
+    Pbrt.Encoder.key (1, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
   begin match v.Onnx_types.type_ with
   | Some x -> 
     Pbrt.Encoder.key (2, Pbrt.Bytes) encoder; 
     Pbrt.Encoder.nested (encode_type_proto x) encoder;
   | None -> ();
   end;
-  Pbrt.Encoder.key (3, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.doc_string encoder;
+  begin match v.Onnx_types.doc_string with
+  | Some x -> 
+    Pbrt.Encoder.key (3, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
   ()
 
 let rec encode_tensor_annotation (v:Onnx_types.tensor_annotation) encoder = 
-  Pbrt.Encoder.key (1, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.tensor_name encoder;
+  begin match v.Onnx_types.tensor_name with
+  | Some x -> 
+    Pbrt.Encoder.key (1, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
   List.iter (fun x -> 
     Pbrt.Encoder.key (2, Pbrt.Bytes) encoder; 
     Pbrt.Encoder.nested (encode_string_string_entry_proto x) encoder;
@@ -1311,20 +1371,48 @@ let rec encode_tensor_annotation (v:Onnx_types.tensor_annotation) encoder =
   ()
 
 let rec encode_attribute_proto (v:Onnx_types.attribute_proto) encoder = 
-  Pbrt.Encoder.key (1, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.name encoder;
-  Pbrt.Encoder.key (21, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.ref_attr_name encoder;
-  Pbrt.Encoder.key (13, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.doc_string encoder;
-  Pbrt.Encoder.key (20, Pbrt.Varint) encoder; 
-  encode_attribute_proto_attribute_type v.Onnx_types.type_ encoder;
-  Pbrt.Encoder.key (2, Pbrt.Bits32) encoder; 
-  Pbrt.Encoder.float_as_bits32 v.Onnx_types.f encoder;
-  Pbrt.Encoder.key (3, Pbrt.Varint) encoder; 
-  Pbrt.Encoder.int64_as_varint v.Onnx_types.i encoder;
-  Pbrt.Encoder.key (4, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.bytes v.Onnx_types.s encoder;
+  begin match v.Onnx_types.name with
+  | Some x -> 
+    Pbrt.Encoder.key (1, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
+  begin match v.Onnx_types.ref_attr_name with
+  | Some x -> 
+    Pbrt.Encoder.key (21, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
+  begin match v.Onnx_types.doc_string with
+  | Some x -> 
+    Pbrt.Encoder.key (13, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
+  begin match v.Onnx_types.type_ with
+  | Some x -> 
+    Pbrt.Encoder.key (20, Pbrt.Varint) encoder; 
+    encode_attribute_proto_attribute_type x encoder;
+  | None -> ();
+  end;
+  begin match v.Onnx_types.f with
+  | Some x -> 
+    Pbrt.Encoder.key (2, Pbrt.Bits32) encoder; 
+    Pbrt.Encoder.float_as_bits32 x encoder;
+  | None -> ();
+  end;
+  begin match v.Onnx_types.i with
+  | Some x -> 
+    Pbrt.Encoder.key (3, Pbrt.Varint) encoder; 
+    Pbrt.Encoder.int64_as_varint x encoder;
+  | None -> ();
+  end;
+  begin match v.Onnx_types.s with
+  | Some x -> 
+    Pbrt.Encoder.key (4, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.bytes x encoder;
+  | None -> ();
+  end;
   begin match v.Onnx_types.t with
   | Some x -> 
     Pbrt.Encoder.key (5, Pbrt.Bytes) encoder; 
@@ -1343,18 +1431,14 @@ let rec encode_attribute_proto (v:Onnx_types.attribute_proto) encoder =
     Pbrt.Encoder.nested (encode_sparse_tensor_proto x) encoder;
   | None -> ();
   end;
-  Pbrt.Encoder.key (7, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.nested (fun encoder ->
-    List.iter (fun x -> 
-      Pbrt.Encoder.float_as_bits32 x encoder;
-    ) v.Onnx_types.floats;
-  ) encoder;
-  Pbrt.Encoder.key (8, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.nested (fun encoder ->
-    List.iter (fun x -> 
-      Pbrt.Encoder.int64_as_varint x encoder;
-    ) v.Onnx_types.ints;
-  ) encoder;
+  List.iter (fun x -> 
+    Pbrt.Encoder.key (7, Pbrt.Bits32) encoder; 
+    Pbrt.Encoder.float_as_bits32 x encoder;
+  ) v.Onnx_types.floats;
+  List.iter (fun x -> 
+    Pbrt.Encoder.key (8, Pbrt.Varint) encoder; 
+    Pbrt.Encoder.int64_as_varint x encoder;
+  ) v.Onnx_types.ints;
   List.iter (fun x -> 
     Pbrt.Encoder.key (9, Pbrt.Bytes) encoder; 
     Pbrt.Encoder.bytes x encoder;
@@ -1378,8 +1462,12 @@ and encode_graph_proto (v:Onnx_types.graph_proto) encoder =
     Pbrt.Encoder.key (1, Pbrt.Bytes) encoder; 
     Pbrt.Encoder.nested (encode_node_proto x) encoder;
   ) v.Onnx_types.node;
-  Pbrt.Encoder.key (2, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.name encoder;
+  begin match v.Onnx_types.name with
+  | Some x -> 
+    Pbrt.Encoder.key (2, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
   List.iter (fun x -> 
     Pbrt.Encoder.key (5, Pbrt.Bytes) encoder; 
     Pbrt.Encoder.nested (encode_tensor_proto x) encoder;
@@ -1388,8 +1476,12 @@ and encode_graph_proto (v:Onnx_types.graph_proto) encoder =
     Pbrt.Encoder.key (15, Pbrt.Bytes) encoder; 
     Pbrt.Encoder.nested (encode_sparse_tensor_proto x) encoder;
   ) v.Onnx_types.sparse_initializer;
-  Pbrt.Encoder.key (10, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.doc_string encoder;
+  begin match v.Onnx_types.doc_string with
+  | Some x -> 
+    Pbrt.Encoder.key (10, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
   List.iter (fun x -> 
     Pbrt.Encoder.key (11, Pbrt.Bytes) encoder; 
     Pbrt.Encoder.nested (encode_value_info_proto x) encoder;
@@ -1417,44 +1509,92 @@ and encode_node_proto (v:Onnx_types.node_proto) encoder =
     Pbrt.Encoder.key (2, Pbrt.Bytes) encoder; 
     Pbrt.Encoder.string x encoder;
   ) v.Onnx_types.output;
-  Pbrt.Encoder.key (3, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.name encoder;
-  Pbrt.Encoder.key (4, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.op_type encoder;
-  Pbrt.Encoder.key (7, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.domain encoder;
+  begin match v.Onnx_types.name with
+  | Some x -> 
+    Pbrt.Encoder.key (3, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
+  begin match v.Onnx_types.op_type with
+  | Some x -> 
+    Pbrt.Encoder.key (4, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
+  begin match v.Onnx_types.domain with
+  | Some x -> 
+    Pbrt.Encoder.key (7, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
   List.iter (fun x -> 
     Pbrt.Encoder.key (5, Pbrt.Bytes) encoder; 
     Pbrt.Encoder.nested (encode_attribute_proto x) encoder;
   ) v.Onnx_types.attribute;
-  Pbrt.Encoder.key (6, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.doc_string encoder;
+  begin match v.Onnx_types.doc_string with
+  | Some x -> 
+    Pbrt.Encoder.key (6, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
   ()
 
 let rec encode_operator_set_id_proto (v:Onnx_types.operator_set_id_proto) encoder = 
-  Pbrt.Encoder.key (1, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.domain encoder;
-  Pbrt.Encoder.key (2, Pbrt.Varint) encoder; 
-  Pbrt.Encoder.int64_as_varint v.Onnx_types.version encoder;
+  begin match v.Onnx_types.domain with
+  | Some x -> 
+    Pbrt.Encoder.key (1, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
+  begin match v.Onnx_types.version with
+  | Some x -> 
+    Pbrt.Encoder.key (2, Pbrt.Varint) encoder; 
+    Pbrt.Encoder.int64_as_varint x encoder;
+  | None -> ();
+  end;
   ()
 
 let rec encode_model_proto (v:Onnx_types.model_proto) encoder = 
-  Pbrt.Encoder.key (1, Pbrt.Varint) encoder; 
-  Pbrt.Encoder.int64_as_varint v.Onnx_types.ir_version encoder;
+  begin match v.Onnx_types.ir_version with
+  | Some x -> 
+    Pbrt.Encoder.key (1, Pbrt.Varint) encoder; 
+    Pbrt.Encoder.int64_as_varint x encoder;
+  | None -> ();
+  end;
   List.iter (fun x -> 
     Pbrt.Encoder.key (8, Pbrt.Bytes) encoder; 
     Pbrt.Encoder.nested (encode_operator_set_id_proto x) encoder;
   ) v.Onnx_types.opset_import;
-  Pbrt.Encoder.key (2, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.producer_name encoder;
-  Pbrt.Encoder.key (3, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.producer_version encoder;
-  Pbrt.Encoder.key (4, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.domain encoder;
-  Pbrt.Encoder.key (5, Pbrt.Varint) encoder; 
-  Pbrt.Encoder.int64_as_varint v.Onnx_types.model_version encoder;
-  Pbrt.Encoder.key (6, Pbrt.Bytes) encoder; 
-  Pbrt.Encoder.string v.Onnx_types.doc_string encoder;
+  begin match v.Onnx_types.producer_name with
+  | Some x -> 
+    Pbrt.Encoder.key (2, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
+  begin match v.Onnx_types.producer_version with
+  | Some x -> 
+    Pbrt.Encoder.key (3, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
+  begin match v.Onnx_types.domain with
+  | Some x -> 
+    Pbrt.Encoder.key (4, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
+  begin match v.Onnx_types.model_version with
+  | Some x -> 
+    Pbrt.Encoder.key (5, Pbrt.Varint) encoder; 
+    Pbrt.Encoder.int64_as_varint x encoder;
+  | None -> ();
+  end;
+  begin match v.Onnx_types.doc_string with
+  | Some x -> 
+    Pbrt.Encoder.key (6, Pbrt.Bytes) encoder; 
+    Pbrt.Encoder.string x encoder;
+  | None -> ();
+  end;
   begin match v.Onnx_types.graph with
   | Some x -> 
     Pbrt.Encoder.key (7, Pbrt.Bytes) encoder; 
