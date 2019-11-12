@@ -137,7 +137,7 @@ let make_onnx_graph
 
 
 let make_onnx_model graph =
-  (* NOTE: IR version and opset matters. *)
+  (* NOTE: IR version and opset do matter; check the doc *)
   let ir_version = Some (Int64.of_int 6) in
   let producer_name = Some "owl" in
   let producer_version = Some "0.6.0" in
@@ -212,7 +212,7 @@ let build_onnx_nodes (sym_graph : Owl_symbolic_graph.symbolic_graph) =
         let onnx_attrs = build_onnx_attrs sym in
         let name = Some name in
         let n = make_onnx_node op_type input_names output_names name onnx_attrs in
-        nodes := Array.append !nodes [| n |] ))
+        nodes := Array.append !nodes [| n |]))
     sym_graph;
   !nodes
 
