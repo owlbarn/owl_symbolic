@@ -70,6 +70,7 @@ let make_onnx_initializers_raw name data_type shape raw_data =
 let make_onnx_initializers_float _name _data_type _shape _float_data = ()
 let make_onnx_initializers_int32 _name _data_type _shape _int32_data = ()
 
+(*
 (** Create onnx attribute from the symbolic attribute *)
 let make_onnx_attr (sym_attr : string * attrvalue) =
   let sym_attr_name, sym_attr_value = sym_attr in
@@ -96,7 +97,7 @@ let make_onnx_attr (sym_attr : string * attrvalue) =
     let tensor = Some (make_onnx_tensor_float fvalue) in
     PT.default_attribute_proto ~name ~type_ ~t:tensor ()
   | _             -> failwith ("make_onnx_attr: unsupported attr type: " ^ sym_attr_name)
-
+*)
 
 let make_onnx_node op_type input_names output_names name attr =
   let input_names = Array.to_list input_names in
@@ -194,12 +195,13 @@ let build_onnx_attrs sym =
 
 (** Core function. Converts symbolic nodes to onnx nodes. *)
 let build_onnx_nodes (sym_graph : Owl_symbolic_graph.symbolic_graph) =
-  (* Not one-to-one projection *)
+  (* NOTE: Nodes in a graph must be topologically sorted. *)
   let nodes = ref [||] in
   Owl_symbolic_graph.iter
     (fun sym_node ->
       let sym = Owl_graph.attr sym_node in
       let op_type = S.op_type sym in
+      (* input variable does not belong to graph *)
       if not (Owl_symbolic_graph.is_variable op_type)
       then (
         let name = S.name sym in
@@ -210,7 +212,7 @@ let build_onnx_nodes (sym_graph : Owl_symbolic_graph.symbolic_graph) =
         let onnx_attrs = build_onnx_attrs sym in
         let name = Some name in
         let n = make_onnx_node op_type input_names output_names name onnx_attrs in
-        nodes := Array.append [| n |] !nodes))
+        nodes := Array.append !nodes [| n |] ))
     sym_graph;
   !nodes
 
