@@ -36,7 +36,7 @@ let make_node (sym : Owl_symbolic_symbol.t) (parents : symbolic_node array) =
 let make_graph nodes name = { sym_nodes = nodes; name }
 let null_graph = { sym_nodes = [||]; name = "" }
 
-(* Topological sort *) 
+(* Topological sort *)
 let iter f (g : symbolic_graph) =
   iter_ancestors ~order:DFS ~traversal:PostOrder f g.sym_nodes
 

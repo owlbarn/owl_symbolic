@@ -35,33 +35,109 @@ type t =
   | Pow of Pow.t
 
 let name = function
+  | Int x      -> Int.(x.name)
   | Float x    -> Float.(x.name)
+  | Complex x  -> Complex.(x.name)
   | Tensor x   -> Tensor.(x.name)
+  | ExpConst x -> ExpConst.(x.name)
+  | Variable x -> Variable.(x.name)
+  | Sin x      -> Sin.(x.name)
+  | Cos x      -> Cos.(x.name)
   | Add x      -> Add.(x.name)
   | Sub x      -> Sub.(x.name)
   | Mul x      -> Mul.(x.name)
   | Div x      -> Div.(x.name)
-  | Sin x      -> Sin.(x.name)
-  | Cos x      -> Cos.(x.name)
   | Pow x      -> Pow.(x.name)
-  | Variable x -> Variable.(x.name)
   | _          -> failwith "owl_symbolic_symbol.name"
 
 
 let input = function
+  | Int x      -> Int.(x.input)
   | Float x    -> Float.(x.input)
+  | Complex x  -> Complex.(x.input)
   | Tensor x   -> Tensor.(x.input)
+  | ExpConst x -> ExpConst.(x.input)
+  | Variable x -> Variable.(x.input)
+  | Sin x      -> Sin.(x.input)
+  | Cos x      -> Cos.(x.input)
   | Add x      -> Add.(x.input)
   | Sub x      -> Sub.(x.input)
   | Mul x      -> Mul.(x.input)
   | Div x      -> Div.(x.input)
-  | Sin x      -> Sin.(x.input)
-  | Cos x      -> Cos.(x.input)
   | Pow x      -> Pow.(x.input)
-  | Variable x -> Variable.(x.input)
   | _          -> failwith "owl_symbolic_symbol.input"
 
 
+let op_type = function
+  | Int _      -> Int.op_type
+  | Float _    -> Float.op_type
+  | Complex _  -> Complex.op_type
+  | Tensor _   -> Tensor.op_type
+  | ExpConst _ -> ExpConst.op_type
+  | Variable _ -> Variable.op_type
+  | Sin _      -> Sin.op_type
+  | Cos _      -> Cos.op_type
+  | Add _      -> Add.op_type
+  | Sub _      -> Sub.op_type
+  | Mul _      -> Mul.op_type
+  | Div _      -> Div.op_type
+  | Pow _      -> Pow.op_type
+  | _          -> failwith "owl_symbolic_symbol.op_type"
+
+
+let sym_attrs = function
+  | Int x      -> Int.(x.attrs)
+  | Float x    -> Float.(x.attrs)
+  | Complex x  -> Complex.(x.attrs)
+  | Tensor x   -> Tensor.(x.attrs)
+  | ExpConst x -> ExpConst.(x.attrs)
+  | Variable x -> Variable.(x.attrs)
+  | Sin x      -> Sin.(x.attrs)
+  | Cos x      -> Cos.(x.attrs)
+  | Add x      -> Add.(x.attrs)
+  | Sub x      -> Sub.(x.attrs)
+  | Mul x      -> Mul.(x.attrs)
+  | Div x      -> Div.(x.attrs)
+  | Pow x      -> Pow.(x.attrs)
+  | _          -> failwith "owl_symbolic_symbol.sym_attrs: unsupported symbol."
+
+
+let get_out_shape = function
+  | Int x      -> Int.(x.out_shape)
+  | Float x    -> Float.(x.out_shape)
+  | Complex x  -> Complex.(x.out_shape)
+  | Tensor x   -> Tensor.(x.out_shape)
+  | ExpConst x -> ExpConst.(x.out_shape)
+  | Variable x -> Variable.(x.out_shape)
+  | Sin x      -> Sin.(x.out_shape)
+  | Cos x      -> Cos.(x.out_shape)
+  | Add x      -> Add.(x.out_shape)
+  | Sub x      -> Sub.(x.out_shape)
+  | Mul x      -> Mul.(x.out_shape)
+  | Div x      -> Div.(x.out_shape)
+  | Pow x      -> Pow.(x.out_shape)
+  | _          -> failwith "get_out_shape: unsupported op."
+
+
+let set_out_shape sym shape =
+  match sym with
+  | Int x      -> x.out_shape <- shape
+  | Float x    -> x.out_shape <- shape
+  | Complex x  -> x.out_shape <- shape
+  | Tensor x   -> x.out_shape <- shape
+  | ExpConst x -> x.out_shape <- shape
+  | Variable x -> x.out_shape <- shape
+  | Sin x      -> x.out_shape <- shape
+  | Cos x      -> x.out_shape <- shape
+  | Add x      -> x.out_shape <- shape
+  | Sub x      -> x.out_shape <- shape
+  | Mul x      -> x.out_shape <- shape
+  | Div x      -> x.out_shape <- shape
+  | Pow x      -> x.out_shape <- shape
+  | _          -> failwith "set_out_shape: unsupported op."
+
+
+(* Not `out_shape` *)
 let shape = function
   | Variable x -> Variable.(x.shape)
   | Tensor x   -> Tensor.(x.shape)
@@ -78,49 +154,21 @@ let int_value = function
   | _     -> failwith "owl_symbolic_symbol.int_value"
 
 
-let op_type = function
-  | Float _    -> Float.op_type
-  | Tensor _   -> Tensor.op_type
-  | Add _      -> Add.op_type
-  | Sub _      -> Sub.op_type
-  | Mul _      -> Mul.op_type
-  | Div _      -> Div.op_type
-  | Sin _      -> Sin.op_type
-  | Cos _      -> Cos.op_type
-  | Pow _      -> Pow.op_type
-  | Variable _ -> Variable.op_type
-  | _          -> failwith "owl_symbolic_symbol.op_type"
+let tensor_value_flt = function
+  | Tensor x -> Tensor.(x.flt_val)
+  | _        -> failwith "owl_symbolic_symbol.tensor_value_flt"
 
 
-let sym_attrs = function
-  | Float x    -> Float.(x.attrs)
-  | Tensor x   -> Tensor.(x.attrs)
-  | Add x      -> Add.(x.attrs)
-  | Sub x      -> Sub.(x.attrs)
-  | Mul x      -> Mul.(x.attrs)
-  | Div x      -> Div.(x.attrs)
-  | Sin x      -> Sin.(x.attrs)
-  | Cos x      -> Cos.(x.attrs)
-  | Pow x      -> Pow.(x.attrs)
-  | Variable x -> Variable.(x.attrs)
-  | _          -> failwith "owl_symbolic_symbol.sym_attrs: unsupported symbol."
+let tensor_value_int = function
+  | Tensor x -> Tensor.(x.int_val)
+  | _        -> failwith "owl_symbolic_symbol.tensor_value_int"
 
 
-let get_out_shape = function
-  | Tensor x   -> Tensor.(x.out_shape)
-  | Variable x -> Variable.(x.out_shape)
-  | Sin x      -> Sin.(x.out_shape)
-  | Add x      -> Add.(x.out_shape)
-  | Float x    -> Float.(x.out_shape)
-  | Int x      -> Int.(x.out_shape)
-  | _          -> failwith "get_out_shape: unsupported op."
+let tensor_value_complex = function
+  | Tensor x -> Tensor.(x.complex_val)
+  | _        -> failwith "owl_symbolic_symbol.tensor_value_complex"
 
 
-let set_out_shape sym shape =
-  match sym with
-  | Tensor x   -> x.out_shape <- shape (* ? the out_shape and shape of tensor ?*)
-  | Variable x -> x.out_shape <- shape
-  | Sin x      -> x.out_shape <- shape
-  | Add x      -> x.out_shape <- shape
-  | Float x    -> x.out_shape <- shape
-  | _          -> failwith "set_out_shape: unsupported op."
+let tensor_value_str = function
+  | Tensor x -> Tensor.(x.str_val)
+  | _        -> failwith "owl_symbolic_symbol.tensor_value_str"
