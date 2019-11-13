@@ -39,3 +39,5 @@ let infer_shape input_shapes sym =
   | Div _      -> _infer_shape_03 input_shapes
   | Pow _      -> _infer_shape_01 input_shapes
   | _          -> [| None |]
+
+(* Do we need pow_scalar/mul_scalar etc.? In the end, yes, but now... *)
