@@ -163,9 +163,12 @@ let make_onnx_model graph =
 
 let map_sym_optyp_to_onnx sym_optyp =
   match sym_optyp with
-  | "Float"  -> "Constant"
-  | "Tensor" -> "Constant"
-  | _        -> sym_optyp
+  | "Int"      -> "Constant"
+  | "Float"    -> "Constant"
+  | "Complex"  -> "Constant"
+  | "Tensor"   -> "Constant"
+  | "ExpConst" -> "Constant"
+  | _          -> sym_optyp
 
 
 (** Attributes scheme: https://github.com/onnx/onnx/blob/master/docs/Operators.md *)
