@@ -103,7 +103,7 @@ module Variable = struct
   let op_type = "Variable"
 
   let create name input attrs typ shape init =
-    { name; input; attrs; typ; shape; out_shape = Some shape; init}
+    { name; input; attrs; typ; shape; out_shape = Some shape; init }
 end
 
 module Sin = struct

@@ -144,7 +144,6 @@ let exp ?name x =
 (* Syntax sugar is exp is used frequently *)
 let expconst () = exp (flt 1.)
 
-
 let add ?name x y =
   let suffix = generate_suffix () in
   let name =

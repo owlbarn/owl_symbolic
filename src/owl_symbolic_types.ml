@@ -3,7 +3,6 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-
 type sym_data_type =
   | SDT_Float
   | SDT_Double
@@ -21,7 +20,6 @@ type sym_data_type =
   | SDT_Uint64
   | SDT_Float16
 
-
 type tensor =
   { dtype : sym_data_type
   ; shape : int array
@@ -30,7 +28,6 @@ type tensor =
   ; int_val : int array option
   ; raw_val : bytes option
   }
-
 
 type attrvalue =
   | ATTR_Nil
@@ -71,9 +68,15 @@ let get_attrvalue_shape v =
   | _            -> failwith "get_attrvalue_shape: incorrect attr type"
 
 
-let make_tensor ?(flt_val=None) ?(int_val=None) ?(str_val=None) 
-  ?(raw_val=None) dtype shape = 
-  { dtype = dtype; shape = shape; flt_val = flt_val; 
-    int_val = int_val; str_val = str_val; raw_val = raw_val }
+let make_tensor
+    ?(flt_val = None)
+    ?(int_val = None)
+    ?(str_val = None)
+    ?(raw_val = None)
+    dtype
+    shape
+  =
+  { dtype; shape; flt_val; int_val; str_val; raw_val }
+
 
 (** flt, int, ... ? *)

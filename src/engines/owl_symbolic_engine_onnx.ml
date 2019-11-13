@@ -27,15 +27,16 @@ let map_data_type_to_int32 typ =
   | SDT_Complex32 -> Int32.of_int 14
   | SDT_Complex64 -> Int32.of_int 15
 
+
 (* DataType:  UNDEFINED = 0 *)
 
 let map_sym_optyp_to_onnx sym_optyp =
   match sym_optyp with
-  | "Int"      -> "Constant"
-  | "Float"    -> "Constant"
-  | "Complex"  -> "Constant"
-  | "Tensor"   -> "Constant"
-  | _          -> sym_optyp
+  | "Int"     -> "Constant"
+  | "Float"   -> "Constant"
+  | "Complex" -> "Constant"
+  | "Tensor"  -> "Constant"
+  | _         -> sym_optyp
 
 
 (* TODO: this still does not include all possible cases *)
@@ -73,23 +74,23 @@ let make_onnx_initializers_raw name data_type shape raw_data =
   let dims = Array.map Int64.of_int shape |> Array.to_list in
   let data_type = Some (map_data_type_to_int32 data_type) in
   let name = Some name in
-  let raw_data = Some raw_data in 
+  let raw_data = Some raw_data in
   PT.default_tensor_proto ~dims ~data_type ~name ~raw_data ()
 
 
-let make_onnx_initializers_float name data_type shape float_data = 
+let make_onnx_initializers_float name data_type shape float_data =
   let dims = Array.map Int64.of_int shape |> Array.to_list in
-  let data_type = Some (map_data_type_to_int32 data_type) in 
+  let data_type = Some (map_data_type_to_int32 data_type) in
   let name = Some name in
-  let float_data = Array.to_list float_data in 
+  let float_data = Array.to_list float_data in
   PT.default_tensor_proto ~dims ~data_type ~name ~float_data ()
 
 
 let make_onnx_initializers_int32 name data_type shape int_data =
   let dims = Array.map Int64.of_int shape |> Array.to_list in
-  let data_type = Some (map_data_type_to_int32 data_type) in 
+  let data_type = Some (map_data_type_to_int32 data_type) in
   let name = Some name in
-  let int32_data = Array.map Int32.of_int int_data |> Array.to_list in 
+  let int32_data = Array.map Int32.of_int int_data |> Array.to_list in
   PT.default_tensor_proto ~dims ~data_type ~name ~int32_data ()
 
 
@@ -233,32 +234,41 @@ let build_onnx_outputs sym_graph =
     (Owl_symbolic_graph.get_output_nodes sym_graph)
 
 
-let build_onnx_initializers sym_graph = 
-  let inits = ref [||] in 
+let build_onnx_initializers sym_graph =
+  let inits = ref [||] in
   Array.iter
     (fun sym_node ->
       let sym = Owl_graph.attr sym_node in
       let name = S.name sym in
       let (init : tensor option) = S.initializer_ sym in
-      match init with 
+      match init with
       | Some init ->
-        let dtype = init.dtype in 
-        let shape = init.shape in 
-        let init_tensor = match dtype with 
-        | SDT_Float -> 
-          let flt_val = init.flt_val in
-          let flt_val = match flt_val with Some f -> f | None -> [||] in 
-          make_onnx_initializers_float name dtype shape flt_val
-        | SDT_Int32 -> 
-          let int_val = init.int_val in
-          let int_val = match int_val with Some i -> i | None -> [||] in 
-          make_onnx_initializers_int32 name dtype shape int_val
-        | _ -> failwith "build_onnx_initializers: unsupported type"
-        in 
-        inits := Array.append [|init_tensor|] !inits
-      | None     -> ()
-    ) (Owl_symbolic_graph.get_input_nodes sym_graph);
-    !inits
+        let dtype = init.dtype in
+        let shape = init.shape in
+        let init_tensor =
+          match dtype with
+          | SDT_Float ->
+            let flt_val = init.flt_val in
+            let flt_val =
+              match flt_val with
+              | Some f -> f
+              | None   -> [||]
+            in
+            make_onnx_initializers_float name dtype shape flt_val
+          | SDT_Int32 ->
+            let int_val = init.int_val in
+            let int_val =
+              match int_val with
+              | Some i -> i
+              | None   -> [||]
+            in
+            make_onnx_initializers_int32 name dtype shape int_val
+          | _         -> failwith "build_onnx_initializers: unsupported type"
+        in
+        inits := Array.append [| init_tensor |] !inits
+      | None      -> ())
+    (Owl_symbolic_graph.get_input_nodes sym_graph);
+  !inits
 
 
 (** Main entry of conversion *)
@@ -270,10 +280,8 @@ let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
   (* Step 2: inpput/output  *)
   let inputs = build_onnx_inputs sym_graph in
   let outputs = build_onnx_outputs sym_graph in
-
   (* Step 3: initializers, corresponding to each input *)
-  let initializer_ = build_onnx_initializers sym_graph  in
-  
+  let initializer_ = build_onnx_initializers sym_graph in
   (* Step N: Maybe some post-processing steps *)
 
   (* Final Step: make graph and model *)

@@ -155,9 +155,10 @@ let int_value = function
   | _     -> failwith "owl_symbolic_symbol.int_value"
 
 
-let initializer_ = function 
+let initializer_ = function
   | Variable x -> Variable.(x.init)
   | _          -> failwith "owl_symbolic_symbol.initializer_"
+
 (*
 
 let tensor_value_flt = function
