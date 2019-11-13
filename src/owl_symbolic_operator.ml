@@ -81,16 +81,6 @@ let tensor ?name ?flt_val ?int_val ?str_val ?complex_val shape =
   make_node sym [||]
 
 
-let expconst () =
-  let suffix = generate_suffix () in
-  let name = Printf.sprintf "expconst_%i" suffix in
-  let input = [||] in
-  let attrs = [||] in
-  let o = Owl_symbolic_ops_math.ExpConst.create name input attrs in
-  let sym = Owl_symbolic_symbol.ExpConst o in
-  make_node sym [||]
-
-
 let variable ?(shape = [||]) ?(typ = SDT_Float) ?name () =
   let suffix = generate_suffix () in
   let name =
@@ -148,6 +138,10 @@ let exp ?name x =
   let o = Owl_symbolic_ops_math.Exp.create name input attrs in
   let sym = Owl_symbolic_symbol.Exp o in
   make_node sym [| x |]
+
+
+(* Syntax sugar is exp is used frequently *)
+let expconst () = exp (flt 1.)
 
 
 let add ?name x y =

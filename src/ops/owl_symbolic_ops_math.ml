@@ -89,18 +89,6 @@ module Tensor = struct
     }
 end
 
-module ExpConst = struct
-  type t =
-    { mutable name : string
-    ; mutable input : string array
-    ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
-    }
-
-  let op_type = "ExpConst"
-  let create name input attrs = { name; input; attrs; out_shape = Some [||] }
-end
-
 module Variable = struct
   type t =
     { mutable name : string

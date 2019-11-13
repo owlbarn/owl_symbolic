@@ -23,7 +23,6 @@ type t =
   | Complex of Complex.t
   | Float of Float.t
   | Tensor of Tensor.t
-  | ExpConst of ExpConst.t
   | Variable of Variable.t
   | Sin of Sin.t
   | Cos of Cos.t
@@ -41,7 +40,6 @@ let name = function
   | Float x    -> Float.(x.name)
   | Complex x  -> Complex.(x.name)
   | Tensor x   -> Tensor.(x.name)
-  | ExpConst x -> ExpConst.(x.name)
   | Variable x -> Variable.(x.name)
   | Sin x      -> Sin.(x.name)
   | Cos x      -> Cos.(x.name)
@@ -59,7 +57,6 @@ let input = function
   | Float x    -> Float.(x.input)
   | Complex x  -> Complex.(x.input)
   | Tensor x   -> Tensor.(x.input)
-  | ExpConst x -> ExpConst.(x.input)
   | Variable x -> Variable.(x.input)
   | Sin x      -> Sin.(x.input)
   | Cos x      -> Cos.(x.input)
@@ -77,7 +74,6 @@ let op_type = function
   | Float _    -> Float.op_type
   | Complex _  -> Complex.op_type
   | Tensor _   -> Tensor.op_type
-  | ExpConst _ -> ExpConst.op_type
   | Variable _ -> Variable.op_type
   | Sin _      -> Sin.op_type
   | Cos _      -> Cos.op_type
@@ -95,7 +91,6 @@ let sym_attrs = function
   | Float x    -> Float.(x.attrs)
   | Complex x  -> Complex.(x.attrs)
   | Tensor x   -> Tensor.(x.attrs)
-  | ExpConst x -> ExpConst.(x.attrs)
   | Variable x -> Variable.(x.attrs)
   | Sin x      -> Sin.(x.attrs)
   | Cos x      -> Cos.(x.attrs)
@@ -113,7 +108,6 @@ let get_out_shape = function
   | Float x    -> Float.(x.out_shape)
   | Complex x  -> Complex.(x.out_shape)
   | Tensor x   -> Tensor.(x.out_shape)
-  | ExpConst x -> ExpConst.(x.out_shape)
   | Variable x -> Variable.(x.out_shape)
   | Sin x      -> Sin.(x.out_shape)
   | Cos x      -> Cos.(x.out_shape)
@@ -132,7 +126,6 @@ let set_out_shape sym shape =
   | Float x    -> x.out_shape <- shape
   | Complex x  -> x.out_shape <- shape
   | Tensor x   -> x.out_shape <- shape
-  | ExpConst x -> x.out_shape <- shape
   | Variable x -> x.out_shape <- shape
   | Sin x      -> x.out_shape <- shape
   | Cos x      -> x.out_shape <- shape

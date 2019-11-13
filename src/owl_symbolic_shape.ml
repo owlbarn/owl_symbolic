@@ -24,7 +24,6 @@ let infer_shape input_shapes sym =
   | Int _      -> [| Some [||] |]
   | Float _    -> [| Some [||] |]
   | Complex _  -> [| Some [||] |]
-  | ExpConst _ -> [| Some [||] |]
   | Tensor _   ->
     let shp = Owl_symbolic_symbol.shape sym in
     [| Some shp |]
