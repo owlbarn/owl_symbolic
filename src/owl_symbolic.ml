@@ -14,6 +14,7 @@
  *     2. https://github.com/onnx/onnx/
  *)
 
+module Type = Owl_symbolic_types
 module Specs = Owl_symbolic_specs
 module Op = Owl_symbolic_operator
 module SymGraph = Owl_symbolic_graph

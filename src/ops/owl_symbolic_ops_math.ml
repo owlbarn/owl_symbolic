@@ -97,12 +97,13 @@ module Variable = struct
     ; mutable typ : sym_data_type
     ; mutable shape : int array
     ; mutable out_shape : int array option
+    ; mutable init : tensor option
     }
 
   let op_type = "Variable"
 
-  let create name input attrs typ shape =
-    { name; input; attrs; typ; shape; out_shape = Some shape }
+  let create name input attrs typ shape init =
+    { name; input; attrs; typ; shape; out_shape = Some shape; init}
 end
 
 module Sin = struct

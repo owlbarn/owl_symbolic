@@ -3,15 +3,6 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-type tensor =
-  { dtype : string
-  ; tensor_shape : int array
-  ; string_val : string array option
-  ; float_val : float array option
-  ; int_val : int array option
-  ; tensor_content : bytes option
-  }
-(** NOTE: no real data should be included in symbolic computation *)
 
 type sym_data_type =
   | SDT_Float
@@ -29,6 +20,17 @@ type sym_data_type =
   | SDT_Uint32
   | SDT_Uint64
   | SDT_Float16
+
+
+type tensor =
+  { dtype : sym_data_type
+  ; shape : int array
+  ; str_val : string array option
+  ; flt_val : float array option
+  ; int_val : int array option
+  ; raw_val : bytes option
+  }
+
 
 type attrvalue =
   | ATTR_Nil
@@ -68,5 +70,10 @@ let get_attrvalue_shape v =
   | ATTR_Shape s -> s
   | _            -> failwith "get_attrvalue_shape: incorrect attr type"
 
+
+let make_tensor ?(flt_val=None) ?(int_val=None) ?(str_val=None) 
+  ?(raw_val=None) dtype shape = 
+  { dtype = dtype; shape = shape; flt_val = flt_val; 
+    int_val = int_val; str_val = str_val; raw_val = raw_val }
 
 (** flt, int, ... ? *)

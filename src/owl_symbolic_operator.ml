@@ -57,6 +57,7 @@ let complex ?name r i =
   make_node sym [||]
 
 
+(* Do we really a "Tensor" node ?
 let tensor ?name ?flt_val ?int_val ?str_val ?complex_val shape =
   let suffix = generate_suffix () in
   let name =
@@ -79,9 +80,9 @@ let tensor ?name ?flt_val ?int_val ?str_val ?complex_val shape =
   in
   let sym = Owl_symbolic_symbol.Tensor o in
   make_node sym [||]
+*)
 
-
-let variable ?(shape = [||]) ?(typ = SDT_Float) ?name () =
+let variable ?(shape = [||]) ?(typ = SDT_Float) ?name ?init () =
   let suffix = generate_suffix () in
   let name =
     match name with
@@ -90,7 +91,7 @@ let variable ?(shape = [||]) ?(typ = SDT_Float) ?name () =
   in
   let input = [||] in
   let attrs = [||] in
-  let o = Owl_symbolic_ops_math.Variable.create name input attrs typ shape in
+  let o = Owl_symbolic_ops_math.Variable.create name input attrs typ shape init in
   let sym = Owl_symbolic_symbol.Variable o in
   make_node sym [||]
 

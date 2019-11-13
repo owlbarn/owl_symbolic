@@ -10,8 +10,9 @@ let _ =
   (* exp(-1 * i ) = 0) *)
   let z =
     add
-      (* TODO: Pow op in ONNX only accepts tensor(flt) type; how to change? *)
-      (* (exp (add (pow (sin x) (integer 2)) (pow (cos x) (integer 2)))) *)
+      (* (exp (add (pow (sin x) (integer 2)) (pow (cos x) (integer 2)))) 
+       * --> this shall leads to error in "of_symbolic"
+       *)
       (exp (add (pow (sin x) (flt 2.)) (pow (cos x) (flt 2.))))
       (mul (flt 10.) (pow y (flt 2.)))
   in

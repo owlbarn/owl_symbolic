@@ -233,6 +233,34 @@ let build_onnx_outputs sym_graph =
     (Owl_symbolic_graph.get_output_nodes sym_graph)
 
 
+let build_onnx_initializers sym_graph = 
+  let inits = ref [||] in 
+  Array.iter
+    (fun sym_node ->
+      let sym = Owl_graph.attr sym_node in
+      let name = S.name sym in
+      let (init : tensor option) = S.initializer_ sym in
+      match init with 
+      | Some init ->
+        let dtype = init.dtype in 
+        let shape = init.shape in 
+        let init_tensor = match dtype with 
+        | SDT_Float -> 
+          let flt_val = init.flt_val in
+          let flt_val = match flt_val with Some f -> f | None -> [||] in 
+          make_onnx_initializers_float name dtype shape flt_val
+        | SDT_Int32 -> 
+          let int_val = init.int_val in
+          let int_val = match int_val with Some i -> i | None -> [||] in 
+          make_onnx_initializers_int32 name dtype shape int_val
+        | _ -> failwith "build_onnx_initializers: unsupported type"
+        in 
+        inits := Array.append [|init_tensor|] !inits
+      | None     -> ()
+    ) (Owl_symbolic_graph.get_input_nodes sym_graph);
+    !inits
+
+
 (** Main entry of conversion *)
 let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
   (* Step 1: convert symbolic nodes to  *)
@@ -244,19 +272,9 @@ let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
   let outputs = build_onnx_outputs sym_graph in
 
   (* Step 3: initializers, corresponding to each input *)
-  (* let initializer_ =
-    Array.map
-      (fun _sym_node ->
-        let nodename = "" in
-        let elt_type = Int32.of_int 1 in
-        let shape = [||] in
-        (* TODO: dummy data *)
-        let raw_data = Bytes.of_string "" in
-        make_onnx_initializers_raw nodename elt_type shape raw_data)
-      (Owl_symbolic_graph.get_input_nodes sym_graph)
-  in *)
-  let initializer_ = [||] in
-  (* Maybe some post-processing steps *)
+  let initializer_ = build_onnx_initializers sym_graph  in
+  
+  (* Step N: Maybe some post-processing steps *)
 
   (* Final Step: make graph and model *)
   let graph = make_onnx_graph nodes initializer_ inputs outputs in
