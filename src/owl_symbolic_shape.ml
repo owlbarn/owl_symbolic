@@ -21,8 +21,22 @@ let _infer_shape_03 input_shapes =
 
 let infer_shape input_shapes sym =
   match sym with
-  | Float _ -> [| Some [||] |]
-  | Int _   -> [| Some [||] |]
-  | Sin _   -> _infer_shape_01 input_shapes
-  | Add _   -> _infer_shape_03 input_shapes
-  | _       -> [| None |]
+  | Int _      -> [| Some [||] |]
+  | Float _    -> [| Some [||] |]
+  | Complex _  -> [| Some [||] |]
+  | ExpConst _ -> [| Some [||] |]
+  | Tensor _   ->
+    let shp = Owl_symbolic_symbol.shape sym in
+    [| Some shp |]
+  | Variable _ ->
+    let shp = Owl_symbolic_symbol.shape sym in
+    [| Some shp |]
+  | Sin _      -> _infer_shape_01 input_shapes
+  | Cos _      -> _infer_shape_01 input_shapes
+  | Exp _      -> _infer_shape_01 input_shapes
+  | Add _      -> _infer_shape_03 input_shapes
+  | Sub _      -> _infer_shape_03 input_shapes
+  | Mul _      -> _infer_shape_03 input_shapes
+  | Div _      -> _infer_shape_03 input_shapes
+  | Pow _      -> _infer_shape_01 input_shapes
+  | _          -> [| None |]

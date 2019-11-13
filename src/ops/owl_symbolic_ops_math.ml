@@ -46,7 +46,7 @@ module Complex = struct
   let op_type = "Complex"
 
   let create name input attrs real img =
-    { name; input; attrs; real; img; out_shape = None }
+    { name; input; attrs; real; img; out_shape = Some [||] }
 end
 
 module Tensor = struct

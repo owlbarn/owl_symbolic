@@ -34,6 +34,8 @@ type t =
   | Div of Div.t
   | Pow of Pow.t
 
+(* TODO: PowScalar; ScalarPow *)
+
 let name = function
   | Int x      -> Int.(x.name)
   | Float x    -> Float.(x.name)
@@ -43,6 +45,7 @@ let name = function
   | Variable x -> Variable.(x.name)
   | Sin x      -> Sin.(x.name)
   | Cos x      -> Cos.(x.name)
+  | Exp x      -> Exp.(x.name)
   | Add x      -> Add.(x.name)
   | Sub x      -> Sub.(x.name)
   | Mul x      -> Mul.(x.name)
@@ -60,6 +63,7 @@ let input = function
   | Variable x -> Variable.(x.input)
   | Sin x      -> Sin.(x.input)
   | Cos x      -> Cos.(x.input)
+  | Exp x      -> Exp.(x.input)
   | Add x      -> Add.(x.input)
   | Sub x      -> Sub.(x.input)
   | Mul x      -> Mul.(x.input)
@@ -77,6 +81,7 @@ let op_type = function
   | Variable _ -> Variable.op_type
   | Sin _      -> Sin.op_type
   | Cos _      -> Cos.op_type
+  | Exp _      -> Exp.op_type
   | Add _      -> Add.op_type
   | Sub _      -> Sub.op_type
   | Mul _      -> Mul.op_type
@@ -94,6 +99,7 @@ let sym_attrs = function
   | Variable x -> Variable.(x.attrs)
   | Sin x      -> Sin.(x.attrs)
   | Cos x      -> Cos.(x.attrs)
+  | Exp x      -> Exp.(x.attrs)
   | Add x      -> Add.(x.attrs)
   | Sub x      -> Sub.(x.attrs)
   | Mul x      -> Mul.(x.attrs)
@@ -111,6 +117,7 @@ let get_out_shape = function
   | Variable x -> Variable.(x.out_shape)
   | Sin x      -> Sin.(x.out_shape)
   | Cos x      -> Cos.(x.out_shape)
+  | Exp x      -> Exp.(x.out_shape)
   | Add x      -> Add.(x.out_shape)
   | Sub x      -> Sub.(x.out_shape)
   | Mul x      -> Mul.(x.out_shape)
@@ -129,6 +136,7 @@ let set_out_shape sym shape =
   | Variable x -> x.out_shape <- shape
   | Sin x      -> x.out_shape <- shape
   | Cos x      -> x.out_shape <- shape
+  | Exp x      -> x.out_shape <- shape
   | Add x      -> x.out_shape <- shape
   | Sub x      -> x.out_shape <- shape
   | Mul x      -> x.out_shape <- shape

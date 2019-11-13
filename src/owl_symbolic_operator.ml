@@ -66,8 +66,17 @@ let tensor ?name ?flt_val ?int_val ?str_val ?complex_val shape =
   in
   let input = [||] in
   let attrs = [||] in
-  let o = Owl_symbolic_ops_math.Tensor.create ~shape 
-    ~flt_val ~int_val ~str_val ~complex_val name input attrs in
+  let o =
+    Owl_symbolic_ops_math.Tensor.create
+      ~shape
+      ~flt_val
+      ~int_val
+      ~str_val
+      ~complex_val
+      name
+      input
+      attrs
+  in
   let sym = Owl_symbolic_symbol.Tensor o in
   make_node sym [||]
 
@@ -123,6 +132,21 @@ let cos ?name x =
   let attrs = [||] in
   let o = Owl_symbolic_ops_math.Cos.create name input attrs in
   let sym = Owl_symbolic_symbol.Cos o in
+  make_node sym [| x |]
+
+
+let exp ?name x =
+  let suffix = generate_suffix () in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "exp_%i" suffix
+  in
+  let x_name = Owl_symbolic_graph.name x in
+  let input = [| x_name |] in
+  let attrs = [||] in
+  let o = Owl_symbolic_ops_math.Exp.create name input attrs in
+  let sym = Owl_symbolic_symbol.Exp o in
   make_node sym [| x |]
 
 
@@ -204,5 +228,3 @@ let pow ?name x y =
   let o = Owl_symbolic_ops_math.Pow.create name input attrs in
   let sym = Owl_symbolic_symbol.Pow o in
   make_node sym [| x; y |]
-
-
