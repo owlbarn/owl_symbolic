@@ -337,7 +337,7 @@ let build_onnx_attrs sym =
     | S.Pi _      ->
       let name = Some "value" in
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
-      let v = 3.1415926535897932384626 in
+      let v = Owl_const.pi in
       let tensor = Some (make_onnx_tensor_float v) in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
