@@ -4,12 +4,14 @@
  *)
 
 open Owl_graph
+open Owl_symbolic_types
 
 type symbolic_node = Owl_symbolic_symbol.t Owl_graph.node
 
 type symbolic_graph =
   { mutable sym_nodes : symbolic_node array
   ; mutable name : string
+  ; mutable node_names : string array (* existing nodes in graph *)
   }
 
 (** A series of graph operations. *)
@@ -33,8 +35,22 @@ let make_node (sym : Owl_symbolic_symbol.t) (parents : symbolic_node array) =
   child
 
 
-let make_graph nodes name = { sym_nodes = nodes; name }
-let null_graph = { sym_nodes = [||]; name = "" }
+(* Create a symbolic graph; check duplicated names *)
+let make_graph (nodes : symbolic_node array) name =
+  let node_names = ref [||] in
+  Owl_graph.iter_ancestors
+    (fun n ->
+      let x = Owl_graph.attr n |> Owl_symbolic_symbol.name in
+      node_names := Array.append [| x |] !node_names)
+    nodes;
+  let node_names = !node_names in
+  if Owl_symbolic_utils.check_uniq node_names = false
+  then raise (INVALID_NAME "make_graph: the nodes contain duplicated names");
+  { sym_nodes = nodes; name; node_names }
+
+
+(* empty graph *)
+let null_graph = make_graph [||] ""
 
 (* Topological sort *)
 let iter f (g : symbolic_graph) =

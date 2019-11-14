@@ -107,3 +107,7 @@ let get_symtensor_dtype (t : tensor) = t.dtype
 
 exception TYPE_CHECK of string
 (** Exception definition *)
+
+exception INVALID_NAME of string
+
+(* TODO: At some poin we may need to provide uses with the ability to build new operations. *)
