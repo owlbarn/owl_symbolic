@@ -17,8 +17,7 @@ module Int = struct
     }
 
   let op_type = "Int"
-  let create name input attrs value = 
-    { name; input; attrs; value; out_shape = Some [||] }
+  let create name input attrs value = { name; input; attrs; value; out_shape = Some [||] }
 end
 
 module Float = struct

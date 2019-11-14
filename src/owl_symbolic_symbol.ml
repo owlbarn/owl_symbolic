@@ -138,6 +138,7 @@ let set_out_shape sym shape =
   | Pow x      -> x.out_shape <- shape
   | _          -> failwith "set_out_shape: unsupported op."
 
+
 (* 
 let set_dtype sym dtype =
   match sym with
@@ -165,15 +166,16 @@ let shape = function
     t.shape
   | _          -> [||]
 
-let dtype = function 
+
+let dtype = function
   | Variable x -> Variable.(x.typ)
   | Tensor x   ->
     let (t : tensor) = Tensor.(x.value) in
     t.dtype
-  | Float _ -> SDT_Float 
-  | Int _   -> SDT_Int32
-  | Complex _ -> SDT_Complex32
-  | _ -> failwith "owl_symboic_symobl.dtype: not var or constant op"
+  | Float _    -> SDT_Float
+  | Int _      -> SDT_Int32
+  | Complex _  -> SDT_Complex32
+  | _          -> failwith "owl_symboic_symobl.dtype: not var or constant op"
 
 
 let float_value = function

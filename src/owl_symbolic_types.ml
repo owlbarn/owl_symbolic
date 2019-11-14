@@ -21,6 +21,25 @@ type sym_data_type =
   | SDT_Uint64
   | SDT_Float16
 
+let sym_data_type_to_string = function
+  | SDT_Noop      -> "SDT_Noop"
+  | SDT_Float     -> "SDT_Float"
+  | SDT_Uint8     -> "SDT_Uint8"
+  | SDT_Int8      -> "SDT_Int8"
+  | SDT_Uint16    -> "SDT_Uint16"
+  | SDT_Int16     -> "SDT_Int16"
+  | SDT_Int32     -> "SDT_Int32"
+  | SDT_Int64     -> "SDT_Int64"
+  | SDT_String    -> "SDT_String"
+  | SDT_Bool      -> "SDT_Bool"
+  | SDT_Float16   -> "SDT_Float16"
+  | SDT_Double    -> "SDT_Double"
+  | SDT_Uint32    -> "SDT_Uint32"
+  | SDT_Uint64    -> "SDT_Uint64"
+  | SDT_Complex32 -> "SDT_Complex32"
+  | SDT_Complex64 -> "SDT_Complex64"
+
+
 type tensor =
   { dtype : sym_data_type
   ; shape : int array
@@ -79,8 +98,7 @@ let make_tensor
   =
   { dtype; shape; flt_val; int_val; str_val; raw_val }
 
-let get_symtensor_dtype (t : tensor) = 
-  t.dtype
+
+let get_symtensor_dtype (t : tensor) = t.dtype
 
 (** flt, int, ... ? *)
-

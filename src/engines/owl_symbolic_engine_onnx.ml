@@ -156,23 +156,29 @@ let make_onnx_model graph =
 
 
 (* TODO: more useful information? *)
-let _check_same types name = 
+let _check_same types name =
   let flag = ref true in
-  if (Array.length types = 0 ) then 
-    failwith "build_onnx_type_check: empty parents for non-input ops"; 
-  Array.iter (fun t ->
-    if t <> types.(0) then flag := false
-  ) types;
-  if !flag = false then (
-    let msg = Printf.sprintf "Type checking fails for node %s; inputs are of differnt type." name in 
-    failwith msg 
-  )
+  if Array.length types = 0
+  then failwith "build_onnx_type_check: empty parents for non-input ops";
+  Array.iter (fun t -> if t <> types.(0) then flag := false) types;
+  if !flag = false
+  then (
+    let msg =
+      Printf.sprintf "Type checking fails for node %s; inputs are of differnt type." name
+    in
+    failwith msg)
+
 
 let _check_constraint t constraints name =
-  if (Array.mem t constraints) = false then (
-    let msg = Printf.sprintf "Type checking fails for node %s; input type not in constraints." name in 
-    failwith msg 
-  )
+  if Array.mem t constraints = false
+  then (
+    let msg =
+      Printf.sprintf
+        "Type checking fails for node %s; input type not in constraints."
+        name
+    in
+    failwith msg)
+
 
 (* This step performs type checking of the symbolic graph to see if it fits the ONNX operator schemas. 
  * Some things to note:
@@ -185,63 +191,110 @@ let _check_constraint t constraints name =
  *   + In the main body, I still check based on Symbolic node, not onnx nodes, this could be logically wrong.
  *)
 
-let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) = 
-  let len = Owl_symbolic_graph.length sym_graph in 
+let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
+  let len = Owl_symbolic_graph.length sym_graph in
   let dtypes = Hashtbl.create len in
   (* Assume this iter is topologically correct *)
-  Owl_symbolic_graph.iter (fun sym_node ->
-    let sym = Owl_graph.attr sym_node in 
-    let name = S.name sym in 
-    (* Get input types *)
-    let parents = Owl_graph.parents sym_node in
-    let ptypes  = Array.map (fun sym_node -> 
-      let s = Owl_graph.attr sym_node in
-      match s with 
-      | Owl_symbolic_symbol.Float _    -> Owl_symbolic_symbol.dtype s
-      | Owl_symbolic_symbol.Int _      -> Owl_symbolic_symbol.dtype s
-      | Owl_symbolic_symbol.Tensor _   -> Owl_symbolic_symbol.dtype s
-      | Owl_symbolic_symbol.Complex _  -> Owl_symbolic_symbol.dtype s
-      | Owl_symbolic_symbol.Variable _ -> Owl_symbolic_symbol.dtype s
-      | _ -> Hashtbl.find dtypes (S.name s)
-    ) parents
-    in
-
-    (* Type checking *)
-    let out_type = match sym with 
-    | Float _    -> Owl_symbolic_symbol.dtype sym
-    | Int _      -> Owl_symbolic_symbol.dtype sym
-    | Tensor _   -> Owl_symbolic_symbol.dtype sym
-    | Complex _  -> Owl_symbolic_symbol.dtype sym 
-    | Variable _ -> Owl_symbolic_symbol.dtype sym
-    | Sin _ -> 
-      _check_constraint ptypes.(0) [| SDT_Float; SDT_Float16; SDT_Double |] name;
-      ptypes.(0)
-    | Cos _ ->
-      _check_constraint ptypes.(0) [| SDT_Float; SDT_Float16; SDT_Double |] name;
-      ptypes.(0)
-    | Exp _ -> 
-      _check_constraint ptypes.(0) [| SDT_Float; SDT_Float16; SDT_Double |] name;
-      ptypes.(0)
-    | Add _ -> 
-      _check_same ptypes name;
-      let c = [| SDT_Uint32; SDT_Uint64; SDT_Int32; SDT_Int64; 
-        SDT_Float16; SDT_Float; SDT_Double|] in 
-      _check_constraint ptypes.(0) c name;
-      ptypes.(0)
-    | Sub _ -> 
-      _check_same ptypes name;
-      let c = [| SDT_Uint32; SDT_Uint64; SDT_Int32; SDT_Int64; 
-        SDT_Float16; SDT_Float; SDT_Double|] in 
-      _check_constraint ptypes.(0) c name;
-      ptypes.(0)
-    | Pow _ ->
-      _check_same ptypes name;
-      _check_constraint ptypes.(0) [| SDT_Float; SDT_Float16; SDT_Double |] name;
-      ptypes.(0)
-    | _     -> SDT_Noop
-    in
-    Hashtbl.add dtypes name out_type
-  ) sym_graph
+  Owl_symbolic_graph.iter
+    (fun sym_node ->
+      let sym = Owl_graph.attr sym_node in
+      let name = S.name sym in
+      (* Get input types *)
+      let parents = Owl_graph.parents sym_node in
+      let ptypes =
+        Array.map
+          (fun sym_node ->
+            let s = Owl_graph.attr sym_node in
+            match s with
+            | Owl_symbolic_symbol.Float _ -> Owl_symbolic_symbol.dtype s
+            | Owl_symbolic_symbol.Int _ -> Owl_symbolic_symbol.dtype s
+            | Owl_symbolic_symbol.Tensor _ -> Owl_symbolic_symbol.dtype s
+            | Owl_symbolic_symbol.Complex _ -> Owl_symbolic_symbol.dtype s
+            | Owl_symbolic_symbol.Variable _ -> Owl_symbolic_symbol.dtype s
+            | _ -> Hashtbl.find dtypes (S.name s))
+          parents
+      in
+      (* Type checking *)
+      let out_type =
+        match sym with
+        | Float _    -> Owl_symbolic_symbol.dtype sym
+        | Int _      -> Owl_symbolic_symbol.dtype sym
+        | Tensor _   -> Owl_symbolic_symbol.dtype sym
+        | Complex _  -> Owl_symbolic_symbol.dtype sym
+        | Variable _ -> Owl_symbolic_symbol.dtype sym
+        | Sin _      ->
+          _check_constraint ptypes.(0) [| SDT_Float; SDT_Float16; SDT_Double |] name;
+          ptypes.(0)
+        | Cos _      ->
+          _check_constraint ptypes.(0) [| SDT_Float; SDT_Float16; SDT_Double |] name;
+          ptypes.(0)
+        | Exp _      ->
+          _check_constraint ptypes.(0) [| SDT_Float; SDT_Float16; SDT_Double |] name;
+          ptypes.(0)
+        | Add _      ->
+          _check_same ptypes name;
+          let c =
+            [| SDT_Uint32
+             ; SDT_Uint64
+             ; SDT_Int32
+             ; SDT_Int64
+             ; SDT_Float16
+             ; SDT_Float
+             ; SDT_Double
+            |]
+          in
+          _check_constraint ptypes.(0) c name;
+          ptypes.(0)
+        | Sub _      ->
+          _check_same ptypes name;
+          let c =
+            [| SDT_Uint32
+             ; SDT_Uint64
+             ; SDT_Int32
+             ; SDT_Int64
+             ; SDT_Float16
+             ; SDT_Float
+             ; SDT_Double
+            |]
+          in
+          _check_constraint ptypes.(0) c name;
+          ptypes.(0)
+        | Mul _      ->
+          _check_same ptypes name;
+          let c =
+            [| SDT_Uint32
+             ; SDT_Uint64
+             ; SDT_Int32
+             ; SDT_Int64
+             ; SDT_Float16
+             ; SDT_Float
+             ; SDT_Double
+            |]
+          in
+          _check_constraint ptypes.(0) c name;
+          ptypes.(0)
+        | Div _      ->
+          _check_same ptypes name;
+          let c =
+            [| SDT_Uint32
+             ; SDT_Uint64
+             ; SDT_Int32
+             ; SDT_Int64
+             ; SDT_Float16
+             ; SDT_Float
+             ; SDT_Double
+            |]
+          in
+          _check_constraint ptypes.(0) c name;
+          ptypes.(0)
+        | Pow _      ->
+          _check_same ptypes name;
+          _check_constraint ptypes.(0) [| SDT_Float; SDT_Float16; SDT_Double |] name;
+          ptypes.(0)
+        | _          -> SDT_Noop
+      in
+      Hashtbl.add dtypes name out_type)
+    sym_graph
 
 
 (** Attributes scheme: https://github.com/onnx/onnx/blob/master/docs/Operators.md *)
@@ -361,7 +414,7 @@ let build_onnx_initializers sym_graph =
 
 (** Main entry of conversion *)
 let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
-  (* Step 0: walk through the sym_graph and infer shapes *)
+  (* Step 0: walk through the sym_graph and check shapes *)
   build_onnx_type_check sym_graph;
   (* Step 1: convert symbolic nodes to  *)
   let nodes = build_onnx_nodes sym_graph in

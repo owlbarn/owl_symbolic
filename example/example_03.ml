@@ -11,7 +11,7 @@ let _ =
   let z =
     add
       (* (exp (add (pow (sin x) (integer 2)) (pow (cos x) (integer 2)))) 
-       * --> this shall leads to error in "of_symbolic"
+       * --> this wiil lead to type checkcing error in "of_symbolic"
        *)
       (exp (add (pow (sin x) (flt 2.)) (pow (cos x) (flt 2.))))
       (mul (flt 10.) (pow y (flt 2.)))
