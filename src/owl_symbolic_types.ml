@@ -4,6 +4,7 @@
  *)
 
 type sym_data_type =
+  | SDT_Noop
   | SDT_Float
   | SDT_Double
   | SDT_Complex32
@@ -78,5 +79,8 @@ let make_tensor
   =
   { dtype; shape; flt_val; int_val; str_val; raw_val }
 
+let get_symtensor_dtype (t : tensor) = 
+  t.dtype
 
 (** flt, int, ... ? *)
+

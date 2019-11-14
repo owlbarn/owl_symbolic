@@ -138,6 +138,24 @@ let set_out_shape sym shape =
   | Pow x      -> x.out_shape <- shape
   | _          -> failwith "set_out_shape: unsupported op."
 
+(* 
+let set_dtype sym dtype =
+  match sym with
+  | Int x      -> x.dtype <- dtype
+  | Float x    -> x.dtype <- dtype
+  | Complex x  -> x.dtype <- dtype
+  | Tensor x   -> x.dtype <- dtype
+  | Variable x -> x.dtype <- dtype
+  | Sin x      -> x.dtype <- dtype
+  | Cos x      -> x.dtype <- dtype
+  | Exp x      -> x.dtype <- dtype
+  | Add x      -> x.dtype <- dtype
+  | Sub x      -> x.dtype <- dtype
+  | Mul x      -> x.dtype <- dtype
+  | Div x      -> x.dtype <- dtype
+  | Pow x      -> x.dtype <- dtype
+  | _          -> failwith "set_dtype: unsupported op."
+*)
 
 (* Not `out_shape` *)
 let shape = function
@@ -146,6 +164,16 @@ let shape = function
     let (t : tensor) = Tensor.(x.value) in
     t.shape
   | _          -> [||]
+
+let dtype = function 
+  | Variable x -> Variable.(x.typ)
+  | Tensor x   ->
+    let (t : tensor) = Tensor.(x.value) in
+    t.dtype
+  | Float _ -> SDT_Float 
+  | Int _   -> SDT_Int32
+  | Complex _ -> SDT_Complex32
+  | _ -> failwith "owl_symboic_symobl.dtype: not var or constant op"
 
 
 let float_value = function
