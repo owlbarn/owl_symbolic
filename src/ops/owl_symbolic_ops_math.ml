@@ -54,39 +54,12 @@ module Tensor = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable typ : sym_data_type
-    ; mutable shape : int array
-    ; mutable out_shape : int array option (* possible data types in  tensor *)
-    ; mutable flt_val : float array option
-    ; mutable int_val : int array option
-    ; mutable str_val : string array option
-    ; mutable complex_val : (float * float) array option
+    ; mutable value : tensor
+    ; mutable out_shape : int array option
     }
 
   let op_type = "Tensor"
-
-  let create
-      ?(shape = [||])
-      ?(typ = SDT_Float)
-      ?(flt_val = None)
-      ?(int_val = None)
-      ?(str_val = None)
-      ?(complex_val = None)
-      name
-      input
-      attrs
-    =
-    { name
-    ; input
-    ; attrs
-    ; typ
-    ; shape
-    ; out_shape = Some shape
-    ; flt_val
-    ; int_val
-    ; str_val
-    ; complex_val
-    }
+  let create name input attrs value = { name; input; attrs; value; out_shape = Some [||] }
 end
 
 module Variable = struct
