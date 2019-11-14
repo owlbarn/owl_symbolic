@@ -102,3 +102,6 @@ let make_tensor
 let get_symtensor_dtype (t : tensor) = t.dtype
 
 (** flt, int, ... ? *)
+
+exception TYPE_CHECK of string
+(** Exception definition *)

@@ -163,21 +163,15 @@ let _check_same types name =
   Array.iter (fun t -> if t <> types.(0) then flag := false) types;
   if !flag = false
   then (
-    let msg =
-      Printf.sprintf "Type checking fails for node %s; inputs are of differnt type." name
-    in
-    failwith msg)
+    let msg = Printf.sprintf "%s: inputs are of differnt type." name in
+    raise (TYPE_CHECK msg))
 
 
 let _check_constraint t constraints name =
   if Array.mem t constraints = false
   then (
-    let msg =
-      Printf.sprintf
-        "Type checking fails for node %s; input type not in constraints."
-        name
-    in
-    failwith msg)
+    let msg = Printf.sprintf "%s: input type not in constraints." name in
+    raise (TYPE_CHECK msg))
 
 
 (* This step performs type checking of the symbolic graph to see if it fits the ONNX operator schemas. 
