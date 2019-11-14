@@ -79,6 +79,21 @@ module Variable = struct
     { name; input; attrs; typ; shape; out_shape = Some shape; init }
 end
 
+module Pi = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    ; mutable dtype : sym_data_type
+    }
+
+  let op_type = "Pi"
+
+  let create ?(dtype = SDT_Float) name =
+    { name; input = [||]; attrs = [||]; out_shape = Some [||]; dtype }
+end
+
 module Sin = struct
   type t =
     { mutable name : string

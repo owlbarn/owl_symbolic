@@ -57,6 +57,18 @@ let complex ?name r i =
   make_node sym [||]
 
 
+let pi ?name () =
+  let suffix = generate_suffix () in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "pi_%i" suffix
+  in
+  let o = Owl_symbolic_ops_math.Pi.create name in
+  let sym = Owl_symbolic_symbol.Pi o in
+  make_node sym [||]
+
+
 (* Do we really a "Tensor" node ? *)
 let tensor ?name t =
   let suffix = generate_suffix () in
@@ -131,9 +143,6 @@ let exp ?name x =
   let sym = Owl_symbolic_symbol.Exp o in
   make_node sym [| x |]
 
-
-(* Syntax sugar is exp is used frequently *)
-let expconst () = exp (flt 1.)
 
 let add ?name x y =
   let suffix = generate_suffix () in
@@ -213,3 +222,8 @@ let pow ?name x y =
   let o = Owl_symbolic_ops_math.Pow.create name input attrs in
   let sym = Owl_symbolic_symbol.Pow o in
   make_node sym [| x; y |]
+
+
+(** The frequently used constants *)
+
+let expconst () = exp (flt 1.)

@@ -69,6 +69,22 @@ let make_onnx_tensor_int i =
   PT.default_tensor_proto ~dims ~int32_data ~data_type ()
 
 
+(* For float and complex64 values
+  Complex32 tensors are encoded as a single array of floats,
+  with the real components appearing in odd numbered positions,
+  and the corresponding imaginary component apparing in the
+  subsequent even numbered position. (e.g., [1.0 + 2.0i, 3.0 + 4.0i]
+  is encoded as [1.0, 2.0 ,3.0 ,4.0]
+  When this field is present, the data_type field MUST be FLOAT or COMPLEX32.
+*)
+let make_onnx_tensor_complex c =
+  let r, i = c in
+  let float_data = [ r; i ] in
+  let dims = [] in
+  let data_type = Some (map_data_type_to_int32 SDT_Complex32) in
+  PT.default_tensor_proto ~dims ~float_data ~data_type ()
+
+
 let make_onnx_initializers_raw name data_type shape raw_data =
   let dims = Array.map Int64.of_int shape |> Array.to_list in
   let data_type = Some (map_data_type_to_int32 data_type) in
@@ -213,6 +229,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
         match sym with
         | Float _    -> Owl_symbolic_symbol.dtype sym
         | Int _      -> Owl_symbolic_symbol.dtype sym
+        | Pi _       -> Owl_symbolic_symbol.dtype sym
         | Tensor _   -> Owl_symbolic_symbol.dtype sym
         | Complex _  -> Owl_symbolic_symbol.dtype sym
         | Variable _ -> Owl_symbolic_symbol.dtype sym
@@ -295,7 +312,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
 let build_onnx_attrs sym =
   let onnx_attrs =
     match sym with
-    | S.Float _ ->
+    | S.Float _   ->
       (* create "value" attribute for constant *)
       let name = Some "value" in
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
@@ -303,15 +320,28 @@ let build_onnx_attrs sym =
       let tensor = Some (make_onnx_tensor_float v) in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
-    | S.Int _   ->
-      (* create "value" attribute for constant *)
+    | S.Int _     ->
       let name = Some "value" in
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
       let v = S.int_value sym in
       let tensor = Some (make_onnx_tensor_int v) in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
-    | _         -> []
+    | S.Complex _ ->
+      let name = Some "value" in
+      let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
+      let v = S.complex_value sym in
+      let tensor = Some (make_onnx_tensor_complex v) in
+      let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
+      [ a_value ]
+    | S.Pi _      ->
+      let name = Some "value" in
+      let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
+      let v = 3.1415926535897932384626 in
+      let tensor = Some (make_onnx_tensor_float v) in
+      let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
+      [ a_value ]
+    | _           -> []
   in
   onnx_attrs
 

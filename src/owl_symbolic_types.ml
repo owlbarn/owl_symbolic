@@ -40,6 +40,8 @@ let sym_data_type_to_string = function
   | SDT_Complex64 -> "SDT_Complex64"
 
 
+(* type sci_const = Pi | and more ... *)
+
 type tensor =
   { dtype : sym_data_type
   ; shape : int array

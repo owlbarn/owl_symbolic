@@ -15,6 +15,14 @@
  * (5) Binary Op: +, -, *, /, pow
  *)
 
+(* TODO: The Pi is quite interesting -- 
+ * how should we represent these mathematical constant, especially an irrational one? 
+ * Perhaps just define a new type and wrap it in tensor? ...
+ * Currently I would put it side-by-side with int/float/complex as a stand-alone type
+ * But we shall see how it works. 
+ * One problem is its type: is it float or double? For now, let the user decide. 
+ *)
+
 open Owl_symbolic_types
 open Owl_symbolic_ops_math
 
@@ -25,6 +33,7 @@ type t =
   | Float of Float.t
   | Tensor of Tensor.t
   | Variable of Variable.t
+  | Pi of Pi.t
   | Sin of Sin.t
   | Cos of Cos.t
   | Exp of Exp.t
@@ -42,6 +51,7 @@ let name = function
   | Complex x  -> Complex.(x.name)
   | Tensor x   -> Tensor.(x.name)
   | Variable x -> Variable.(x.name)
+  | Pi x       -> Pi.(x.name)
   | Sin x      -> Sin.(x.name)
   | Cos x      -> Cos.(x.name)
   | Exp x      -> Exp.(x.name)
@@ -54,11 +64,12 @@ let name = function
 
 
 let input = function
-  | Int x      -> Int.(x.input)
-  | Float x    -> Float.(x.input)
-  | Complex x  -> Complex.(x.input)
-  | Tensor x   -> Tensor.(x.input)
-  | Variable x -> Variable.(x.input)
+  | Int _      -> [||]
+  | Float _    -> [||]
+  | Complex _  -> [||]
+  | Tensor _   -> [||]
+  | Variable _ -> [||]
+  | Pi _       -> [||]
   | Sin x      -> Sin.(x.input)
   | Cos x      -> Cos.(x.input)
   | Exp x      -> Exp.(x.input)
@@ -76,6 +87,7 @@ let op_type = function
   | Complex _  -> Complex.op_type
   | Tensor _   -> Tensor.op_type
   | Variable _ -> Variable.op_type
+  | Pi _       -> Pi.op_type
   | Sin _      -> Sin.op_type
   | Cos _      -> Cos.op_type
   | Exp _      -> Exp.op_type
@@ -93,6 +105,7 @@ let sym_attrs = function
   | Complex x  -> Complex.(x.attrs)
   | Tensor x   -> Tensor.(x.attrs)
   | Variable x -> Variable.(x.attrs)
+  | Pi x       -> Pi.(x.attrs)
   | Sin x      -> Sin.(x.attrs)
   | Cos x      -> Cos.(x.attrs)
   | Exp x      -> Exp.(x.attrs)
@@ -110,6 +123,7 @@ let get_out_shape = function
   | Complex x  -> Complex.(x.out_shape)
   | Tensor x   -> Tensor.(x.out_shape)
   | Variable x -> Variable.(x.out_shape)
+  | Pi x       -> Pi.(x.out_shape)
   | Sin x      -> Sin.(x.out_shape)
   | Cos x      -> Cos.(x.out_shape)
   | Exp x      -> Exp.(x.out_shape)
@@ -123,20 +137,42 @@ let get_out_shape = function
 
 let set_out_shape sym shape =
   match sym with
-  | Int x      -> x.out_shape <- shape
+  (* | Int x      -> x.out_shape <- shape
   | Float x    -> x.out_shape <- shape
   | Complex x  -> x.out_shape <- shape
-  | Tensor x   -> x.out_shape <- shape
+  | Pi x       -> x.out_shape <- shape *)
+  | Tensor x -> x.out_shape <- shape
   | Variable x -> x.out_shape <- shape
-  | Sin x      -> x.out_shape <- shape
-  | Cos x      -> x.out_shape <- shape
-  | Exp x      -> x.out_shape <- shape
-  | Add x      -> x.out_shape <- shape
-  | Sub x      -> x.out_shape <- shape
-  | Mul x      -> x.out_shape <- shape
-  | Div x      -> x.out_shape <- shape
-  | Pow x      -> x.out_shape <- shape
-  | _          -> failwith "set_out_shape: unsupported op."
+  | Sin x -> x.out_shape <- shape
+  | Cos x -> x.out_shape <- shape
+  | Exp x -> x.out_shape <- shape
+  | Add x -> x.out_shape <- shape
+  | Sub x -> x.out_shape <- shape
+  | Mul x -> x.out_shape <- shape
+  | Div x -> x.out_shape <- shape
+  | Pow x -> x.out_shape <- shape
+  | _ -> failwith "set_out_shape: unsupported op."
+
+
+(* Not `out_shape` *)
+let shape = function
+  | Variable x -> Variable.(x.shape)
+  | Tensor x   ->
+    let (t : tensor) = Tensor.(x.value) in
+    t.shape
+  | _          -> [||]
+
+
+let dtype = function
+  | Variable x -> Variable.(x.typ)
+  | Tensor x   ->
+    let (t : tensor) = Tensor.(x.value) in
+    t.dtype
+  | Float _    -> SDT_Float
+  | Int _      -> SDT_Int32
+  | Pi x       -> Pi.(x.dtype)
+  | Complex _  -> SDT_Complex32
+  | _          -> failwith "owl_symboic_symobl.dtype: not var or constant op"
 
 
 (* 
@@ -158,26 +194,6 @@ let set_dtype sym dtype =
   | _          -> failwith "set_dtype: unsupported op."
 *)
 
-(* Not `out_shape` *)
-let shape = function
-  | Variable x -> Variable.(x.shape)
-  | Tensor x   ->
-    let (t : tensor) = Tensor.(x.value) in
-    t.shape
-  | _          -> [||]
-
-
-let dtype = function
-  | Variable x -> Variable.(x.typ)
-  | Tensor x   ->
-    let (t : tensor) = Tensor.(x.value) in
-    t.dtype
-  | Float _    -> SDT_Float
-  | Int _      -> SDT_Int32
-  | Complex _  -> SDT_Complex32
-  | _          -> failwith "owl_symboic_symobl.dtype: not var or constant op"
-
-
 let float_value = function
   | Float x -> Float.(x.value)
   | _       -> failwith "owl_symbolic_symbol.float_value"
@@ -186,6 +202,11 @@ let float_value = function
 let int_value = function
   | Int x -> Int.(x.value)
   | _     -> failwith "owl_symbolic_symbol.int_value"
+
+
+let complex_value = function
+  | Complex x -> Complex.(x.real), Complex.(x.img)
+  | _         -> failwith "owl_symbolic_symbol.int_value"
 
 
 let tensor_value = function
