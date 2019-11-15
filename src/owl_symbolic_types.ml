@@ -5,40 +5,40 @@
 
 (* number_type *)
 type number_type =
-  | SDT_Noop
-  | SDT_Float
-  | SDT_Double
-  | SDT_Complex32
-  | SDT_Complex64
-  | SDT_Bool
-  | SDT_String
-  | SDT_Int8
-  | SDT_Int16
-  | SDT_Int32
-  | SDT_Int64
-  | SDT_Uint8
-  | SDT_Uint16
-  | SDT_Uint32
-  | SDT_Uint64
-  | SDT_Float16
+  | SNT_Noop
+  | SNT_Float
+  | SNT_Double
+  | SNT_Complex32
+  | SNT_Complex64
+  | SNT_Bool
+  | SNT_String
+  | SNT_Int8
+  | SNT_Int16
+  | SNT_Int32
+  | SNT_Int64
+  | SNT_Uint8
+  | SNT_Uint16
+  | SNT_Uint32
+  | SNT_Uint64
+  | SNT_Float16
 
 let number_type_to_string = function
-  | SDT_Noop      -> "SDT_Noop"
-  | SDT_Float     -> "SDT_Float"
-  | SDT_Uint8     -> "SDT_Uint8"
-  | SDT_Int8      -> "SDT_Int8"
-  | SDT_Uint16    -> "SDT_Uint16"
-  | SDT_Int16     -> "SDT_Int16"
-  | SDT_Int32     -> "SDT_Int32"
-  | SDT_Int64     -> "SDT_Int64"
-  | SDT_String    -> "SDT_String"
-  | SDT_Bool      -> "SDT_Bool"
-  | SDT_Float16   -> "SDT_Float16"
-  | SDT_Double    -> "SDT_Double"
-  | SDT_Uint32    -> "SDT_Uint32"
-  | SDT_Uint64    -> "SDT_Uint64"
-  | SDT_Complex32 -> "SDT_Complex32"
-  | SDT_Complex64 -> "SDT_Complex64"
+  | SNT_Noop      -> "SNT_Noop"
+  | SNT_Float     -> "SNT_Float"
+  | SNT_Uint8     -> "SNT_Uint8"
+  | SNT_Int8      -> "SNT_Int8"
+  | SNT_Uint16    -> "SNT_Uint16"
+  | SNT_Int16     -> "SNT_Int16"
+  | SNT_Int32     -> "SNT_Int32"
+  | SNT_Int64     -> "SNT_Int64"
+  | SNT_String    -> "SNT_String"
+  | SNT_Bool      -> "SNT_Bool"
+  | SNT_Float16   -> "SNT_Float16"
+  | SNT_Double    -> "SNT_Double"
+  | SNT_Uint32    -> "SNT_Uint32"
+  | SNT_Uint64    -> "SNT_Uint64"
+  | SNT_Complex32 -> "SNT_Complex32"
+  | SNT_Complex64 -> "SNT_Complex64"
 
 
 (* type sci_const = Pi | and more ... *)

@@ -5,7 +5,7 @@
 
 open Owl_symbolic_types
 
- module Int = struct
+module Int = struct
   type t =
     { mutable name : string
     ; mutable input : string array
@@ -87,6 +87,6 @@ module Pi = struct
 
   let op_type = "Pi"
 
-  let create ?(dtype = SDT_Float) name =
+  let create ?(dtype = SNT_Float) name =
     { name; input = [||]; attrs = [||]; out_shape = Some [||]; dtype }
 end

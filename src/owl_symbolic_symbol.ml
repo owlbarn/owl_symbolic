@@ -169,10 +169,10 @@ let dtype = function
   | Tensor x   ->
     let (t : tensor) = Tensor.(x.value) in
     t.dtype
-  | Float _    -> SDT_Float
-  | Int _      -> SDT_Int32
+  | Float _    -> SNT_Float
+  | Int _      -> SNT_Int32
   | Pi x       -> Pi.(x.dtype)
-  | Complex _  -> SDT_Complex32
+  | Complex _  -> SNT_Complex32
   | _          -> failwith "owl_symboic_symobl.dtype: not var or constant op"
 
 

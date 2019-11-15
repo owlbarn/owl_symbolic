@@ -11,22 +11,22 @@ type t = Onnx_types.graph_proto
 
 let map_data_type_to_int32 typ =
   match typ with
-  | SDT_Noop      -> Int32.of_int 0 (* Undefined *)
-  | SDT_Float     -> Int32.of_int 1
-  | SDT_Uint8     -> Int32.of_int 2
-  | SDT_Int8      -> Int32.of_int 3
-  | SDT_Uint16    -> Int32.of_int 4
-  | SDT_Int16     -> Int32.of_int 5
-  | SDT_Int32     -> Int32.of_int 6
-  | SDT_Int64     -> Int32.of_int 7
-  | SDT_String    -> Int32.of_int 8
-  | SDT_Bool      -> Int32.of_int 9
-  | SDT_Float16   -> Int32.of_int 10
-  | SDT_Double    -> Int32.of_int 11
-  | SDT_Uint32    -> Int32.of_int 12
-  | SDT_Uint64    -> Int32.of_int 13
-  | SDT_Complex32 -> Int32.of_int 14
-  | SDT_Complex64 -> Int32.of_int 15
+  | SNT_Noop      -> Int32.of_int 0 (* Undefined *)
+  | SNT_Float     -> Int32.of_int 1
+  | SNT_Uint8     -> Int32.of_int 2
+  | SNT_Int8      -> Int32.of_int 3
+  | SNT_Uint16    -> Int32.of_int 4
+  | SNT_Int16     -> Int32.of_int 5
+  | SNT_Int32     -> Int32.of_int 6
+  | SNT_Int64     -> Int32.of_int 7
+  | SNT_String    -> Int32.of_int 8
+  | SNT_Bool      -> Int32.of_int 9
+  | SNT_Float16   -> Int32.of_int 10
+  | SNT_Double    -> Int32.of_int 11
+  | SNT_Uint32    -> Int32.of_int 12
+  | SNT_Uint64    -> Int32.of_int 13
+  | SNT_Complex32 -> Int32.of_int 14
+  | SNT_Complex64 -> Int32.of_int 15
 
 
 let map_sym_optyp_to_onnx sym_optyp =
@@ -58,14 +58,14 @@ let make_onnx_io name elt_type shape =
 let make_onnx_tensor_float f =
   let float_data = [ f ] in
   let dims = [] in
-  let data_type = Some (map_data_type_to_int32 SDT_Float) in
+  let data_type = Some (map_data_type_to_int32 SNT_Float) in
   PT.default_tensor_proto ~dims ~float_data ~data_type ()
 
 
 let make_onnx_tensor_int i =
   let int32_data = [ Int32.of_int i ] in
   let dims = [] in
-  let data_type = Some (map_data_type_to_int32 SDT_Int32) in
+  let data_type = Some (map_data_type_to_int32 SNT_Int32) in
   PT.default_tensor_proto ~dims ~int32_data ~data_type ()
 
 
@@ -81,7 +81,7 @@ let make_onnx_tensor_complex c =
   let r, i = c in
   let float_data = [ r; i ] in
   let dims = [] in
-  let data_type = Some (map_data_type_to_int32 SDT_Complex32) in
+  let data_type = Some (map_data_type_to_int32 SNT_Complex32) in
   PT.default_tensor_proto ~dims ~float_data ~data_type ()
 
 
@@ -234,24 +234,24 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
         | Complex _  -> Owl_symbolic_symbol.dtype sym
         | Variable _ -> Owl_symbolic_symbol.dtype sym
         | Sin _      ->
-          _check_constraint ptypes.(0) [| SDT_Float; SDT_Float16; SDT_Double |] name;
+          _check_constraint ptypes.(0) [| SNT_Float; SNT_Float16; SNT_Double |] name;
           ptypes.(0)
         | Cos _      ->
-          _check_constraint ptypes.(0) [| SDT_Float; SDT_Float16; SDT_Double |] name;
+          _check_constraint ptypes.(0) [| SNT_Float; SNT_Float16; SNT_Double |] name;
           ptypes.(0)
         | Exp _      ->
-          _check_constraint ptypes.(0) [| SDT_Float; SDT_Float16; SDT_Double |] name;
+          _check_constraint ptypes.(0) [| SNT_Float; SNT_Float16; SNT_Double |] name;
           ptypes.(0)
         | Add _      ->
           _check_same ptypes name;
           let c =
-            [| SDT_Uint32
-             ; SDT_Uint64
-             ; SDT_Int32
-             ; SDT_Int64
-             ; SDT_Float16
-             ; SDT_Float
-             ; SDT_Double
+            [| SNT_Uint32
+             ; SNT_Uint64
+             ; SNT_Int32
+             ; SNT_Int64
+             ; SNT_Float16
+             ; SNT_Float
+             ; SNT_Double
             |]
           in
           _check_constraint ptypes.(0) c name;
@@ -259,13 +259,13 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
         | Sub _      ->
           _check_same ptypes name;
           let c =
-            [| SDT_Uint32
-             ; SDT_Uint64
-             ; SDT_Int32
-             ; SDT_Int64
-             ; SDT_Float16
-             ; SDT_Float
-             ; SDT_Double
+            [| SNT_Uint32
+             ; SNT_Uint64
+             ; SNT_Int32
+             ; SNT_Int64
+             ; SNT_Float16
+             ; SNT_Float
+             ; SNT_Double
             |]
           in
           _check_constraint ptypes.(0) c name;
@@ -273,13 +273,13 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
         | Mul _      ->
           _check_same ptypes name;
           let c =
-            [| SDT_Uint32
-             ; SDT_Uint64
-             ; SDT_Int32
-             ; SDT_Int64
-             ; SDT_Float16
-             ; SDT_Float
-             ; SDT_Double
+            [| SNT_Uint32
+             ; SNT_Uint64
+             ; SNT_Int32
+             ; SNT_Int64
+             ; SNT_Float16
+             ; SNT_Float
+             ; SNT_Double
             |]
           in
           _check_constraint ptypes.(0) c name;
@@ -287,22 +287,22 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
         | Div _      ->
           _check_same ptypes name;
           let c =
-            [| SDT_Uint32
-             ; SDT_Uint64
-             ; SDT_Int32
-             ; SDT_Int64
-             ; SDT_Float16
-             ; SDT_Float
-             ; SDT_Double
+            [| SNT_Uint32
+             ; SNT_Uint64
+             ; SNT_Int32
+             ; SNT_Int64
+             ; SNT_Float16
+             ; SNT_Float
+             ; SNT_Double
             |]
           in
           _check_constraint ptypes.(0) c name;
           ptypes.(0)
         | Pow _      ->
           _check_same ptypes name;
-          _check_constraint ptypes.(0) [| SDT_Float; SDT_Float16; SDT_Double |] name;
+          _check_constraint ptypes.(0) [| SNT_Float; SNT_Float16; SNT_Double |] name;
           ptypes.(0)
-        | _          -> SDT_Noop
+        | _          -> SNT_Noop
       in
       Hashtbl.add dtypes name out_type)
     sym_graph
@@ -412,7 +412,7 @@ let build_onnx_initializers sym_graph =
         let shape = init.shape in
         let init_tensor =
           match dtype with
-          | SDT_Float ->
+          | SNT_Float ->
             let flt_val = init.flt_val in
             let flt_val =
               match flt_val with
@@ -420,7 +420,7 @@ let build_onnx_initializers sym_graph =
               | None   -> [||]
             in
             make_onnx_initializers_float name dtype shape flt_val
-          | SDT_Int32 ->
+          | SNT_Int32 ->
             let int_val = init.int_val in
             let int_val =
               match int_val with
