@@ -5,8 +5,8 @@ open Type
 (* open Owl_symbolic_infix *)
 
 let _ =
-  let x = variable ~shape:[||] ~name:"X" () in
-  let y = variable ~shape:[||] ~name:"Y" () in
+  let x = variable "X" in
+  let y = variable "Y" in
   (* exp(sin(x)^2 + cos(x)^2) + 10*y^2 *)
   (* exp(pi * i ) = 0) *)
   let z_wrong =
