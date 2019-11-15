@@ -459,7 +459,7 @@ let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
 (** Main entry of conversion from ONNX graph *)
 let to_symbolic (_onnx_graph : t) = Owl_symbolic_graph.null_graph
 
-(** save a onnx model to Protobuf file *)
+(** save an onnx model to Protobuf file *)
 let save (onnx_model : Onnx_types.model_proto) filename =
   let encoder = Pbrt.Encoder.create () in
   PB.encode_model_proto onnx_model encoder;
@@ -468,5 +468,5 @@ let save (onnx_model : Onnx_types.model_proto) filename =
   close_out oc
 
 
-(** save a onnx model to Protobuf file *)
+(** load an onnx model from Protobuf file *)
 let load _filename = None

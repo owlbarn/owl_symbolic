@@ -106,3 +106,9 @@ let eval_elt (sym_graph : symbolic_graph) =
   G.eval_elt [| cgraph_elt |];
   G.unpack_elt cgraph_elt
 *)
+
+(** save an cgraph model to file *)
+let save _cgraph _filename = ()
+
+(** load an cgraph model from file *)
+let load _filename = None
