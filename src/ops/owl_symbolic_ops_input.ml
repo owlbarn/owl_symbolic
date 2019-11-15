@@ -8,33 +8,30 @@ open Owl_symbolic_types
 module Int = struct
   type t =
     { mutable name : string
-    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     ; mutable value : int
     ; mutable out_shape : int array option
     }
 
   let op_type = "Int"
-  let create name input attrs value = { name; input; attrs; value; out_shape = Some [||] }
+  let create name attrs value = { name; attrs; value; out_shape = Some [||] }
 end
 
 module Float = struct
   type t =
     { mutable name : string
-    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     ; mutable value : float
     ; mutable out_shape : int array option
     }
 
   let op_type = "Float"
-  let create name input attrs value = { name; input; attrs; value; out_shape = Some [||] }
+  let create name attrs value = { name; attrs; value; out_shape = Some [||] }
 end
 
 module Complex = struct
   type t =
     { mutable name : string
-    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     ; mutable real : float
     ; mutable img : float
@@ -42,22 +39,19 @@ module Complex = struct
     }
 
   let op_type = "Complex"
-
-  let create name input attrs real img =
-    { name; input; attrs; real; img; out_shape = Some [||] }
+  let create name attrs real img = { name; attrs; real; img; out_shape = Some [||] }
 end
 
 module Tensor = struct
   type t =
     { mutable name : string
-    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     ; mutable value : tensor
     ; mutable out_shape : int array option
     }
 
   let op_type = "Tensor"
-  let create name input attrs value = { name; input; attrs; value; out_shape = Some [||] }
+  let create name attrs value = { name; attrs; value; out_shape = Some [||] }
 end
 
 module Variable = struct
@@ -79,7 +73,6 @@ end
 module Pi = struct
   type t =
     { mutable name : string
-    ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     ; mutable out_shape : int array option
     ; mutable dtype : number_type
@@ -88,5 +81,5 @@ module Pi = struct
   let op_type = "Pi"
 
   let create ?(dtype = SNT_Float) name =
-    { name; input = [||]; attrs = [||]; out_shape = Some [||]; dtype }
+    { name; attrs = [||]; out_shape = Some [||]; dtype }
 end

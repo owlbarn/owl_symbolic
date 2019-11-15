@@ -3,6 +3,7 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
+(* Or elt_type ? *)
 type number_type =
   | SNT_Noop
   | SNT_Float

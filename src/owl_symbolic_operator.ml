@@ -7,8 +7,6 @@ open Owl_symbolic_namespace
 open Owl_symbolic_graph
 open Owl_symbolic_types
 
-(* TODO: check user-defined name is uniq in the whole graph *)
-
 let noop =
   let sym = Owl_symbolic_symbol.NOOP in
   make_node sym [||]
@@ -21,9 +19,8 @@ let integer ?name value =
     | Some n -> n
     | None   -> Printf.sprintf "integer_%i" suffix
   in
-  let input = [||] in
   let attrs = [||] in
-  let o = Owl_symbolic_ops_input.Int.create name input attrs value in
+  let o = Owl_symbolic_ops_input.Int.create name attrs value in
   let sym = Owl_symbolic_symbol.Int o in
   make_node sym [||]
 
@@ -35,10 +32,9 @@ let flt ?name x =
     | Some n -> n
     | None   -> Printf.sprintf "float_%i" suffix
   in
-  let input = [||] in
   let attrs = [||] in
   let value = x in
-  let o = Owl_symbolic_ops_input.Float.create name input attrs value in
+  let o = Owl_symbolic_ops_input.Float.create name attrs value in
   let sym = Owl_symbolic_symbol.Float o in
   make_node sym [||]
 
@@ -50,9 +46,8 @@ let complex ?name r i =
     | Some n -> n
     | None   -> Printf.sprintf "complex_%i" suffix
   in
-  let input = [||] in
   let attrs = [||] in
-  let o = Owl_symbolic_ops_input.Complex.create name input attrs r i in
+  let o = Owl_symbolic_ops_input.Complex.create name attrs r i in
   let sym = Owl_symbolic_symbol.Complex o in
   make_node sym [||]
 
@@ -69,7 +64,6 @@ let pi ?name () =
   make_node sym [||]
 
 
-(* Do we really a "Tensor" node ? *)
 let tensor ?name t =
   let suffix = generate_suffix () in
   let name =
@@ -77,10 +71,9 @@ let tensor ?name t =
     | Some n -> n
     | None   -> Printf.sprintf "tensor_%i" suffix
   in
-  let input = [||] in
   let attrs = [||] in
   let value = t in
-  let o = Owl_symbolic_ops_input.Tensor.create name input attrs value in
+  let o = Owl_symbolic_ops_input.Tensor.create name attrs value in
   let sym = Owl_symbolic_symbol.Tensor o in
   make_node sym [||]
 

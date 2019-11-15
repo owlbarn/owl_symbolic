@@ -9,7 +9,9 @@ module S = Owl_symbolic_symbol
 
 type t = Onnx_types.graph_proto
 
-let map_data_type_to_int32 typ =
+(** Mapping functions *)
+
+let map_elt_type_to_int32 typ =
   match typ with
   | SNT_Noop      -> Int32.of_int 0 (* Undefined *)
   | SNT_Float     -> Int32.of_int 1
@@ -38,6 +40,54 @@ let map_sym_optyp_to_onnx sym_optyp =
   | _         -> sym_optyp
 
 
+(** Wrapper for building onnx-proto's *)
+
+let make_onnx_tensor_float f =
+  let float_data = [ f ] in
+  let dims = [] in
+  let data_type = Some (map_elt_type_to_int32 SNT_Float) in
+  PT.default_tensor_proto ~dims ~float_data ~data_type ()
+
+
+let make_onnx_tensor_int i =
+  let int32_data = [ Int32.of_int i ] in
+  let dims = [] in
+  let data_type = Some (map_elt_type_to_int32 SNT_Int32) in
+  PT.default_tensor_proto ~dims ~int32_data ~data_type ()
+
+
+let make_onnx_tensor_complex c =
+  let r, i = c in
+  let float_data = [ r; i ] in
+  let dims = [] in
+  let data_type = Some (map_elt_type_to_int32 SNT_Complex32) in
+  PT.default_tensor_proto ~dims ~float_data ~data_type ()
+
+
+let make_onnx_initializers_raw name data_type shape raw_data =
+  let dims = Array.map Int64.of_int shape |> Array.to_list in
+  let data_type = Some (map_elt_type_to_int32 data_type) in
+  let name = Some name in
+  let raw_data = Some raw_data in
+  PT.default_tensor_proto ~dims ~data_type ~name ~raw_data ()
+
+
+let make_onnx_initializers_float name data_type shape float_data =
+  let dims = Array.map Int64.of_int shape |> Array.to_list in
+  let data_type = Some (map_elt_type_to_int32 data_type) in
+  let name = Some name in
+  let float_data = Array.to_list float_data in
+  PT.default_tensor_proto ~dims ~data_type ~name ~float_data ()
+
+
+let make_onnx_initializers_int32 name data_type shape int_data =
+  let dims = Array.map Int64.of_int shape |> Array.to_list in
+  let data_type = Some (map_elt_type_to_int32 data_type) in
+  let name = Some name in
+  let int32_data = Array.map Int32.of_int int_data |> Array.to_list in
+  PT.default_tensor_proto ~dims ~data_type ~name ~int32_data ()
+
+
 (* TODO: this still does not include all possible cases *)
 let make_onnx_io name elt_type shape =
   let dim =
@@ -49,64 +99,12 @@ let make_onnx_io name elt_type shape =
     |> Array.to_list
   in
   let shape = Some (PT.default_tensor_shape_proto ~dim ()) in
-  let type_proto_tensor = PT.default_type_proto_tensor ~shape ~elem_type:elt_type () in
+  let type_proto_tensor =
+    PT.default_type_proto_tensor ~shape ~elem_type:(Some elt_type) ()
+  in
   let value = PT.Tensor_type type_proto_tensor in
   let type_ = Some (PT.default_type_proto ~value ()) in
-  PT.default_value_info_proto ~name ~type_ ()
-
-
-let make_onnx_tensor_float f =
-  let float_data = [ f ] in
-  let dims = [] in
-  let data_type = Some (map_data_type_to_int32 SNT_Float) in
-  PT.default_tensor_proto ~dims ~float_data ~data_type ()
-
-
-let make_onnx_tensor_int i =
-  let int32_data = [ Int32.of_int i ] in
-  let dims = [] in
-  let data_type = Some (map_data_type_to_int32 SNT_Int32) in
-  PT.default_tensor_proto ~dims ~int32_data ~data_type ()
-
-
-(* For float and complex64 values
-  Complex32 tensors are encoded as a single array of floats,
-  with the real components appearing in odd numbered positions,
-  and the corresponding imaginary component apparing in the
-  subsequent even numbered position. (e.g., [1.0 + 2.0i, 3.0 + 4.0i]
-  is encoded as [1.0, 2.0 ,3.0 ,4.0]
-  When this field is present, the data_type field MUST be FLOAT or COMPLEX32.
-*)
-let make_onnx_tensor_complex c =
-  let r, i = c in
-  let float_data = [ r; i ] in
-  let dims = [] in
-  let data_type = Some (map_data_type_to_int32 SNT_Complex32) in
-  PT.default_tensor_proto ~dims ~float_data ~data_type ()
-
-
-let make_onnx_initializers_raw name data_type shape raw_data =
-  let dims = Array.map Int64.of_int shape |> Array.to_list in
-  let data_type = Some (map_data_type_to_int32 data_type) in
-  let name = Some name in
-  let raw_data = Some raw_data in
-  PT.default_tensor_proto ~dims ~data_type ~name ~raw_data ()
-
-
-let make_onnx_initializers_float name data_type shape float_data =
-  let dims = Array.map Int64.of_int shape |> Array.to_list in
-  let data_type = Some (map_data_type_to_int32 data_type) in
-  let name = Some name in
-  let float_data = Array.to_list float_data in
-  PT.default_tensor_proto ~dims ~data_type ~name ~float_data ()
-
-
-let make_onnx_initializers_int32 name data_type shape int_data =
-  let dims = Array.map Int64.of_int shape |> Array.to_list in
-  let data_type = Some (map_data_type_to_int32 data_type) in
-  let name = Some name in
-  let int32_data = Array.map Int32.of_int int_data |> Array.to_list in
-  PT.default_tensor_proto ~dims ~data_type ~name ~int32_data ()
+  PT.default_value_info_proto ~name:(Some name) ~type_ ()
 
 
 let make_onnx_node op_type input_names output_names name attr =
@@ -171,7 +169,9 @@ let make_onnx_model graph =
     ()
 
 
-(* TODO: more useful information? *)
+(** Functions to build part of onnx graph *)
+
+(* TODO: include more useful information? *)
 let _check_same types name =
   let flag = ref true in
   if Array.length types = 0
@@ -305,8 +305,11 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
         | _          -> SNT_Noop
       in
       Hashtbl.add dtypes name out_type)
-    sym_graph
+    sym_graph;
+  dtypes
 
+
+(* TODO: unfinished *)
 
 (** Attributes scheme: https://github.com/onnx/onnx/blob/master/docs/Operators.md *)
 let build_onnx_attrs sym =
@@ -348,7 +351,6 @@ let build_onnx_attrs sym =
 
 (** Core function. Converts symbolic nodes to onnx nodes. *)
 let build_onnx_nodes (sym_graph : Owl_symbolic_graph.symbolic_graph) =
-  (* NOTE: Nodes in a graph must be topologically sorted. *)
   let nodes = ref [||] in
   Owl_symbolic_graph.iter
     (fun sym_node ->
@@ -370,32 +372,30 @@ let build_onnx_nodes (sym_graph : Owl_symbolic_graph.symbolic_graph) =
   !nodes
 
 
-let build_onnx_inputs sym_graph =
+let build_onnx_inputs sym_graph _type_dict =
   Array.map
     (fun sym_node ->
       let sym = Owl_graph.attr sym_node in
-      let nodename = S.name sym in
-      let elt_type = Int32.one in
-      (* assume only float dtype *)
+      let name = S.name sym in
+      let elt_type = S.dtype sym |> map_elt_type_to_int32 in
       let shape = S.shape sym in
-      make_onnx_io (Some nodename) (Some elt_type) shape)
+      make_onnx_io name elt_type shape)
     (Owl_symbolic_graph.get_input_nodes sym_graph)
 
 
-let build_onnx_outputs sym_graph =
+let build_onnx_outputs sym_graph type_dict =
   Array.map
     (fun sym_node ->
       let sym = Owl_graph.attr sym_node in
-      let nodename = S.name sym in
-      let elt_type = Int32.one in
-      (* assume only float dtype *)
+      let name = S.name sym in
+      let elt_type = Hashtbl.find type_dict name |> map_elt_type_to_int32 in
       let shape = S.out_shape sym in
       let shape =
         match shape with
         | Some s -> s
-        | None   -> failwith "build_onnx_outputs: non specified output shape."
+        | None   -> failwith "build_onnx_outputs: non-specified output shape."
       in
-      make_onnx_io (Some nodename) (Some elt_type) shape)
+      make_onnx_io name elt_type shape)
     (Owl_symbolic_graph.get_output_nodes sym_graph)
 
 
@@ -436,17 +436,17 @@ let build_onnx_initializers sym_graph =
   !inits
 
 
-(** Main entry of conversion *)
+(** Main entry of conversion to ONNX graph *)
 let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
   (* Step 0: walk through the sym_graph and check shapes *)
-  build_onnx_type_check sym_graph;
+  let type_dict = build_onnx_type_check sym_graph in
   (* Step 1: convert symbolic nodes to  *)
   let nodes = build_onnx_nodes sym_graph in
   (* Steps 1.x : more processing such as rewriting complex nodes *)
 
   (* Step 2: inpput/output  *)
-  let inputs = build_onnx_inputs sym_graph in
-  let outputs = build_onnx_outputs sym_graph in
+  let inputs = build_onnx_inputs sym_graph type_dict in
+  let outputs = build_onnx_outputs sym_graph type_dict in
   (* Step 3: initializers, corresponding to each input *)
   let initializer_ = build_onnx_initializers sym_graph in
   (* Step N: Maybe some post-processing steps *)
@@ -456,8 +456,10 @@ let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
   make_onnx_model graph
 
 
+(** Main entry of conversion from ONNX graph *)
 let to_symbolic (_onnx_graph : t) = Owl_symbolic_graph.null_graph
 
+(** Serialise a onnx model to Protobuf file *)
 let serialise (onnx_model : Onnx_types.model_proto) filename =
   let encoder = Pbrt.Encoder.create () in
   PB.encode_model_proto onnx_model encoder;
