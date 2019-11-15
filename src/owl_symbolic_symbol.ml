@@ -25,6 +25,7 @@
 
 open Owl_symbolic_types
 open Owl_symbolic_ops_math
+open Owl_symbolic_ops_input
 
 type t =
   | NOOP

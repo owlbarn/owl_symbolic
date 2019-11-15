@@ -192,7 +192,7 @@ let _check_constraint t constraints name =
 
 (* This step performs type checking of the symbolic graph to see if it fits the ONNX operator schemas. 
  * Some things to note:
- *   + Both input and output types of each operator are array of sym_data_type.
+ *   + Both input and output types of each operator are array of number_type.
  *   + Type checking does not consider if the output is optional or not
  *   + The inferred output type of an operator is always unique. 
  *   + Do not change the structure of symgraph itself. 

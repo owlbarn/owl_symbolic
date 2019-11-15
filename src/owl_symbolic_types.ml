@@ -3,7 +3,8 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-type sym_data_type =
+(* number_type *)
+type number_type =
   | SDT_Noop
   | SDT_Float
   | SDT_Double
@@ -21,7 +22,7 @@ type sym_data_type =
   | SDT_Uint64
   | SDT_Float16
 
-let sym_data_type_to_string = function
+let number_type_to_string = function
   | SDT_Noop      -> "SDT_Noop"
   | SDT_Float     -> "SDT_Float"
   | SDT_Uint8     -> "SDT_Uint8"
@@ -43,7 +44,7 @@ let sym_data_type_to_string = function
 (* type sci_const = Pi | and more ... *)
 
 type tensor =
-  { dtype : sym_data_type
+  { dtype : number_type
   ; shape : int array
   ; str_val : string array option
   ; flt_val : float array option
@@ -55,7 +56,7 @@ type attrvalue =
   | ATTR_Nil
   | ATTR_Int of int
   | ATTR_Bool of bool
-  | ATTR_Type of sym_data_type
+  | ATTR_Type of number_type
   | ATTR_Float of float
   | ATTR_Shape of int array
   | ATTR_String of string
