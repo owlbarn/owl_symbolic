@@ -10,4 +10,4 @@ let _ =
   let y = sin x in
   let g = SymGraph.make_graph [| y |] "sym_graph" in
   let z = ONNX_Engine.of_symbolic g in
-  ONNX_Engine.serialise z "test.onnx"
+  ONNX_Engine.save z "test.onnx"

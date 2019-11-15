@@ -25,7 +25,7 @@ let _ =
     in
     let g = SymGraph.make_graph [| z |] "sym_graph" in
     let y = ONNX_Engine.of_symbolic g in
-    ONNX_Engine.serialise y "test.onnx"
+    ONNX_Engine.save y "test.onnx"
 
 (* TOOD: Pity we cannot run the beautiful Euler's formula 
  * (exp (mul (complex 0. 1.) (pi ()))) on ONNX now , because type checking makes sure
