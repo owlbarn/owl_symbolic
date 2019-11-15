@@ -90,16 +90,32 @@ let get_attrvalue_shape v =
   | ATTR_Shape s -> s
   | _            -> failwith "get_attrvalue_shape: incorrect attr type"
 
-
-let make_tensor
-    ?(flt_val = None)
-    ?(int_val = None)
-    ?(str_val = None)
-    ?(raw_val = None)
-    dtype
-    shape
-  =
-  { dtype; shape; flt_val; int_val; str_val; raw_val }
+(* One and only one of the value arguments should be used *)
+let make_tensor ?flt_val ?int_val ?str_val ?raw_val shape =
+  let counter = ref 0 in
+  if flt_val <> None then counter := !counter + 1;
+  if int_val <> None then counter := !counter + 1;
+  if str_val <> None then counter := !counter + 1;
+  if raw_val <> None then counter := !counter + 1;
+  if !counter <> 1
+  then (
+    Owl_log.error "make_tensor: one and only one type of value should be used.";
+    exit 1);
+  if flt_val <> None
+  then
+    { dtype = SNT_Float; shape; flt_val; int_val = None; str_val = None; raw_val = None }
+  else if int_val <> None
+  then
+    { dtype = SNT_Int32; shape; flt_val = None; int_val; str_val = None; raw_val = None }
+  else if str_val <> None
+  then
+    { dtype = SNT_String; shape; flt_val = None; int_val = None; str_val; raw_val = None }
+  else if raw_val <> None
+  then
+    { dtype = SNT_String; shape; flt_val = None; int_val = None; str_val = None; raw_val }
+  else (
+    Owl_log.error "make_tensor: unsupported data type";
+    exit 1)
 
 
 let get_symtensor_dtype (t : tensor) = t.dtype
