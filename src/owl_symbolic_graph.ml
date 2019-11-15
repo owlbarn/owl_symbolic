@@ -23,7 +23,7 @@ let make_node (sym : Owl_symbolic_symbol.t) (parents : symbolic_node array) =
   then (
     let in_shapes =
       Array.map
-        (fun sym_node -> Owl_graph.attr sym_node |> Owl_symbolic_symbol.get_out_shape)
+        (fun sym_node -> Owl_graph.attr sym_node |> Owl_symbolic_symbol.out_shape)
         parents
     in
     let shape = Owl_symbolic_shape.infer_shape in_shapes sym in

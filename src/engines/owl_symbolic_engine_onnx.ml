@@ -389,7 +389,7 @@ let build_onnx_outputs sym_graph =
       let nodename = S.name sym in
       let elt_type = Int32.one in
       (* assume only float dtype *)
-      let shape = S.get_out_shape sym in
+      let shape = S.out_shape sym in
       let shape =
         match shape with
         | Some s -> s

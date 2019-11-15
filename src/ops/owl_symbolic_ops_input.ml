@@ -64,7 +64,7 @@ module Variable = struct
   type t =
     { mutable name : string
     ; mutable attrs : (string * attrvalue) array
-    ; mutable typ : number_type
+    ; mutable dtype : number_type
     ; mutable shape : int array
     ; mutable out_shape : int array option
     ; mutable init : tensor option
@@ -72,8 +72,8 @@ module Variable = struct
 
   let op_type = "Variable"
 
-  let create name attrs typ shape init =
-    { name; attrs; typ; shape; out_shape = Some shape; init }
+  let create name attrs dtype shape init =
+    { name; attrs; dtype; shape; out_shape = Some shape; init }
 end
 
 module Pi = struct

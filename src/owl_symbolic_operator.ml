@@ -88,7 +88,7 @@ let tensor ?name t =
 (* The shape and type are decided by initial value; 
  * if initial value not given, user need to specify them. 
  * Shape value default to scalar [||], and type default to SNT_Float. *)
-let variable ?shape ?typ ?init name =
+let variable ?shape ?dtype ?init name =
   let true_shape =
     match init with
     | Some (t : tensor) ->
@@ -100,19 +100,19 @@ let variable ?shape ?typ ?init name =
       | Some s -> s
       | None   -> [||])
   in
-  let true_typ =
+  let true_dtype =
     match init with
     | Some (t : tensor) ->
       if shape <> None
       then Owl_log.warn "Variable %s: type overridden by initializers" name;
       t.dtype
     | None              ->
-      (match typ with
+      (match dtype with
       | Some s -> s
       | None   -> SNT_Float)
   in
   let attrs = [||] in
-  let o = Owl_symbolic_ops_input.Variable.create name attrs true_typ true_shape init in
+  let o = Owl_symbolic_ops_input.Variable.create name attrs true_dtype true_shape init in
   let sym = Owl_symbolic_symbol.Variable o in
   make_node sym [||]
 
