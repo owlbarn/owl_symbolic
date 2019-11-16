@@ -92,7 +92,8 @@ let to_symbolic (cgraph : G.graph) =
           Owl_symbolic_operator.tensor ~name tensor
         | Sin   -> Owl_symbolic_operator.sin ~name sym_inputs.(0)
         | Add   -> Owl_symbolic_operator.add sym_inputs.(0) sym_inputs.(1)
-        | _     -> failwith "Node type not supported."
+        | AddScalar  -> Owl_symbolic_operator.add sym_inputs.(0) sym_inputs.(1)
+        | _     -> failwith (Printf.sprintf "Node type not supported: %s" (G.op_to_str cnode_attr.op))
       in
       Hashtbl.add syms name sym)
     outputs;
