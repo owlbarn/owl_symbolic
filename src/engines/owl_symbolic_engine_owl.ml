@@ -78,22 +78,25 @@ let to_symbolic (cgraph : G.graph) =
       (* build the current symbol *)
       let sym =
         match cnode_attr.op with
-        | Var ->
+        | Var       ->
           let shape = cnode_attr.shape in
-          let s = match shape.(0) with 
+          let s =
+            match shape.(0) with
             | Some s -> s
             | None   -> failwith "unspecified owl shape"
-          in 
-          Owl_symbolic_operator.variable ~shape:s ~dtype:SNT_Float name 
-        | Ones shp -> 
-          let ele_num = Owl_symbolic_utils.nelt shp in 
+          in
+          Owl_symbolic_operator.variable ~shape:s ~dtype:SNT_Float name
+        | Ones shp  ->
+          let ele_num = Owl_symbolic_utils.nelt shp in
           let flt_val = Array.make ele_num 1. in
-          let tensor = Owl_symbolic_types.make_tensor ~flt_val shp in 
+          let tensor = Owl_symbolic_types.make_tensor ~flt_val shp in
           Owl_symbolic_operator.tensor ~name tensor
-        | Sin   -> Owl_symbolic_operator.sin ~name sym_inputs.(0)
-        | Add   -> Owl_symbolic_operator.add sym_inputs.(0) sym_inputs.(1)
-        | AddScalar  -> Owl_symbolic_operator.add sym_inputs.(0) sym_inputs.(1)
-        | _     -> failwith (Printf.sprintf "Node type not supported: %s" (G.op_to_str cnode_attr.op))
+        | Sin       -> Owl_symbolic_operator.sin ~name sym_inputs.(0)
+        | Add       -> Owl_symbolic_operator.add sym_inputs.(0) sym_inputs.(1)
+        | AddScalar -> Owl_symbolic_operator.add sym_inputs.(0) sym_inputs.(1)
+        | _         ->
+          failwith
+            (Printf.sprintf "Node type not supported: %s" (G.op_to_str cnode_attr.op))
       in
       Hashtbl.add syms name sym)
     outputs;
@@ -106,6 +109,7 @@ let to_symbolic (cgraph : G.graph) =
       outputs
   in
   Owl_symbolic_graph.make_graph output_sym_nodes ""
+
 
 (*
 let of_symbolic (_sym_graph : symbolic_graph) =

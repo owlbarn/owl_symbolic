@@ -49,11 +49,11 @@ module Add = struct
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     ; mutable out_shape : int array option
-    (* ; mutable pos_scalar : int --> differentiate add (0), scalaradd(-1), and addscalar(1) *)
+          (* ; mutable pos_scalar : int --> differentiate add (0), scalaradd(-1), and addscalar(1) *)
     }
 
   let op_type = "Add"
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape; }
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
   let type_constraints = []
   let doc_string = "Addition"
 end

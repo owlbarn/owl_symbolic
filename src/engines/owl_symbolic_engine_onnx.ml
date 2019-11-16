@@ -42,14 +42,14 @@ let map_sym_optyp_to_onnx sym_optyp =
 
 (** Wrapper for building onnx-proto's *)
 
-let make_onnx_tensor_floats ?(shape=[||]) fs =
+let make_onnx_tensor_floats ?(shape = [||]) fs =
   let float_data = Array.to_list fs in
   let dims = Array.map Int64.of_int shape |> Array.to_list in
   let data_type = Some (map_elt_type_to_int32 SNT_Float) in
   PT.default_tensor_proto ~dims ~float_data ~data_type ()
 
 
-let make_onnx_tensor_ints ?(shape=[||]) i =
+let make_onnx_tensor_ints ?(shape = [||]) i =
   let int32_data = Array.map Int32.of_int i |> Array.to_list in
   let dims = Array.map Int64.of_int shape |> Array.to_list in
   let data_type = Some (map_elt_type_to_int32 SNT_Int32) in
@@ -320,7 +320,7 @@ let build_onnx_attrs sym =
       let name = Some "value" in
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
       let v = S.float_value sym in
-      let tensor = Some (make_onnx_tensor_floats [|v|]) in
+      let tensor = Some (make_onnx_tensor_floats [| v |]) in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
     | S.Int _     ->
@@ -328,7 +328,7 @@ let build_onnx_attrs sym =
       let name = Some "value" in
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
       let v = S.int_value sym in
-      let tensor = Some (make_onnx_tensor_ints [|v|]) in
+      let tensor = Some (make_onnx_tensor_ints [| v |]) in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
     | S.Complex _ ->
@@ -344,22 +344,31 @@ let build_onnx_attrs sym =
       let name = Some "value" in
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
       let v = Owl_const.pi in
-      let tensor = Some (make_onnx_tensor_floats [|v|]) in
+      let tensor = Some (make_onnx_tensor_floats [| v |]) in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
-    | S.Tensor _   ->
+    | S.Tensor _  ->
       (* create "value" attribute for Constant *)
       let name = Some "value" in
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
       let v = S.tensor_value sym in
-      let tensor = match v.dtype with
-        | SNT_Float -> 
-          let flts = match v.flt_val with Some f -> f | None -> [||] in
-          Some (make_onnx_tensor_floats ~shape:(v.shape) flts)
-        | SNT_Int32 -> 
-          let ints = match v.int_val with Some i -> i | None -> [||] in
-          Some (make_onnx_tensor_ints  ~shape:(v.shape) ints)
-        | _         -> 
+      let tensor =
+        match v.dtype with
+        | SNT_Float ->
+          let flts =
+            match v.flt_val with
+            | Some f -> f
+            | None   -> [||]
+          in
+          Some (make_onnx_tensor_floats ~shape:v.shape flts)
+        | SNT_Int32 ->
+          let ints =
+            match v.int_val with
+            | Some i -> i
+            | None   -> [||]
+          in
+          Some (make_onnx_tensor_ints ~shape:v.shape ints)
+        | _         ->
           let t = Owl_symbolic_types.number_type_to_string v.dtype in
           let err_msg = Printf.sprintf "build_onnx_attrs: unsupported type: %s\n" t in
           failwith err_msg
