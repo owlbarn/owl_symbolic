@@ -11,6 +11,8 @@ let make_graph () =
   let output = [| unpack_arr z |> G.arr_to_node |] in
   G.make_graph ~input ~output "graph"
 
-let g = make_graph ()
-
-let sym_graph = OWL_Engine.to_symbolic g
+let _ =
+  let g = make_graph () in
+  let h = OWL_Engine.to_symbolic g in
+  let k = ONNX_Engine.of_symbolic h in
+  ONNX_Engine.save k "test.onnx"
