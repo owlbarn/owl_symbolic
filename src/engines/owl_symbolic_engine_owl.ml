@@ -40,7 +40,7 @@ let get_const_value (attr : Symbol.Shape.Type.attr) =
 
 (** Main entry *)
 
-let to_symbolic (cgraph : t) =
+let to_symbolic (cgraph : G.graph) =
   let outputs = G.get_outputs cgraph in
   (* name each node properly *)
   iter_ancestors
@@ -78,9 +78,18 @@ let to_symbolic (cgraph : t) =
       (* build the current symbol *)
       let sym =
         match cnode_attr.op with
-        | Const ->
-          let value = get_const_value cnode_attr in
-          Owl_symbolic_operator.flt ~name value
+        | Var ->
+          let shape = cnode_attr.shape in
+          let s = match shape.(0) with 
+            | Some s -> s
+            | None   -> failwith "unspecified owl shape"
+          in 
+          Owl_symbolic_operator.variable ~shape:s ~dtype:SNT_Float name 
+        | Ones shp -> 
+          let ele_num = Owl_symbolic_utils.nelt shp in 
+          let flt_val = Array.make ele_num 1. in
+          let tensor = Owl_symbolic_types.make_tensor ~flt_val shp in 
+          Owl_symbolic_operator.tensor ~name tensor
         | Sin   -> Owl_symbolic_operator.sin ~name sym_inputs.(0)
         | Add   -> Owl_symbolic_operator.add sym_inputs.(0) sym_inputs.(1)
         | _     -> failwith "Node type not supported."
