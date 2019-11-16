@@ -9,6 +9,23 @@ open Owl_graph
 
 type t = G.graph
 
+(* Target op (Owl -- Symbolic):
+Var -- variable 
+Zeros -- float tensor 
+Ones  -- float tensor 
+Const -- float tensor
+
+HOWEVER, beware that: Uniform node  requires two const nodes as parameter;
+so we are not one-to-one map.
+Wait, no actually, we need to have "RandomUniform/Normal" operators in Symbolic as in ONNX. 
+That means we need to ditch the two const node, but use then as attributes of the RandomUniform node.
+
+Sin/Cos/Add/Sub/Mul/Div/Pow -- direct map
+AddScalar/ScalarAdd/Scalar_Sin....  -- map to Add/Sin... in the end; scalar to tensor first
+
+No need to shape inference since that' already done in Owl
+*)
+
 (** Helper function *)
 
 let get_const_value (attr : Symbol.Shape.Type.attr) =
