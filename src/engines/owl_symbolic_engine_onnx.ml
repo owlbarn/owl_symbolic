@@ -366,7 +366,12 @@ let build_onnx_nodes (sym_graph : Owl_symbolic_graph.symbolic_graph) =
         (* Build onnx attributes  *)
         let onnx_attrs = build_onnx_attrs sym in
         let name = Some name in
-        let n = make_onnx_node op_type input_names output_names name onnx_attrs in
+        let n = 
+          (* TODO: add support for Tensor etc. *)
+          (* match sym with 
+          | Tensor x ->    
+          | _ -> make_onnx_node op_type input_names output_names name onnx_attrs *)
+        make_onnx_node op_type input_names output_names name onnx_attrs in
         nodes := Array.append !nodes [| n |]))
     sym_graph;
   !nodes
