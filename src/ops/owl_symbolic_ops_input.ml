@@ -51,7 +51,7 @@ module Tensor = struct
     }
 
   let op_type = "Tensor"
-  let create name attrs value = { name; attrs; value; out_shape = Some [||] }
+  let create name attrs value = { name; attrs; value; out_shape = Some value.shape }
 end
 
 module Variable = struct

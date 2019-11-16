@@ -42,16 +42,16 @@ let map_sym_optyp_to_onnx sym_optyp =
 
 (** Wrapper for building onnx-proto's *)
 
-let make_onnx_tensor_float f =
-  let float_data = [ f ] in
-  let dims = [] in
+let make_onnx_tensor_floats ?(shape=[||]) fs =
+  let float_data = Array.to_list fs in
+  let dims = Array.map Int64.of_int shape |> Array.to_list in
   let data_type = Some (map_elt_type_to_int32 SNT_Float) in
   PT.default_tensor_proto ~dims ~float_data ~data_type ()
 
 
-let make_onnx_tensor_int i =
-  let int32_data = [ Int32.of_int i ] in
-  let dims = [] in
+let make_onnx_tensor_ints ?(shape=[||]) i =
+  let int32_data = Array.map Int32.of_int i |> Array.to_list in
+  let dims = Array.map Int64.of_int shape |> Array.to_list in
   let data_type = Some (map_elt_type_to_int32 SNT_Int32) in
   PT.default_tensor_proto ~dims ~int32_data ~data_type ()
 
@@ -316,32 +316,54 @@ let build_onnx_attrs sym =
   let onnx_attrs =
     match sym with
     | S.Float _   ->
-      (* create "value" attribute for constant *)
+      (* create "value" attribute for Constant *)
       let name = Some "value" in
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
       let v = S.float_value sym in
-      let tensor = Some (make_onnx_tensor_float v) in
+      let tensor = Some (make_onnx_tensor_floats [|v|]) in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
     | S.Int _     ->
+      (* create "value" attribute for Constant *)
       let name = Some "value" in
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
       let v = S.int_value sym in
-      let tensor = Some (make_onnx_tensor_int v) in
+      let tensor = Some (make_onnx_tensor_ints [|v|]) in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
     | S.Complex _ ->
       let name = Some "value" in
+      (* create "value" attribute for Constant *)
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
       let v = S.complex_value sym in
       let tensor = Some (make_onnx_tensor_complex v) in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
     | S.Pi _      ->
+      (* create "value" attribute for Constant *)
       let name = Some "value" in
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
       let v = Owl_const.pi in
-      let tensor = Some (make_onnx_tensor_float v) in
+      let tensor = Some (make_onnx_tensor_floats [|v|]) in
+      let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
+      [ a_value ]
+    | S.Tensor _   ->
+      (* create "value" attribute for Constant *)
+      let name = Some "value" in
+      let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
+      let v = S.tensor_value sym in
+      let tensor = match v.dtype with
+        | SNT_Float -> 
+          let flts = match v.flt_val with Some f -> f | None -> [||] in
+          Some (make_onnx_tensor_floats ~shape:(v.shape) flts)
+        | SNT_Int32 -> 
+          let ints = match v.int_val with Some i -> i | None -> [||] in
+          Some (make_onnx_tensor_ints  ~shape:(v.shape) ints)
+        | _         -> 
+          let t = Owl_symbolic_types.number_type_to_string v.dtype in
+          let err_msg = Printf.sprintf "build_onnx_attrs: unsupported type: %s\n" t in
+          failwith err_msg
+      in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
     | _           -> []
@@ -366,12 +388,7 @@ let build_onnx_nodes (sym_graph : Owl_symbolic_graph.symbolic_graph) =
         (* Build onnx attributes  *)
         let onnx_attrs = build_onnx_attrs sym in
         let name = Some name in
-        let n = 
-          (* TODO: add support for Tensor etc. *)
-          (* match sym with 
-          | Tensor x ->    
-          | _ -> make_onnx_node op_type input_names output_names name onnx_attrs *)
-        make_onnx_node op_type input_names output_names name onnx_attrs in
+        let n = make_onnx_node op_type input_names output_names name onnx_attrs in
         nodes := Array.append !nodes [| n |]))
     sym_graph;
   !nodes

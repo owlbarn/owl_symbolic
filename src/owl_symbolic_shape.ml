@@ -41,4 +41,6 @@ let infer_shape input_shapes sym =
   | Pow _      -> _infer_shape_01 input_shapes
   | _          -> [| None |]
 
-(* Do we need pow_scalar/mul_scalar etc.? In the end, yes, but now... *)
+(* It has been shown that current _infer_shape_03 
+  works for add, addscalar and scalaradd; so no need to 
+  rush to add new symbols perhaps *)
