@@ -1,3 +1,4 @@
 
 *.ml linguist-language=OCaml
 vendor/* linguist-vendored
+example/*.py linguist-vendored
