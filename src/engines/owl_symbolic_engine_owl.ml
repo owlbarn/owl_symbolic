@@ -94,6 +94,7 @@ let to_symbolic (cgraph : G.graph) =
         | Sin       -> Owl_symbolic_operator.sin ~name sym_inputs.(0)
         | Add       -> Owl_symbolic_operator.add sym_inputs.(0) sym_inputs.(1)
         | AddScalar -> Owl_symbolic_operator.add sym_inputs.(0) sym_inputs.(1)
+        | ScalarAdd -> Owl_symbolic_operator.add sym_inputs.(0) sym_inputs.(1)
         | _         ->
           failwith
             (Printf.sprintf "Node type not supported: %s" (G.op_to_str cnode_attr.op))
@@ -108,7 +109,7 @@ let to_symbolic (cgraph : G.graph) =
         Hashtbl.find syms name)
       outputs
   in
-  Owl_symbolic_graph.make_graph output_sym_nodes ""
+  Owl_symbolic_graph.make_graph output_sym_nodes (cgraph.name)
 
 
 (*
