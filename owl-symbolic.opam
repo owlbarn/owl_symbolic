@@ -5,7 +5,7 @@ license: "MIT"
 homepage: "https://github.com/owlbarn/owl-symbolic"
 dev-repo: "git+https://github.com/owlbarn/owl-symbolic.git"
 bug-reports: "https://github.com/owlbarn/owl-symbolic/issues"
-doc: "https://owlbarn.github.io/owl-symbolic/owl-symbolic"
+doc: "https://owlbarn.github.io/owl-symbolic"
 build: [
   ["dune" "build" "-p" name "-j" jobs]
   ["dune" "runtest" "-p" name "-j" jobs] {with-test}
