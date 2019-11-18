@@ -78,7 +78,7 @@ let to_symbolic (cgraph : G.graph) =
       (* build the current symbol *)
       let sym =
         match cnode_attr.op with
-        | Var       ->
+        | Var        ->
           let shape = cnode_attr.shape in
           let s =
             match shape.(0) with
@@ -91,32 +91,34 @@ let to_symbolic (cgraph : G.graph) =
           let flt_val = Array.make ele_num 0. in
           let tensor = Owl_symbolic_types.make_tensor ~flt_val shp in
           Owl_symbolic_operator.tensor ~name tensor
-        | Ones shp  ->
+        | Ones shp   ->
           let ele_num = Owl_symbolic_utils.nelt shp in
           let flt_val = Array.make ele_num 1. in
           let tensor = Owl_symbolic_types.make_tensor ~flt_val shp in
           Owl_symbolic_operator.tensor ~name tensor
-        | Sin       -> Owl_symbolic_operator.sin ~name sym_inputs.(0)
-        | Cos       -> Owl_symbolic_operator.cos ~name sym_inputs.(0)
-        | Sqrt      -> Owl_symbolic_operator.sqrt ~name sym_inputs.(0)
-        | Exp       -> Owl_symbolic_operator.exp ~name sym_inputs.(0)
-        | Log       -> Owl_symbolic_operator.log ~name sym_inputs.(0)
-        | Add       -> Owl_symbolic_operator.add sym_inputs.(0) sym_inputs.(1)
-        | AddScalar -> Owl_symbolic_operator.add sym_inputs.(0) sym_inputs.(1)
-        | ScalarAdd -> Owl_symbolic_operator.add sym_inputs.(0) sym_inputs.(1)
-        | Sub       -> Owl_symbolic_operator.sub sym_inputs.(0) sym_inputs.(1)
-        | SubScalar -> Owl_symbolic_operator.sub sym_inputs.(0) sym_inputs.(1)
-        | ScalarSub -> Owl_symbolic_operator.sub sym_inputs.(0) sym_inputs.(1)
-        | Mul       -> Owl_symbolic_operator.mul sym_inputs.(0) sym_inputs.(1)
-        | MulScalar -> Owl_symbolic_operator.mul sym_inputs.(0) sym_inputs.(1)
-        | ScalarMul -> Owl_symbolic_operator.mul sym_inputs.(0) sym_inputs.(1)
-        | Div       -> Owl_symbolic_operator.div sym_inputs.(0) sym_inputs.(1)
-        | DivScalar -> Owl_symbolic_operator.div sym_inputs.(0) sym_inputs.(1)
-        | ScalarDiv -> Owl_symbolic_operator.div sym_inputs.(0) sym_inputs.(1)
-        | Pow       -> Owl_symbolic_operator.pow sym_inputs.(0) sym_inputs.(1)
-        | PowScalar -> Owl_symbolic_operator.pow sym_inputs.(0) sym_inputs.(1)
-        | ScalarPow -> Owl_symbolic_operator.pow sym_inputs.(0) sym_inputs.(1)
-        | _         ->
+        | Sin        -> Owl_symbolic_operator.sin ~name sym_inputs.(0)
+        | Cos        -> Owl_symbolic_operator.cos ~name sym_inputs.(0)
+        | Sqrt       -> Owl_symbolic_operator.sqrt ~name sym_inputs.(0)
+        | Exp        -> Owl_symbolic_operator.exp ~name sym_inputs.(0)
+        | Log        -> Owl_symbolic_operator.log ~name sym_inputs.(0)
+        | Neg        -> Owl_symbolic_operator.neg ~name sym_inputs.(0)
+        | Scalar_Neg -> Owl_symbolic_operator.neg ~name sym_inputs.(0) (* ? *)
+        | Add        -> Owl_symbolic_operator.add sym_inputs.(0) sym_inputs.(1)
+        | AddScalar  -> Owl_symbolic_operator.add sym_inputs.(0) sym_inputs.(1)
+        | ScalarAdd  -> Owl_symbolic_operator.add sym_inputs.(0) sym_inputs.(1)
+        | Sub        -> Owl_symbolic_operator.sub sym_inputs.(0) sym_inputs.(1)
+        | SubScalar  -> Owl_symbolic_operator.sub sym_inputs.(0) sym_inputs.(1)
+        | ScalarSub  -> Owl_symbolic_operator.sub sym_inputs.(0) sym_inputs.(1)
+        | Mul        -> Owl_symbolic_operator.mul sym_inputs.(0) sym_inputs.(1)
+        | MulScalar  -> Owl_symbolic_operator.mul sym_inputs.(0) sym_inputs.(1)
+        | ScalarMul  -> Owl_symbolic_operator.mul sym_inputs.(0) sym_inputs.(1)
+        | Div        -> Owl_symbolic_operator.div sym_inputs.(0) sym_inputs.(1)
+        | DivScalar  -> Owl_symbolic_operator.div sym_inputs.(0) sym_inputs.(1)
+        | ScalarDiv  -> Owl_symbolic_operator.div sym_inputs.(0) sym_inputs.(1)
+        | Pow        -> Owl_symbolic_operator.pow sym_inputs.(0) sym_inputs.(1)
+        | PowScalar  -> Owl_symbolic_operator.pow sym_inputs.(0) sym_inputs.(1)
+        | ScalarPow  -> Owl_symbolic_operator.pow sym_inputs.(0) sym_inputs.(1)
+        | _          ->
           failwith
             (Printf.sprintf "Node type not supported: %s" (G.op_to_str cnode_attr.op))
       in
@@ -130,7 +132,7 @@ let to_symbolic (cgraph : G.graph) =
         Hashtbl.find syms name)
       outputs
   in
-  Owl_symbolic_graph.make_graph output_sym_nodes (cgraph.name)
+  Owl_symbolic_graph.make_graph output_sym_nodes cgraph.name
 
 
 (*

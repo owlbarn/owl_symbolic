@@ -42,5 +42,5 @@ loc:
 	cloc src/
 
 push:
-	git commit -am "coding onnx converter ..." && \
+	git commit -am "coding symbolic ..." && \
 	git push origin `git branch | grep \* | cut -d ' ' -f2`

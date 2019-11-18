@@ -248,6 +248,19 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
         | Log _      ->
           _check_constraint ptypes.(0) [| SNT_Float; SNT_Float16; SNT_Double |] name;
           ptypes.(0)
+        | Neg _      ->
+          let c =
+            [| SNT_Int8
+             ; SNT_Int16
+             ; SNT_Int32
+             ; SNT_Int64
+             ; SNT_Float16
+             ; SNT_Float
+             ; SNT_Double
+            |]
+          in
+          _check_constraint ptypes.(0) c name;
+          ptypes.(0)
         | Add _      ->
           _check_same ptypes name;
           let c =

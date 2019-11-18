@@ -67,6 +67,18 @@ module Log = struct
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
 
+module Neg = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Neg"
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end
+
 module Add = struct
   type t =
     { mutable name : string

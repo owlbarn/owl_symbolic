@@ -40,6 +40,7 @@ type t =
   | Sqrt of Sqrt.t
   | Exp of Exp.t
   | Log of Log.t
+  | Neg of Neg.t
   | Add of Add.t
   | Sub of Sub.t
   | Mul of Mul.t
@@ -57,7 +58,8 @@ let name = function
   | Cos x      -> Cos.(x.name)
   | Sqrt x     -> Sqrt.(x.name)
   | Exp x      -> Exp.(x.name)
-  | Log x      -> Log.(x.name) 
+  | Log x      -> Log.(x.name)
+  | Neg x      -> Neg.(x.name)
   | Add x      -> Add.(x.name)
   | Sub x      -> Sub.(x.name)
   | Mul x      -> Mul.(x.name)
@@ -77,7 +79,8 @@ let input = function
   | Cos x      -> Cos.(x.input)
   | Sqrt x     -> Sqrt.(x.input)
   | Exp x      -> Exp.(x.input)
-  | Log x      -> Log.(x.input) 
+  | Log x      -> Log.(x.input)
+  | Neg x      -> Neg.(x.input)
   | Add x      -> Add.(x.input)
   | Sub x      -> Sub.(x.input)
   | Mul x      -> Mul.(x.input)
@@ -98,6 +101,7 @@ let op_type = function
   | Sqrt _     -> Sqrt.op_type
   | Exp _      -> Exp.op_type
   | Log _      -> Log.op_type
+  | Neg _      -> Neg.op_type
   | Add _      -> Add.op_type
   | Sub _      -> Sub.op_type
   | Mul _      -> Mul.op_type
@@ -118,6 +122,7 @@ let sym_attrs = function
   | Sqrt x     -> Sqrt.(x.attrs)
   | Exp x      -> Exp.(x.attrs)
   | Log x      -> Log.(x.attrs)
+  | Neg x      -> Neg.(x.attrs)
   | Add x      -> Add.(x.attrs)
   | Sub x      -> Sub.(x.attrs)
   | Mul x      -> Mul.(x.attrs)
@@ -145,7 +150,8 @@ let out_shape = function
   | Cos x      -> Cos.(x.out_shape)
   | Sqrt x     -> Sqrt.(x.out_shape)
   | Exp x      -> Exp.(x.out_shape)
-  | Log x      -> Log.(x.out_shape) 
+  | Log x      -> Log.(x.out_shape)
+  | Neg x      -> Neg.(x.out_shape)
   | Add x      -> Add.(x.out_shape)
   | Sub x      -> Sub.(x.out_shape)
   | Mul x      -> Mul.(x.out_shape)
@@ -163,6 +169,7 @@ let set_out_shape sym shape =
   | Sqrt x     -> x.out_shape <- shape
   | Exp x      -> x.out_shape <- shape
   | Log x      -> x.out_shape <- shape
+  | Neg x      -> x.out_shape <- shape
   | Add x      -> x.out_shape <- shape
   | Sub x      -> x.out_shape <- shape
   | Mul x      -> x.out_shape <- shape
