@@ -33,7 +33,9 @@ let infer_shape input_shapes sym =
     [| Some shp |]
   | Sin _      -> _infer_shape_01 input_shapes
   | Cos _      -> _infer_shape_01 input_shapes
+  | Sqrt _     -> _infer_shape_01 input_shapes
   | Exp _      -> _infer_shape_01 input_shapes
+  | Log _      -> _infer_shape_01 input_shapes
   | Add _      -> _infer_shape_03 input_shapes
   | Sub _      -> _infer_shape_03 input_shapes
   | Mul _      -> _infer_shape_03 input_shapes

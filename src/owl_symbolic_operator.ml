@@ -140,6 +140,21 @@ let cos ?name x =
   make_node sym [| x |]
 
 
+let sqrt ?name x =
+  let suffix = generate_suffix () in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "sqrt_%i" suffix
+  in
+  let x_name = Owl_symbolic_graph.name x in
+  let input = [| x_name |] in
+  let attrs = [||] in
+  let o = Owl_symbolic_ops_math.Sqrt.create name input attrs in
+  let sym = Owl_symbolic_symbol.Sqrt o in
+  make_node sym [| x |]
+
+
 let exp ?name x =
   let suffix = generate_suffix () in
   let name =
@@ -152,6 +167,21 @@ let exp ?name x =
   let attrs = [||] in
   let o = Owl_symbolic_ops_math.Exp.create name input attrs in
   let sym = Owl_symbolic_symbol.Exp o in
+  make_node sym [| x |]
+
+
+let log ?name x =
+  let suffix = generate_suffix () in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "log_%i" suffix
+  in
+  let x_name = Owl_symbolic_graph.name x in
+  let input = [| x_name |] in
+  let attrs = [||] in
+  let o = Owl_symbolic_ops_math.Log.create name input attrs in
+  let sym = Owl_symbolic_symbol.Log o in
   make_node sym [| x |]
 
 

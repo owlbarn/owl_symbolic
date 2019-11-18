@@ -239,7 +239,13 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
         | Cos _      ->
           _check_constraint ptypes.(0) [| SNT_Float; SNT_Float16; SNT_Double |] name;
           ptypes.(0)
+        | Sqrt _     ->
+          _check_constraint ptypes.(0) [| SNT_Float; SNT_Float16; SNT_Double |] name;
+          ptypes.(0)
         | Exp _      ->
+          _check_constraint ptypes.(0) [| SNT_Float; SNT_Float16; SNT_Double |] name;
+          ptypes.(0)
+        | Log _      ->
           _check_constraint ptypes.(0) [| SNT_Float; SNT_Float16; SNT_Double |] name;
           ptypes.(0)
         | Add _      ->

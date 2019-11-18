@@ -31,6 +31,18 @@ module Cos = struct
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
 
+module Sqrt = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Sqrt"
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end
+
 module Exp = struct
   type t =
     { mutable name : string
@@ -40,6 +52,18 @@ module Exp = struct
     }
 
   let op_type = "Exp"
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end
+
+module Log = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Log"
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
 
