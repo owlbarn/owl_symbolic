@@ -65,6 +65,7 @@ let infer_shape input_shapes sym =
   | MatMul _        -> _infer_shape_19 input_shapes
   | ReduceSum x     -> _infer_shape_10 input_shapes x.axes x.keepdims
   | ReduceMax x     -> _infer_shape_10 input_shapes x.axes x.keepdims
+  | Reshape x       -> [| Some x.shape |]
   | _               -> [| None |]
 
 (* It has been shown that current _infer_shape_03 

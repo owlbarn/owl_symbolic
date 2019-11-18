@@ -16,6 +16,15 @@ so we are not one-to-one map.
 Wait, no actually, we need to have "RandomUniform/Normal" operators in Symbolic as in ONNX. 
 That means we need to ditch the two const node, but use then as attributes of the RandomUniform node.
 No need to shape inference since that' already done in Owl
+
+
+Special ops:
+
+- Uniform+Const ---> multiple owl nodes to one sym node
+- Reshape --> onne owl nodes to multiple sym node
+- Conv --> optional input
+- maxpool  -> multiple output (2, one of them is optional)
+
 *)
 
 (** Helper function *)
@@ -69,8 +78,9 @@ let to_symbolic (cgraph : G.graph) =
       in
       (* build the current symbol *)
       let sym =
+        (* Damn you ocamlformat; sometimes I just want to punch you in that perfect teeth *)
         match cnode_attr.op with
-        | Var         ->
+        | Var ->
           let shape = cnode_attr.shape in
           let s =
             match shape.(0) with
@@ -78,12 +88,12 @@ let to_symbolic (cgraph : G.graph) =
             | None   -> failwith "unspecified owl shape"
           in
           variable ~shape:s ~dtype:SNT_Float name
-        | Zeros shp   ->
+        | Zeros shp ->
           let ele_num = Owl_symbolic_utils.nelt shp in
           let flt_val = Array.make ele_num 0. in
           let tensor = Owl_symbolic_types.make_tensor ~flt_val shp in
           Owl_symbolic_operator.tensor ~name tensor
-        | Ones shp    ->
+        | Ones shp ->
           let ele_num = Owl_symbolic_utils.nelt shp in
           let flt_val = Array.make ele_num 1. in
           let tensor = Owl_symbolic_types.make_tensor ~flt_val shp in
@@ -96,35 +106,34 @@ let to_symbolic (cgraph : G.graph) =
           let high = G.node_to_elt inodes.(0) |> elt_to_float in
           let low = G.node_to_elt inodes.(1) |> elt_to_float in
           random_uniform ~name ~high ~low shp
-        | Sin         -> sin ~name sym_inputs.(0)
-        | Cos         -> cos ~name sym_inputs.(0)
-        | Sqrt        -> sqrt ~name sym_inputs.(0)
-        | Exp         -> exp ~name sym_inputs.(0)
-        | Log         -> log ~name sym_inputs.(0)
-        | Neg         -> neg ~name sym_inputs.(0)
-        | Scalar_Neg  -> neg ~name sym_inputs.(0) (* ? *)
-        | Relu        -> relu ~name sym_inputs.(0)
-        | Add         -> add ~name sym_inputs.(0) sym_inputs.(1)
-        | AddScalar   -> add ~name sym_inputs.(0) sym_inputs.(1)
-        | ScalarAdd   -> add ~name sym_inputs.(0) sym_inputs.(1)
-        | Sub         -> sub ~name sym_inputs.(0) sym_inputs.(1)
-        | SubScalar   -> sub ~name sym_inputs.(0) sym_inputs.(1)
-        | ScalarSub   -> sub ~name sym_inputs.(0) sym_inputs.(1)
-        | Mul         -> mul ~name sym_inputs.(0) sym_inputs.(1)
-        | MulScalar   -> mul ~name sym_inputs.(0) sym_inputs.(1)
-        | ScalarMul   -> mul ~name sym_inputs.(0) sym_inputs.(1)
-        | Div         -> div ~name sym_inputs.(0) sym_inputs.(1)
-        | DivScalar   -> div ~name sym_inputs.(0) sym_inputs.(1)
-        | ScalarDiv   -> div ~name sym_inputs.(0) sym_inputs.(1)
-        | Pow         -> pow ~name sym_inputs.(0) sym_inputs.(1)
-        | PowScalar   -> pow ~name sym_inputs.(0) sym_inputs.(1)
-        | ScalarPow   -> pow ~name sym_inputs.(0) sym_inputs.(1)
+        | Sin -> sin ~name sym_inputs.(0)
+        | Cos -> cos ~name sym_inputs.(0)
+        | Sqrt -> sqrt ~name sym_inputs.(0)
+        | Exp -> exp ~name sym_inputs.(0)
+        | Log -> log ~name sym_inputs.(0)
+        | Neg -> neg ~name sym_inputs.(0)
+        | Scalar_Neg -> neg ~name sym_inputs.(0) (* ? *)
+        | Relu -> relu ~name sym_inputs.(0)
+        | Add -> add ~name sym_inputs.(0) sym_inputs.(1)
+        | AddScalar -> add ~name sym_inputs.(0) sym_inputs.(1)
+        | ScalarAdd -> add ~name sym_inputs.(0) sym_inputs.(1)
+        | Sub -> sub ~name sym_inputs.(0) sym_inputs.(1)
+        | SubScalar -> sub ~name sym_inputs.(0) sym_inputs.(1)
+        | ScalarSub -> sub ~name sym_inputs.(0) sym_inputs.(1)
+        | Mul -> mul ~name sym_inputs.(0) sym_inputs.(1)
+        | MulScalar -> mul ~name sym_inputs.(0) sym_inputs.(1)
+        | ScalarMul -> mul ~name sym_inputs.(0) sym_inputs.(1)
+        | Div -> div ~name sym_inputs.(0) sym_inputs.(1)
+        | DivScalar -> div ~name sym_inputs.(0) sym_inputs.(1)
+        | ScalarDiv -> div ~name sym_inputs.(0) sym_inputs.(1)
+        | Pow -> pow ~name sym_inputs.(0) sym_inputs.(1)
+        | PowScalar -> pow ~name sym_inputs.(0) sym_inputs.(1)
+        | ScalarPow -> pow ~name sym_inputs.(0) sym_inputs.(1)
         (* A more proper implementation could be GEMM instead of MatMul *)
-        | Dot (_, _, _, _) -> 
-          matmul ~name sym_inputs.(0) sym_inputs.(1)
+        | Dot (_, _, _, _) -> matmul ~name sym_inputs.(0) sym_inputs.(1)
         | SumReduce a -> reduce_sum ~name sym_inputs.(0) a
-        | Sum a       -> reduce_sum ~name sym_inputs.(0) [| a |]
-        | Sum'        ->
+        | Sum a -> reduce_sum ~name sym_inputs.(0) [| a |]
+        | Sum' ->
           (* !!! *)
           let shape = cnode_attr.shape in
           let len =
@@ -134,8 +143,8 @@ let to_symbolic (cgraph : G.graph) =
           in
           let axes = Owl_utils_array.range 0 (len - 1) in
           reduce_sum ~name ~keepdims:false sym_inputs.(0) axes
-        | Max a       -> reduce_max ~name sym_inputs.(0) [| a |]
-        | _           ->
+        | Max a -> reduce_max ~name sym_inputs.(0) [| a |]
+        | _ ->
           failwith
             (Printf.sprintf "Node type not supported: %s" (G.op_to_str cnode_attr.op))
       in

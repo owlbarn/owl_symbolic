@@ -368,6 +368,28 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
           in
           _check_constraint ptypes.(0) c name;
           ptypes.(0)
+        | Reshape _       ->
+          let c =
+            [| SNT_Uint8
+             ; SNT_Uint16
+             ; SNT_Uint32
+             ; SNT_Uint64
+             ; SNT_Int8
+             ; SNT_Int16
+             ; SNT_Int32
+             ; SNT_Int64
+             ; SNT_Float16
+             ; SNT_Float
+             ; SNT_Double
+             ; SNT_String
+             ; SNT_Bool
+             ; SNT_Complex32
+             ; SNT_Complex64
+            |]
+          in
+          _check_constraint ptypes.(0) c name;
+          _check_constraint ptypes.(1) [| SNT_Int64 |] name;
+          ptypes.(0)
         | _               -> SNT_Noop
       in
       Hashtbl.add dtypes name out_type)

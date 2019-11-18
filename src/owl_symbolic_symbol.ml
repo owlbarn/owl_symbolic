@@ -28,6 +28,7 @@ open Owl_symbolic_ops_math
 open Owl_symbolic_ops_input
 open Owl_symbolic_ops_reduction
 open Owl_symbolic_ops_generator
+open Owl_symbolic_ops_tensor
 
 type t =
   | NOOP
@@ -53,6 +54,7 @@ type t =
   | MatMul of MatMul.t
   | ReduceSum of ReduceSum.t
   | ReduceMax of ReduceMax.t
+  | Reshape of Reshape.t
 
 (* TODO: GEMM or MatMul? *)
 
@@ -79,6 +81,7 @@ let name = function
   | MatMul x        -> MatMul.(x.name)
   | ReduceSum x     -> ReduceSum.(x.name)
   | ReduceMax x     -> ReduceMax.(x.name)
+  | Reshape x       -> Reshape.(x.name)
   | _               -> failwith "owl_symbolic_symbol.name"
 
 
@@ -103,6 +106,7 @@ let input = function
   | Div x           -> Div.(x.input)
   | Pow x           -> Pow.(x.input)
   | MatMul x        -> MatMul.(x.input)
+  | Reshape x       -> Reshape.(x.input)
   | ReduceSum x     -> ReduceSum.(x.input)
   | ReduceMax x     -> ReduceMax.(x.input)
   | _               -> failwith "owl_symbolic_symbol.input"
@@ -129,6 +133,7 @@ let op_type = function
   | Div _           -> Div.op_type
   | Pow _           -> Pow.op_type
   | MatMul _        -> MatMul.op_type
+  | Reshape _       -> Reshape.op_type
   | ReduceSum _     -> ReduceSum.op_type
   | ReduceMax _     -> ReduceMax.op_type
   | _               -> failwith "owl_symbolic_symbol.op_type"
@@ -155,6 +160,7 @@ let sym_attrs = function
   | Div x           -> Div.(x.attrs)
   | Pow x           -> Pow.(x.attrs)
   | MatMul x        -> MatMul.(x.attrs)
+  | Reshape x       -> Reshape.(x.attrs)
   | ReduceSum x     -> ReduceSum.(x.attrs)
   | ReduceMax x     -> ReduceMax.(x.attrs)
   | _               -> failwith "owl_symbolic_symbol.sym_attrs: unsupported symbol."
@@ -190,6 +196,7 @@ let out_shape = function
   | Div x           -> Div.(x.out_shape)
   | Pow x           -> Pow.(x.out_shape)
   | MatMul x        -> MatMul.(x.out_shape)
+  | Reshape x       -> Reshape.(x.out_shape)
   | ReduceSum x     -> ReduceSum.(x.out_shape)
   | ReduceMax x     -> ReduceMax.(x.out_shape)
   | _               -> failwith "out_shape: unsupported op."
@@ -213,6 +220,7 @@ let set_out_shape sym shape =
   | Div x           -> x.out_shape <- shape
   | Pow x           -> x.out_shape <- shape
   | MatMul x        -> x.out_shape <- shape
+  | Reshape x       -> x.out_shape <- shape
   | ReduceSum x     -> x.out_shape <- shape
   | ReduceMax x     -> x.out_shape <- shape
   | _               -> failwith "set_out_shape: unsupported op."

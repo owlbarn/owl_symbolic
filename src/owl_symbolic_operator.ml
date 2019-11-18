@@ -356,6 +356,24 @@ let reduce_max ?(keepdims = true) ?name x axes =
   make_node sym [| x |]
 
 
+(* NOTEICE that reshape accept a shape tensor as input node; not as attributes *)
+let reshape ?name data shape =
+  let suffix = generate_suffix () in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "reduce_max_%i" suffix
+  in
+  let x_name = Owl_symbolic_graph.name data in
+  let y_name = Owl_symbolic_graph.name shape in
+  let input = [| x_name; y_name |] in
+  let attrs = [||] in
+  let shp = Owl_symbolic_symbol.shape (Owl_graph.attr shape) in
+  let o = Owl_symbolic_ops_tensor.Reshape.create name input shp attrs in
+  let sym = Owl_symbolic_symbol.Reshape o in
+  make_node sym [| data; shape |]
+
+
 (** The frequently used constants *)
 
 let expconst () = exp (flt 1.)
