@@ -227,28 +227,28 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
       (* Type checking *)
       let out_type =
         match sym with
-        | Float _    -> Owl_symbolic_symbol.dtype sym
-        | Int _      -> Owl_symbolic_symbol.dtype sym
-        | Pi _       -> Owl_symbolic_symbol.dtype sym
-        | Tensor _   -> Owl_symbolic_symbol.dtype sym
-        | Complex _  -> Owl_symbolic_symbol.dtype sym
-        | Variable _ -> Owl_symbolic_symbol.dtype sym
-        | Sin _      ->
+        | Float _     -> Owl_symbolic_symbol.dtype sym
+        | Int _       -> Owl_symbolic_symbol.dtype sym
+        | Pi _        -> Owl_symbolic_symbol.dtype sym
+        | Tensor _    -> Owl_symbolic_symbol.dtype sym
+        | Complex _   -> Owl_symbolic_symbol.dtype sym
+        | Variable _  -> Owl_symbolic_symbol.dtype sym
+        | Sin _       ->
           _check_constraint ptypes.(0) [| SNT_Float; SNT_Float16; SNT_Double |] name;
           ptypes.(0)
-        | Cos _      ->
+        | Cos _       ->
           _check_constraint ptypes.(0) [| SNT_Float; SNT_Float16; SNT_Double |] name;
           ptypes.(0)
-        | Sqrt _     ->
+        | Sqrt _      ->
           _check_constraint ptypes.(0) [| SNT_Float; SNT_Float16; SNT_Double |] name;
           ptypes.(0)
-        | Exp _      ->
+        | Exp _       ->
           _check_constraint ptypes.(0) [| SNT_Float; SNT_Float16; SNT_Double |] name;
           ptypes.(0)
-        | Log _      ->
+        | Log _       ->
           _check_constraint ptypes.(0) [| SNT_Float; SNT_Float16; SNT_Double |] name;
           ptypes.(0)
-        | Neg _      ->
+        | Neg _       ->
           let c =
             [| SNT_Int8
              ; SNT_Int16
@@ -261,7 +261,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
           in
           _check_constraint ptypes.(0) c name;
           ptypes.(0)
-        | Add _      ->
+        | Add _       ->
           _check_same ptypes name;
           let c =
             [| SNT_Uint32
@@ -275,7 +275,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
           in
           _check_constraint ptypes.(0) c name;
           ptypes.(0)
-        | Sub _      ->
+        | Sub _       ->
           _check_same ptypes name;
           let c =
             [| SNT_Uint32
@@ -289,7 +289,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
           in
           _check_constraint ptypes.(0) c name;
           ptypes.(0)
-        | Mul _      ->
+        | Mul _       ->
           _check_same ptypes name;
           let c =
             [| SNT_Uint32
@@ -303,7 +303,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
           in
           _check_constraint ptypes.(0) c name;
           ptypes.(0)
-        | Div _      ->
+        | Div _       ->
           _check_same ptypes name;
           let c =
             [| SNT_Uint32
@@ -317,11 +317,24 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
           in
           _check_constraint ptypes.(0) c name;
           ptypes.(0)
-        | Pow _      ->
+        | Pow _       ->
           _check_same ptypes name;
           _check_constraint ptypes.(0) [| SNT_Float; SNT_Float16; SNT_Double |] name;
           ptypes.(0)
-        | _          -> SNT_Noop
+        | ReduceSum _ ->
+          let c =
+            [| SNT_Uint32
+             ; SNT_Uint64
+             ; SNT_Int32
+             ; SNT_Int64
+             ; SNT_Float16
+             ; SNT_Float
+             ; SNT_Double
+            |]
+          in
+          _check_constraint ptypes.(0) c name;
+          ptypes.(0)
+        | _           -> SNT_Noop
       in
       Hashtbl.add dtypes name out_type)
     sym_graph;
@@ -334,7 +347,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
 let build_onnx_attrs sym =
   let onnx_attrs =
     match sym with
-    | S.Float _   ->
+    | S.Float _     ->
       (* create "value" attribute for Constant *)
       let name = Some "value" in
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
@@ -342,7 +355,7 @@ let build_onnx_attrs sym =
       let tensor = Some (make_onnx_tensor_floats [| v |]) in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
-    | S.Int _     ->
+    | S.Int _       ->
       (* create "value" attribute for Constant *)
       let name = Some "value" in
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
@@ -350,7 +363,7 @@ let build_onnx_attrs sym =
       let tensor = Some (make_onnx_tensor_ints [| v |]) in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
-    | S.Complex _ ->
+    | S.Complex _   ->
       let name = Some "value" in
       (* create "value" attribute for Constant *)
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
@@ -358,7 +371,7 @@ let build_onnx_attrs sym =
       let tensor = Some (make_onnx_tensor_complex v) in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
-    | S.Pi _      ->
+    | S.Pi _        ->
       (* create "value" attribute for Constant *)
       let name = Some "value" in
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
@@ -366,7 +379,7 @@ let build_onnx_attrs sym =
       let tensor = Some (make_onnx_tensor_floats [| v |]) in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
-    | S.Tensor _  ->
+    | S.Tensor _    ->
       (* create "value" attribute for Constant *)
       let name = Some "value" in
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
@@ -394,7 +407,19 @@ let build_onnx_attrs sym =
       in
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
-    | _           -> []
+    | S.ReduceSum x ->
+      let name_axes = Some "axes" in
+      let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
+      let ints = Array.map Int64.of_int x.axes |> Array.to_list in
+      let attr_axes = PT.default_attribute_proto ~name:name_axes ~type_ ~ints () in
+      let name_keepdims = Some "keepdims" in
+      let type_ = Some PT.Int in
+      let i = if x.keepdims = true then Int64.one else Int64.zero in
+      let attr_keepdims =
+        PT.default_attribute_proto ~name:name_keepdims ~type_ ~i:(Some i) ()
+      in
+      [ attr_axes; attr_keepdims ]
+    | _             -> []
   in
   onnx_attrs
 
