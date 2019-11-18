@@ -200,6 +200,21 @@ let neg ?name x =
   make_node sym [| x |]
 
 
+let relu ?name x =
+  let suffix = generate_suffix () in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "relu_%i" suffix
+  in
+  let x_name = Owl_symbolic_graph.name x in
+  let input = [| x_name |] in
+  let attrs = [||] in
+  let o = Owl_symbolic_ops_math.Relu.create name input attrs in
+  let sym = Owl_symbolic_symbol.Relu o in
+  make_node sym [| x |]
+
+
 let add ?name x y =
   let suffix = generate_suffix () in
   let name =

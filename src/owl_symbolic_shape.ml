@@ -45,6 +45,7 @@ let infer_shape input_shapes sym =
   | Exp _       -> _infer_shape_01 input_shapes
   | Log _       -> _infer_shape_01 input_shapes
   | Neg _       -> _infer_shape_01 input_shapes
+  | Relu _      -> _infer_shape_01 input_shapes
   | Add _       -> _infer_shape_03 input_shapes
   | Sub _       -> _infer_shape_03 input_shapes
   | Mul _       -> _infer_shape_03 input_shapes

@@ -103,6 +103,7 @@ let to_symbolic (cgraph : G.graph) =
         | Log         -> Owl_symbolic_operator.log ~name sym_inputs.(0)
         | Neg         -> Owl_symbolic_operator.neg ~name sym_inputs.(0)
         | Scalar_Neg  -> Owl_symbolic_operator.neg ~name sym_inputs.(0) (* ? *)
+        | Relu        -> Owl_symbolic_operator.relu ~name sym_inputs.(0)
         | Add         -> Owl_symbolic_operator.add ~name sym_inputs.(0) sym_inputs.(1)
         | AddScalar   -> Owl_symbolic_operator.add ~name sym_inputs.(0) sym_inputs.(1)
         | ScalarAdd   -> Owl_symbolic_operator.add ~name sym_inputs.(0) sym_inputs.(1)
