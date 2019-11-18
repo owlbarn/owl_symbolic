@@ -119,6 +119,7 @@ let to_symbolic (cgraph : G.graph) =
         | PowScalar   -> Owl_symbolic_operator.pow ~name sym_inputs.(0) sym_inputs.(1)
         | ScalarPow   -> Owl_symbolic_operator.pow ~name sym_inputs.(0) sym_inputs.(1)
         | SumReduce a -> Owl_symbolic_operator.reduce_sum ~name sym_inputs.(0) a
+        | Sum a       -> Owl_symbolic_operator.reduce_sum ~name sym_inputs.(0) [| a |]
         | Sum'        ->
           (* !!! *)
           let shape = cnode_attr.shape in
@@ -129,6 +130,7 @@ let to_symbolic (cgraph : G.graph) =
           in
           let axes = Owl_utils_array.range 0 (len - 1) in
           Owl_symbolic_operator.reduce_sum ~name ~keepdims:false sym_inputs.(0) axes
+        | Max a       -> Owl_symbolic_operator.reduce_max ~name sym_inputs.(0) [| a |]
         | _           ->
           failwith
             (Printf.sprintf "Node type not supported: %s" (G.op_to_str cnode_attr.op))

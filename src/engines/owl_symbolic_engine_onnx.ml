@@ -334,6 +334,19 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
           in
           _check_constraint ptypes.(0) c name;
           ptypes.(0)
+        | ReduceMax _ ->
+          let c =
+            [| SNT_Uint32
+             ; SNT_Uint64
+             ; SNT_Int32
+             ; SNT_Int64
+             ; SNT_Float16
+             ; SNT_Float
+             ; SNT_Double
+            |]
+          in
+          _check_constraint ptypes.(0) c name;
+          ptypes.(0)
         | _           -> SNT_Noop
       in
       Hashtbl.add dtypes name out_type)
@@ -408,6 +421,18 @@ let build_onnx_attrs sym =
       let a_value = PT.default_attribute_proto ~name ~type_ ~t:tensor () in
       [ a_value ]
     | S.ReduceSum x ->
+      let name_axes = Some "axes" in
+      let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
+      let ints = Array.map Int64.of_int x.axes |> Array.to_list in
+      let attr_axes = PT.default_attribute_proto ~name:name_axes ~type_ ~ints () in
+      let name_keepdims = Some "keepdims" in
+      let type_ = Some PT.Int in
+      let i = if x.keepdims = true then Int64.one else Int64.zero in
+      let attr_keepdims =
+        PT.default_attribute_proto ~name:name_keepdims ~type_ ~i:(Some i) ()
+      in
+      [ attr_axes; attr_keepdims ]
+    | S.ReduceMax x ->
       let name_axes = Some "axes" in
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
       let ints = Array.map Int64.of_int x.axes |> Array.to_list in

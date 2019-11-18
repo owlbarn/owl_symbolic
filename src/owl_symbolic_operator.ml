@@ -295,6 +295,21 @@ let reduce_sum ?(keepdims = true) ?name x axes =
   make_node sym [| x |]
 
 
+let reduce_max ?(keepdims = true) ?name x axes =
+  let suffix = generate_suffix () in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "reduce_max_%i" suffix
+  in
+  let x_name = Owl_symbolic_graph.name x in
+  let input = [| x_name |] in
+  let attrs = [||] in
+  let o = Owl_symbolic_ops_reduction.ReduceMax.create ~keepdims name input attrs axes in
+  let sym = Owl_symbolic_symbol.ReduceMax o in
+  make_node sym [| x |]
+
+
 (** The frequently used constants *)
 
 let expconst () = exp (flt 1.)

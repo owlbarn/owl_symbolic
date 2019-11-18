@@ -20,3 +20,19 @@ module ReduceSum = struct
   let create ?(out_shape = None) ?(keepdims = true) name input attrs axes =
     { name; input; attrs; out_shape; axes; keepdims }
 end
+
+module ReduceMax = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    ; mutable axes : int array
+    ; mutable keepdims : bool (* NOTE: ONNX requires an int parameter *)
+    }
+
+  let op_type = "ReduceMax"
+
+  let create ?(out_shape = None) ?(keepdims = true) name input attrs axes =
+    { name; input; attrs; out_shape; axes; keepdims }
+end

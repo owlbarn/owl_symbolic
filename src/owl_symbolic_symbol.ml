@@ -48,6 +48,7 @@ type t =
   | Div of Div.t
   | Pow of Pow.t
   | ReduceSum of ReduceSum.t
+  | ReduceMax of ReduceMax.t
 
 let name = function
   | Int x       -> Int.(x.name)
@@ -68,6 +69,7 @@ let name = function
   | Div x       -> Div.(x.name)
   | Pow x       -> Pow.(x.name)
   | ReduceSum x -> ReduceSum.(x.name)
+  | ReduceMax x -> ReduceMax.(x.name)
   | _           -> failwith "owl_symbolic_symbol.name"
 
 
@@ -90,6 +92,7 @@ let input = function
   | Div x       -> Div.(x.input)
   | Pow x       -> Pow.(x.input)
   | ReduceSum x -> ReduceSum.(x.input)
+  | ReduceMax x -> ReduceMax.(x.input)
   | _           -> failwith "owl_symbolic_symbol.input"
 
 
@@ -112,6 +115,7 @@ let op_type = function
   | Div _       -> Div.op_type
   | Pow _       -> Pow.op_type
   | ReduceSum _ -> ReduceSum.op_type
+  | ReduceMax _ -> ReduceMax.op_type
   | _           -> failwith "owl_symbolic_symbol.op_type"
 
 
@@ -134,6 +138,7 @@ let sym_attrs = function
   | Div x       -> Div.(x.attrs)
   | Pow x       -> Pow.(x.attrs)
   | ReduceSum x -> ReduceSum.(x.attrs)
+  | ReduceMax x -> ReduceMax.(x.attrs)
   | _           -> failwith "owl_symbolic_symbol.sym_attrs: unsupported symbol."
 
 
@@ -164,6 +169,7 @@ let out_shape = function
   | Div x       -> Div.(x.out_shape)
   | Pow x       -> Pow.(x.out_shape)
   | ReduceSum x -> ReduceSum.(x.out_shape)
+  | ReduceMax x -> ReduceMax.(x.out_shape)
   | _           -> failwith "out_shape: unsupported op."
 
 
@@ -183,9 +189,11 @@ let set_out_shape sym shape =
   | Div x       -> x.out_shape <- shape
   | Pow x       -> x.out_shape <- shape
   | ReduceSum x -> x.out_shape <- shape
+  | ReduceMax x -> x.out_shape <- shape
   | _           -> failwith "set_out_shape: unsupported op."
 
 
+(* this one might be useless... *)
 let axes = function
   | ReduceSum x -> x.axes
   | _           -> failwith "axes: unsupported op."
