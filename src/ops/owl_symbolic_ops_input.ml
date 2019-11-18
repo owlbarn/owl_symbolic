@@ -3,6 +3,8 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
+(* TODO: Perhaps combine to owl_symbolic_ops_generator? *)
+
 open Owl_symbolic_types
 
 module Int = struct

@@ -29,31 +29,34 @@ let _infer_shape_10 input_shapes axis keepdims =
 
 let infer_shape input_shapes sym =
   match sym with
-  | Int _       -> [| Some [||] |]
-  | Float _     -> [| Some [||] |]
-  | Complex _   -> [| Some [||] |]
-  | Pi _        -> [| Some [||] |]
-  | Tensor _    ->
+  | Int _           -> [| Some [||] |]
+  | Float _         -> [| Some [||] |]
+  | Complex _       -> [| Some [||] |]
+  | Pi _            -> [| Some [||] |]
+  | Tensor _        ->
     let shp = Owl_symbolic_symbol.shape sym in
     [| Some shp |]
-  | Variable _  ->
+  | Variable _      ->
     let shp = Owl_symbolic_symbol.shape sym in
     [| Some shp |]
-  | Sin _       -> _infer_shape_01 input_shapes
-  | Cos _       -> _infer_shape_01 input_shapes
-  | Sqrt _      -> _infer_shape_01 input_shapes
-  | Exp _       -> _infer_shape_01 input_shapes
-  | Log _       -> _infer_shape_01 input_shapes
-  | Neg _       -> _infer_shape_01 input_shapes
-  | Relu _      -> _infer_shape_01 input_shapes
-  | Add _       -> _infer_shape_03 input_shapes
-  | Sub _       -> _infer_shape_03 input_shapes
-  | Mul _       -> _infer_shape_03 input_shapes
-  | Div _       -> _infer_shape_03 input_shapes
-  | Pow _       -> _infer_shape_01 input_shapes
-  | ReduceSum x -> _infer_shape_10 input_shapes x.axes x.keepdims
-  | ReduceMax x -> _infer_shape_10 input_shapes x.axes x.keepdims
-  | _           -> [| None |]
+  | RandomUniform _ ->
+    let shp = Owl_symbolic_symbol.shape sym in
+    [| Some shp |]
+  | Sin _           -> _infer_shape_01 input_shapes
+  | Cos _           -> _infer_shape_01 input_shapes
+  | Sqrt _          -> _infer_shape_01 input_shapes
+  | Exp _           -> _infer_shape_01 input_shapes
+  | Log _           -> _infer_shape_01 input_shapes
+  | Neg _           -> _infer_shape_01 input_shapes
+  | Relu _          -> _infer_shape_01 input_shapes
+  | Add _           -> _infer_shape_03 input_shapes
+  | Sub _           -> _infer_shape_03 input_shapes
+  | Mul _           -> _infer_shape_03 input_shapes
+  | Div _           -> _infer_shape_03 input_shapes
+  | Pow _           -> _infer_shape_01 input_shapes
+  | ReduceSum x     -> _infer_shape_10 input_shapes x.axes x.keepdims
+  | ReduceMax x     -> _infer_shape_10 input_shapes x.axes x.keepdims
+  | _               -> [| None |]
 
 (* It has been shown that current _infer_shape_03 
   works for add, addscalar and scalaradd; so no need to 

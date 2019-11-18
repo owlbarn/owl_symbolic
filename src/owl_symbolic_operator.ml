@@ -110,6 +110,21 @@ let variable ?shape ?dtype ?init name =
   make_node sym [||]
 
 
+let random_uniform ?(dtype = SNT_Float) ?(low = 0.) ?(high = 1.) ?name shape =
+  let suffix = generate_suffix () in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "random_uniform_%i" suffix
+  in
+  let attrs = [||] in
+  let o =
+    Owl_symbolic_ops_generator.RandomUniform.create ~low ~high name attrs dtype shape
+  in
+  let sym = Owl_symbolic_symbol.RandomUniform o in
+  make_node sym [||]
+
+
 let sin ?name x =
   let suffix = generate_suffix () in
   let name =

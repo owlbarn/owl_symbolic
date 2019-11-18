@@ -57,7 +57,7 @@ let to_symbolic (cgraph : G.graph) =
       in
       Owl_graph.set_name node name)
     outputs;
-  (* NOTE: change the length *)
+  (* TODO: change the length *)
   let syms = Hashtbl.create 100 in
   (* iterate Owl CGraph in topology order *)
   iter_ancestors
@@ -67,7 +67,7 @@ let to_symbolic (cgraph : G.graph) =
       let cnode_attr : Symbol.Shape.Type.attr = Owl_graph.attr node in
       let name = Owl_graph.name node in
       (* find in dict the input sym nodes of current sym *)
-      let sym_inputs =
+      let (sym_inputs : Owl_symbolic_graph.symbolic_node array) =
         Array.map
           (fun n ->
             let n = Owl_graph.name n in
@@ -96,6 +96,14 @@ let to_symbolic (cgraph : G.graph) =
           let flt_val = Array.make ele_num 1. in
           let tensor = Owl_symbolic_types.make_tensor ~flt_val shp in
           Owl_symbolic_operator.tensor ~name tensor
+        | Uniform shp ->
+          (* !!! we need to get its input from CGraph node; while they are 
+           * both just attributes in symbolic;
+           * Also, node the order of high/low; should be checked later *)
+          let inodes = Owl_graph.parents node in
+          let high = G.node_to_elt inodes.(0) |> elt_to_float in
+          let low = G.node_to_elt inodes.(1) |> elt_to_float in
+          Owl_symbolic_operator.random_uniform ~name ~high ~low shp
         | Sin         -> Owl_symbolic_operator.sin ~name sym_inputs.(0)
         | Cos         -> Owl_symbolic_operator.cos ~name sym_inputs.(0)
         | Sqrt        -> Owl_symbolic_operator.sqrt ~name sym_inputs.(0)
