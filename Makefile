@@ -17,6 +17,11 @@ test: depends
 clean:
 	dune clean
 
+.PHONY: cleanall
+cleanall:
+	dune uninstall
+	dune clean
+
 .PHONY: install
 install: build
 	dune install
