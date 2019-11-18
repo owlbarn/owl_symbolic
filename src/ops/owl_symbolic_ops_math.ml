@@ -154,4 +154,16 @@ module Pow = struct
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
 
-(** Is `output` necessary? *)
+(* Matrix product that behaves like numpy.matmul:
+ * https://docs.scipy.org/doc/numpy-1.13.0/reference/generated/numpy.matmul.html *)
+module MatMul = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "MatMul"
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end

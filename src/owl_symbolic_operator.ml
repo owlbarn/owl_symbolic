@@ -310,6 +310,22 @@ let pow ?name x y =
   make_node sym [| x; y |]
 
 
+let matmul ?name x y =
+  let suffix = generate_suffix () in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "matmul_%i" suffix
+  in
+  let x_name = Owl_symbolic_graph.name x in
+  let y_name = Owl_symbolic_graph.name y in
+  let input = [| x_name; y_name |] in
+  let attrs = [||] in
+  let o = Owl_symbolic_ops_math.MatMul.create name input attrs in
+  let sym = Owl_symbolic_symbol.MatMul o in
+  make_node sym [| x; y |]
+
+
 let reduce_sum ?(keepdims = true) ?name x axes =
   let suffix = generate_suffix () in
   let name =

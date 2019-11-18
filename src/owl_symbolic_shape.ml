@@ -27,6 +27,14 @@ let _infer_shape_10 input_shapes axis keepdims =
   | None   -> [| None |]
 
 
+let _infer_shape_19 input_shapes =
+  let x_shape = input_shapes.(0) in
+  let y_shape = input_shapes.(1) in
+  match x_shape, y_shape with
+  | Some s0, Some s1 -> [| Some Owl_utils_infer_shape.(dot s0 s1) |]
+  | _, _             -> [| None |]
+
+
 let infer_shape input_shapes sym =
   match sym with
   | Int _           -> [| Some [||] |]
@@ -54,6 +62,7 @@ let infer_shape input_shapes sym =
   | Mul _           -> _infer_shape_03 input_shapes
   | Div _           -> _infer_shape_03 input_shapes
   | Pow _           -> _infer_shape_01 input_shapes
+  | MatMul _        -> _infer_shape_19 input_shapes
   | ReduceSum x     -> _infer_shape_10 input_shapes x.axes x.keepdims
   | ReduceMax x     -> _infer_shape_10 input_shapes x.axes x.keepdims
   | _               -> [| None |]
