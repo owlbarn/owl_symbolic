@@ -161,8 +161,8 @@ let to_symbolic (cgraph : G.graph) =
   Owl_symbolic_graph.make_graph output_sym_nodes cgraph.name
 
 
-(*
-let of_symbolic (_sym_graph : symbolic_graph) =
+(* Dummy *)
+let of_symbolic (_sym_graph : Owl_symbolic_graph.symbolic_graph) =
   let attr =
     { op = Noop
     ; freeze = true
@@ -173,9 +173,10 @@ let of_symbolic (_sym_graph : symbolic_graph) =
     ; block = None
     }
   in
-  Owl_graph.node attr
-
-
+  let n = Owl_graph.node attr in
+  G.make_graph ~input:[||] ~output:[|n|] "dummy-graph"
+ 
+(*
 let eval_arr (sym_graph : symbolic_graph) =
   let cgraph_arr = of_symbolic sym_graph |> G.node_to_arr in
   G.eval_arr [| cgraph_arr |];
@@ -193,3 +194,6 @@ let save _cgraph _filename = ()
 
 (** load an cgraph model from file *)
 let load _filename = None
+
+
+(* Add mli files at some point *)
