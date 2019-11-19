@@ -68,7 +68,7 @@ let number_type_to_string = function
 let get_tensor_dtype (t : tensor) = t.dtype
 
 (* One and only one of the value arguments should be used *)
-let make_tensor ?flt_val ?int_val ?str_val ?raw_val shape =
+let make_tensor ?dtype ?flt_val ?int_val ?str_val ?raw_val shape =
   let counter = ref 0 in
   if flt_val <> None then counter := !counter + 1;
   if int_val <> None then counter := !counter + 1;
@@ -79,11 +79,39 @@ let make_tensor ?flt_val ?int_val ?str_val ?raw_val shape =
     Owl_log.error "make_tensor: one and only one type of value should be used.";
     exit 1);
   if flt_val <> None
-  then
-    { dtype = SNT_Float; shape; flt_val; int_val = None; str_val = None; raw_val = None }
+  then (
+    let tp =
+      match dtype with
+      | Some x ->
+        assert (
+          Array.mem
+            x
+            [| SNT_Float; SNT_Float16; SNT_Double; SNT_Complex32; SNT_Complex64 |]);
+        x
+      | None   -> SNT_Float
+    in
+    { dtype = tp; shape; flt_val; int_val = None; str_val = None; raw_val = None })
   else if int_val <> None
-  then
-    { dtype = SNT_Int32; shape; flt_val = None; int_val; str_val = None; raw_val = None }
+  then (
+    let tp =
+      match dtype with
+      | Some x ->
+        assert (
+          Array.mem
+            x
+            [| SNT_Uint8
+             ; SNT_Uint16
+             ; SNT_Uint32
+             ; SNT_Uint64
+             ; SNT_Int8
+             ; SNT_Int16
+             ; SNT_Int16
+             ; SNT_Int32
+            |]);
+        x
+      | None   -> SNT_Int32
+    in
+    { dtype = tp; shape; flt_val = None; int_val; str_val = None; raw_val = None })
   else if str_val <> None
   then
     { dtype = SNT_String; shape; flt_val = None; int_val = None; str_val; raw_val = None }

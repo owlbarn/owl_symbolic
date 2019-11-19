@@ -625,8 +625,7 @@ let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
 
 
 (** Main entry of conversion from ONNX graph (dummy) *)
-let to_symbolic (_onnx_graph : Onnx_types.model_proto) = 
-  Owl_symbolic_graph.null_graph
+let to_symbolic (_onnx_graph : Onnx_types.model_proto) = Owl_symbolic_graph.null_graph
 
 (** save an onnx model to Protobuf file *)
 let save (onnx_model : Onnx_types.model_proto) filename =

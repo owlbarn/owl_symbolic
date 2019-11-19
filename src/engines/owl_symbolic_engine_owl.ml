@@ -68,6 +68,7 @@ let to_symbolic (cgraph : G.graph) =
       let cnode_attr : Symbol.Shape.Type.attr = Owl_graph.attr node in
       let name = Owl_graph.name node in
       (* find in dict the input sym nodes of current sym *)
+      (* TODO: there has to be the performance issue *)
       let (sym_inputs : Owl_symbolic_graph.symbolic_node array) =
         Array.map
           (fun n ->
@@ -144,6 +145,17 @@ let to_symbolic (cgraph : G.graph) =
           let axes = Owl_utils_array.range 0 (len - 1) in
           reduce_sum ~name ~keepdims:false sym_inputs.(0) axes
         | Max a -> reduce_max ~name sym_inputs.(0) [| a |]
+        | Reshape shp ->
+          let t =
+            Owl_symbolic_types.make_tensor
+              ~dtype:SNT_Int64
+              ~int_val:shp
+              [| Array.length shp |]
+          in
+          let shp_node = tensor t in
+          (* !!!NOTE: we create a node shp_node, but it is not added to the dict
+           * since it is only used by reshape node; also note the order of two inputs. *)
+          reshape ~name sym_inputs.(0) shp_node
         | _ ->
           failwith
             (Printf.sprintf "Node type not supported: %s" (G.op_to_str cnode_attr.op))
@@ -174,8 +186,9 @@ let of_symbolic (_sym_graph : Owl_symbolic_graph.symbolic_graph) =
     }
   in
   let n = Owl_graph.node attr in
-  G.make_graph ~input:[||] ~output:[|n|] "dummy-graph"
- 
+  G.make_graph ~input:[||] ~output:[| n |] "dummy-graph"
+
+
 (*
 let eval_arr (sym_graph : symbolic_graph) =
   let cgraph_arr = of_symbolic sym_graph |> G.node_to_arr in
@@ -194,6 +207,5 @@ let save _cgraph _filename = ()
 
 (** load an cgraph model from file *)
 let load _filename = None
-
 
 (* Add mli files at some point *)
