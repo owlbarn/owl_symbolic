@@ -29,6 +29,7 @@ open Owl_symbolic_ops_input
 open Owl_symbolic_ops_reduction
 open Owl_symbolic_ops_generator
 open Owl_symbolic_ops_tensor
+open Owl_symbolic_ops_nn
 
 type t =
   | NOOP
@@ -55,6 +56,7 @@ type t =
   | ReduceSum of ReduceSum.t
   | ReduceMax of ReduceMax.t
   | Reshape of Reshape.t
+  | Conv of Conv.t
 
 (* TODO: GEMM or MatMul? *)
 
@@ -82,6 +84,7 @@ let name = function
   | ReduceSum x     -> ReduceSum.(x.name)
   | ReduceMax x     -> ReduceMax.(x.name)
   | Reshape x       -> Reshape.(x.name)
+  | Conv x          -> Conv.(x.name)
   | _               -> failwith "owl_symbolic_symbol.name"
 
 
@@ -109,6 +112,7 @@ let input = function
   | Reshape x       -> Reshape.(x.input)
   | ReduceSum x     -> ReduceSum.(x.input)
   | ReduceMax x     -> ReduceMax.(x.input)
+  | Conv x          -> Conv.(x.input)
   | _               -> failwith "owl_symbolic_symbol.input"
 
 
@@ -136,6 +140,7 @@ let op_type = function
   | Reshape _       -> Reshape.op_type
   | ReduceSum _     -> ReduceSum.op_type
   | ReduceMax _     -> ReduceMax.op_type
+  | Conv _          -> Conv.op_type
   | _               -> failwith "owl_symbolic_symbol.op_type"
 
 
@@ -163,6 +168,7 @@ let sym_attrs = function
   | Reshape x       -> Reshape.(x.attrs)
   | ReduceSum x     -> ReduceSum.(x.attrs)
   | ReduceMax x     -> ReduceMax.(x.attrs)
+  | Conv x          -> Conv.(x.attrs)
   | _               -> failwith "owl_symbolic_symbol.sym_attrs: unsupported symbol."
 
 
@@ -199,6 +205,7 @@ let out_shape = function
   | Reshape x       -> Reshape.(x.out_shape)
   | ReduceSum x     -> ReduceSum.(x.out_shape)
   | ReduceMax x     -> ReduceMax.(x.out_shape)
+  | Conv x          -> Conv.(x.out_shape)
   | _               -> failwith "out_shape: unsupported op."
 
 
@@ -223,6 +230,7 @@ let set_out_shape sym shape =
   | Reshape x       -> x.out_shape <- shape
   | ReduceSum x     -> x.out_shape <- shape
   | ReduceMax x     -> x.out_shape <- shape
+  | Conv x          -> x.out_shape <- shape
   | _               -> failwith "set_out_shape: unsupported op."
 
 

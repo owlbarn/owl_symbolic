@@ -374,6 +374,44 @@ let reshape ?name data shape =
   make_node sym [| data; shape |]
 
 
+let conv ?name ?bias input kernel padding dilations strides =
+  let suffix = generate_suffix () in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "conv_%i" suffix
+  in
+  (* TODO: or new padding type? Should we use same_lower or same_upper?  *)
+
+  (* let ndims = *)
+  let auto_pad = if padding = "SAME" then "SAME_LOWER" else "VALID" in
+  let attrs = [||] in
+  let kernel_shp = Owl_symbolic_symbol.shape (Owl_graph.attr kernel) in
+  let i_name = Owl_symbolic_graph.name input in
+  let k_name = Owl_symbolic_graph.name kernel in
+  let inputs =
+    match bias with
+    | Some n ->
+      let b_name = Owl_symbolic_graph.name n in
+      [| i_name; k_name; b_name |]
+    | None   -> [| i_name; k_name |]
+  in
+  let o =
+    Owl_symbolic_ops_nn.Conv.create
+      ~auto_pad
+      name
+      inputs
+      attrs
+      kernel_shp
+      strides
+      dilations
+  in
+  let sym = Owl_symbolic_symbol.Conv o in
+  match bias with
+  | Some b -> make_node sym [| input; kernel; b |]
+  | None   -> make_node sym [| input; kernel |]
+
+
 (** The frequently used constants *)
 
 let expconst () = exp (flt 1.)
