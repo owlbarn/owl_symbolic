@@ -138,6 +138,7 @@ let to_symbolic (cgraph : G.graph) =
         | Sub -> sub ~name sym_inputs.(0) sym_inputs.(1)
         | SubScalar -> sub ~name sym_inputs.(0) sym_inputs.(1)
         | ScalarSub -> sub ~name sym_inputs.(0) sym_inputs.(1)
+        | Scalar_Sub -> sub ~name sym_inputs.(0) sym_inputs.(1) (* ? *)
         | Mul -> mul ~name sym_inputs.(0) sym_inputs.(1)
         | MulScalar -> mul ~name sym_inputs.(0) sym_inputs.(1)
         | ScalarMul -> mul ~name sym_inputs.(0) sym_inputs.(1)
