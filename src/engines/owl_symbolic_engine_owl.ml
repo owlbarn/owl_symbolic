@@ -232,6 +232,6 @@ let eval_elt (sym_graph : symbolic_graph) =
 let save _cgraph _filename = ()
 
 (** load an cgraph model from file *)
-let load _filename = Obj.magic(None)
+let load _filename = Obj.magic None
 
 (* Add mli files at some point *)

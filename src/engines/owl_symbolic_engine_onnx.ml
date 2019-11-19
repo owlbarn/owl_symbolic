@@ -706,4 +706,4 @@ let save (onnx_model : Onnx_types.model_proto) filename =
 
 
 (** load an onnx model from Protobuf file *)
-let load _filename = Obj.magic(None)
+let load _filename = Obj.magic None
