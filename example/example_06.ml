@@ -1,8 +1,9 @@
-open Owl_symbolic
 module G = Owl_computation_cpu_engine.Make (Owl_dense_ndarray.S)
 module A = Owl_algodiff_generic.Make (G)
 include Owl_neural_generic.Make (G)
 open Graph
+open Owl_symbolic
+module OWL_Engine = Owl_symbolic_engine_owl.Make (G)
 
 (*
 let make_mnist_network input_shape =

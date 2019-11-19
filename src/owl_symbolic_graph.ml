@@ -8,7 +8,7 @@ open Owl_symbolic_types
 
 type symbolic_node = Owl_symbolic_symbol.t Owl_graph.node
 
-type symbolic_graph =
+type t =
   { mutable sym_nodes : symbolic_node array
   ; mutable name : string
   ; mutable node_names : string array (* existing nodes in graph *)
@@ -50,9 +50,7 @@ let make_graph (nodes : symbolic_node array) name =
 
 
 (* Topological sort *)
-let iter f (g : symbolic_graph) =
-  iter_ancestors ~order:DFS ~traversal:PostOrder f g.sym_nodes
-
+let iter f (g : t) = iter_ancestors ~order:DFS ~traversal:PostOrder f g.sym_nodes
 
 (* get all the "variable" nodes in sym_graph *)
 let get_input_nodes sym_graph =
@@ -80,7 +78,7 @@ let get_output_nodes sym_graph =
 
 let null_graph = make_graph [||] ""
 
-let iter_print (g : symbolic_graph) =
+let iter_print (g : t) =
   iter
     (fun sym_node ->
       let a = Owl_graph.attr sym_node in
@@ -95,7 +93,7 @@ let name sym_node =
   Owl_symbolic_symbol.name sym
 
 
-let length (g : symbolic_graph) =
+let length (g : t) =
   let cnt = ref 0 in
   iter (fun _ -> cnt := !cnt + 1) g;
   !cnt

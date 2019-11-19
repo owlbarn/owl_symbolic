@@ -1,5 +1,6 @@
 open Owl_symbolic
 module G = Owl_computation_cpu_engine.Make (Owl_dense_ndarray.S)
+module OWL_Engine = Owl_symbolic_engine_owl.Make (G)
 include Owl_algodiff_generic.Make (G)
 
 let make_graph () =

@@ -3,9 +3,11 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-type t
+module Make (G : Owl_computation_engine_sig.Flatten_Sig) : sig
+  type t = G.graph
 
-val of_symbolic : Owl_symbolic_graph.symbolic_graph -> t
-val to_symbolic : t -> Owl_symbolic_graph.symbolic_graph
-val save : t -> string -> unit
-val load : string -> t
+  val to_symbolic : t -> Owl_symbolic_graph.t
+  val of_symbolic : Owl_symbolic_graph.t -> t
+  val save : 'a -> 'b -> unit
+  val load : 'a -> 'b
+end

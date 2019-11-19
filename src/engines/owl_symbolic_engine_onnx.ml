@@ -201,7 +201,7 @@ let _check_constraint t constraints name =
  *   + In the main body, I still check based on Symbolic node, not onnx nodes, this could be logically wrong.
  *)
 
-let build_onnx_type_check (sym_graph : Owl_symbolic_graph.symbolic_graph) =
+let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
   let len = Owl_symbolic_graph.length sym_graph in
   let dtypes = Hashtbl.create len in
   (* Assume this iter is topologically correct *)
@@ -587,7 +587,7 @@ let build_onnx_attrs sym =
 
 
 (** Core function. Converts symbolic nodes to onnx nodes. *)
-let build_onnx_nodes (sym_graph : Owl_symbolic_graph.symbolic_graph) =
+let build_onnx_nodes (sym_graph : Owl_symbolic_graph.t) =
   let nodes = ref [||] in
   Owl_symbolic_graph.iter
     (fun sym_node ->
@@ -674,7 +674,7 @@ let build_onnx_initializers sym_graph =
 
 
 (** Main entry of conversion to ONNX graph *)
-let of_symbolic (sym_graph : Owl_symbolic_graph.symbolic_graph) =
+let of_symbolic (sym_graph : Owl_symbolic_graph.t) =
   (* Step 0: walk through the sym_graph and check shapes *)
   let type_dict = build_onnx_type_check sym_graph in
   (* Step 1: convert symbolic nodes to  *)

@@ -5,7 +5,7 @@
 
 type t = string (* or other type? json? *)
 
-let of_symbolic (_sym_graph : Owl_symbolic_graph.symbolic_graph) = "dummy_math:\\sum_i^j"
+let of_symbolic (_sym_graph : Owl_symbolic_graph.t) = "dummy_math:\\sum_i^j"
 let to_symbolic (_latex_str : string) = Owl_symbolic_graph.null_graph
 
 (** save latex expression to file *)
