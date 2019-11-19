@@ -20,6 +20,7 @@ module Conv = struct
            * TODO: Currently set to None; onluy use auto_pad
            *)
     ; mutable strides : int array
+    ; mutable group : int (* TODO: currently use default value *)
     }
 
   let op_type = "Sin"
@@ -35,5 +36,15 @@ module Conv = struct
       strides
       dilations
     =
-    { name; input; attrs; out_shape; auto_pad; dilations; kernel_shp; pads; strides }
+    { name
+    ; input
+    ; attrs
+    ; out_shape
+    ; auto_pad
+    ; dilations
+    ; kernel_shp
+    ; pads
+    ; strides
+    ; group = 1
+    }
 end

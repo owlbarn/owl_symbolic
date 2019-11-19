@@ -173,6 +173,10 @@ let to_symbolic (cgraph : G.graph) =
           (* !!!NOTE: we create a node shp_node, but it is not added to the dict
            * since it is only used by reshape node; also note the order of two inputs. *)
           reshape ~name sym_inputs.(0) shp_node
+        | Conv2d (padding, stride) ->
+          let pad = if padding = SAME then "SAME" else "VALID" in
+          let stride = Array.append [| 1 |] (Array.append stride [| 1 |]) in
+          conv ~name sym_inputs.(0) sym_inputs.(1) pad stride [| 1; 1; 1; 1 |]
         | _ ->
           failwith
             (Printf.sprintf "Node type not supported: %s" (G.op_to_str cnode_attr.op))
