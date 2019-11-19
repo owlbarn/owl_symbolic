@@ -29,7 +29,7 @@ Special ops:
 
 (** Helper function *)
 
-let get_const_value (attr : Symbol.Shape.Type.attr) =
+let _get_const_value (attr : Symbol.Shape.Type.attr) =
   if Array.length attr.value > 0
   then (
     let v = attr.value.(0) in
@@ -193,7 +193,7 @@ let eval_elt (sym_graph : symbolic_graph) =
 let save _cgraph _filename = ()
 
 (** load an cgraph model from file *)
-let load _filename = None
+let load _filename = Obj.magic(None)
 
 
 (* Add mli files at some point *)

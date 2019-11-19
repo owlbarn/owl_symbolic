@@ -64,7 +64,7 @@ let make_onnx_tensor_complex c =
   PT.default_tensor_proto ~dims ~float_data ~data_type ()
 
 
-let make_onnx_initializers_raw name data_type shape raw_data =
+let _make_onnx_initializers_raw name data_type shape raw_data =
   let dims = Array.map Int64.of_int shape |> Array.to_list in
   let data_type = Some (map_elt_type_to_int32 data_type) in
   let name = Some name in
@@ -638,4 +638,4 @@ let save (onnx_model : Onnx_types.model_proto) filename =
 
 
 (** load an onnx model from Protobuf file *)
-let load _filename = None
+let load _filename = Obj.magic(None)
