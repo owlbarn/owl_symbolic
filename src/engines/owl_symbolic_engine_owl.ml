@@ -68,6 +68,7 @@ let to_symbolic (cgraph : G.graph) =
       let cnode_attr : Symbol.Shape.Type.attr = Owl_graph.attr node in
       let name = Owl_graph.name node in
       (* find in dict the input sym nodes of current sym *)
+      (* TODO: there has to be the performance issue *)
       let (sym_inputs : Owl_symbolic_graph.symbolic_node array) =
         Array.map
           (fun n ->
@@ -106,6 +107,23 @@ let to_symbolic (cgraph : G.graph) =
           let high = G.node_to_elt inodes.(0) |> elt_to_float in
           let low = G.node_to_elt inodes.(1) |> elt_to_float in
           random_uniform ~name ~high ~low shp
+        | Const ->
+          (* NOTE: Uniform's constant parents are converted but later ignored. *)
+          let shape =
+            match cnode_attr.shape.(0) with
+            | Some s -> s
+            | None   -> failwith "Const: unspecified owl shape"
+          in
+          let flt_val =
+            if shape = [||]
+            then [| G.node_to_elt node |> elt_to_float |]
+            else
+              (* TODO: G.node_to_arr node |> G.unpack_arr |> A.to_array *)
+              failwith "Convert constant Ndarray value is not supported yet."
+          in
+          (* TODO: change the dtype to float/double accoding to specific Owl ndarray type *)
+          let t = Owl_symbolic_types.make_tensor ~flt_val shape in
+          tensor ~name t
         | Sin -> sin ~name sym_inputs.(0)
         | Cos -> cos ~name sym_inputs.(0)
         | Sqrt -> sqrt ~name sym_inputs.(0)
@@ -120,6 +138,7 @@ let to_symbolic (cgraph : G.graph) =
         | Sub -> sub ~name sym_inputs.(0) sym_inputs.(1)
         | SubScalar -> sub ~name sym_inputs.(0) sym_inputs.(1)
         | ScalarSub -> sub ~name sym_inputs.(0) sym_inputs.(1)
+        | Scalar_Sub -> sub ~name sym_inputs.(0) sym_inputs.(1) (* ? *)
         | Mul -> mul ~name sym_inputs.(0) sym_inputs.(1)
         | MulScalar -> mul ~name sym_inputs.(0) sym_inputs.(1)
         | ScalarMul -> mul ~name sym_inputs.(0) sym_inputs.(1)
@@ -144,6 +163,25 @@ let to_symbolic (cgraph : G.graph) =
           let axes = Owl_utils_array.range 0 (len - 1) in
           reduce_sum ~name ~keepdims:false sym_inputs.(0) axes
         | Max a -> reduce_max ~name sym_inputs.(0) [| a |]
+        | Reshape shp ->
+          let t =
+            Owl_symbolic_types.make_tensor
+              ~dtype:SNT_Int64
+              ~int_val:shp
+              [| Array.length shp |]
+          in
+          let shp_node = tensor t in
+          (* !!!NOTE: we create a node shp_node, but it is not added to the dict
+           * since it is only used by reshape node; also note the order of two inputs. *)
+          reshape ~name sym_inputs.(0) shp_node
+        | Conv2d (padding, stride) ->
+          let pad = if padding = SAME then "SAME" else "VALID" in
+          let stride = Array.append [| 1 |] (Array.append stride [| 1 |]) in
+          conv ~name sym_inputs.(0) sym_inputs.(1) pad stride [| 1; 1; 1; 1 |]
+        | MaxPool2d (padding, kernel, stride) ->
+          let pad = if padding = SAME then "SAME" else "VALID" in
+          let stride = Array.append [| 1 |] (Array.append stride [| 1 |]) in
+          maxpool ~name sym_inputs.(0) kernel stride pad [| 1; 1; 1; 1 |]
         | _ ->
           failwith
             (Printf.sprintf "Node type not supported: %s" (G.op_to_str cnode_attr.op))
@@ -174,8 +212,9 @@ let of_symbolic (_sym_graph : Owl_symbolic_graph.symbolic_graph) =
     }
   in
   let n = Owl_graph.node attr in
-  G.make_graph ~input:[||] ~output:[|n|] "dummy-graph"
- 
+  G.make_graph ~input:[||] ~output:[| n |] "dummy-graph"
+
+
 (*
 let eval_arr (sym_graph : symbolic_graph) =
   let cgraph_arr = of_symbolic sym_graph |> G.node_to_arr in
@@ -194,6 +233,5 @@ let save _cgraph _filename = ()
 
 (** load an cgraph model from file *)
 let load _filename = Obj.magic(None)
-
 
 (* Add mli files at some point *)

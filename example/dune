@@ -1,3 +1,4 @@
 (executables
- (names example_00 example_01 example_02 example_03 example_04 example_05)
+ (names example_00 example_01 example_02 example_03 
+  example_04 example_05 example_06)
  (libraries owl-symbolic))
