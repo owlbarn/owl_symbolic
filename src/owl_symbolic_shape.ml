@@ -54,12 +54,33 @@ let _infer_shape_13 input_shapes padding stride =
   | _, _                    -> [| None |]
 
 
+let _infer_shape_15 input_shapes padding kernel stride =
+  let input_shape = input_shapes.(0) in
+  match input_shape with
+  | Some input -> [| Some Owl_utils_infer_shape.(conv1d input padding kernel stride) |]
+  | _          -> [| None |]
+
+
+let _infer_shape_17 input_shapes padding kernel stride =
+  let input_shape = input_shapes.(0) in
+  match input_shape with
+  | Some input -> [| Some Owl_utils_infer_shape.(conv3d input padding kernel stride) |]
+  | _          -> [| None |]
+
+
 let _infer_shape_19 input_shapes =
   let x_shape = input_shapes.(0) in
   let y_shape = input_shapes.(1) in
   match x_shape, y_shape with
   | Some s0, Some s1 -> [| Some Owl_utils_infer_shape.(dot s0 s1) |]
   | _, _             -> [| None |]
+
+
+let _infer_shape_21 input_shapes padding kernel stride =
+  let input_shape = input_shapes.(0) in
+  match input_shape with
+  | Some input -> [| Some Owl_utils_infer_shape.(pool2d input padding kernel stride) |]
+  | _          -> [| None |]
 
 
 let infer_shape input_shapes sym =
@@ -96,13 +117,23 @@ let infer_shape input_shapes sym =
   | Conv x          ->
     let l = Array.length x.strides in
     let padding = if x.auto_pad = "VALID" then Owl_types.VALID else Owl_types.SAME in
-    if l = 4
+    if l = 3
     then _infer_shape_11 input_shapes padding x.strides
     else if l = 4
     then _infer_shape_12 input_shapes padding x.strides
     else if l = 5
     then _infer_shape_13 input_shapes padding x.strides
     else failwith "Owl_symbolic_shape: illegal conv dimensions."
+  | MaxPool x       ->
+    let l = Array.length x.strides in
+    let padding = if x.auto_pad = "VALID" then Owl_types.VALID else Owl_types.SAME in
+    if l = 4
+    then _infer_shape_15 input_shapes padding x.kernel_shp x.strides
+    else if l = 4
+    then _infer_shape_21 input_shapes padding x.kernel_shp x.strides
+    else if l = 5
+    then _infer_shape_17 input_shapes padding x.kernel_shp x.strides
+    else failwith "Owl_symbolic_shape: illegal maxpool dimensions."
   | _               -> [| None |]
 
 (* It has been shown that current _infer_shape_03 

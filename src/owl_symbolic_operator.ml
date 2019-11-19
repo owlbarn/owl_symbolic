@@ -374,6 +374,7 @@ let reshape ?name data shape =
   make_node sym [| data; shape |]
 
 
+(* This interface needs to be updated; make dilations and strides default value *)
 let conv ?name ?bias input kernel padding dilations strides =
   let suffix = generate_suffix () in
   let name =
@@ -410,6 +411,33 @@ let conv ?name ?bias input kernel padding dilations strides =
   match bias with
   | Some b -> make_node sym [| input; kernel; b |]
   | None   -> make_node sym [| input; kernel |]
+
+
+(* TODO: every problem in conv applies here *)
+(* !!!! Currently ignore its second optional output -- that may require some structural change *)
+let maxpool ?name input kernel strides padding dilations =
+  let suffix = generate_suffix () in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "maxpool_%i" suffix
+  in
+  let auto_pad = if padding = "SAME" then "SAME_LOWER" else "VALID" in
+  let attrs = [||] in
+  let i_name = Owl_symbolic_graph.name input in
+  let inputs = [| i_name |] in
+  let o =
+    Owl_symbolic_ops_nn.MaxPool.create
+      ~auto_pad
+      name
+      inputs
+      attrs
+      kernel
+      strides
+      dilations
+  in
+  let sym = Owl_symbolic_symbol.MaxPool o in
+  make_node sym [| input |]
 
 
 (** The frequently used constants *)

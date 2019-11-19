@@ -177,6 +177,10 @@ let to_symbolic (cgraph : G.graph) =
           let pad = if padding = SAME then "SAME" else "VALID" in
           let stride = Array.append [| 1 |] (Array.append stride [| 1 |]) in
           conv ~name sym_inputs.(0) sym_inputs.(1) pad stride [| 1; 1; 1; 1 |]
+        | MaxPool2d (padding, kernel, stride) ->
+          let pad = if padding = SAME then "SAME" else "VALID" in
+          let stride = Array.append [| 1 |] (Array.append stride [| 1 |]) in
+          maxpool ~name sym_inputs.(0) kernel stride pad [| 1; 1; 1; 1 |]
         | _ ->
           failwith
             (Printf.sprintf "Node type not supported: %s" (G.op_to_str cnode_attr.op))
