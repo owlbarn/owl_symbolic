@@ -107,6 +107,23 @@ let to_symbolic (cgraph : G.graph) =
           let high = G.node_to_elt inodes.(0) |> elt_to_float in
           let low = G.node_to_elt inodes.(1) |> elt_to_float in
           random_uniform ~name ~high ~low shp
+        | Const ->
+          (* NOTE: Uniform's constant parents are converted but later ignored. *)
+          let shape =
+            match cnode_attr.shape.(0) with
+            | Some s -> s
+            | None   -> failwith "Const: unspecified owl shape"
+          in
+          let flt_val =
+            if shape = [||]
+            then [| G.node_to_elt node |> elt_to_float |]
+            else
+              (* TODO: G.node_to_arr node |> G.unpack_arr |> A.to_array *)
+              failwith "Convert constant Ndarray value is not supported yet."
+          in
+          (* TODO: change the dtype to float/double accoding to specific Owl ndarray type *)
+          let t = Owl_symbolic_types.make_tensor ~flt_val shape in
+          tensor ~name t
         | Sin -> sin ~name sym_inputs.(0)
         | Cos -> cos ~name sym_inputs.(0)
         | Sqrt -> sqrt ~name sym_inputs.(0)
