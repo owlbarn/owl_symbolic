@@ -77,6 +77,7 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
             (Owl_graph.parents node)
         in
         (* build the current symbol *)
+        Owl_log.info "shiiiit!";
         let sym =
           (* Damn you ocamlformat; sometimes I just want to punch you in that perfect teeth *)
           match cnode_attr.op with
@@ -210,6 +211,7 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
                  "Node type not supported: %s"
                  (G.Optimiser.Operator.Symbol.op_to_str cnode_attr.op))
         in
+        Owl_log.info "fuuuuuuck!";
         Hashtbl.add syms name sym)
       outputs;
     (* choose only the output symbols to be in the graph *)

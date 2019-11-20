@@ -28,7 +28,9 @@ let make_node (sym : Owl_symbolic_symbol.t) (parents : symbolic_node array) =
         (fun sym_node -> Owl_graph.attr sym_node |> Owl_symbolic_symbol.out_shape)
         parents
     in
+    Owl_log.info "huhuhu1";
     let shape = Owl_symbolic_shape.infer_shape in_shapes sym in
+    Owl_log.info "huhuhu2";
     (* TODO: remove this part in product code *)
     if _debug_shape = true
     then (

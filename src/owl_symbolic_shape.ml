@@ -127,7 +127,7 @@ let infer_shape input_shapes sym =
   | MaxPool x       ->
     let l = Array.length x.strides in
     let padding = if x.auto_pad = "VALID" then Owl_types.VALID else Owl_types.SAME in
-    if l = 4
+    if l = 3
     then _infer_shape_15 input_shapes padding x.kernel_shp x.strides
     else if l = 4
     then _infer_shape_21 input_shapes padding x.kernel_shp x.strides
