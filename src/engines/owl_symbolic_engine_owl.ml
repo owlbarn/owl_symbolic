@@ -85,7 +85,6 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
             (Owl_graph.parents node)
         in
         (* build the current symbol *)
-        Owl_log.info "shiiiit!";
         let sym =
           (* Damn you ocamlformat; sometimes I just want to punch you in that perfect teeth *)
           match cnode_attr.op with
@@ -195,31 +194,28 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
             Owl_symbolic_operator.reshape ~name sym_inputs.(0) shp_node
           | Conv2d (padding, stride) ->
             let pad = if padding = SAME then "SAME" else "VALID" in
-            let stride = Array.append [| 1 |] (Array.append stride [| 1 |]) in
             Owl_symbolic_operator.conv
               ~name
               sym_inputs.(0)
               sym_inputs.(1)
               pad
               stride
-              [| 1; 1; 1; 1 |]
+              [| 1; 1 |]
           | MaxPool2d (padding, kernel, stride) ->
             let pad = if padding = SAME then "SAME" else "VALID" in
-            let stride = Array.append [| 1 |] (Array.append stride [| 1 |]) in
             Owl_symbolic_operator.maxpool
               ~name
               sym_inputs.(0)
               kernel
               stride
               pad
-              [| 1; 1; 1; 1 |]
+              [| 1; 1 |]
           | _ ->
             failwith
               (Printf.sprintf
                  "Node type not supported: %s"
                  (G.Optimiser.Operator.Symbol.op_to_str cnode_attr.op))
         in
-        Owl_log.info "fuuuuuuck!";
         Hashtbl.add syms name sym)
       outputs;
     (* choose only the output symbols to be in the graph *)
