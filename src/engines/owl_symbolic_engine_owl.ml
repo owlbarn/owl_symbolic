@@ -3,6 +3,14 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
+(*
+open Owl_types
+
+module Make (A : Ndarray_Mutable) = struct
+
+  module G = Owl_computation_cpu_engine.Make (A)
+*)
+
 module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
   open G.Optimiser.Operator.Symbol.Shape.Type
 
