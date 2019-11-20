@@ -248,15 +248,16 @@ let axes = function
 
 
 let dtype = function
-  | Float _    -> SNT_Float
-  | Int _      -> SNT_Int32
-  | Complex _  -> SNT_Complex32
-  | Pi x       -> Pi.(x.dtype)
-  | Tensor x   ->
+  | Float _         -> SNT_Float
+  | Int _           -> SNT_Int32
+  | Complex _       -> SNT_Complex32
+  | Pi x            -> Pi.(x.dtype)
+  | Tensor x        ->
     let (t : tensor) = Tensor.(x.value) in
     t.dtype
-  | Variable x -> Variable.(x.dtype)
-  | _          -> failwith "owl_symboic_symobl.dtype: not var or constant op"
+  | Variable x      -> Variable.(x.dtype)
+  | RandomUniform x -> RandomUniform.(x.dtype)
+  | _               -> failwith "owl_symboic_symobl.dtype: not var or constant op"
 
 
 let float_value = function

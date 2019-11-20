@@ -105,8 +105,8 @@ let make_tensor ?dtype ?flt_val ?int_val ?str_val ?raw_val shape =
              ; SNT_Uint64
              ; SNT_Int8
              ; SNT_Int16
-             ; SNT_Int16
              ; SNT_Int32
+             ; SNT_Int64
             |]);
         x
       | None   -> SNT_Int32

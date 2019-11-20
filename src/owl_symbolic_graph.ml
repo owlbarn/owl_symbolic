@@ -16,6 +16,8 @@ type t =
 
 (** A series of graph operations. *)
 
+let _debug_shape = false
+
 let make_node (sym : Owl_symbolic_symbol.t) (parents : symbolic_node array) =
   let child = node sym in
   (* update the child's input and output shape *)
@@ -27,6 +29,18 @@ let make_node (sym : Owl_symbolic_symbol.t) (parents : symbolic_node array) =
         parents
     in
     let shape = Owl_symbolic_shape.infer_shape in_shapes sym in
+    (* TODO: remove this part in product code *)
+    if _debug_shape = true
+    then (
+      let foo =
+        match shape.(0) with
+        | Some s -> s
+        | None   -> [||]
+      in
+      Owl_log.info
+        "%s: %s\n"
+        (Owl_symbolic_symbol.name sym)
+        (Owl_utils_array.to_string string_of_int foo));
     Owl_symbolic_symbol.set_out_shape sym shape.(0)
     (* Currently only use the first shape *));
   connect_ancestors parents [| child |];

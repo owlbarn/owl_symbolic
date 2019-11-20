@@ -368,7 +368,12 @@ let reshape ?name data shape =
   let y_name = Owl_symbolic_graph.name shape in
   let input = [| x_name; y_name |] in
   let attrs = [||] in
-  let shp = Owl_symbolic_symbol.shape (Owl_graph.attr shape) in
+  let shp = (Owl_symbolic_symbol.tensor_value (Owl_graph.attr shape)).int_val in
+  let shp =
+    match shp with
+    | Some s -> s
+    | None   -> failwith "Owl_symbolic_operator.reshape: empty shape input."
+  in
   let o = Owl_symbolic_ops_tensor.Reshape.create name input shp attrs in
   let sym = Owl_symbolic_symbol.Reshape o in
   make_node sym [| data; shape |]

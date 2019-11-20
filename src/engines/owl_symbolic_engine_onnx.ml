@@ -56,6 +56,13 @@ let make_onnx_tensor_ints ?(shape = [||]) i =
   PT.default_tensor_proto ~dims ~int32_data ~data_type ()
 
 
+let make_onnx_tensor_int64s ?(shape = [||]) i =
+  let int64_data = Array.map Int64.of_int i |> Array.to_list in
+  let dims = Array.map Int64.of_int shape |> Array.to_list in
+  let data_type = Some (map_elt_type_to_int32 SNT_Int64) in
+  PT.default_tensor_proto ~dims ~int64_data ~data_type ()
+
+
 let make_onnx_tensor_complex c =
   let r, i = c in
   let float_data = [ r; i ] in
@@ -464,6 +471,13 @@ let build_onnx_attrs sym =
             | None   -> [||]
           in
           Some (make_onnx_tensor_ints ~shape:v.shape ints)
+        | SNT_Int64 ->
+          let ints =
+            match v.int_val with
+            | Some i -> i
+            | None   -> [||]
+          in
+          Some (make_onnx_tensor_int64s ~shape:v.shape ints)
         | _         ->
           let t = Owl_symbolic_types.number_type_to_string v.dtype in
           let err_msg = Printf.sprintf "build_onnx_attrs: unsupported type: %s\n" t in
