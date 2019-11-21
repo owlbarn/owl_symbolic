@@ -112,11 +112,11 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
              * both just attributes in symbolic;
              * Also, node the order of high/low; should be checked later *)
             let inodes = Owl_graph.parents node in
-            let high =
+            let low =
               G.Optimiser.Operator.Symbol.node_to_elt inodes.(0)
               |> G.Optimiser.Operator.Symbol.elt_to_float
             in
-            let low =
+            let high =
               G.Optimiser.Operator.Symbol.node_to_elt inodes.(1)
               |> G.Optimiser.Operator.Symbol.elt_to_float
             in
