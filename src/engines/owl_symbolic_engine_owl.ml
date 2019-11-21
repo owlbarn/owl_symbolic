@@ -36,19 +36,6 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
 
   *)
 
-  (** Helper function *)
-
-  (*
-  let _get_const_value (attr : Symbol.Shape.Type.attr) =
-    if Array.length attr.value > 0
-    then (
-      let v = attr.value.(0) in
-      if Device.is_elt v
-      then Device.value_to_float v
-      else failwith "Non-float value const not supported yet")
-    else failwith "Non-value const"
-  *)
-
   (** Main entry *)
 
   (* TODO: create subroutines to do those long match *)
@@ -100,16 +87,19 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
               | None   -> failwith "unspecified owl shape"
             in
             let s = Owl_symbolic_utils.to_nchw_order s in
+            (* HACK *)
             (*!!!*)
             Owl_symbolic_operator.variable ~shape:s ~dtype:SNT_Float name
           | Zeros shp ->
             let shp = Owl_symbolic_utils.to_nchw_order shp in
+            (* HACK *)
             let ele_num = Owl_symbolic_utils.nelt shp in
             let flt_val = Array.make ele_num 0. in
             let tensor = Owl_symbolic_types.make_tensor ~flt_val shp in
             Owl_symbolic_operator.tensor ~name tensor
           | Ones shp ->
             let shp = Owl_symbolic_utils.to_nchw_order shp in
+            (* HACK *)
             let ele_num = Owl_symbolic_utils.nelt shp in
             let flt_val = Array.make ele_num 1. in
             let tensor = Owl_symbolic_types.make_tensor ~flt_val shp in
@@ -117,6 +107,7 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
           | Uniform shp ->
             (* !!!! TODO: only a temp hack; order does not depends on specific node type *)
             let shp = Owl_symbolic_utils.hwio_to_oihw_order shp in
+            (* HACK *)
             (* !!! we need to get its input from CGraph node; while they are 
              * both just attributes in symbolic;
              * Also, node the order of high/low; should be checked later *)
@@ -138,6 +129,7 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
               | None   -> failwith "Const: unspecified owl shape"
             in
             let shape = Owl_symbolic_utils.to_nchw_order shape in
+            (* HACK *)
             let flt_val =
               if shape = [||]
               then
@@ -194,6 +186,7 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
           | Max a -> Owl_symbolic_operator.reduce_max ~name sym_inputs.(0) [| a |]
           | Reshape shp ->
             let shp = Owl_symbolic_utils.to_nchw_order shp in
+            (* HACK *)
             let t =
               Owl_symbolic_types.make_tensor
                 ~dtype:SNT_Int64
