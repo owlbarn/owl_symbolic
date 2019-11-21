@@ -16,7 +16,7 @@ type t =
 
 (** A series of graph operations. *)
 
-let _debug_shape = true
+let _debug_shape = false
 
 let make_node (sym : Owl_symbolic_symbol.t) (parents : symbolic_node array) =
   let child = node sym in
