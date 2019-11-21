@@ -20,15 +20,14 @@ let loss =
 
 let make_mnist_network input_shape =
   input input_shape
-  (* |> normalisation ~decay:0.9 *)
-
-  (* |> conv2d [|3;3;3;32|] [|1;1|]
-  |> activation Activation.Relu *)
-  |> max_pool2d [| 2; 2 |] [| 2; 2 |] ~padding:VALID
-  (* |> fully_connected 512
+  |> normalisation ~decay:0.9
+  |> conv2d [| 3; 3; 3; 32 |] [| 1; 1 |]
   |> activation Activation.Relu
-  |> linear 10 
-  |> activation Activation.(Softmax 1) *)
+  |> max_pool2d [| 2; 2 |] [| 2; 2 |] ~padding:VALID
+  |> fully_connected 512
+  |> activation Activation.Relu
+  |> linear 10
+  |> activation Activation.(Softmax 1)
   |> get_network
 
 

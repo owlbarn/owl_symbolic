@@ -41,7 +41,7 @@ let _infer_shape_12 input_shapes padding stride =
   let kernel_shape = input_shapes.(1) in
   match input_shape, kernel_shape with
   | Some input, Some kernel ->
-    [| Some Owl_utils_infer_shape.(conv2d input padding kernel stride) |]
+    [| Some Owl_symbolic_utils.(conv2d input padding kernel stride) |]
   | _, _                    -> [| None |]
 
 
@@ -79,7 +79,7 @@ let _infer_shape_19 input_shapes =
 let _infer_shape_21 input_shapes padding kernel stride =
   let input_shape = input_shapes.(0) in
   match input_shape with
-  | Some input -> [| Some Owl_utils_infer_shape.(pool2d input padding kernel stride) |]
+  | Some input -> [| Some Owl_symbolic_utils.(pool2d input padding kernel stride) |]
   | _          -> [| None |]
 
 

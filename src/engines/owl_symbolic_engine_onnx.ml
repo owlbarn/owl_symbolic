@@ -9,6 +9,8 @@ module S = Owl_symbolic_symbol
 
 type t = Onnx_types.graph_proto
 
+(* NOTE: Be very careful about the order issue; ONNX uses NCHW for conv etc. *)
+
 (** Mapping functions *)
 
 let map_elt_type_to_int32 typ =

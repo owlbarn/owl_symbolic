@@ -30,6 +30,10 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
   - Conv --> optional input
   - maxpool  -> multiple output (2, one of them is optional)
 
+  !!!! NOTE: he ONNX uses NCHW order!!!!! Be VERY careful about the tensor order,
+  especially if you want to transfer data. 
+  Currently symbolic also uses NHWC so no change required at Owl's side. 
+
   *)
 
   (** Helper function *)
@@ -95,18 +99,24 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
               | Some s -> s
               | None   -> failwith "unspecified owl shape"
             in
+            let s = Owl_symbolic_utils.to_nchw_order s in
+            (*!!!*)
             Owl_symbolic_operator.variable ~shape:s ~dtype:SNT_Float name
           | Zeros shp ->
+            let shp = Owl_symbolic_utils.to_nchw_order shp in
             let ele_num = Owl_symbolic_utils.nelt shp in
             let flt_val = Array.make ele_num 0. in
             let tensor = Owl_symbolic_types.make_tensor ~flt_val shp in
             Owl_symbolic_operator.tensor ~name tensor
           | Ones shp ->
+            let shp = Owl_symbolic_utils.to_nchw_order shp in
             let ele_num = Owl_symbolic_utils.nelt shp in
             let flt_val = Array.make ele_num 1. in
             let tensor = Owl_symbolic_types.make_tensor ~flt_val shp in
             Owl_symbolic_operator.tensor ~name tensor
           | Uniform shp ->
+            (* !!!! TODO: only a temp hack; order does not depends on specific node type *)
+            let shp = Owl_symbolic_utils.hwio_to_oihw_order shp in
             (* !!! we need to get its input from CGraph node; while they are 
              * both just attributes in symbolic;
              * Also, node the order of high/low; should be checked later *)
@@ -127,6 +137,7 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
               | Some s -> s
               | None   -> failwith "Const: unspecified owl shape"
             in
+            let shape = Owl_symbolic_utils.to_nchw_order shape in
             let flt_val =
               if shape = [||]
               then
@@ -182,6 +193,7 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
             Owl_symbolic_operator.reduce_sum ~name ~keepdims:false sym_inputs.(0) axes
           | Max a -> Owl_symbolic_operator.reduce_max ~name sym_inputs.(0) [| a |]
           | Reshape shp ->
+            let shp = Owl_symbolic_utils.to_nchw_order shp in
             let t =
               Owl_symbolic_types.make_tensor
                 ~dtype:SNT_Int64
