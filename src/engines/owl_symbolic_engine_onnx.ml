@@ -9,13 +9,11 @@ module S = Owl_symbolic_symbol
 
 type t = Onnx_types.graph_proto
 
-(* NOTE: Be very careful about the order issue; ONNX uses NCHW for conv etc. *)
-
 (** Mapping functions *)
 
 let map_elt_type_to_int32 typ =
   match typ with
-  | SNT_Noop      -> Int32.of_int 0 (* Undefined *)
+  | SNT_Noop      -> Int32.of_int 0
   | SNT_Float     -> Int32.of_int 1
   | SNT_Uint8     -> Int32.of_int 2
   | SNT_Int8      -> Int32.of_int 3
@@ -97,7 +95,6 @@ let make_onnx_initializers_int32 name data_type shape int_data =
   PT.default_tensor_proto ~dims ~data_type ~name ~int32_data ()
 
 
-(* TODO: this still does not include all possible cases *)
 let make_onnx_io name elt_type shape =
   let dim =
     Array.map
@@ -180,7 +177,6 @@ let make_onnx_model graph =
 
 (** Functions to build part of onnx graph *)
 
-(* TODO: include more useful information? *)
 let _check_same types name =
   let flag = ref true in
   if Array.length types = 0
@@ -213,8 +209,7 @@ let _check_constraint t constraints name =
 let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
   let len = Owl_symbolic_graph.length sym_graph in
   let dtypes = Hashtbl.create len in
-  (* Assume this iter is topologically correct *)
-  Owl_symbolic_graph.iter
+  Owl_symbolic_graph.topo_iter
     (fun sym_node ->
       let sym = Owl_graph.attr sym_node in
       let name = S.name sym in
@@ -414,8 +409,6 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
   dtypes
 
 
-(* TODO: unfinished *)
-
 (** Attributes scheme: https://github.com/onnx/onnx/blob/master/docs/Operators.md *)
 let build_onnx_attrs sym =
   let onnx_attrs =
@@ -505,7 +498,7 @@ let build_onnx_attrs sym =
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Float in
       let f = Some x.low in
       let attr_low = PT.default_attribute_proto ~name:name_low ~type_ ~f () in
-      (* TODO create "seed" attribute -- currently leave to ONNX *)
+      (* TODO: create "seed" attribute -- currently leave to ONNX *)
       (* create "shape" attribute *)
       let name_shape = Some "shape" in
       let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
@@ -605,7 +598,7 @@ let build_onnx_attrs sym =
 (** Core function. Converts symbolic nodes to onnx nodes. *)
 let build_onnx_nodes (sym_graph : Owl_symbolic_graph.t) =
   let nodes = ref [||] in
-  Owl_symbolic_graph.iter
+  Owl_symbolic_graph.topo_iter
     (fun sym_node ->
       let sym = Owl_graph.attr sym_node in
       let op_type = S.op_type sym in

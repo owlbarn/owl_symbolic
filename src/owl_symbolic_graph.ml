@@ -63,13 +63,13 @@ let make_graph (nodes : symbolic_node array) name =
   { sym_nodes = nodes; name; node_names }
 
 
-(* Topological sort *)
-let iter f (g : t) = iter_ancestors ~order:DFS ~traversal:PostOrder f g.sym_nodes
+(* Topological iteration *)
+let topo_iter f (g : t) = iter_ancestors ~order:DFS ~traversal:PostOrder f g.sym_nodes
 
 (* get all the "variable" nodes in sym_graph *)
 let get_input_nodes sym_graph =
   let inputs = ref [||] in
-  iter
+  topo_iter
     (fun sym_node ->
       let sym = Owl_graph.attr sym_node in
       let op_typ = Owl_symbolic_symbol.op_type sym in
@@ -93,7 +93,7 @@ let get_output_nodes sym_graph =
 let null_graph = make_graph [||] ""
 
 let iter_print (g : t) =
-  iter
+  topo_iter
     (fun sym_node ->
       let a = Owl_graph.attr sym_node in
       Printf.fprintf stderr "%s\n" (Owl_symbolic_symbol.name a))
@@ -109,7 +109,7 @@ let name sym_node =
 
 let length (g : t) =
   let cnt = ref 0 in
-  iter (fun _ -> cnt := !cnt + 1) g;
+  topo_iter (fun _ -> cnt := !cnt + 1) g;
   !cnt
 
 
