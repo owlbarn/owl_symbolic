@@ -151,7 +151,6 @@ let make_onnx_graph
 
 
 let make_onnx_model graph =
-  (* NOTE: IR version and opset do matter; check the doc *)
   let ir_version = Some (Int64.of_int 6) in
   let producer_name = Some "owl" in
   let producer_version = Some "0.6.0" in
@@ -399,7 +398,6 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           _check_constraint ptypes.(0) [| SNT_Float; SNT_Float16; SNT_Double |] name;
           ptypes.(0)
         | MaxPool _       ->
-          (* TODO: Again, current we dont' consider its second output *)
           _check_constraint ptypes.(0) [| SNT_Float; SNT_Float16; SNT_Double |] name;
           ptypes.(0)
         | _               -> SNT_Noop
@@ -602,7 +600,7 @@ let build_onnx_nodes (sym_graph : Owl_symbolic_graph.t) =
     (fun sym_node ->
       let sym = Owl_graph.attr sym_node in
       let op_type = S.op_type sym in
-      (* input variable does not belong to graph *)
+      (* Input variable does not belong to graph *)
       if not (Owl_symbolic_graph.is_variable op_type)
       then (
         let name = S.name sym in

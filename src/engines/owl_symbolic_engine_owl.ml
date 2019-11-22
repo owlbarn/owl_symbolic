@@ -53,12 +53,8 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
       let tensor = Owl_symbolic_types.make_tensor ~flt_val shp in
       Owl_symbolic_operator.tensor ~name tensor
     | Uniform shp ->
-      (* !!!! TODO: only a temp hack; order does not depends on specific node type *)
       let shp = Owl_symbolic_utils.hwio_to_oihw_order shp in
       (* HACK *)
-      (* !!! we need to get its input from CGraph node; while they are 
-        * both just attributes in symbolic;
-        * Also, node the order of high/low; should be checked later *)
       let inodes = Owl_graph.parents node in
       let low =
         G.Optimiser.Operator.Symbol.node_to_elt inodes.(0)
@@ -70,7 +66,6 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
       in
       Owl_symbolic_operator.random_uniform ~name ~high ~low shp
     | Const ->
-      (* NOTE: Uniform's constant parents are converted but later ignored. *)
       let shape =
         match cnode_attr.shape.(0) with
         | Some s -> s
@@ -115,12 +110,10 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
     | Pow -> Owl_symbolic_operator.pow ~name sym_inputs.(0) sym_inputs.(1)
     | PowScalar -> Owl_symbolic_operator.pow ~name sym_inputs.(0) sym_inputs.(1)
     | ScalarPow -> Owl_symbolic_operator.pow ~name sym_inputs.(0) sym_inputs.(1)
-    (* A more proper implementation could be GEMM instead of MatMul *)
     | Dot (_, _, _, _) -> Owl_symbolic_operator.matmul ~name sym_inputs.(0) sym_inputs.(1)
     | SumReduce a -> Owl_symbolic_operator.reduce_sum ~name sym_inputs.(0) a
     | Sum a -> Owl_symbolic_operator.reduce_sum ~name sym_inputs.(0) [| a |]
     | Sum' ->
-      (* !!! *)
       let shape = cnode_attr.shape in
       let len =
         match shape.(0) with
@@ -140,8 +133,6 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
           [| Array.length shp |]
       in
       let shp_node = Owl_symbolic_operator.tensor t in
-      (* !!!NOTE: we create a node shp_node, but it is not added to the dict
-        * since it is only used by reshape node; also note the order of two inputs. *)
       Owl_symbolic_operator.reshape ~name sym_inputs.(0) shp_node
     | Conv2d (padding, stride) ->
       let pad = if padding = SAME then "SAME" else "VALID" in

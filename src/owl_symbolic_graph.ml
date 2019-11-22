@@ -41,8 +41,9 @@ let make_node (sym : Owl_symbolic_symbol.t) (parents : symbolic_node array) =
         "%s: %s\n"
         (Owl_symbolic_symbol.name sym)
         (Owl_utils_array.to_string string_of_int foo));
-    Owl_symbolic_symbol.set_out_shape sym shape.(0)
-    (* Currently only use the first shape *));
+    (* Currently only use the first shape *)
+    Owl_symbolic_symbol.set_out_shape sym shape.(0));
+  (* Connect child with parents *)
   connect_ancestors parents [| child |];
   let uniq_parents = Owl_utils_array.unique parents in
   Array.iter (fun parent -> connect_descendants [| parent |] [| child |]) uniq_parents;
@@ -74,11 +75,7 @@ let get_input_nodes sym_graph =
     (fun sym_node ->
       let sym = Owl_graph.attr sym_node in
       let op_typ = Owl_symbolic_symbol.op_type sym in
-      if op_typ = "Variable"
-      then
-        (* TODO: maybe need a copy of node instead of just node; 
-         * it's about performance *)
-        inputs := Array.append !inputs [| sym_node |])
+      if op_typ = "Variable" then inputs := Array.append !inputs [| sym_node |])
     sym_graph;
   !inputs
 
