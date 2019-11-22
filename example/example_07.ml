@@ -24,22 +24,20 @@ let dnn =
     tensor t
   in
   let t_reshape0 = reshape t_maxpool0 t_shape0 in
-  let t_rand = random_uniform ~low:(-0.0011) ~high:0.0011 [| 8192; 512 |] in
-  let t_dot0 = t_reshape0 *@ t_rand in
+  let t_rand0 = random_uniform ~low:(-0.0011) ~high:0.0011 [| 8192; 512 |] in
   let t_zero1 =
     let flt_val = Array.make 512 0. in
     let t = Type.make_tensor ~flt_val [| 1; 512 |] in
     tensor t
   in
-  let t_relu1 = relu (t_dot0 + t_zero1) in
-  let t_rand = random_uniform ~low:(-0.00419) ~high:0.00419 [| 512; 10 |] in
-  let t_dot1 = t_relu1 *@ t_rand in
+  let t_relu1 = relu ((t_reshape0 *@ t_rand0) + t_zero1) in
+  let t_rand1 = random_uniform ~low:(-0.00419) ~high:0.00419 [| 512; 10 |] in
   let t_zero2 =
     let flt_val = Array.make 10 0. in
     let t = Type.make_tensor ~flt_val [| 1; 10 |] in
     tensor t
   in
-  let t_add2 = t_dot1 + t_zero2 in
+  let t_add2 = (t_relu1 *@ t_rand1) + t_zero2 in
   let t_exp0 = exp (t_add2 - (reduce_max t_add2 [| 1 |])) in
   t_exp0 / (reduce_sum t_exp0 [| 1 |])
 
