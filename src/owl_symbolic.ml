@@ -18,5 +18,7 @@ module Type = Owl_symbolic_types
 module Specs = Owl_symbolic_specs
 module Op = Owl_symbolic_operator
 module SymGraph = Owl_symbolic_graph
+module Infix = Owl_symbolic_infix
 module ONNX_Engine = Owl_symbolic_engine_onnx
 module Owl_symbolic_engine_owl = Owl_symbolic_engine_owl
+

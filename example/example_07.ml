@@ -1,4 +1,5 @@
 open Owl_symbolic
+open Infix
 open Op
 
 let dnn =
@@ -16,35 +17,31 @@ let dnn =
     let t = Type.make_tensor ~flt_val [| 32 |] in
     tensor t
   in
-  let t_add0 = add t_conv0 t_zero0 in
-  let t_relu0 = relu t_add0 in
+  let t_relu0 = relu (t_conv0 + t_zero0) in
   let t_maxpool0 = maxpool t_relu0 [| 2; 2 |] [| 2; 2 |] "VALID" [| 1; 1 |] in
   let t_shape0 =
     let t = Type.make_tensor ~dtype:SNT_Int64 ~int_val:[| 100; 8192 |] [| 2 |] in
     tensor t
   in
   let t_reshape0 = reshape t_maxpool0 t_shape0 in
-  let t_dot0 =
-    matmul t_reshape0 (random_uniform ~low:(-0.0011) ~high:0.0011 [| 8192; 512 |])
-  in
+  let t_rand = random_uniform ~low:(-0.0011) ~high:0.0011 [| 8192; 512 |] in
+  let t_dot0 = t_reshape0 *@ t_rand in
   let t_zero1 =
     let flt_val = Array.make 512 0. in
     let t = Type.make_tensor ~flt_val [| 1; 512 |] in
     tensor t
   in
-  let t_add1 = add t_dot0 t_zero1 in
-  let t_relu1 = relu t_add1 in
-  let t_dot1 =
-    matmul t_relu1 (random_uniform ~low:(-0.00419) ~high:0.00419 [| 512; 10 |])
-  in
+  let t_relu1 = relu (t_dot0 + t_zero1) in
+  let t_rand = random_uniform ~low:(-0.00419) ~high:0.00419 [| 512; 10 |] in
+  let t_dot1 = t_relu1 *@ t_rand in
   let t_zero2 =
     let flt_val = Array.make 10 0. in
     let t = Type.make_tensor ~flt_val [| 1; 10 |] in
     tensor t
   in
-  let t_add2 = add t_dot1 t_zero2 in
-  let t_exp0 = exp (sub t_add2 (reduce_max t_add2 [| 1 |])) in
-  div t_exp0 (reduce_sum t_exp0 [| 1 |])
+  let t_add2 = t_dot1 + t_zero2 in
+  let t_exp0 = exp (t_add2 - (reduce_max t_add2 [| 1 |])) in
+  t_exp0 / (reduce_sum t_exp0 [| 1 |])
 
 
 let g = SymGraph.make_graph [| dnn |] "sym_graph"

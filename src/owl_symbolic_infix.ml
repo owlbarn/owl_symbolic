@@ -8,3 +8,4 @@ let ( - ) = Owl_symbolic_operator.sub
 let ( * ) = Owl_symbolic_operator.mul
 let ( / ) = Owl_symbolic_operator.div
 let ( ** ) = Owl_symbolic_operator.pow
+let ( *@ ) = Owl_symbolic_operator.matmul
