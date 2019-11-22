@@ -20,7 +20,7 @@ let integer ?name value =
     | None   -> Printf.sprintf "integer_%i" suffix
   in
   let attrs = [||] in
-  let o = Owl_symbolic_ops_input.Int.create name attrs value in
+  let o = Owl_symbolic_ops_generator.Int.create name attrs value in
   let sym = Owl_symbolic_symbol.Int o in
   make_node sym [||]
 
@@ -34,7 +34,7 @@ let flt ?name x =
   in
   let attrs = [||] in
   let value = x in
-  let o = Owl_symbolic_ops_input.Float.create name attrs value in
+  let o = Owl_symbolic_ops_generator.Float.create name attrs value in
   let sym = Owl_symbolic_symbol.Float o in
   make_node sym [||]
 
@@ -47,7 +47,7 @@ let complex ?name r i =
     | None   -> Printf.sprintf "complex_%i" suffix
   in
   let attrs = [||] in
-  let o = Owl_symbolic_ops_input.Complex.create name attrs r i in
+  let o = Owl_symbolic_ops_generator.Complex.create name attrs r i in
   let sym = Owl_symbolic_symbol.Complex o in
   make_node sym [||]
 
@@ -59,7 +59,7 @@ let pi ?name () =
     | Some n -> n
     | None   -> Printf.sprintf "pi_%i" suffix
   in
-  let o = Owl_symbolic_ops_input.Pi.create name in
+  let o = Owl_symbolic_ops_generator.Pi.create name in
   let sym = Owl_symbolic_symbol.Pi o in
   make_node sym [||]
 
@@ -73,7 +73,7 @@ let tensor ?name t =
   in
   let attrs = [||] in
   let value = t in
-  let o = Owl_symbolic_ops_input.Tensor.create name attrs value in
+  let o = Owl_symbolic_ops_generator.Tensor.create name attrs value in
   let sym = Owl_symbolic_symbol.Tensor o in
   make_node sym [||]
 
@@ -105,7 +105,9 @@ let variable ?shape ?dtype ?init name =
       | None   -> SNT_Float)
   in
   let attrs = [||] in
-  let o = Owl_symbolic_ops_input.Variable.create name attrs true_dtype true_shape init in
+  let o =
+    Owl_symbolic_ops_generator.Variable.create name attrs true_dtype true_shape init
+  in
   let sym = Owl_symbolic_symbol.Variable o in
   make_node sym [||]
 

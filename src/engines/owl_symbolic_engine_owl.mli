@@ -28,8 +28,6 @@ module Make (A : Ndarray_Mutable) : sig
 
 end
 
-
-
 Error in to_symbolic : This expression has type OWL_Engine.t -> SymGraph.t
        but an expression was expected of type G.graph -> 'a
        Type OWL_Engine.t is not compatible with type G.graph 

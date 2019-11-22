@@ -3,18 +3,6 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-(*
- * The operations included: 
- * (1) Numbers: Integers, Complex, Float. E.g. in "exp = x + y - 0.1" the 0.1 is a float;
- * note that its not related to the tensor type (float or double etc.)
- * Tensor is also what we need.
- * (2) Special constant: ExpConst
- * (3) Symbol. It's not specified when defined. You can just define "Symbol 'x'" in the symbolic grpah.
- * Only before evaluation (conversion) should the symbol be replaced with float, int, tensor, etc. 
- * (4) Unary Op: Sin, Cos, Exp
- * (5) Binary Op: +, -, *, /, pow
- *)
-
 (* TODO: The Pi is quite interesting -- 
  * how should we represent these mathematical constant, especially an irrational one? 
  * Perhaps just define a new type and wrap it in tensor? ...
@@ -25,7 +13,6 @@
 
 open Owl_symbolic_types
 open Owl_symbolic_ops_math
-open Owl_symbolic_ops_input
 open Owl_symbolic_ops_reduction
 open Owl_symbolic_ops_generator
 open Owl_symbolic_ops_tensor
@@ -241,12 +228,6 @@ let set_out_shape sym shape =
   | _               -> failwith "set_out_shape: unsupported op."
 
 
-(* this one might be useless... *)
-let axes = function
-  | ReduceSum x -> x.axes
-  | _           -> failwith "axes: unsupported op."
-
-
 let dtype = function
   | Float _         -> SNT_Float
   | Int _           -> SNT_Int32
@@ -258,6 +239,13 @@ let dtype = function
   | Variable x      -> Variable.(x.dtype)
   | RandomUniform x -> RandomUniform.(x.dtype)
   | _               -> failwith "owl_symboic_symobl.dtype: not var or constant op"
+
+
+(** operaations that only apply to certain symbol *)
+
+let axes = function
+  | ReduceSum x -> x.axes
+  | _           -> failwith "axes: unsupported op."
 
 
 let float_value = function

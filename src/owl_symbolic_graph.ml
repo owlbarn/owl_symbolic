@@ -11,7 +11,7 @@ type symbolic_node = Owl_symbolic_symbol.t Owl_graph.node
 type t =
   { mutable sym_nodes : symbolic_node array
   ; mutable name : string
-  ; mutable node_names : string array (* existing nodes in graph *)
+  ; mutable node_names : string array
   }
 
 (** A series of graph operations. *)
@@ -57,6 +57,7 @@ let make_graph (nodes : symbolic_node array) name =
       let x = Owl_graph.attr n |> Owl_symbolic_symbol.name in
       node_names := Array.append [| x |] !node_names)
     nodes;
+  (* TODO: add the names of `nodes` in `node_names` *)
   let node_names = !node_names in
   if Owl_symbolic_utils.check_uniq node_names = false
   then raise (INVALID_NAME "make_graph: the nodes contain duplicated names");
@@ -66,7 +67,7 @@ let make_graph (nodes : symbolic_node array) name =
 (* Topological iteration *)
 let topo_iter f (g : t) = iter_ancestors ~order:DFS ~traversal:PostOrder f g.sym_nodes
 
-(* get all the "variable" nodes in sym_graph *)
+(* Get all the "variable" nodes in sym_graph *)
 let get_input_nodes sym_graph =
   let inputs = ref [||] in
   topo_iter
@@ -109,17 +110,10 @@ let name sym_node =
 
 let length (g : t) =
   let cnt = ref 0 in
+  (* TODO: also add in the *)
   topo_iter (fun _ -> cnt := !cnt + 1) g;
   !cnt
 
 
-(** Targeted operations on the graph *)
-
 (** Print a symbolic tree (not graph) to terminal *)
 let to_dot _g = ()
-
-(** Derivative of symbolic tree *)
-let derive _g = ()
-
-(** Replace certain part of tree with anoter subtree *)
-let replace _g _m _r = ()

@@ -6,7 +6,6 @@ open Owl_symbolic
 module OWL_Engine = Owl_symbolic_engine_owl.Make (G)
 
 (*
-
 let loss =
   let network = make_mnist_network [|32;32;3|] in
   let xt = G.var_arr "xt" ~shape:[|100;32;32;3|] |> A.pack_arr in

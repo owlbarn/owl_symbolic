@@ -28,7 +28,7 @@ module ReduceMax = struct
     ; mutable attrs : (string * attrvalue) array
     ; mutable out_shape : int array option
     ; mutable axes : int array
-    ; mutable keepdims : bool (* NOTE: ONNX requires an int parameter *)
+    ; mutable keepdims : bool
     }
 
   let op_type = "ReduceMax"

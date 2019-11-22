@@ -135,7 +135,3 @@ let infer_shape input_shapes sym =
     then _infer_shape_17 input_shapes padding x.kernel_shp x.strides
     else failwith "Owl_symbolic_shape: illegal maxpool dimensions."
   | _               -> [| None |]
-
-(* It has been shown that current _infer_shape_03 
-  works for add, addscalar and scalaradd; so no need to 
-  rush to add new symbols perhaps *)

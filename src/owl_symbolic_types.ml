@@ -22,30 +22,6 @@ type number_type =
   | SNT_Uint64
   | SNT_Float16
 
-type tensor =
-  { dtype : number_type
-  ; shape : int array
-  ; str_val : string array option
-  ; flt_val : float array option
-  ; int_val : int array option
-  ; raw_val : bytes option
-  }
-
-type attrvalue =
-  | ATTR_Nil
-  | ATTR_Int of int
-  | ATTR_Bool of bool
-  | ATTR_Type of number_type
-  | ATTR_Float of float
-  | ATTR_Shape of int array
-  | ATTR_String of string
-  | ATTR_Tensor of tensor
-  | ATTR_Array of attrvalue array
-  | ATTR_NameArray of
-      { name : string
-      ; attr : (string * attrvalue) array
-      }
-
 let number_type_to_string = function
   | SNT_Noop      -> "SNT_Noop"
   | SNT_Float     -> "SNT_Float"
@@ -65,7 +41,14 @@ let number_type_to_string = function
   | SNT_Complex64 -> "SNT_Complex64"
 
 
-let get_tensor_dtype (t : tensor) = t.dtype
+type tensor =
+  { dtype : number_type
+  ; shape : int array
+  ; str_val : string array option
+  ; flt_val : float array option
+  ; int_val : int array option
+  ; raw_val : bytes option
+  }
 
 (* One and only one of the value arguments should be used *)
 let make_tensor ?dtype ?flt_val ?int_val ?str_val ?raw_val shape =
@@ -123,6 +106,25 @@ let make_tensor ?dtype ?flt_val ?int_val ?str_val ?raw_val shape =
     exit 1)
 
 
+let get_tensor_dtype (t : tensor) = t.dtype
+
+(** Currently useless types: attrvalue *)
+
+type attrvalue =
+  | ATTR_Nil
+  | ATTR_Int of int
+  | ATTR_Bool of bool
+  | ATTR_Type of number_type
+  | ATTR_Float of float
+  | ATTR_Shape of int array
+  | ATTR_String of string
+  | ATTR_Tensor of tensor
+  | ATTR_Array of attrvalue array
+  | ATTR_NameArray of
+      { name : string
+      ; attr : (string * attrvalue) array
+      }
+
 let get_attrvalue_int v =
   match v with
   | ATTR_Int i -> i
@@ -150,5 +152,3 @@ let get_attrvalue_shape v =
 (* Exception definition *)
 exception TYPE_CHECK of string
 exception INVALID_NAME of string
-
-(* TODO: At some poin we may need to provide uses with the ability to build new operations. *)
