@@ -12,7 +12,7 @@ let noop =
   make_node sym [||]
 
 
-let integer ?name value =
+let int ?name value =
   let suffix = generate_suffix () in
   let name =
     match name with
@@ -25,7 +25,7 @@ let integer ?name value =
   make_node sym [||]
 
 
-let flt ?name x =
+let float ?name x =
   let suffix = generate_suffix () in
   let name =
     match name with
@@ -450,4 +450,4 @@ let maxpool ?name input kernel strides padding dilations =
 
 (** The frequently used constants *)
 
-let expconst () = exp (flt 1.)
+let expconst () = exp (float 1.)

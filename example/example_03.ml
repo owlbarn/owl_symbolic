@@ -8,16 +8,16 @@ let _ =
   let y = variable "Y" in
   (* exp(pi * i ) = 0) *)
   let z_wrong =
-      (exp (((sin x) ** (integer 2)) + ((cos x) ** (integer 2)))) + 
-      ((flt 10.) * (y ** (flt 2.)))
+      (exp (((sin x) ** (int 2)) + ((cos x) ** (int 2)))) + 
+      ((float 10.) * (y ** (float 2.)))
   in
   let g_wrong = SymGraph.make_graph [| z_wrong |] "sym_graph_wrong" in
   try ONNX_Engine.of_symbolic g_wrong |> ignore with
   | TYPE_CHECK _ ->
     Printf.printf "Type checking works well on wrong symbolic graph.\n";
     let z =
-      (exp (((sin x) ** (flt 2.)) + ((cos x) ** (flt 2.)))) + 
-      ((flt 10.) * (y ** (flt 2.)))
+      (exp (((sin x) ** (float 2.)) + ((cos x) ** (float 2.)))) + 
+      ((float 10.) * (y ** (float 2.)))
     in
     let g = SymGraph.make_graph [| z |] "sym_graph" in
     let y = ONNX_Engine.of_symbolic g in
