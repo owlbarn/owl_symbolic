@@ -14,7 +14,6 @@ depends: [
   "ocaml" {>= "4.06.0"}
   "dune" {>= "1.5.0"}
   "owl-base" {>= "0.6.0"}
-  "integers" {with-test}
   "ocaml-protoc" {with-test}
   "alcotest" {with-test}
 ]
