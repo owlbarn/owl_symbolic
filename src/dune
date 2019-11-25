@@ -4,6 +4,8 @@
 
 (copy_files# ops/*)
 
+(copy_files# simplify/*)
+
 (library
  (name owl_symbolic)
  (public_name owl-symbolic)

@@ -38,8 +38,8 @@ let dnn =
     tensor t
   in
   let t_add2 = (t_relu1 *@ t_rand1) + t_zero2 in
-  let t_exp0 = exp (t_add2 - (reduce_max t_add2 [| 1 |])) in
-  t_exp0 / (reduce_sum t_exp0 [| 1 |])
+  let t_exp0 = exp (t_add2 - reduce_max t_add2 [| 1 |]) in
+  t_exp0 / reduce_sum t_exp0 [| 1 |]
 
 
 let g = SymGraph.make_graph [| dnn |] "sym_graph"
