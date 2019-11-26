@@ -6,7 +6,6 @@
 open Owl_graph
 open Owl_symbolic_graph
 open Owl_symbolic_symbol
-open Owl_symbolic_types
 
 let topo_iter_expr f (n : symbolic_node) = iter_ancestors ~order:DFS ~traversal:PostOrder f [|n|]
 
@@ -22,9 +21,9 @@ let has_symbol expr e =
       | Variable _ -> (op_type s = typ) && (name s = nam)
       | _          -> op_type s = typ
       in
-      if f then raise EARLY_BREAK
+      if f then raise Owl_exception.FOUND
     ) expr
-  with EARLY_BREAK -> flag := true 
+  with Owl_exception.FOUND -> flag := true 
   in
   !flag
 
