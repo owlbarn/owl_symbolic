@@ -152,3 +152,4 @@ let get_attrvalue_shape v =
 (* Exception definition *)
 exception TYPE_CHECK of string
 exception INVALID_NAME of string
+exception EARLY_BREAK

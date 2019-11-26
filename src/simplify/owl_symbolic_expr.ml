@@ -3,24 +3,29 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-open Owl_symbolic_graph
 open Owl_graph
+open Owl_symbolic_graph
 open Owl_symbolic_symbol
+open Owl_symbolic_types
 
 let topo_iter_expr f (n : symbolic_node) = iter_ancestors ~order:DFS ~traversal:PostOrder f [|n|]
 
-(* `any` *)
+(* `any` -- a clumsy solution with early break *)
 let has_symbol expr e = 
-  let flag = ref false in
-  let typ  = op_type e in 
-  topo_iter_expr (fun n ->
-    let s = Owl_graph.attr n in 
-    let f = match s with 
-    | Variable _ -> true 
-    | _ -> op_type s = typ
-    in
-    flag := !flag || f
-  ) expr;
+  let typ  = op_type e in
+  let nam  = name e in
+  let flag = ref false in 
+  let _ = try 
+    topo_iter_expr (fun n ->
+      let s = Owl_graph.attr n in 
+      let f = match s with 
+      | Variable _ -> (op_type s = typ) && (name s = nam)
+      | _          -> op_type s = typ
+      in
+      if f then raise EARLY_BREAK
+    ) expr
+  with EARLY_BREAK -> flag := true 
+  in
   !flag
 
 
