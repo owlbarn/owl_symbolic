@@ -27,11 +27,36 @@ let has_symbol expr e =
   in
   !flag
 
+(* Replace occurrences of objects within the expression.
+ * (1 + x*y).xreplace({x: pi}) -> pi*y + 1
+ * (x + y + 2).xreplace({x + y: 2}) -> x + y + 2
+ *)
+let xreplace expr _rule = 
+  (* 1. if rule already in expr then return rule[expr] *)
+  (* 2. *)
+  expr
 
-let xreplace () = ()
 
+(* ((x*y)**3).extract_multiplicatively(x**2 * y) -->  x*y**2 *)
+let extract_multiplicatively _expr _c = 
+  (* 1. if expr is NaN, return None *)
+  (* 2. if c is "One", return expr *)
+  (* 3. if c equals to self, return One *)
 
-let extract_multiplicatively _expr _c = None
+  (* 4. if c is add, get primitive a, b:
+   * E.g. (2*x + 4*y).primitive() --> (2, x + 2*y)
+   * if a != 1, then c = a * b 
+   *)
+  (* 5. if c is mul, make it as a, b terms;
+   * let x = extract_multiplicatively(expr, a); 
+   * if x is not None, then return  extract_multiplicatively(x, b);
+   * Here the idea: we want y so that  expr = cy = a b y; if expr = a x, then y = x/b 
+   *)
+   (* 6. let quotien = expr / c; if expr is number, then
+    * if expr and quotient are both int/float/rational, and (expr is not positive OR quotient is non-negative)
+    * then return quotient
+    *)
+  None
 
 
 (* return true if expr is not in a canonical form with respect to its sign. *)
