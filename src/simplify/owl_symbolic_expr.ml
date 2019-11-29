@@ -10,7 +10,7 @@ open Owl_symbolic_symbol
 let topo_iter_expr f (n : symbolic_node) = iter_ancestors ~order:DFS ~traversal:PostOrder f [|n|]
 
 (* `any` -- a clumsy solution with early break *)
-let has_symbol expr e = 
+let has_symbol (expr : symbolic_node) e = 
   let typ  = op_type e in
   let nam  = name e in
   let flag = ref false in 
@@ -33,7 +33,7 @@ let has_symbol expr e =
  *)
 let xreplace expr _rule = 
   (* 1. if rule already in expr then return rule[expr] *)
-  (* 2. *)
+  (* 2. Iterative apply xreplace on all children *)
   expr
 
 
