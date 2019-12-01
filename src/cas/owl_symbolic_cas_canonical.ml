@@ -15,8 +15,7 @@ let rec _to_canonical expr =
   | _ -> failwith "error: _to_canonical"
   (*| Rational x -> canonical_rat x *)
 
-and canonical_int x =
-  if  
+and canonical_int x = ()
 
 and canonical_rat x = ()
 
@@ -27,4 +26,5 @@ and canonical_add x = ()
 
 let canonical_form sym_graph =
   let output = Owl_symbolic_graph.get_output_nodes sym_graph in 
-  Array.iter _to_canonical output
+  let syms = Array.map Owl_graph.attr output in 
+  Array.iter _to_canonical syms
