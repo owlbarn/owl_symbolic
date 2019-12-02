@@ -104,3 +104,13 @@ let conv2d input_shape padding kernel_shape stride_shape =
       col_stride
   in
   [| batches; output_cols; output_rows; out_channel |]
+
+
+(* Represent float as rational format: (numerator, denominator) *)
+
+let float_as_ratio _v = 666, 777
+
+let rec gcd a b =
+  match a mod b with
+  | 0 -> b
+  | r -> gcd b r

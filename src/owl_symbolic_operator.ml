@@ -271,7 +271,7 @@ let relu ?name x =
   make_node sym [| x |]
 
 
-(* allows float and int; both nodes must be there *)
+(* allows float, int, and rational; both nodes must be there *)
 let rational ?name p q =
   let p_type = Owl_symbolic_symbol.op_type (Owl_graph.attr p) in
   let q_type = Owl_symbolic_symbol.op_type (Owl_graph.attr q) in

@@ -5,16 +5,21 @@
 
 open Owl_symbolic_types
 
+(* p and q are not specified by user; but rather later calculated in canonical part *)
 module Rational = struct
   type t =
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     ; mutable out_shape : int array option
+    ; mutable p : int
+    ; mutable q : int
     }
 
   let op_type = "Rational"
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+
+  let create ?(out_shape = None) name input attrs =
+    { name; input; attrs; out_shape; p = 0; q = 0 }
 end
 
 module Sin = struct
