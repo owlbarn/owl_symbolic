@@ -26,6 +26,9 @@ type t =
   | Tensor of Tensor.t
   | Variable of Variable.t
   | RandomUniform of RandomUniform.t
+  | Zero of Zero.t
+  | One of One.t
+  | NegOne of NegOne.t
   | Pi of Pi.t
   | Sin of Sin.t
   | Cos of Cos.t
@@ -55,6 +58,9 @@ let name = function
   | Tensor x        -> Tensor.(x.name)
   | Variable x      -> Variable.(x.name)
   | RandomUniform x -> RandomUniform.(x.name)
+  | Zero x          -> Zero.(x.name)
+  | One x           -> One.(x.name)
+  | NegOne x        -> NegOne.(x.name)
   | Pi x            -> Pi.(x.name)
   | Sin x           -> Sin.(x.name)
   | Cos x           -> Cos.(x.name)
@@ -84,6 +90,9 @@ let input = function
   | Tensor _        -> [||]
   | Variable _      -> [||]
   | RandomUniform _ -> [||]
+  | Zero _          -> [||]
+  | One _           -> [||]
+  | NegOne _        -> [||]
   | Pi _            -> [||]
   | Sin x           -> Sin.(x.input)
   | Cos x           -> Cos.(x.input)
@@ -113,6 +122,9 @@ let op_type = function
   | Tensor _        -> Tensor.op_type
   | Variable _      -> Variable.op_type
   | RandomUniform _ -> RandomUniform.op_type
+  | Zero _          -> Zero.op_type
+  | One _           -> One.op_type
+  | NegOne _        -> NegOne.op_type
   | Pi _            -> Pi.op_type
   | Sin _           -> Sin.op_type
   | Cos _           -> Cos.op_type
@@ -142,6 +154,9 @@ let sym_attrs = function
   | Tensor x        -> Tensor.(x.attrs)
   | Variable x      -> Variable.(x.attrs)
   | RandomUniform x -> RandomUniform.(x.attrs)
+  | Zero x          -> Zero.(x.attrs)
+  | One x           -> One.(x.attrs)
+  | NegOne x        -> NegOne.(x.attrs)
   | Pi x            -> Pi.(x.attrs)
   | Sin x           -> Sin.(x.attrs)
   | Cos x           -> Cos.(x.attrs)
@@ -180,6 +195,9 @@ let out_shape = function
   | Tensor x        -> Tensor.(x.out_shape)
   | Variable x      -> Variable.(x.out_shape)
   | RandomUniform x -> RandomUniform.(x.out_shape)
+  | Zero x          -> Zero.(x.out_shape)
+  | One x           -> One.(x.out_shape)
+  | NegOne x        -> NegOne.(x.out_shape)
   | Pi x            -> Pi.(x.out_shape)
   | Sin x           -> Sin.(x.out_shape)
   | Cos x           -> Cos.(x.out_shape)

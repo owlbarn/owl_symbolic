@@ -25,6 +25,45 @@ let int ?name value =
   make_node sym [||]
 
 
+let zero ?name () =
+  let suffix = generate_suffix () in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "zero_%i" suffix
+  in
+  let attrs = [||] in
+  let o = Owl_symbolic_ops_generator.Zero.create name attrs in
+  let sym = Owl_symbolic_symbol.Zero o in
+  make_node sym [||]
+
+
+let one ?name () =
+  let suffix = generate_suffix () in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "one_%i" suffix
+  in
+  let attrs = [||] in
+  let o = Owl_symbolic_ops_generator.One.create name attrs in
+  let sym = Owl_symbolic_symbol.One o in
+  make_node sym [||]
+
+
+let negone ?name () =
+  let suffix = generate_suffix () in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "negone_%i" suffix
+  in
+  let attrs = [||] in
+  let o = Owl_symbolic_ops_generator.NegOne.create name attrs in
+  let sym = Owl_symbolic_symbol.NegOne o in
+  make_node sym [||]
+
+
 let float ?name x =
   let suffix = generate_suffix () in
   let name =

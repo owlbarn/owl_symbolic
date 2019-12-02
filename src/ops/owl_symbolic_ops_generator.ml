@@ -70,20 +70,6 @@ module Variable = struct
     { name; attrs; dtype; shape; out_shape = Some shape; init }
 end
 
-module Pi = struct
-  type t =
-    { mutable name : string
-    ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
-    ; mutable dtype : number_type
-    }
-
-  let op_type = "Pi"
-
-  let create ?(dtype = SNT_Float) name =
-    { name; attrs = [||]; out_shape = Some [||]; dtype }
-end
-
 module RandomUniform = struct
   type t =
     { mutable name : string
@@ -100,4 +86,53 @@ module RandomUniform = struct
 
   let create ?(low = 0.) ?(high = 1.) ?(seed = None) name attrs dtype shape =
     { name; attrs; dtype; shape; out_shape = Some shape; high; low; seed }
+end
+
+(** Special Numbers *)
+
+module Zero = struct
+  type t =
+    { mutable name : string
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Zero"
+  let create name attrs = { name; attrs; out_shape = Some [||] }
+end
+
+module One = struct
+  type t =
+    { mutable name : string
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "One"
+  let create name attrs = { name; attrs; out_shape = Some [||] }
+end
+
+module NegOne = struct
+  type t =
+    { mutable name : string
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "NegOne"
+  let create name attrs = { name; attrs; out_shape = Some [||] }
+end
+
+module Pi = struct
+  type t =
+    { mutable name : string
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    ; mutable dtype : number_type
+    }
+
+  let op_type = "Pi"
+
+  let create ?(dtype = SNT_Float) name =
+    { name; attrs = [||]; out_shape = Some [||]; dtype }
 end

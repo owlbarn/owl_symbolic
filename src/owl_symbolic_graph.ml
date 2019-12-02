@@ -114,3 +114,5 @@ let length (g : t) =
 
 (** Print a symbolic tree (not graph) to terminal *)
 let to_dot _g = ()
+
+let set_sym (n : symbolic_node) (s : Owl_symbolic_symbol.t) = Owl_graph.set_attr n s
