@@ -57,10 +57,10 @@ and canonical_rat node =
     | One _      -> 1, 1
     | NegOne _   -> -1, 1
     | Int _      ->
-      let v = Owl_symbolic_symbol.int_value (Owl_graph.attr node) in
+      let v = Owl_symbolic_symbol.int_value (Owl_graph.attr p) in
       v, 1
     | Float _    ->
-      let v = Owl_symbolic_symbol.float_value (Owl_graph.attr node) in
+      let v = Owl_symbolic_symbol.float_value (Owl_graph.attr p) in
       Owl_symbolic_utils.float_as_ratio v
     | Rational x -> x.p, x.q
     | _          -> failwith "canonical_rat: unsupported input type"
