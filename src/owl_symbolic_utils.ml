@@ -106,11 +106,26 @@ let conv2d input_shape padding kernel_shape stride_shape =
   [| batches; output_cols; output_rows; out_channel |]
 
 
-(* Represent float as rational format: (numerator, denominator) *)
-
-let float_as_ratio _v = 666, 777
-
 let rec gcd a b =
   match a mod b with
   | 0 -> b
   | r -> gcd b r
+
+
+(* Represent float as rational format: (numerator, denominator) *)
+(* TODO: this is a very hacky and quite likely error-prone temporary solution *)
+let float_as_ratio flt =
+  (* control the precision, and make sure p q are not larger than max_int *)
+  let n_lim = 7 in
+  (* flt = a * 2 ** b *)
+  let a, b = frexp flt in
+  let a_str = string_of_float a in
+  let n = String.length a_str - 2 in
+  let a_str = if n >= n_lim then Printf.sprintf "%.7f" a else a_str in
+  let n = String.length a_str - 2 in
+  let p = int_of_string (String.sub a_str 2 n) in
+  let q = int_of_float (Owl_base_maths.pow 10. (float_of_int n)) in
+  let e = Owl_base_maths.pow 2. (float_of_int (abs b)) |> int_of_float in
+  let p, q = if b < 0 then p, q * e else p * e, q in
+  let g = gcd p q in
+  p / g, q / g
