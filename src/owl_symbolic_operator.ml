@@ -271,6 +271,27 @@ let relu ?name x =
   make_node sym [| x |]
 
 
+(* allows float and int; both nodes must be there *)
+let rational ?name p q =
+  let p_type = Owl_symbolic_symbol.op_type (Owl_graph.attr p) in
+  let q_type = Owl_symbolic_symbol.op_type (Owl_graph.attr q) in
+  if not ((p_type = "Int" || p_type = "Float") && (q_type = "Int" || q_type = "Float"))
+  then failwith "rational: input nodes hould only be int or float";
+  let suffix = generate_suffix () in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "rat_%i" suffix
+  in
+  let p_name = Owl_symbolic_graph.name p in
+  let q_name = Owl_symbolic_graph.name q in
+  let input = [| p_name; q_name |] in
+  let attrs = [||] in
+  let o = Owl_symbolic_ops_math.Rational.create name input attrs in
+  let sym = Owl_symbolic_symbol.Rational o in
+  make_node sym [| p; q |]
+
+
 let add ?name x y =
   let suffix = generate_suffix () in
   let name =

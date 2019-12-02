@@ -37,6 +37,7 @@ type t =
   | Log of Log.t
   | Relu of Relu.t
   | Neg of Neg.t
+  | Rational of Rational.t
   | Add of Add.t
   | Sub of Sub.t
   | Mul of Mul.t
@@ -69,6 +70,7 @@ let name = function
   | Log x           -> Log.(x.name)
   | Relu x          -> Relu.(x.name)
   | Neg x           -> Neg.(x.name)
+  | Rational x      -> Rational.(x.name)
   | Add x           -> Add.(x.name)
   | Sub x           -> Sub.(x.name)
   | Mul x           -> Mul.(x.name)
@@ -101,6 +103,7 @@ let input = function
   | Log x           -> Log.(x.input)
   | Neg x           -> Neg.(x.input)
   | Relu x          -> Relu.(x.input)
+  | Rational x      -> Rational.(x.input)
   | Add x           -> Add.(x.input)
   | Sub x           -> Sub.(x.input)
   | Mul x           -> Mul.(x.input)
@@ -131,6 +134,7 @@ let op_type = function
   | Sqrt _          -> Sqrt.op_type
   | Exp _           -> Exp.op_type
   | Log _           -> Log.op_type
+  | Rational _      -> Rational.op_type
   | Neg _           -> Neg.op_type
   | Relu _          -> Relu.op_type
   | Add _           -> Add.op_type
@@ -163,6 +167,7 @@ let sym_attrs = function
   | Sqrt x          -> Sqrt.(x.attrs)
   | Exp x           -> Exp.(x.attrs)
   | Log x           -> Log.(x.attrs)
+  | Rational x      -> Rational.(x.attrs)
   | Neg x           -> Neg.(x.attrs)
   | Relu x          -> Relu.(x.attrs)
   | Add x           -> Add.(x.attrs)
@@ -206,6 +211,7 @@ let out_shape = function
   | Log x           -> Log.(x.out_shape)
   | Neg x           -> Neg.(x.out_shape)
   | Relu x          -> Relu.(x.out_shape)
+  | Rational x      -> Rational.(x.out_shape)
   | Add x           -> Add.(x.out_shape)
   | Sub x           -> Sub.(x.out_shape)
   | Mul x           -> Mul.(x.out_shape)
@@ -232,6 +238,7 @@ let set_out_shape sym shape =
   | Log x           -> x.out_shape <- shape
   | Neg x           -> x.out_shape <- shape
   | Relu x          -> x.out_shape <- shape
+  | Rational x      -> x.out_shape <- shape
   | Add x           -> x.out_shape <- shape
   | Sub x           -> x.out_shape <- shape
   | Mul x           -> x.out_shape <- shape
