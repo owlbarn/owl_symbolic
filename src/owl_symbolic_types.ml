@@ -58,9 +58,8 @@ let make_tensor ?dtype ?flt_val ?int_val ?str_val ?raw_val shape =
   if str_val <> None then counter := !counter + 1;
   if raw_val <> None then counter := !counter + 1;
   if !counter <> 1
-  then (
-    Owl_log.error "make_tensor: one and only one type of value should be used.";
-    exit 1);
+  then
+    raise (Invalid_argument "make_tensor: one and only one type of value should be used.");
   if flt_val <> None
   then (
     let tp =
@@ -101,9 +100,7 @@ let make_tensor ?dtype ?flt_val ?int_val ?str_val ?raw_val shape =
   else if raw_val <> None
   then
     { dtype = SNT_String; shape; flt_val = None; int_val = None; str_val = None; raw_val }
-  else (
-    Owl_log.error "make_tensor: unsupported data type";
-    exit 1)
+  else raise (Invalid_argument "make_tensor: unsupported data type")
 
 
 let get_tensor_dtype (t : tensor) = t.dtype
