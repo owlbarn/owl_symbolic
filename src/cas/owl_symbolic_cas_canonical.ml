@@ -15,6 +15,7 @@ let rec _to_canonical node =
   | Float _    -> canonical_float node
   | Variable _ -> canonical_var node
   | Add _      -> canonical_add node
+  | Mul _      -> canonical_mul node
   | Rational _ -> canonical_rat node
   | _          -> failwith "error: _to_canonical"
 
@@ -100,7 +101,60 @@ and canonical_rat node =
 
 
 and canonical_var _node = ()
-and canonical_add _node = ()
+
+(*
+(** Extract common factor  *)
+and canonical_add node = 
+  let parents = Owl_graph.parents node in
+  Array.iter _to_canonical parents;
+  
+  let terms = Hashtbl.create 20 in 
+  (* TODO: expand dynamically *) 
+  Array.iter (fun p -> 
+    let ap = Owl_graph.attr p in 
+    match ap with 
+    | Zero _ -> ()
+    | _ -> let num, term = 
+      match ap wih
+      | Mul _ -> Owl_symbolic_cas_tree.extract_mul_coeff p 
+      | Add _ -> make_one, p 
+      (* TODO: doesn't consider multiple add/mul arguments *)
+      | _     -> make_one, p
+      in
+      try 
+        let nums = Hashtbl.find terms term in 
+        let new_num = num + nums in 
+        _to_canonical new_num;
+        Hashtbl.add terms term new_num 
+      with Not_found -> 
+        Hashtbl.add terms term num
+  ) parents;
+
+  let new_parents = ref [] in
+  Hashtbl.iter (fun num term -> 
+    match num with 
+    | Zero _ -> ()
+    | One _  -> 
+      new_parents := List.append !new_parents [term]
+    | _      -> 
+      let new_p = match term with 
+      | Add _ -> mul c term
+      | _     -> 
+         let new_op =  mul c term in 
+        _to_canonical new_op;
+        new_op
+      in 
+      new_parents := List.append !new_parents [new_p]
+  ) terms;
+
+  sort(new_arg);
+
+  ()
+*)
+
+and canonical_mul _node = ()
+
+
 
 let canonical_form sym_graph =
   let output = Owl_symbolic_graph.get_output_nodes sym_graph in
