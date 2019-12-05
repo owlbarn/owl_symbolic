@@ -118,6 +118,30 @@ let input = function
   | _               -> failwith "owl_symbolic_symbol.input"
 
 
+let set_input sym inputs =
+  match sym with
+  | Sin x       -> x.input <- inputs
+  | Cos x       -> x.input <- inputs
+  | Sqrt x      -> x.input <- inputs
+  | Exp x       -> x.input <- inputs
+  | Log x       -> x.input <- inputs
+  | Neg x       -> x.input <- inputs
+  | Relu x      -> x.input <- inputs
+  | Rational x  -> x.input <- inputs
+  | Add x       -> x.input <- inputs
+  | Sub x       -> x.input <- inputs
+  | Mul x       -> x.input <- inputs
+  | Div x       -> x.input <- inputs
+  | Pow x       -> x.input <- inputs
+  | MatMul x    -> x.input <- inputs
+  | Reshape x   -> x.input <- inputs
+  | ReduceSum x -> x.input <- inputs
+  | ReduceMax x -> x.input <- inputs
+  | Conv x      -> x.input <- inputs
+  | MaxPool x   -> x.input <- inputs
+  | _           -> failwith "owl_symbolic_symbol.input"
+
+
 let op_type = function
   | Int _           -> Int.op_type
   | Float _         -> Float.op_type

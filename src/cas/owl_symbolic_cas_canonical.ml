@@ -102,10 +102,9 @@ and canonical_rat node =
 
 and canonical_var _node = ()
 
-(*
 (** Extract common factor  *)
-and canonical_add node = 
-  let parents = Owl_graph.parents node in
+and canonical_add _node =
+  (* let parents = Owl_graph.parents node in
   Array.iter _to_canonical parents;
   
   let terms = Hashtbl.create 20 in 
@@ -114,8 +113,8 @@ and canonical_add node =
     let ap = Owl_graph.attr p in 
     match ap with 
     | Zero _ -> ()
-    | _ -> let num, term = 
-      match ap wih
+    | _      -> let num, term = 
+      match ap with
       | Mul _ -> Owl_symbolic_cas_tree.extract_mul_coeff p 
       | Add _ -> make_one, p 
       (* TODO: doesn't consider multiple add/mul arguments *)
@@ -147,14 +146,11 @@ and canonical_add node =
       new_parents := List.append !new_parents [new_p]
   ) terms;
 
-  sort(new_arg);
-
+  sort(new_arg); *)
   ()
-*)
+
 
 and canonical_mul _node = ()
-
-
 
 let canonical_form sym_graph =
   let output = Owl_symbolic_graph.get_output_nodes sym_graph in

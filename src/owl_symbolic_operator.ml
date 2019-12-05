@@ -7,12 +7,10 @@ open Owl_symbolic_namespace
 open Owl_symbolic_graph
 open Owl_symbolic_types
 
-let noop =
-  let sym = Owl_symbolic_symbol.NOOP in
-  make_node sym [||]
+let noop_sym = Owl_symbolic_symbol.NOOP
+let noop = make_node noop_sym [||]
 
-
-let int ?name value =
+let int_sym ?name value =
   let suffix = generate_suffix () in
   let name =
     match name with
@@ -21,11 +19,15 @@ let int ?name value =
   in
   let attrs = [||] in
   let o = Owl_symbolic_ops_generator.Int.create name attrs value in
-  let sym = Owl_symbolic_symbol.Int o in
+  Owl_symbolic_symbol.Int o
+
+
+let int ?name value =
+  let sym = int_sym ?name value in
   make_node sym [||]
 
 
-let zero ?name () =
+let zero_sym ?name () =
   let suffix = generate_suffix () in
   let name =
     match name with
@@ -34,11 +36,15 @@ let zero ?name () =
   in
   let attrs = [||] in
   let o = Owl_symbolic_ops_generator.Zero.create name attrs in
-  let sym = Owl_symbolic_symbol.Zero o in
+  Owl_symbolic_symbol.Zero o
+
+
+let zero ?name () =
+  let sym = zero_sym ?name () in
   make_node sym [||]
 
 
-let one ?name () =
+let one_sym ?name () =
   let suffix = generate_suffix () in
   let name =
     match name with
@@ -47,11 +53,15 @@ let one ?name () =
   in
   let attrs = [||] in
   let o = Owl_symbolic_ops_generator.One.create name attrs in
-  let sym = Owl_symbolic_symbol.One o in
+  Owl_symbolic_symbol.One o
+
+
+let one ?name () =
+  let sym = one_sym ?name () in
   make_node sym [||]
 
 
-let negone ?name () =
+let negone_sym ?name () =
   let suffix = generate_suffix () in
   let name =
     match name with
@@ -60,11 +70,15 @@ let negone ?name () =
   in
   let attrs = [||] in
   let o = Owl_symbolic_ops_generator.NegOne.create name attrs in
-  let sym = Owl_symbolic_symbol.NegOne o in
+  Owl_symbolic_symbol.NegOne o
+
+
+let negone ?name () =
+  let sym = negone_sym ?name () in
   make_node sym [||]
 
 
-let float ?name x =
+let float_sym ?name x =
   let suffix = generate_suffix () in
   let name =
     match name with
@@ -74,11 +88,15 @@ let float ?name x =
   let attrs = [||] in
   let value = x in
   let o = Owl_symbolic_ops_generator.Float.create name attrs value in
-  let sym = Owl_symbolic_symbol.Float o in
+  Owl_symbolic_symbol.Float o
+
+
+let float ?name x =
+  let sym = float_sym ?name x in
   make_node sym [||]
 
 
-let complex ?name r i =
+let complex_sym ?name r i =
   let suffix = generate_suffix () in
   let name =
     match name with
@@ -87,11 +105,15 @@ let complex ?name r i =
   in
   let attrs = [||] in
   let o = Owl_symbolic_ops_generator.Complex.create name attrs r i in
-  let sym = Owl_symbolic_symbol.Complex o in
+  Owl_symbolic_symbol.Complex o
+
+
+let complex ?name r i =
+  let sym = complex_sym ?name r i in
   make_node sym [||]
 
 
-let pi ?name () =
+let pi_sym ?name () =
   let suffix = generate_suffix () in
   let name =
     match name with
@@ -99,11 +121,15 @@ let pi ?name () =
     | None   -> Printf.sprintf "pi_%i" suffix
   in
   let o = Owl_symbolic_ops_generator.Pi.create name in
-  let sym = Owl_symbolic_symbol.Pi o in
+  Owl_symbolic_symbol.Pi o
+
+
+let pi ?name () =
+  let sym = pi_sym ?name () in
   make_node sym [||]
 
 
-let tensor ?name t =
+let tensor_sym ?name t =
   let suffix = generate_suffix () in
   let name =
     match name with
@@ -113,14 +139,18 @@ let tensor ?name t =
   let attrs = [||] in
   let value = t in
   let o = Owl_symbolic_ops_generator.Tensor.create name attrs value in
-  let sym = Owl_symbolic_symbol.Tensor o in
+  Owl_symbolic_symbol.Tensor o
+
+
+let tensor ?name t =
+  let sym = tensor_sym ?name t in
   make_node sym [||]
 
 
 (* The shape and type are decided by initial value; 
  * if initial value not given, user need to specify them. 
  * Shape value default to scalar [||], and type default to SNT_Float. *)
-let variable ?shape ?dtype ?init name =
+let variable_sym ?shape ?dtype ?init name =
   let true_shape =
     match init with
     | Some (t : tensor) ->
@@ -147,11 +177,15 @@ let variable ?shape ?dtype ?init name =
   let o =
     Owl_symbolic_ops_generator.Variable.create name attrs true_dtype true_shape init
   in
-  let sym = Owl_symbolic_symbol.Variable o in
+  Owl_symbolic_symbol.Variable o
+
+
+let variable ?shape ?dtype ?init name =
+  let sym = variable_sym ?shape ?dtype ?init name in
   make_node sym [||]
 
 
-let random_uniform ?(dtype = SNT_Float) ?(low = 0.) ?(high = 1.) ?name shape =
+let random_uniform_sym ?(dtype = SNT_Float) ?(low = 0.) ?(high = 1.) ?name shape =
   let suffix = generate_suffix () in
   let name =
     match name with
@@ -162,11 +196,15 @@ let random_uniform ?(dtype = SNT_Float) ?(low = 0.) ?(high = 1.) ?name shape =
   let o =
     Owl_symbolic_ops_generator.RandomUniform.create ~low ~high name attrs dtype shape
   in
-  let sym = Owl_symbolic_symbol.RandomUniform o in
+  Owl_symbolic_symbol.RandomUniform o
+
+
+let random_uniform ?dtype ?low ?high ?name shape =
+  let sym = random_uniform_sym ?dtype ?low ?high ?name shape in
   make_node sym [||]
 
 
-let sin ?name x =
+let sin_sym ?name x =
   let suffix = generate_suffix () in
   let name =
     match name with
@@ -177,11 +215,15 @@ let sin ?name x =
   let input = [| x_name |] in
   let attrs = [||] in
   let o = Owl_symbolic_ops_math.Sin.create name input attrs in
-  let sym = Owl_symbolic_symbol.Sin o in
+  Owl_symbolic_symbol.Sin o
+
+
+let sin ?name x =
+  let sym = sin_sym ?name x in
   make_node sym [| x |]
 
 
-let cos ?name x =
+let cos_sym ?name x =
   let suffix = generate_suffix () in
   let name =
     match name with
@@ -192,11 +234,17 @@ let cos ?name x =
   let input = [| x_name |] in
   let attrs = [||] in
   let o = Owl_symbolic_ops_math.Cos.create name input attrs in
-  let sym = Owl_symbolic_symbol.Cos o in
+  Owl_symbolic_symbol.Cos o
+
+
+let cos ?name x =
+  let sym = cos_sym ?name x in
   make_node sym [| x |]
 
 
-let sqrt ?name x =
+(* TODO: are these `input` truely necessary for an symbol? ... *)
+
+let sqrt_sym ?name x =
   let suffix = generate_suffix () in
   let name =
     match name with
@@ -207,184 +255,249 @@ let sqrt ?name x =
   let input = [| x_name |] in
   let attrs = [||] in
   let o = Owl_symbolic_ops_math.Sqrt.create name input attrs in
-  let sym = Owl_symbolic_symbol.Sqrt o in
+  Owl_symbolic_symbol.Sqrt o
+
+
+let sqrt ?name x =
+  let sym = sqrt_sym ?name x in
   make_node sym [| x |]
 
 
-let exp ?name x =
+let exp_sym ?name () =
   let suffix = generate_suffix () in
   let name =
     match name with
     | Some n -> n
     | None   -> Printf.sprintf "exp_%i" suffix
   in
-  let x_name = Owl_symbolic_graph.name x in
-  let input = [| x_name |] in
+  let input = [||] in
   let attrs = [||] in
   let o = Owl_symbolic_ops_math.Exp.create name input attrs in
-  let sym = Owl_symbolic_symbol.Exp o in
+  Owl_symbolic_symbol.Exp o
+
+
+let exp ?name x =
+  let sym = exp_sym ?name () in
+  let x_name = Owl_symbolic_graph.name x in
+  Owl_symbolic_symbol.set_input sym [| x_name |];
   make_node sym [| x |]
 
 
-let log ?name x =
+let log_sym ?name () =
   let suffix = generate_suffix () in
   let name =
     match name with
     | Some n -> n
     | None   -> Printf.sprintf "log_%i" suffix
   in
-  let x_name = Owl_symbolic_graph.name x in
-  let input = [| x_name |] in
+  let input = [||] in
   let attrs = [||] in
   let o = Owl_symbolic_ops_math.Log.create name input attrs in
-  let sym = Owl_symbolic_symbol.Log o in
+  Owl_symbolic_symbol.Log o
+
+
+let log ?name x =
+  let sym = log_sym ?name () in
+  let x_name = Owl_symbolic_graph.name x in
+  Owl_symbolic_symbol.set_input sym [| x_name |];
   make_node sym [| x |]
 
 
-let neg ?name x =
+let neg_sym ?name () =
   let suffix = generate_suffix () in
   let name =
     match name with
     | Some n -> n
     | None   -> Printf.sprintf "neg_%i" suffix
   in
-  let x_name = Owl_symbolic_graph.name x in
-  let input = [| x_name |] in
+  let input = [||] in
   let attrs = [||] in
   let o = Owl_symbolic_ops_math.Neg.create name input attrs in
-  let sym = Owl_symbolic_symbol.Neg o in
+  Owl_symbolic_symbol.Neg o
+
+
+let neg ?name x =
+  let sym = neg_sym ?name () in
+  let x_name = Owl_symbolic_graph.name x in
+  Owl_symbolic_symbol.set_input sym [| x_name |];
   make_node sym [| x |]
 
 
-let relu ?name x =
+let relu_sym ?name () =
   let suffix = generate_suffix () in
   let name =
     match name with
     | Some n -> n
     | None   -> Printf.sprintf "relu_%i" suffix
   in
-  let x_name = Owl_symbolic_graph.name x in
-  let input = [| x_name |] in
+  let input = [||] in
   let attrs = [||] in
   let o = Owl_symbolic_ops_math.Relu.create name input attrs in
-  let sym = Owl_symbolic_symbol.Relu o in
+  Owl_symbolic_symbol.Relu o
+
+
+let relu ?name x =
+  let sym = relu_sym ?name () in
+  let x_name = Owl_symbolic_graph.name x in
+  Owl_symbolic_symbol.set_input sym [| x_name |];
   make_node sym [| x |]
 
 
 (* allows float, int, and rational; both nodes must be there *)
-let rational ?name p q =
-  let p_type = Owl_symbolic_symbol.op_type (Owl_graph.attr p) in
-  let q_type = Owl_symbolic_symbol.op_type (Owl_graph.attr q) in
-  if not ((p_type = "Int" || p_type = "Float") && (q_type = "Int" || q_type = "Float"))
-  then failwith "rational: input nodes hould only be int or float";
+let rational_sym ?name () =
   let suffix = generate_suffix () in
   let name =
     match name with
     | Some n -> n
     | None   -> Printf.sprintf "rat_%i" suffix
   in
-  let p_name = Owl_symbolic_graph.name p in
-  let q_name = Owl_symbolic_graph.name q in
-  let input = [| p_name; q_name |] in
+  let input = [||] in
   let attrs = [||] in
   let o = Owl_symbolic_ops_math.Rational.create name input attrs in
-  let sym = Owl_symbolic_symbol.Rational o in
+  Owl_symbolic_symbol.Rational o
+
+
+let rational ?name p q =
+  let p_type = Owl_symbolic_symbol.op_type (Owl_graph.attr p) in
+  let q_type = Owl_symbolic_symbol.op_type (Owl_graph.attr q) in
+  if not ((p_type = "Int" || p_type = "Float") && (q_type = "Int" || q_type = "Float"))
+  then failwith "rational: input nodes hould only be int or float";
+  let sym = rational_sym ?name () in
+  let p_name = Owl_symbolic_graph.name p in
+  let q_name = Owl_symbolic_graph.name q in
+  Owl_symbolic_symbol.set_input sym [| p_name; q_name |];
   make_node sym [| p; q |]
 
 
-let add ?name x y =
+let add_sym ?name () =
   let suffix = generate_suffix () in
   let name =
     match name with
     | Some n -> n
     | None   -> Printf.sprintf "add_%i" suffix
   in
+  let input = [||] in
+  let attrs = [||] in
+  let o = Owl_symbolic_ops_math.Add.create name input attrs in
+  Owl_symbolic_symbol.Add o
+
+
+let add ?name x y =
+  let sym = add_sym ?name () in
   let x_name = Owl_symbolic_graph.name x in
   let y_name = Owl_symbolic_graph.name y in
   let input = [| x_name; y_name |] in
-  let attrs = [||] in
-  let o = Owl_symbolic_ops_math.Add.create name input attrs in
-  let sym = Owl_symbolic_symbol.Add o in
+  Owl_symbolic_symbol.set_input sym input;
   make_node sym [| x; y |]
 
 
-let sub ?name x y =
+let sub_sym ?name () =
   let suffix = generate_suffix () in
   let name =
     match name with
     | Some n -> n
     | None   -> Printf.sprintf "sub_%i" suffix
   in
+  let input = [||] in
+  let attrs = [||] in
+  let o = Owl_symbolic_ops_math.Sub.create name input attrs in
+  Owl_symbolic_symbol.Sub o
+
+
+let sub ?name x y =
+  let sym = sub_sym ?name () in
   let x_name = Owl_symbolic_graph.name x in
   let y_name = Owl_symbolic_graph.name y in
   let input = [| x_name; y_name |] in
-  let attrs = [||] in
-  let o = Owl_symbolic_ops_math.Sub.create name input attrs in
-  let sym = Owl_symbolic_symbol.Sub o in
+  Owl_symbolic_symbol.set_input sym input;
   make_node sym [| x; y |]
 
 
-let mul ?name x y =
+let mul_sym ?name () =
   let suffix = generate_suffix () in
   let name =
     match name with
     | Some n -> n
     | None   -> Printf.sprintf "mul_%i" suffix
   in
+  let input = [||] in
+  let attrs = [||] in
+  let o = Owl_symbolic_ops_math.Mul.create name input attrs in
+  Owl_symbolic_symbol.Mul o
+
+
+let mul ?name x y =
+  let sym = mul_sym ?name () in
   let x_name = Owl_symbolic_graph.name x in
   let y_name = Owl_symbolic_graph.name y in
   let input = [| x_name; y_name |] in
-  let attrs = [||] in
-  let o = Owl_symbolic_ops_math.Mul.create name input attrs in
-  let sym = Owl_symbolic_symbol.Mul o in
+  Owl_symbolic_symbol.set_input sym input;
   make_node sym [| x; y |]
 
 
-let div ?name x y =
+let div_sym ?name () =
   let suffix = generate_suffix () in
   let name =
     match name with
     | Some n -> n
     | None   -> Printf.sprintf "div_%i" suffix
   in
+  let input = [||] in
+  let attrs = [||] in
+  let o = Owl_symbolic_ops_math.Div.create name input attrs in
+  Owl_symbolic_symbol.Div o
+
+
+let div ?name x y =
+  let sym = div_sym ?name () in
   let x_name = Owl_symbolic_graph.name x in
   let y_name = Owl_symbolic_graph.name y in
   let input = [| x_name; y_name |] in
-  let attrs = [||] in
-  let o = Owl_symbolic_ops_math.Div.create name input attrs in
-  let sym = Owl_symbolic_symbol.Div o in
+  Owl_symbolic_symbol.set_input sym input;
   make_node sym [| x; y |]
 
 
-let pow ?name x y =
+let pow_sym ?name () =
   let suffix = generate_suffix () in
   let name =
     match name with
     | Some n -> n
     | None   -> Printf.sprintf "pow_%i" suffix
   in
+  let input = [||] in
+  let attrs = [||] in
+  let o = Owl_symbolic_ops_math.Pow.create name input attrs in
+  Owl_symbolic_symbol.Pow o
+
+
+let pow ?name x y =
+  let sym = pow_sym ?name () in
   let x_name = Owl_symbolic_graph.name x in
   let y_name = Owl_symbolic_graph.name y in
   let input = [| x_name; y_name |] in
-  let attrs = [||] in
-  let o = Owl_symbolic_ops_math.Pow.create name input attrs in
-  let sym = Owl_symbolic_symbol.Pow o in
+  Owl_symbolic_symbol.set_input sym input;
   make_node sym [| x; y |]
 
 
-let matmul ?name x y =
+let matmul_sym ?name () =
   let suffix = generate_suffix () in
   let name =
     match name with
     | Some n -> n
     | None   -> Printf.sprintf "matmul_%i" suffix
   in
+  let input = [||] in
+  let attrs = [||] in
+  let o = Owl_symbolic_ops_math.MatMul.create name input attrs in
+  Owl_symbolic_symbol.MatMul o
+
+
+let matmul ?name x y =
+  let sym = mul_sym ?name () in
   let x_name = Owl_symbolic_graph.name x in
   let y_name = Owl_symbolic_graph.name y in
   let input = [| x_name; y_name |] in
-  let attrs = [||] in
-  let o = Owl_symbolic_ops_math.MatMul.create name input attrs in
-  let sym = Owl_symbolic_symbol.MatMul o in
+  Owl_symbolic_symbol.set_input sym input;
   make_node sym [| x; y |]
 
 
