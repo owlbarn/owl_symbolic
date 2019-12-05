@@ -7,6 +7,7 @@
 
 open Owl_symbolic_symbol
 open Owl_symbolic_graph
+open Owl_symbolic_operator
 
 let rec _to_canonical node =
   let sym = Owl_graph.attr node in
@@ -25,25 +26,16 @@ and canonical_int node =
   assert (parents = [||]);
   let value = Owl_symbolic_symbol.int_value (Owl_graph.attr node) in
   if value = 0
-  then (
-    let new_sym = Owl_symbolic_operator.zero () in
-    set_sym node (Owl_graph.attr new_sym) (* TODO: redundant step *))
+  then set_sym node (zero_sym ())
   else if value = 1
-  then (
-    let new_sym = Owl_symbolic_operator.one () in
-    set_sym node (Owl_graph.attr new_sym))
+  then set_sym node (one_sym ())
   else if value = -1
-  then (
-    let new_sym = Owl_symbolic_operator.negone () in
-    set_sym node (Owl_graph.attr new_sym))
+  then set_sym node (negone_sym ())
 
 
 and canonical_float node =
   let value = Owl_symbolic_symbol.float_value (Owl_graph.attr node) in
-  if value = 0.
-  then (
-    let new_sym = Owl_symbolic_operator.zero () in
-    set_sym node (Owl_graph.attr new_sym))
+  if value = 0. then set_sym node (one_sym ())
 
 
 and canonical_rat node =
@@ -82,18 +74,14 @@ and canonical_rat node =
   in
   if q == 1
   then (
-    let s = Owl_symbolic_operator.int p |> Owl_graph.attr in
-    (* TODO change to symbol *)
-    set_sym node s;
+    set_sym node (int_sym p);
     Owl_graph.remove_edge parents.(0) node;
     Owl_graph.remove_edge parents.(1) node;
     Owl_graph.remove_node parents.(0);
     Owl_graph.remove_node parents.(1))
   else (
-    let s1 = Owl_symbolic_operator.int p |> Owl_graph.attr in
-    set_sym parents.(0) s1;
-    let s2 = Owl_symbolic_operator.int q |> Owl_graph.attr in
-    set_sym parents.(1) s2
+    set_sym parents.(0) (int_sym p);
+    set_sym parents.(1) (int_sym q)
     (* !!!!! TODO: but you have to remove the parents ?!!!!! *)
     (* let x = Owl_graph.attr node in 
     x.p <- p;
@@ -103,50 +91,50 @@ and canonical_rat node =
 and canonical_var _node = ()
 
 (** Extract common factor  *)
-and canonical_add _node =
-  (* let parents = Owl_graph.parents node in
+and canonical_add node =
+  let parents = Owl_graph.parents node in
   Array.iter _to_canonical parents;
-  
-  let terms = Hashtbl.create 20 in 
-  (* TODO: expand dynamically *) 
-  Array.iter (fun p -> 
-    let ap = Owl_graph.attr p in 
-    match ap with 
-    | Zero _ -> ()
-    | _      -> let num, term = 
+  let terms = Hashtbl.create 20 in
+  (* TODO: expand dynamically *)
+  Array.iter
+    (fun p ->
+      let ap = Owl_graph.attr p in
       match ap with
-      | Mul _ -> Owl_symbolic_cas_tree.extract_mul_coeff p 
-      | Add _ -> make_one, p 
-      (* TODO: doesn't consider multiple add/mul arguments *)
-      | _     -> make_one, p
-      in
-      try 
-        let nums = Hashtbl.find terms term in 
-        let new_num = num + nums in 
-        _to_canonical new_num;
-        Hashtbl.add terms term new_num 
-      with Not_found -> 
-        Hashtbl.add terms term num
-  ) parents;
-
-  let new_parents = ref [] in
-  Hashtbl.iter (fun num term -> 
-    match num with 
-    | Zero _ -> ()
-    | One _  -> 
-      new_parents := List.append !new_parents [term]
-    | _      -> 
-      let new_p = match term with 
-      | Add _ -> mul c term
-      | _     -> 
-         let new_op =  mul c term in 
-        _to_canonical new_op;
-        new_op
-      in 
-      new_parents := List.append !new_parents [new_p]
-  ) terms;
-
-  sort(new_arg); *)
+      | Zero _ -> ()
+      | _      ->
+        let num, term =
+          match ap with
+          | Mul _ -> Owl_symbolic_cas_tree.extract_mul_coeff p
+          | Add _ -> one (), p
+          (* TODO: doesn't consider multiple add/mul arguments *)
+          | _ -> one (), p
+        in
+        (try
+           let nums = Hashtbl.find terms term in
+           let new_num = add num nums in
+           _to_canonical new_num;
+           Hashtbl.add terms term new_num
+         with
+        | Not_found -> Hashtbl.add terms term num))
+    parents;
+  let new_parents : Owl_symbolic_symbol.t Owl_graph.node list ref = ref [] in
+  Hashtbl.iter
+    (fun num term ->
+      match Owl_graph.attr num with
+      | Zero _ -> ()
+      | One _  -> new_parents := List.append !new_parents [ term ]
+      | _      ->
+        let new_p =
+          match Owl_graph.attr term with
+          | Add _ -> mul num term
+          | _     ->
+            let new_op = mul num term in
+            _to_canonical new_op;
+            new_op
+        in
+        new_parents := List.append !new_parents [ new_p ])
+    terms;
+  (* sort(new_arg); *)
   ()
 
 
