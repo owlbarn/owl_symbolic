@@ -320,3 +320,38 @@ let tensor_value = function
 let initializer_ = function
   | Variable x -> Variable.(x.init)
   | _          -> failwith "owl_symbolic_symbol.initializer_"
+
+
+let compare sx sy =
+  let order =
+    [| "Zero"
+     ; "One"
+     ; "NegOne"
+     ; "Integer"
+     ; "Rational"
+     ; "Float"
+     ; "Pi"
+     ; "Variable"
+     ; "Pow"
+     ; "Mul"
+     ; "Add"
+     ; "Sqrt"
+     ; "Exp"
+     ; "Log"
+     ; "Sin"
+     ; "Cos"
+    |]
+  in
+  let a = op_type sx in
+  let b = op_type sy in
+  if Array.mem a order && Array.mem b order
+  then (
+    let ai = ref 0 in
+    let bi = ref 0 in
+    Array.iteri
+      (fun i x ->
+        if x = a then ai := i;
+        if x = b then bi := i)
+      order;
+    !ai - !bi)
+  else String.compare a b

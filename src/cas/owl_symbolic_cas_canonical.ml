@@ -8,6 +8,7 @@
 open Owl_symbolic_symbol
 open Owl_symbolic_graph
 open Owl_symbolic_operator
+open Owl_graph
 
 let rec _to_canonical node =
   let sym = Owl_graph.attr node in
@@ -134,7 +135,24 @@ and canonical_add node =
         in
         new_parents := List.append !new_parents [ new_p ])
     terms;
-  (* sort(new_arg); *)
+  (* Sort parents by symbolic order *)
+  let new_parents =
+    List.sort
+      (fun x y ->
+        let sx = Owl_graph.attr x in
+        let sy = Owl_graph.attr y in
+        Owl_symbolic_symbol.compare sx sy)
+      !new_parents
+  in
+  (* Update parents of node *)
+  Array.iter
+    (fun p ->
+      remove_edge p node;
+      remove_node p)
+    parents;
+  let new_parents = Array.of_list new_parents in
+  connect_ancestors new_parents [| node |];
+  Array.iter (fun p -> connect_descendants [| p |] [| node |]) parents;
   ()
 
 
