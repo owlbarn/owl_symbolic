@@ -7,7 +7,7 @@ open Owl_symbolic_specs
 open Owl_symbolic_types
 module S = Owl_symbolic_symbol
 
-type t = Onnx_types.graph_proto
+type t = Onnx_types.model_proto
 
 (** Mapping functions *)
 

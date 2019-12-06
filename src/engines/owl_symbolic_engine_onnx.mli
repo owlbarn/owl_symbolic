@@ -3,9 +3,9 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-type t
+type t = Onnx_types.model_proto
 
-val of_symbolic : Owl_symbolic_graph.t -> Onnx_types.model_proto
-val to_symbolic : Onnx_types.model_proto -> Owl_symbolic_graph.t
-val save : Onnx_types.model_proto -> string -> unit
-val load : string -> Onnx_types.model_proto
+val of_symbolic : Owl_symbolic_graph.t -> t
+val to_symbolic : t -> Owl_symbolic_graph.t
+val save : t -> string -> unit
+val load : string -> t
