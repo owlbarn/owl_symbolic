@@ -22,22 +22,8 @@ let rec _to_canonical node =
   | _          -> failwith "error: _to_canonical"
 
 
-and canonical_int node =
-  let parents = Owl_graph.parents node in
-  assert (parents = [||]);
-  let value = Owl_symbolic_symbol.int_value (Owl_graph.attr node) in
-  if value = 0
-  then set_sym node (zero_sym ())
-  else if value = 1
-  then set_sym node (one_sym ())
-  else if value = -1
-  then set_sym node (negone_sym ())
-
-
-and canonical_float node =
-  let value = Owl_symbolic_symbol.float_value (Owl_graph.attr node) in
-  if value = 0. then set_sym node (one_sym ())
-
+and canonical_int _node = ()
+and canonical_float _node = ()
 
 and canonical_rat node =
   let parents = Owl_graph.parents node in
@@ -47,9 +33,6 @@ and canonical_rat node =
   _to_canonical q;
   let get_rat p =
     match Owl_graph.attr p with
-    | Zero _     -> 0, 1 (* TODO: are they really necessary? *)
-    | One _      -> 1, 1
-    | NegOne _   -> -1, 1
     | Int _      ->
       let v = Owl_symbolic_symbol.int_value (Owl_graph.attr p) in
       v, 1
@@ -118,7 +101,7 @@ and canonical_add node =
          with
         | Not_found -> Hashtbl.add terms term num))
     parents;
-  let new_parents : Owl_symbolic_symbol.t Owl_graph.node list ref = ref [] in
+  let new_parents = ref [] in
   Hashtbl.iter
     (fun num term ->
       match Owl_graph.attr num with

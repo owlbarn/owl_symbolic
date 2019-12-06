@@ -116,35 +116,45 @@ let length (g : t) =
 (** Print a symbolic tree (not graph) to terminal *)
 
 let shape_or_value x =
-  let sym = (attr x) in 
+  let sym = attr x in
   let shp = shape sym in
-  if shp = [||] then (
-    let v = match sym with 
-    | Int _   -> int_value sym |> string_of_int 
-    | Float _ -> float_value sym |> string_of_float
-    | _       -> "NaN"
-    in 
+  if shp = [||]
+  then (
+    let v =
+      match sym with
+      | Int _   -> int_value sym |> string_of_int
+      | Float _ -> float_value sym |> string_of_float
+      | _       -> "NaN"
+    in
     Printf.sprintf "v:%s" v)
   else (
-    let shp_str = Owl_utils_array.to_string (string_of_int) shp in 
-    Printf.sprintf "s:%s" shp_str
-  )
+    let shp_str = Owl_utils_array.to_string string_of_int shp in
+    Printf.sprintf "s:%s" shp_str)
+
 
 let refnum x = Owl_graph.outdegree x
 
 let to_dot graph filename =
   let b = Buffer.create 512 in
   Buffer.add_string b "digraph CG {\nnode [shape=record];\n";
-  iter_in_edges (fun u v ->
-    Buffer.add_string b (Printf.sprintf "%i -> %i;\n" (id u) (id v))
-  ) (get_output_nodes graph);
-  iter_ancestors (fun n ->
-    let svs = shape_or_value n in
-    Buffer.add_string b
-      (Printf.sprintf "%i [ label=\"{{#%i | { %s | %s }} | r:%i; %s;}\""
-          (id n) (id n) (name n) (Owl_symbolic_symbol.op_type (attr n)) (refnum n) svs);
-    Buffer.add_string b "];\n"
-  ) (get_output_nodes graph);
+  iter_in_edges
+    (fun u v -> Buffer.add_string b (Printf.sprintf "%i -> %i;\n" (id u) (id v)))
+    (get_output_nodes graph);
+  iter_ancestors
+    (fun n ->
+      let svs = shape_or_value n in
+      Buffer.add_string
+        b
+        (Printf.sprintf
+           "%i [ label=\"{{#%i | { %s | %s }} | r:%i; %s;}\""
+           (id n)
+           (id n)
+           (name n)
+           (Owl_symbolic_symbol.op_type (attr n))
+           (refnum n)
+           svs);
+      Buffer.add_string b "];\n")
+    (get_output_nodes graph);
   Buffer.add_char b '}';
   Owl_io.write_file filename (Buffer.contents b)
 

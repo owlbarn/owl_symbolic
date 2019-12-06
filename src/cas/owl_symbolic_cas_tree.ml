@@ -28,3 +28,16 @@ let extract_mul_coeff node =
     | NegOne _   -> ps.(0), negone () * ps.(1)
     | _          -> one (), node)
   | _     -> failwith "extract_mul_coeff: not mul op"
+
+
+let is_rational = function
+  | Int _      -> true
+  | Rational _ -> true
+  | _          -> false
+
+
+let is_zero = function
+  | Int s     -> s.value = 0
+  | Float s   -> s.value = 0.
+  | Complex s -> s.real = 0. && s.img = 0.
+  | _         -> false
