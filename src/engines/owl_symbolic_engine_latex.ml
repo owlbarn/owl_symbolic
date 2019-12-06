@@ -13,11 +13,33 @@ let rec to_latex sym_node =
   | One _      -> "1"
   | Int _      -> Owl_symbolic_symbol.int_value sym |> string_of_int
   | Float _    -> Owl_symbolic_symbol.float_value sym |> string_of_float
+  | Complex _  -> to_latex_complex sym_node
+  | Pi _       -> "\\pi"
   | Rational _ -> to_latex_rational sym_node
   | Variable _ -> name sym
+  | Exp _      -> to_latex_exp sym_node
+  | Sin _      -> to_latex_sin sym_node
+  | Cos _      -> to_latex_cos sym_node
   | Add _      -> to_latex_add sym_node
   | Mul _      -> to_latex_mul sym_node
+  | Pow _      -> to_latex_pow sym_node
   | _          -> failwith (Printf.sprintf "Not implemented: %s" (op_type sym))
+
+
+and to_latex_complex node =
+  let sym = Owl_graph.attr node in
+  let real, img =
+    match sym with
+    | Complex s -> s.real, s.img
+    | _         -> failwith "to_latex_complex: unexpected symbol"
+  in
+  if real = 0.
+  then Printf.sprintf "%fi" img
+  else if img = 0.
+  then Printf.sprintf "%f" real
+  else if img = 1.
+  then Printf.sprintf "%f+i" real
+  else Printf.sprintf "%f+%fi" real img
 
 
 and to_latex_rational node =
@@ -44,15 +66,37 @@ and to_latex_add node =
 (* TODO: a lot more special cases... *)
 and to_latex_mul node =
   let parents = Owl_graph.parents node in
-  let tex =
-    Array.fold_left
-      (fun s p ->
-        let ptex = to_latex p in
-        s ^ " \\times " ^ ptex)
-      ""
-      parents
-  in
-  String.sub tex 1 (String.length tex - 1)
+  assert (Array.length parents = 2);
+  let ps = Array.map to_latex parents in
+  Printf.sprintf "%s\\times %s" ps.(0) ps.(1)
+
+
+and to_latex_pow node =
+  let parents = Owl_graph.parents node in
+  assert (Array.length parents = 2);
+  let ps = Array.map to_latex parents in
+  ps.(0) ^ "^" ^ ps.(1)
+
+
+and to_latex_exp node =
+  let parents = Owl_graph.parents node in
+  assert (Array.length parents = 1);
+  let p = to_latex parents.(0) in
+  Printf.sprintf "\\exp(%s)" p
+
+
+and to_latex_sin node =
+  let parents = Owl_graph.parents node in
+  assert (Array.length parents = 1);
+  let p = to_latex parents.(0) in
+  Printf.sprintf "\\sin(%s)" p
+
+
+and to_latex_cos node =
+  let parents = Owl_graph.parents node in
+  assert (Array.length parents = 1);
+  let p = to_latex parents.(0) in
+  Printf.sprintf "\\sin(%s)" p
 
 
 let of_symbolic (sym_graph : Owl_symbolic_graph.t) =
@@ -69,11 +113,12 @@ let save _expr _filename = ()
 (** load latex expression from file *)
 let load _filename = Obj.magic None
 
-
 (** Helper functions *)
 
-let html filename tex = 
-  let html_str = Printf.sprintf {|
+let html filename tex =
+  let html_str =
+    Printf.sprintf
+      {|
 <!DOCTYPE html>
 <html>
   <head>
@@ -108,5 +153,7 @@ let html filename tex =
 	  </div>
   </body>
 </html>
-  |} tex in
+  |}
+      tex
+  in
   Owl_io.write_file filename html_str
