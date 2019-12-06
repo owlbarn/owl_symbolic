@@ -68,3 +68,45 @@ let save _expr _filename = ()
 
 (** load latex expression from file *)
 let load _filename = Obj.magic None
+
+
+(** Helper functions *)
+
+let html filename tex = 
+  let html_str = Printf.sprintf {|
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>KaTeX</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/contrib/auto-render.min.js" integrity="sha384-kWPLUVMOks5AQFrykwIup5lo0m3iMkkHrD0uJ4H5cjeGihAutqP0yW0J6dpFiVkI" crossorigin="anonymous"
+      onload="renderMathInElement(document.body);"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", function() {
+        renderMathInElement(document.body,{
+          delimiters: [
+            {left: "<math>", right: "</math>", display: false},
+            {left: "$$", right: "$$", display: true},
+            {left: "$", right: "$", display: false},
+            {left: "\\[", right: "\\]", display: true},
+            {left: "\\(", right: "\\)", display: false},
+          ]}
+      );
+    });
+    </script>
+  </head>
+  	
+  <body>
+  	<div class="jumbotron text-center">
+  		<h1> Owl-Symbolic in $\LaTeX$ </h1>
+	  </div>
+  	<div class="container jumbotron">
+  		$$%s$$
+	  </div>
+  </body>
+</html>
+  |} tex in
+  Owl_io.write_file filename html_str
