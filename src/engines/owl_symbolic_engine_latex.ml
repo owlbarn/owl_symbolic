@@ -119,7 +119,7 @@ let load _filename = Obj.magic None
 
 (** Helper functions *)
 
-let one_section section_id embed_dot expr =
+let html_section section_id embed_dot expr =
   let expr_tex = of_symbolic expr in
   let dot_tex =
     if embed_dot
@@ -158,16 +158,26 @@ let one_section section_id embed_dot expr =
     dot_tex
 
 
+let html_footer () =
+  Printf.sprintf {|
+    <div class="container" style="width:100%%; text-align:center">
+      OCaml Scientific and Engineering Computing <br />
+      Copyright (c) 2016-2019 <a href="http://ocaml.xyz">ocaml.xyz</a>
+    </div>
+  |}
+
+
 let html ?(dot = false) ~exprs filename =
   let section_id = ref 0 in
-  let tex =
+  let body =
     List.fold_left
       (fun acc expr ->
         section_id := !section_id + 1;
-        acc ^ "\n" ^ one_section !section_id dot expr)
+        acc ^ "\n" ^ html_section !section_id dot expr)
       ""
       exprs
   in
+  let footer = html_footer () in
   let html_str =
     Printf.sprintf
       {|
@@ -209,9 +219,12 @@ let html ?(dot = false) ~exprs filename =
       <h1> Owl-Symbolic $\LaTeX$ Engine </h1>
     </div>
     %s
+    %s
   </body>
 </html>
   |}
-      tex
+  body
+  footer
+
   in
   Owl_io.write_file filename html_str
