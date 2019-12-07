@@ -133,7 +133,7 @@ let html_section section_id embed_dot expr =
           </button>
           <button class="btn btn-outline-primary" type="button" onClick="copyToClipboard('%s')">
             <i class="far fa-copy"></i>
-            copy LaTex
+            copy LaTeX
           </button>
         </div>
         <div class="collapse" style="text-align:center" id="viz-graph-%i"></div>
