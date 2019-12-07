@@ -141,6 +141,7 @@ let one_section section_id embed_dot expr =
         $$%s$$
         %s
       </div>
+      <hr class="my-4">
     |}
     section_id
     expr_tex
