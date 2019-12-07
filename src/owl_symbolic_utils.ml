@@ -129,3 +129,6 @@ let float_as_ratio flt =
   let p, q = if b < 0 then p, q * e else p * e, q in
   let g = gcd p q in
   p / g, q / g
+
+
+let flt_is_int v = v = snd (modf v)

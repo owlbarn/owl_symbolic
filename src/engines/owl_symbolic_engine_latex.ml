@@ -12,7 +12,11 @@ let rec to_latex sym_node =
   match sym with
   | One _      -> "1"
   | Int _      -> Owl_symbolic_symbol.int_value sym |> string_of_int
-  | Float _    -> Owl_symbolic_symbol.float_value sym |> string_of_float
+  | Float _    ->
+    let v = Owl_symbolic_symbol.float_value sym in
+    if Owl_symbolic_utils.flt_is_int v
+    then int_of_float v |> string_of_int
+    else string_of_float v
   | Complex _  -> to_latex_complex sym_node
   | Pi _       -> "\\pi"
   | Rational _ -> to_latex_rational sym_node
@@ -122,7 +126,7 @@ let one_section section_id embed_dot expr =
     then
       Printf.sprintf
         {|
-        <div class="container" id="viz-graph-%i"></div>
+        <div class="container" style="text-align:center;" id="viz-graph-%i"></div>
         <script>
           d3.select("#viz-graph-%i").graphviz()
             .fade(false)
