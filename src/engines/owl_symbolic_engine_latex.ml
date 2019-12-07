@@ -131,7 +131,7 @@ let html_section section_id embed_dot expr =
             <i class="fas fa-plus"></i>
             computation graph
           </button>
-          <button class="btn btn-outline-primary" type="button" onClick="copyToClipboard('%s')">
+          <button class="btn btn-outline-primary" type="button" onClick="copyToClipboard('expr-latex-%i')">
             <i class="far fa-copy"></i>
             copy LaTex
           </button>
@@ -145,7 +145,7 @@ let html_section section_id embed_dot expr =
       |}
         section_id
         section_id
-        expr_tex
+        section_id
         section_id
         section_id
         (Owl_symbolic_graph.to_dot expr)
@@ -154,12 +154,20 @@ let html_section section_id embed_dot expr =
   Printf.sprintf
     {|
       <div class="container jumbotron" style="padding-top:30px; padding-bottom:20px">
-        <h2><span class="badge badge-secondary"><i class="fa fa-square-root-alt"></i> Expression #%i</span></h2>
+        <h2>
+          <span class="badge badge-secondary">
+            <i class="fa fa-square-root-alt"></i>
+            Expression #%i
+          </span>
+        </h2>
+        <div id="expr-latex-%i" style="visibility:hidden; height:0px">%s</div>
         $$%s$$
         %s
       </div>
     |}
     section_id
+    section_id
+    expr_tex
     expr_tex
     dot_tex
 
@@ -219,11 +227,12 @@ let html ?(dot = false) ~exprs filename =
     </script>
 
     <script>
-      function copyToClipboard(text) {
-        navigator.clipboard.writeText(text).then(function() {
-          console.log('owl: copy to clipboard.');
+      function copyToClipboard(latexID) {
+        var latexItem = document.getElementById(latexID);
+        navigator.clipboard.writeText(latexItem.innerHTML).then(function() {
+          console.log("owl: copy to clipboard.");
         }, function(err) {
-          console.error('owl: fail to copy text: ', err);
+          console.error('owl: fail to copy latex due to ', err);
         });
       }
     </script>
