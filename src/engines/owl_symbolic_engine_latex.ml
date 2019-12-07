@@ -127,7 +127,7 @@ let html_section section_id embed_dot expr =
       Printf.sprintf
         {|
         <div style="text-align:center; padding:20px">
-          <button class="btn btn-outline-primary oi oi-plus" type="button" data-toggle="collapse" data-target="#viz-graph-%i" aria-expanded="false" aria-controls="viz-graph-%i">
+          <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#viz-graph-%i" aria-expanded="false" aria-controls="viz-graph-%i">
             computation graph
           </button>
         </div>
