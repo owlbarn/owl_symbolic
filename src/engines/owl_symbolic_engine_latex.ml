@@ -126,7 +126,12 @@ let one_section section_id embed_dot expr =
     then
       Printf.sprintf
         {|
-        <div class="container" style="text-align:center;" id="viz-graph-%i"></div>
+        <div style="text-align:center; padding:20px">
+          <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#viz-graph-%i" aria-expanded="false" aria-controls="viz-graph-%i">
+            computation graph
+          </button>
+        </div>
+        <div class="collapse" style="text-align:center" id="viz-graph-%i"></div>
         <script>
           d3.select("#viz-graph-%i").graphviz()
             .fade(false)
@@ -135,17 +140,18 @@ let one_section section_id embed_dot expr =
       |}
         section_id
         section_id
+        section_id
+        section_id
         (Owl_symbolic_graph.to_dot expr)
     else ""
   in
   Printf.sprintf
     {|
-      <div class="container jumbotron">
+      <div class="container jumbotron" style="padding-top:30px; padding-bottom:20px">
         <h2><span class="badge badge-secondary">Expression #%i</span></h2>
         $$%s$$
         %s
       </div>
-      <hr class="my-4">
     |}
     section_id
     expr_tex
@@ -170,6 +176,11 @@ let html ?(dot = false) ~exprs filename =
   <head>
     <meta charset="UTF-8">
     <title>Owl - OCaml Scientic and Engineering Computing</title>
+
+    <script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.css" integrity="sha384-zB1R0rpPzHqg7Kpt0Aljp8JPLqbXI3bhnPWROx27a9N0Ll6ZP/+DiW/UqRcLbRjq" crossorigin="anonymous">
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.11.1/dist/katex.min.js" integrity="sha384-y23I5Q6l+B6vatafAwxRu/0oK/79VlbSz7Q9aiSZUvyWYIYsd+qj+o24G5ZU2zJz" crossorigin="anonymous"></script>
@@ -194,7 +205,7 @@ let html ?(dot = false) ~exprs filename =
   </head>
     
   <body>
-    <div class="jumbotron text-center">
+    <div class="text-center" style="padding:20px">
       <h1> Owl-Symbolic $\LaTeX$ Engine </h1>
     </div>
     %s
