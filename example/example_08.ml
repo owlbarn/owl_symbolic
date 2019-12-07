@@ -2,7 +2,7 @@ open Owl_symbolic
 open Op
 open Infix
 
-let test_print () =
+let make_expr0 () =
   (* construct *)
   let x = variable "x_0" in
   let y =
@@ -10,26 +10,30 @@ let test_print () =
     + (float 10. * (x ** float 2.))
     + exp (pi () * complex 0. 1.)
   in
-  let g = SymGraph.make_graph [| y |] "sym_graph" in
+  let expr = SymGraph.make_graph [| y |] "sym_graph" in
   (* to LaTeX string *)
-  let s = LaTeX_Engine.of_symbolic g in
-  (* to GraphViz dot format string *)
-  let d = Owl_symbolic_graph.to_dot g in
-  (* print to html with KaTeX *)
-  LaTeX_Engine.html ~dot:d ~tex:s "example_08.html"
+  LaTeX_Engine.of_symbolic expr |> print_endline;
+  expr
 
 
-let test_canonical () =
+let make_expr1 () =
   (* construct *)
   let y = rational (int 6) (int 4) + int 1 + variable "x_i" in
-  let g = SymGraph.make_graph [| y |] "sym_graph" in
+  let expr = SymGraph.make_graph [| y |] "sym_graph" in
   (* initial simplification *)
-  let _ = Owl_symbolic_cas_canonical.canonical_form g in
+  let _ = Owl_symbolic_cas_canonical.canonical_form expr in
   (* print to html for debugging *)
-  let d = Owl_symbolic_graph.to_dot g in
-  let s = LaTeX_Engine.of_symbolic g in
-  (* print to html with KaTeX *)
-  LaTeX_Engine.html ~dot:d ~tex:s "example_08_debug.html"
+  (* let d = Owl_symbolic_graph.to_dot expr in *)
+  LaTeX_Engine.of_symbolic expr |> print_endline;
+  expr
+
+
+let make_expr2 () =
+  (* construct *)
+  let y = int 6 + variable "x_0" + variable "x_1" in
+  let expr = SymGraph.make_graph [| y |] "sym_graph" in
+  LaTeX_Engine.of_symbolic expr |> print_endline;
+  expr
 
 
 (* print graph to dot/pdf file *)
@@ -37,4 +41,6 @@ let test_canonical () =
    let _ = Owl_io.write "example_08.dot" s
    let _ = Sys.command "dot -Tpdf example_08.dot -o example_08.pdf" *)
 
-let _ = test_print ()
+let _ =
+  let exprs = [ make_expr0 (); make_expr2 () ] in
+  LaTeX_Engine.html ~dot:true ~exprs "example_08.html"

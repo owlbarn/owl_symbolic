@@ -10,5 +10,5 @@ val to_symbolic : t -> Owl_symbolic_graph.t
 val save : t -> string -> unit
 val load : string -> t
 
-val html : ?dot:string -> tex:t -> string -> unit
 (** Helper functions *)
+val html : ?dot:bool -> exprs:Owl_symbolic_graph.t list -> t -> unit
