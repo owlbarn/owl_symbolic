@@ -11,10 +11,12 @@ let test_print () =
     + exp (pi () * complex 0. 1.)
   in
   let g = SymGraph.make_graph [| y |] "sym_graph" in
-  (* print to LaTeX string *)
+  (* to LaTeX string *)
   let s = LaTeX_Engine.of_symbolic g in
-  (* option 2: print to html with KaTeX *)
-  LaTeX_Engine.html "example_08.html" s
+  (* to GraphViz dot format string *)
+  let d = Owl_symbolic_graph.to_dot g in
+  (* print to html with KaTeX *)
+  LaTeX_Engine.html ~dot:d ~tex:s "example_08.html"
 
 
 let test_canonical () =
@@ -23,14 +25,16 @@ let test_canonical () =
   let g = SymGraph.make_graph [| y |] "sym_graph" in
   (* initial simplification *)
   let _ = Owl_symbolic_cas_canonical.canonical_form g in
-  (* print to LaTeX string *)
+  (* print to html for debugging *)
+  let d = Owl_symbolic_graph.to_dot g in
   let s = LaTeX_Engine.of_symbolic g in
-  (* option 2: print to html with KaTeX *)
-  LaTeX_Engine.html "example_08.html" s
+  (* print to html with KaTeX *)
+  LaTeX_Engine.html ~dot:d ~tex:s "example_08_debug.html"
 
 
-(* option 3: print graph to dot/pdf file for debugging *)
-(* let _ = Owl_symbolic_graph.to_dot g "example_08.dot"
-  let _ = Sys.command "dot -Tpdf example_08.dot -o example_08.pdf" *)
+(* print graph to dot/pdf file *)
+(* let s = Owl_symbolic_graph.to_dot g
+   let _ = Owl_io.write "example_08.dot" s
+   let _ = Sys.command "dot -Tpdf example_08.dot -o example_08.pdf" *)
 
 let _ = test_print ()

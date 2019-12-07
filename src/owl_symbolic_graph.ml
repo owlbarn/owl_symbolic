@@ -134,7 +134,7 @@ let shape_or_value x =
 
 let refnum x = Owl_graph.outdegree x
 
-let to_dot graph filename =
+let to_dot graph =
   let b = Buffer.create 512 in
   Buffer.add_string b "digraph CG {\nnode [shape=record];\n";
   iter_in_edges
@@ -156,7 +156,7 @@ let to_dot graph filename =
       Buffer.add_string b "];\n")
     (get_output_nodes graph);
   Buffer.add_char b '}';
-  Owl_io.write_file filename (Buffer.contents b)
+  Buffer.contents b
 
 
 let set_sym (n : symbolic_node) (s : Owl_symbolic_symbol.t) = Owl_graph.set_attr n s

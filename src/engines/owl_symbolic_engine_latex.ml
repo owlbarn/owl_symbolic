@@ -115,7 +115,7 @@ let load _filename = Obj.magic None
 
 (** Helper functions *)
 
-let html filename tex =
+let html ?(dot = "") ~tex filename =
   let html_str =
     Printf.sprintf
       {|
@@ -142,18 +142,29 @@ let html filename tex =
       );
     });
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/d3/5.12.0/d3.min.js"></script>
+	  <script src="https://unpkg.com/viz.js@1.8.1/viz.js" type="javascript/worker"></script>
+	  <script src="https://unpkg.com/d3-graphviz@2.6.1/build/d3-graphviz.js"></script>
   </head>
   	
   <body>
   	<div class="jumbotron text-center">
-  		<h1> Owl-Symbolic in $\LaTeX$ </h1>
+  		<h1> Owl-Symbolic in $\LaTeX$ and GraphViz </h1>
 	  </div>
   	<div class="container jumbotron">
   		$$%s$$
 	  </div>
+    <div class="container" id="viz-graph"></div>
+
+    <script>
+	    d3.select("#viz-graph").graphviz()
+    	  .fade(false)
+    	  .renderDot(`%s`);
+	  </script>
   </body>
 </html>
   |}
       tex
+      dot
   in
   Owl_io.write_file filename html_str
