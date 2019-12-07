@@ -141,10 +141,11 @@ let one_section section_id embed_dot expr =
   Printf.sprintf
     {|
       <div class="container jumbotron">
-        <h2>Expression #%i</h2>
+        <h2><span class="badge badge-secondary">Expression #%i</span></h2>
         $$%s$$
+        %s
       </div>
-      %s
+      <hr class="my-4">
     |}
     section_id
     expr_tex
