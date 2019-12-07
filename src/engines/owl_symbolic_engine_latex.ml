@@ -117,10 +117,11 @@ let load _filename = Obj.magic None
 
 let one_section section_id embed_dot expr =
   let expr_tex = of_symbolic expr in
-  let dot_tex = 
-    if embed_dot then
+  let dot_tex =
+    if embed_dot
+    then
       Printf.sprintf
-      {|
+        {|
         <div class="container" id="viz-graph-%i"></div>
         <script>
           d3.select("#viz-graph-%i").graphviz()
@@ -128,12 +129,11 @@ let one_section section_id embed_dot expr =
             .renderDot(`%s`);
         </script>
       |}
-      section_id
-      section_id
-      (Owl_symbolic_graph.to_dot expr)
+        section_id
+        section_id
+        (Owl_symbolic_graph.to_dot expr)
     else ""
   in
-
   Printf.sprintf
     {|
       <div class="container jumbotron">
@@ -142,17 +142,21 @@ let one_section section_id embed_dot expr =
       </div>
       %s
     |}
-  section_id
-  expr_tex
-  dot_tex
+    section_id
+    expr_tex
+    dot_tex
 
 
-let html ?(dot=false) ~exprs filename =
+let html ?(dot = false) ~exprs filename =
   let section_id = ref 0 in
-  let tex = List.fold_left (fun acc expr ->
-    section_id := !section_id + 1;  
-    acc ^ "\n" ^ one_section !section_id dot expr
-  ) "" exprs in
+  let tex =
+    List.fold_left
+      (fun acc expr ->
+        section_id := !section_id + 1;
+        acc ^ "\n" ^ one_section !section_id dot expr)
+      ""
+      exprs
+  in
   let html_str =
     Printf.sprintf
       {|
