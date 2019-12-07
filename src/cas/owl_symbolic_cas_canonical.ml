@@ -8,6 +8,7 @@
 open Owl_symbolic_symbol
 open Owl_symbolic_graph
 open Owl_symbolic_operator
+open Owl_symbolic_cas_operation
 open Owl_graph
 
 let rec _to_canonical node =
@@ -92,11 +93,11 @@ and canonical_add node =
           | Mul _ -> Owl_symbolic_cas_tree.extract_mul_coeff p
           | Add _ -> one (), p
           (* TODO: doesn't consider multiple add/mul arguments *)
-          | _     -> one (), p
+          | _ -> one (), p
         in
         (try
            let nums = Hashtbl.find terms term in
-           let new_num = add num nums in
+           let new_num = cas_add num nums in
            _to_canonical new_num;
            Hashtbl.add terms term new_num
          with
