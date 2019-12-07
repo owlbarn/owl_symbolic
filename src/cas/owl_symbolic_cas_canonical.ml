@@ -78,8 +78,9 @@ and canonical_var _node = ()
 and canonical_add node =
   let parents = Owl_graph.parents node in
   Array.iter _to_canonical parents;
+  (* TODO: expand dict dynamically *)
   let terms = Hashtbl.create 20 in
-  (* TODO: expand dynamically *)
+  (* express each parent term in the form of number*term *)
   Array.iter
     (fun p ->
       let ap = Owl_graph.attr p in
@@ -91,7 +92,7 @@ and canonical_add node =
           | Mul _ -> Owl_symbolic_cas_tree.extract_mul_coeff p
           | Add _ -> one (), p
           (* TODO: doesn't consider multiple add/mul arguments *)
-          | _ -> one (), p
+          | _     -> one (), p
         in
         (try
            let nums = Hashtbl.find terms term in
