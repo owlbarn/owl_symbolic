@@ -173,7 +173,8 @@ let html_section section_id embed_dot expr =
 
 
 let html_footer () =
-  Printf.sprintf {|
+  Printf.sprintf
+    {|
     <div class="container" style="width:100%%; text-align:center">
       OCaml Scientific and Engineering Computing <br />
       Copyright (c) 2016-2019 <a href="http://ocaml.xyz">ocaml.xyz</a>
@@ -251,8 +252,7 @@ let html ?(dot = false) ~exprs filename =
   </body>
 </html>
   |}
-  body
-  footer
-
+      body
+      footer
   in
   Owl_io.write_file filename html_str
