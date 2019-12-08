@@ -19,7 +19,7 @@ let make_expr0 () =
 let make_expr1 () =
   (* construct *)
   let x = variable "x_i" in
-  let y = (rational (int 6) (int 4) * x) + (int 2 * x) in
+  let y = (int 6 / int 4 * x) + (int 2 * x) in
   let expr = SymGraph.make_graph [| y |] "sym_graph" in
   (* initial simplification *)
   let _ = Owl_symbolic_cas_canonical.canonical_form expr in
@@ -40,5 +40,5 @@ let make_expr2 () =
 
 
 let _ =
-  let exprs = [ make_expr0 (); make_expr1 (); make_expr2 () ] in
+  let exprs = [ make_expr0 (); make_expr2 () ] in
   LaTeX_Engine.html ~dot:true ~exprs "example_08.html"
