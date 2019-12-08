@@ -109,7 +109,7 @@ and canonical_add node =
       match Owl_graph.attr num with
       | Zero _ -> ()
       (* | One _  -> new_parents := List.append !new_parents [ term ] *)
-      | _      ->
+      | _ ->
         let new_p =
           match Owl_graph.attr term with
           | Add _ -> mul num term
