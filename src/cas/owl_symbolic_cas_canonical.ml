@@ -8,7 +8,7 @@
 open Owl_symbolic_symbol
 open Owl_symbolic_graph
 open Owl_symbolic_operator
-open Owl_symbolic_cas_operation
+open Owl_symbolic_cas_add
 open Owl_graph
 
 let rec _to_canonical node =
