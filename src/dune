@@ -10,7 +10,7 @@
  (name owl_symbolic)
  (public_name owl-symbolic)
  ; Note: dependency to owl is only for dev purpose
- (libraries owl owl-base ocaml-protoc))
+ (libraries owl-base ocaml-protoc))
 
 (documentation
  (package owl-symbolic))
