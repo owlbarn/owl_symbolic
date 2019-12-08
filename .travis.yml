@@ -1,0 +1,15 @@
+language: c
+sudo: false
+services:
+  - docker
+install: wget https://raw.githubusercontent.com/ocaml/ocaml-travisci-skeleton/master/.travis-docker.sh
+script: bash -ex ./.travis-docker.sh
+env:
+  global:
+  - PINS="owl-symbolic:."
+  matrix:
+  - PACKAGE="owl-symbolic" DISTRO="debian-stable" OCAML_VERSION="4.07"
+  - PACKAGE="owl-symbolic" DISTRO="debian-stable" OCAML_VERSION="4.08"
+
+matrix:
+  fast_finish: true
