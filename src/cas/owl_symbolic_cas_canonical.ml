@@ -19,14 +19,14 @@ let rec _to_canonical node =
   | Variable _ -> canonical_var node
   | Add _      -> canonical_add node
   | Mul _      -> canonical_mul node
-  | Rational _ -> canonical_rat node
+  | Div _      -> canonical_div node
   | _          -> failwith "error: _to_canonical"
 
 
 and canonical_int _node = ()
 and canonical_float _node = ()
 
-and canonical_rat node =
+and canonical_div node =
   let parents = Owl_graph.parents node in
   let p = parents.(0) in
   let q = parents.(1) in
@@ -34,14 +34,13 @@ and canonical_rat node =
   _to_canonical q;
   let get_rat p =
     match Owl_graph.attr p with
-    | Int _      ->
+    | Int _   ->
       let v = Owl_symbolic_symbol.int_value (Owl_graph.attr p) in
       v, 1
-    | Float _    ->
+    | Float _ ->
       let v = Owl_symbolic_symbol.float_value (Owl_graph.attr p) in
       Owl_symbolic_utils.float_as_ratio v
-    | Rational x -> x.p, x.q
-    | _          -> failwith "canonical_rat: unsupported input type"
+    | _       -> failwith "canonical_rat: unsupported input type"
   in
   let pn, pd = get_rat p in
   let qn, qd = get_rat q in
@@ -109,7 +108,7 @@ and canonical_add node =
       match Owl_graph.attr num with
       | Zero _ -> ()
       (* | One _  -> new_parents := List.append !new_parents [ term ] *)
-      | _      ->
+      | _ ->
         let new_p =
           match Owl_graph.attr term with
           | Add _ -> mul num term

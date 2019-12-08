@@ -24,17 +24,17 @@ let extract_mul_coeff node =
   | Mul _ ->
     let ps = Owl_graph.parents node in
     (match Owl_graph.attr ps.(0) with
-    | Rational _ -> ps.(0), ps.(1)
-    | Int _      -> ps.(0), ps.(1)
-    | NegOne _   -> ps.(0), negone () * ps.(1)
-    | _          -> one (), node)
+    | Div _    -> ps.(0), ps.(1)
+    | Int _    -> ps.(0), ps.(1)
+    | NegOne _ -> ps.(0), negone () * ps.(1)
+    | _        -> one (), node)
   | _     -> failwith "extract_mul_coeff: not mul op"
 
 
 let is_rational = function
-  | Int _      -> true
-  | Rational _ -> true
-  | _          -> false
+  | Int _ -> true
+  | Div _ -> true
+  | _     -> false
 
 
 let is_zero = function

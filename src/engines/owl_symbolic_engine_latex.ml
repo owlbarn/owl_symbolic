@@ -38,12 +38,12 @@ and to_latex_complex node =
     | _         -> failwith "to_latex_complex: unexpected symbol"
   in
   if real = 0.
-  then Printf.sprintf "%fi" img
+  then Printf.sprintf "%.2fi" img
   else if img = 0.
   then Printf.sprintf "%f" real
   else if img = 1.
   then Printf.sprintf "%f+i" real
-  else Printf.sprintf "%f+%fi" real img
+  else Printf.sprintf "%.2f+%.2fi" real img
 
 
 and to_latex_rational node =
@@ -100,7 +100,7 @@ and to_latex_cos node =
   let parents = Owl_graph.parents node in
   assert (Array.length parents = 1);
   let p = to_latex parents.(0) in
-  Printf.sprintf "\\sin(%s)" p
+  Printf.sprintf "\\cos(%s)" p
 
 
 let of_symbolic (sym_graph : Owl_symbolic_graph.t) =
