@@ -126,23 +126,23 @@ let html_section section_id embed_dot expr =
     then
       Printf.sprintf
         {|
-        <div style="text-align:center; padding:20px">
-          <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#viz-graph-%i" aria-expanded="false" aria-controls="viz-graph-%i">
-            <i class="fas fa-plus"></i>
-            computation graph
-          </button>
-          <button class="btn btn-outline-primary" type="button" onClick="copyToClipboard('expr-latex-%i')">
-            <i class="far fa-copy"></i>
-            copy LaTeX
-          </button>
-        </div>
-        <div class="collapse" style="text-align:center" id="viz-graph-%i"></div>
-        <script>
-          d3.select("#viz-graph-%i").graphviz()
-            .fade(false)
-            .renderDot(`%s`);
-        </script>
-      |}
+          <div style="text-align:center; padding:20px">
+            <button class="btn btn-outline-primary" type="button" data-toggle="collapse" data-target="#viz-graph-%i" aria-expanded="false" aria-controls="viz-graph-%i">
+              <i class="fas fa-plus"></i>
+              computation graph
+            </button>
+            <button class="btn btn-outline-primary" type="button" onClick="copyToClipboard('expr-latex-%i')">
+              <i class="far fa-copy"></i>
+              copy LaTeX
+            </button>
+          </div>
+          <div class="collapse" style="text-align:center" id="viz-graph-%i"></div>
+          <script>
+            d3.select("#viz-graph-%i").graphviz()
+              .fade(false)
+              .renderDot(`%s`);
+          </script>
+        |}
         section_id
         section_id
         section_id
@@ -175,11 +175,11 @@ let html_section section_id embed_dot expr =
 let html_footer () =
   Printf.sprintf
     {|
-    <div class="container" style="width:100%%; text-align:center">
-      OCaml Scientific and Engineering Computing <br />
-      Copyright (c) 2016-2019 <a href="http://ocaml.xyz">ocaml.xyz</a>
-    </div>
-  |}
+      <div class="container" style="width:100%%; text-align:center">
+        OCaml Scientific and Engineering Computing <br />
+        Copyright (c) 2016-2019 <a href="http://ocaml.xyz">ocaml.xyz</a>
+      </div>
+    |}
 
 
 let html ?(dot = false) ~exprs filename =
@@ -251,7 +251,7 @@ let html ?(dot = false) ~exprs filename =
     %s
   </body>
 </html>
-  |}
+    |}
       body
       footer
   in
