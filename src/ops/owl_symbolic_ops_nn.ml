@@ -24,7 +24,7 @@ module Conv = struct
     ; mutable kernel_shp : int array
     ; mutable pads : int array option
           (* This attribute cannot be used simultaneously with auto_pad attribute 
-           * TODO: Currently set to None; onluy use auto_pad
+           * TODO: Currently set to None; only use auto_pad
            *)
     ; mutable strides : int array
     ; mutable group : int (* TODO: currently use default value *)

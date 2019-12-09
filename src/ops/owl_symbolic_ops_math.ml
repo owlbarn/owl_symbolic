@@ -15,6 +15,7 @@ Round, Det
 open Owl_symbolic_types
 
 (* p and q are not specified by user; but rather later calculated in canonical part *)
+(* TODO: remove this op *)
 module Rational = struct
   type t =
     { mutable name : string
@@ -30,6 +31,8 @@ module Rational = struct
   let create ?(out_shape = None) name input attrs =
     { name; input; attrs; out_shape; p = 0; q = 0 }
 end
+
+(** One input *)
 
 module Sin = struct
   type t =
@@ -53,6 +56,136 @@ module Cos = struct
     }
 
   let op_type = "Cos"
+
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end
+
+module Tan = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Tan"
+
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end
+
+module Asin = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Asin"
+
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end
+
+module Acos = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Acos"
+
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end
+
+module Atan = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Atan"
+
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end
+
+module Sinh = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Sinh"
+
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end
+
+module Cosh = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Cosh"
+
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end
+
+module Tanh = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Tanh"
+
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end
+
+module Asinh = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Asinh"
+
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end
+
+module Acosh = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Acosh"
+
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end
+
+module Atanh = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Atanh"
 
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
@@ -96,6 +229,19 @@ module Log = struct
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
 
+module Abs = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Abs"
+
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end
+
 module Neg = struct
   type t =
     { mutable name : string
@@ -105,6 +251,45 @@ module Neg = struct
     }
 
   let op_type = "Neg"
+
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end
+
+module Floor = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Floor"
+
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end
+
+module Ceil = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Ceil"
+
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end
+
+module Round = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Round"
 
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
@@ -121,6 +306,8 @@ module Relu = struct
 
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
+
+(** Two inputs *)
 
 module Add = struct
   type t =
@@ -188,6 +375,19 @@ module Pow = struct
     }
 
   let op_type = "Pow"
+
+  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+end
+
+module Gemm = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "MatMul"
 
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end

@@ -30,13 +30,28 @@ type t =
   | One of One.t
   | NegOne of NegOne.t
   | Pi of Pi.t
+  (* Math *)
   | Sin of Sin.t
   | Cos of Cos.t
+  | Tan of Tan.t
+  | Asin of Asin.t
+  | Acos of Acos.t
+  | Atan of Atan.t
+  | Sinh of Sinh.t
+  | Cosh of Cosh.t
+  | Tanh of Tanh.t
+  | Asinh of Asinh.t
+  | Acosh of Acosh.t
+  | Atanh of Atanh.t
   | Sqrt of Sqrt.t
   | Exp of Exp.t
   | Log of Log.t
   | Relu of Relu.t
+  | Abs of Abs.t
   | Neg of Neg.t
+  | Floor of Floor.t
+  | Ceil of Ceil.t
+  | Round of Round.t
   | Rational of Rational.t
   | Add of Add.t
   | Sub of Sub.t
@@ -67,10 +82,24 @@ let name = function
   | Pi x            -> Pi.(x.name)
   | Sin x           -> Sin.(x.name)
   | Cos x           -> Cos.(x.name)
+  | Tan x           -> Tan.(x.name)
+  | Asin x          -> Asin.(x.name)
+  | Acos x          -> Acos.(x.name)
+  | Atan x          -> Atan.(x.name)
+  | Sinh x          -> Sinh.(x.name)
+  | Cosh x          -> Cosh.(x.name)
+  | Tanh x          -> Tanh.(x.name)
+  | Asinh x         -> Asinh.(x.name)
+  | Acosh x         -> Acosh.(x.name)
+  | Atanh x         -> Atanh.(x.name)
   | Sqrt x          -> Sqrt.(x.name)
   | Exp x           -> Exp.(x.name)
   | Log x           -> Log.(x.name)
   | Relu x          -> Relu.(x.name)
+  | Abs x           -> Abs.(x.name)
+  | Floor x         -> Floor.(x.name)
+  | Ceil x          -> Ceil.(x.name)
+  | Round x         -> Round.(x.name)
   | Neg x           -> Neg.(x.name)
   | Rational x      -> Rational.(x.name)
   | Add x           -> Add.(x.name)
@@ -101,10 +130,24 @@ let input = function
   | Pi _            -> [||]
   | Sin x           -> Sin.(x.input)
   | Cos x           -> Cos.(x.input)
+  | Tan x           -> Tan.(x.input)
+  | Asin x          -> Asin.(x.input)
+  | Acos x          -> Acos.(x.input)
+  | Atan x          -> Atan.(x.input)
+  | Sinh x          -> Sinh.(x.input)
+  | Cosh x          -> Cosh.(x.input)
+  | Tanh x          -> Tanh.(x.input)
+  | Asinh x         -> Asinh.(x.input)
+  | Acosh x         -> Acosh.(x.input)
+  | Atanh x         -> Atanh.(x.input)
   | Sqrt x          -> Sqrt.(x.input)
   | Exp x           -> Exp.(x.input)
   | Log x           -> Log.(x.input)
   | Neg x           -> Neg.(x.input)
+  | Abs x           -> Abs.(x.input)
+  | Floor x         -> Floor.(x.input)
+  | Ceil x          -> Ceil.(x.input)
+  | Round x         -> Round.(x.input)
   | Relu x          -> Relu.(x.input)
   | Rational x      -> Rational.(x.input)
   | Add x           -> Add.(x.input)
@@ -126,10 +169,24 @@ let set_input sym inputs =
   match sym with
   | Sin x       -> x.input <- inputs
   | Cos x       -> x.input <- inputs
+  | Tan x       -> x.input <- inputs
+  | Asin x      -> x.input <- inputs
+  | Acos x      -> x.input <- inputs
+  | Atan x      -> x.input <- inputs
+  | Sinh x      -> x.input <- inputs
+  | Cosh x      -> x.input <- inputs
+  | Tanh x      -> x.input <- inputs
+  | Asinh x     -> x.input <- inputs
+  | Acosh x     -> x.input <- inputs
+  | Atanh x     -> x.input <- inputs
   | Sqrt x      -> x.input <- inputs
   | Exp x       -> x.input <- inputs
   | Log x       -> x.input <- inputs
   | Neg x       -> x.input <- inputs
+  | Abs x       -> x.input <- inputs
+  | Floor x     -> x.input <- inputs
+  | Ceil x      -> x.input <- inputs
+  | Round x     -> x.input <- inputs
   | Relu x      -> x.input <- inputs
   | Rational x  -> x.input <- inputs
   | Add x       -> x.input <- inputs
@@ -160,11 +217,25 @@ let op_type = function
   | Pi _            -> Pi.op_type
   | Sin _           -> Sin.op_type
   | Cos _           -> Cos.op_type
+  | Tan _           -> Tan.op_type
+  | Asin _          -> Asin.op_type
+  | Acos _          -> Acos.op_type
+  | Atan _          -> Atan.op_type
+  | Sinh _          -> Sinh.op_type
+  | Cosh _          -> Cosh.op_type
+  | Tanh _          -> Tanh.op_type
+  | Asinh _         -> Asinh.op_type
+  | Acosh _         -> Acosh.op_type
+  | Atanh _         -> Atanh.op_type
   | Sqrt _          -> Sqrt.op_type
   | Exp _           -> Exp.op_type
   | Log _           -> Log.op_type
   | Rational _      -> Rational.op_type
   | Neg _           -> Neg.op_type
+  | Abs _           -> Abs.op_type
+  | Floor _         -> Floor.op_type
+  | Ceil _          -> Ceil.op_type
+  | Round _         -> Round.op_type
   | Relu _          -> Relu.op_type
   | Add _           -> Add.op_type
   | Sub _           -> Sub.op_type
@@ -212,7 +283,7 @@ let sym_attrs = function
   | Conv x          -> Conv.(x.attrs)
   | MaxPool x       -> MaxPool.(x.attrs)
   | Equal x         -> Equal.(x.attrs)
-  | _               -> failwith "owl_symbolic_symbol.sym_attrs: unsupported symbol."
+  | _               -> [||]
 
 
 let shape = function
@@ -237,10 +308,24 @@ let out_shape = function
   | Pi x            -> Pi.(x.out_shape)
   | Sin x           -> Sin.(x.out_shape)
   | Cos x           -> Cos.(x.out_shape)
+  | Tan x           -> Tan.(x.out_shape)
+  | Asin x          -> Asin.(x.out_shape)
+  | Acos x          -> Acos.(x.out_shape)
+  | Atan x          -> Atan.(x.out_shape)
+  | Sinh x          -> Sinh.(x.out_shape)
+  | Cosh x          -> Cosh.(x.out_shape)
+  | Tanh x          -> Tanh.(x.out_shape)
+  | Asinh x         -> Asinh.(x.out_shape)
+  | Acosh x         -> Acosh.(x.out_shape)
+  | Atanh x         -> Atanh.(x.out_shape)
   | Sqrt x          -> Sqrt.(x.out_shape)
   | Exp x           -> Exp.(x.out_shape)
   | Log x           -> Log.(x.out_shape)
   | Neg x           -> Neg.(x.out_shape)
+  | Abs x           -> Abs.(x.out_shape)
+  | Floor x         -> Floor.(x.out_shape)
+  | Ceil x          -> Ceil.(x.out_shape)
+  | Round x         -> Round.(x.out_shape)
   | Relu x          -> Relu.(x.out_shape)
   | Rational x      -> Rational.(x.out_shape)
   | Add x           -> Add.(x.out_shape)
@@ -264,10 +349,24 @@ let set_out_shape sym shape =
   | RandomUniform x -> x.out_shape <- shape
   | Sin x           -> x.out_shape <- shape
   | Cos x           -> x.out_shape <- shape
+  | Tan x           -> x.out_shape <- shape
+  | Asin x          -> x.out_shape <- shape
+  | Acos x          -> x.out_shape <- shape
+  | Atan x          -> x.out_shape <- shape
+  | Sinh x          -> x.out_shape <- shape
+  | Cosh x          -> x.out_shape <- shape
+  | Tanh x          -> x.out_shape <- shape
+  | Asinh x         -> x.out_shape <- shape
+  | Acosh x         -> x.out_shape <- shape
+  | Atanh x         -> x.out_shape <- shape
   | Sqrt x          -> x.out_shape <- shape
   | Exp x           -> x.out_shape <- shape
   | Log x           -> x.out_shape <- shape
   | Neg x           -> x.out_shape <- shape
+  | Abs x           -> x.out_shape <- shape
+  | Floor x         -> x.out_shape <- shape
+  | Ceil x          -> x.out_shape <- shape
+  | Round x         -> x.out_shape <- shape
   | Relu x          -> x.out_shape <- shape
   | Rational x      -> x.out_shape <- shape
   | Add x           -> x.out_shape <- shape
