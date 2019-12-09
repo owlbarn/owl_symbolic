@@ -9,6 +9,15 @@ open Owl_symbolic_operator
 open Owl_symbolic_cas_add
 open Owl_symbolic_cas_assumption
 
+(* Temporay helper function *)
+
+let int_sym v =
+  let sym = Owl_symbolic_ops_generator.Int.create v in
+  Owl_symbolic_symbol.Int sym
+
+
+(* Main entry *)
+
 let rec _to_canonical node =
   let sym = Owl_graph.attr node in
   match sym with
@@ -92,9 +101,9 @@ and canonical_add node =
         let num, term =
           match ap with
           | Mul _ -> Owl_symbolic_cas_tree.extract_mul_coeff p
-          | Add _ -> one (), p
+          | Add _ -> int 1, p
           (* TODO: doesn't consider multiple add/mul arguments *)
-          | _ -> one (), p
+          | _ -> int 1, p
         in
         (try
            let nums = Hashtbl.find terms term in

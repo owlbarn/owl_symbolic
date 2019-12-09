@@ -132,3 +132,10 @@ let float_as_ratio flt =
 
 
 let flt_is_int v = v = snd (modf v)
+
+let node_name ?name op_typ =
+  match name with
+  | Some n -> n
+  | None   ->
+    let suffix = Owl_symbolic_namespace.generate_suffix () in
+    Printf.sprintf "%s_%i" (String.lowercase_ascii op_typ) suffix

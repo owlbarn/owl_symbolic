@@ -18,7 +18,10 @@ module Int = struct
 
   let op_type = "Int"
 
-  let create name attrs value = { name; attrs; value; out_shape = Some [||] }
+  let create ?name value =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; attrs; value; out_shape = Some [||] }
 end
 
 module Float = struct
@@ -31,7 +34,10 @@ module Float = struct
 
   let op_type = "Float"
 
-  let create name attrs value = { name; attrs; value; out_shape = Some [||] }
+  let create ?name value =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; attrs; value; out_shape = Some [||] }
 end
 
 module Complex = struct
@@ -45,7 +51,10 @@ module Complex = struct
 
   let op_type = "Complex"
 
-  let create name attrs real img = { name; attrs; real; img; out_shape = Some [||] }
+  let create ?name real img =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; attrs; real; img; out_shape = Some [||] }
 end
 
 module Tensor = struct
@@ -58,7 +67,10 @@ module Tensor = struct
 
   let op_type = "Tensor"
 
-  let create name attrs value = { name; attrs; value; out_shape = Some value.shape }
+  let create ?name value =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; attrs; value; out_shape = Some value.shape }
 end
 
 module Variable = struct
@@ -73,8 +85,31 @@ module Variable = struct
 
   let op_type = "Variable"
 
-  let create name attrs dtype shape init =
-    { name; attrs; dtype; shape; out_shape = Some shape; init }
+  let create ?dtype ?shape ?init name =
+    let s =
+      match init with
+      | Some (t : tensor) ->
+        if shape <> None
+        then Owl_log.warn "Variable %s: shape overridden by initializers" name;
+        t.shape
+      | None              ->
+        (match shape with
+        | Some s -> s
+        | None   -> [||])
+    in
+    let d =
+      match init with
+      | Some (t : tensor) ->
+        if shape <> None
+        then Owl_log.warn "Variable %s: type overridden by initializers" name;
+        t.dtype
+      | None              ->
+        (match dtype with
+        | Some s -> s
+        | None   -> SNT_Float)
+    in
+    let attrs = [||] in
+    { name; attrs; dtype = d; shape = s; out_shape = Some s; init }
 end
 
 module RandomUniform = struct
@@ -91,7 +126,9 @@ module RandomUniform = struct
 
   let op_type = "RandomUniform"
 
-  let create ?(low = 0.) ?(high = 1.) ?(seed = None) name attrs dtype shape =
+  let create ?(low = 0.) ?(high = 1.) ?(seed = None) ?(dtype = SNT_Float) ?name shape =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; attrs; dtype; shape; out_shape = Some shape; high; low; seed }
 end
 
@@ -143,6 +180,8 @@ module Pi = struct
 
   let op_type = "Pi"
 
-  let create ?(dtype = SNT_Float) name =
-    { name; attrs = [||]; out_shape = Some [||]; dtype }
+  let create ?(dtype = SNT_Float) ?name () =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; attrs; out_shape = Some [||]; dtype }
 end

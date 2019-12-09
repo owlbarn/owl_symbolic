@@ -26,6 +26,6 @@ let extract_mul_coeff node =
     (match Owl_graph.attr ps.(0) with
     | Div _    -> ps.(0), ps.(1)
     | Int _    -> ps.(0), ps.(1)
-    | NegOne _ -> ps.(0), negone () * ps.(1)
-    | _        -> one (), node)
+    | NegOne _ -> ps.(0), int ~-1 * ps.(1)
+    | _        -> int 1, node)
   | _     -> failwith "extract_mul_coeff: not mul op"

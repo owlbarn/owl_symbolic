@@ -44,7 +44,11 @@ module Sin = struct
 
   let op_type = "Sin"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Cos = struct

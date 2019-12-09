@@ -7,221 +7,52 @@ open Owl_symbolic_namespace
 open Owl_symbolic_graph
 open Owl_symbolic_types
 
-let noop_sym = Owl_symbolic_symbol.NOOP
-
-let noop = make_node noop_sym [||]
-
-let int_sym ?name value =
-  let suffix = generate_suffix () in
-  let name =
-    match name with
-    | Some n -> n
-    | None   -> Printf.sprintf "integer_%i" suffix
-  in
-  let attrs = [||] in
-  let o = Owl_symbolic_ops_generator.Int.create name attrs value in
-  Owl_symbolic_symbol.Int o
-
+let noop = make_node Owl_symbolic_symbol.NOOP [||]
 
 let int ?name value =
-  let sym = int_sym ?name value in
-  make_node sym [||]
+  let sym = Owl_symbolic_ops_generator.Int.create ?name value in
+  make_node (Owl_symbolic_symbol.Int sym) [||]
 
 
-let zero_sym ?name () =
-  let suffix = generate_suffix () in
-  let name =
-    match name with
-    | Some n -> n
-    | None   -> Printf.sprintf "zero_%i" suffix
-  in
-  let attrs = [||] in
-  let o = Owl_symbolic_ops_generator.Zero.create name attrs in
-  Owl_symbolic_symbol.Zero o
-
-
-let zero ?name () =
-  let sym = zero_sym ?name () in
-  make_node sym [||]
-
-
-let one_sym ?name () =
-  let suffix = generate_suffix () in
-  let name =
-    match name with
-    | Some n -> n
-    | None   -> Printf.sprintf "one_%i" suffix
-  in
-  let attrs = [||] in
-  let o = Owl_symbolic_ops_generator.One.create name attrs in
-  Owl_symbolic_symbol.One o
-
-
-let one ?name () =
-  let sym = one_sym ?name () in
-  make_node sym [||]
-
-
-let negone_sym ?name () =
-  let suffix = generate_suffix () in
-  let name =
-    match name with
-    | Some n -> n
-    | None   -> Printf.sprintf "negone_%i" suffix
-  in
-  let attrs = [||] in
-  let o = Owl_symbolic_ops_generator.NegOne.create name attrs in
-  Owl_symbolic_symbol.NegOne o
-
-
-let negone ?name () =
-  let sym = negone_sym ?name () in
-  make_node sym [||]
-
-
-let float_sym ?name x =
-  let suffix = generate_suffix () in
-  let name =
-    match name with
-    | Some n -> n
-    | None   -> Printf.sprintf "float_%i" suffix
-  in
-  let attrs = [||] in
-  let value = x in
-  let o = Owl_symbolic_ops_generator.Float.create name attrs value in
-  Owl_symbolic_symbol.Float o
-
-
-let float ?name x =
-  let sym = float_sym ?name x in
-  make_node sym [||]
-
-
-let complex_sym ?name r i =
-  let suffix = generate_suffix () in
-  let name =
-    match name with
-    | Some n -> n
-    | None   -> Printf.sprintf "complex_%i" suffix
-  in
-  let attrs = [||] in
-  let o = Owl_symbolic_ops_generator.Complex.create name attrs r i in
-  Owl_symbolic_symbol.Complex o
+let float ?name value =
+  let sym = Owl_symbolic_ops_generator.Float.create ?name value in
+  make_node (Owl_symbolic_symbol.Float sym) [||]
 
 
 let complex ?name r i =
-  let sym = complex_sym ?name r i in
-  make_node sym [||]
-
-
-let pi_sym ?name () =
-  let suffix = generate_suffix () in
-  let name =
-    match name with
-    | Some n -> n
-    | None   -> Printf.sprintf "pi_%i" suffix
-  in
-  let o = Owl_symbolic_ops_generator.Pi.create name in
-  Owl_symbolic_symbol.Pi o
+  let sym = Owl_symbolic_ops_generator.Complex.create ?name r i in
+  make_node (Owl_symbolic_symbol.Complex sym) [||]
 
 
 let pi ?name () =
-  let sym = pi_sym ?name () in
-  make_node sym [||]
-
-
-let tensor_sym ?name t =
-  let suffix = generate_suffix () in
-  let name =
-    match name with
-    | Some n -> n
-    | None   -> Printf.sprintf "tensor_%i" suffix
-  in
-  let attrs = [||] in
-  let value = t in
-  let o = Owl_symbolic_ops_generator.Tensor.create name attrs value in
-  Owl_symbolic_symbol.Tensor o
+  let sym = Owl_symbolic_ops_generator.Pi.create ?name () in
+  make_node (Owl_symbolic_symbol.Pi sym) [||]
 
 
 let tensor ?name t =
-  let sym = tensor_sym ?name t in
-  make_node sym [||]
+  let sym = Owl_symbolic_ops_generator.Tensor.create ?name t in
+  make_node (Owl_symbolic_symbol.Tensor sym) [||]
 
 
 (* The shape and type are decided by initial value; 
  * if initial value not given, user need to specify them. 
  * Shape value default to scalar [||], and type default to SNT_Float. *)
-let variable_sym ?shape ?dtype ?init name =
-  let true_shape =
-    match init with
-    | Some (t : tensor) ->
-      if shape <> None
-      then Owl_log.warn "Variable %s: shape overridden by initializers" name;
-      t.shape
-    | None              ->
-      (match shape with
-      | Some s -> s
-      | None   -> [||])
+let variable ?dtype ?shape ?init name =
+  let s = Owl_symbolic_ops_generator.Variable.create ?dtype ?shape ?init name in
+  make_node (Owl_symbolic_symbol.Variable s) [||]
+
+
+let random_uniform ?dtype ?seed ?low ?high ?name shape =
+  let s =
+    Owl_symbolic_ops_generator.RandomUniform.create ?dtype ?seed ?low ?high ?name shape
   in
-  let true_dtype =
-    match init with
-    | Some (t : tensor) ->
-      if shape <> None
-      then Owl_log.warn "Variable %s: type overridden by initializers" name;
-      t.dtype
-    | None              ->
-      (match dtype with
-      | Some s -> s
-      | None   -> SNT_Float)
-  in
-  let attrs = [||] in
-  let o =
-    Owl_symbolic_ops_generator.Variable.create name attrs true_dtype true_shape init
-  in
-  Owl_symbolic_symbol.Variable o
-
-
-let variable ?shape ?dtype ?init name =
-  let sym = variable_sym ?shape ?dtype ?init name in
-  make_node sym [||]
-
-
-let random_uniform_sym ?(dtype = SNT_Float) ?(low = 0.) ?(high = 1.) ?name shape =
-  let suffix = generate_suffix () in
-  let name =
-    match name with
-    | Some n -> n
-    | None   -> Printf.sprintf "random_uniform_%i" suffix
-  in
-  let attrs = [||] in
-  let o =
-    Owl_symbolic_ops_generator.RandomUniform.create ~low ~high name attrs dtype shape
-  in
-  Owl_symbolic_symbol.RandomUniform o
-
-
-let random_uniform ?dtype ?low ?high ?name shape =
-  let sym = random_uniform_sym ?dtype ?low ?high ?name shape in
-  make_node sym [||]
-
-
-let sin_sym ?name x =
-  let suffix = generate_suffix () in
-  let name =
-    match name with
-    | Some n -> n
-    | None   -> Printf.sprintf "sin_%i" suffix
-  in
-  let x_name = Owl_symbolic_graph.name x in
-  let input = [| x_name |] in
-  let attrs = [||] in
-  let o = Owl_symbolic_ops_math.Sin.create name input attrs in
-  Owl_symbolic_symbol.Sin o
+  make_node (Owl_symbolic_symbol.RandomUniform s) [||]
 
 
 let sin ?name x =
-  let sym = sin_sym ?name x in
-  make_node sym [| x |]
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Sin.create ?name xn in
+  make_node (Owl_symbolic_symbol.Sin s) [| x |]
 
 
 let cos_sym ?name x =
