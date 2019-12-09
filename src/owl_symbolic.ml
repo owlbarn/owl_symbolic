@@ -24,3 +24,4 @@ module Owl_symbolic_engine_owl = Owl_symbolic_engine_owl
 module Owl_symbolic_cas_canonical = Owl_symbolic_cas_canonical
 module LaTeX_Engine = Owl_symbolic_engine_latex
 module Owl_symbolic_graph = Owl_symbolic_graph
+module Owl_symbolic_cas_assumption = Owl_symbolic_cas_assumption

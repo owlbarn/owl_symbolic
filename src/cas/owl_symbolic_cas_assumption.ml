@@ -63,3 +63,21 @@ Assumption rules :
     'extended_nonzero == extended_real & !zero',
 
  *)
+
+open Owl_symbolic_symbol
+
+(* TODO: These temporary rules are only hacks tailored for the example *)
+
+let is_rational n =
+  match Owl_graph.attr n with
+  | Int _ -> true
+  | Div _ -> true
+  | _     -> false
+
+
+let is_zero n =
+  match Owl_graph.attr n with
+  | Int s     -> s.value = 0
+  | Float s   -> s.value = 0.
+  | Complex s -> s.real = 0. && s.img = 0.
+  | _         -> false
