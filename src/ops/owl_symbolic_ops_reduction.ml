@@ -3,6 +3,9 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
+(** ReduceMax, ReduceMin, ReduceSum, ReduceSumSquare, ReduceMean, ReduceProd, 
+ReduceLogSum, ReduceLogSumExp, ReduceL1, ReduceL2 *)
+
 open Owl_symbolic_types
 
 module ReduceSum = struct

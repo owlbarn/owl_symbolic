@@ -3,6 +3,15 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
+(* Add, Sub, Mod, Mul, Div, Neg, Abs, Reciprocal, Floor, Ceil,
+Sqrt, Relu, LeakyRelu, ThreasholdedRelu, Selu, Elu, Exp, Log, 
+Pow, PRelu, Sigmoid, HardSigmoid, Max, Min, Sum, Mean, Clip, 
+Softmax, LogSoftmax, Hardmax, Softsign, Softplus, Gemm, MatMul,
+Sin, Cos, Tan, Asin, Acos, Atan, Expand, Sinh, Cosh, Tanh, Asinh, 
+Acosh, Atanh, Sign, Erf, QLinearMatMul, MatMulInteger, Cumsum, 
+Round, Det 
+*)
+
 open Owl_symbolic_types
 
 (* p and q are not specified by user; but rather later calculated in canonical part *)
