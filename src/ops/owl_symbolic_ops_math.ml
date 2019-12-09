@@ -61,7 +61,11 @@ module Cos = struct
 
   let op_type = "Cos"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Tan = struct
@@ -74,7 +78,11 @@ module Tan = struct
 
   let op_type = "Tan"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Asin = struct
@@ -87,7 +95,11 @@ module Asin = struct
 
   let op_type = "Asin"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Acos = struct
@@ -100,7 +112,11 @@ module Acos = struct
 
   let op_type = "Acos"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Atan = struct
@@ -113,7 +129,11 @@ module Atan = struct
 
   let op_type = "Atan"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Sinh = struct
@@ -126,7 +146,11 @@ module Sinh = struct
 
   let op_type = "Sinh"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Cosh = struct
@@ -139,7 +163,11 @@ module Cosh = struct
 
   let op_type = "Cosh"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Tanh = struct
@@ -152,7 +180,11 @@ module Tanh = struct
 
   let op_type = "Tanh"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Asinh = struct
@@ -165,7 +197,11 @@ module Asinh = struct
 
   let op_type = "Asinh"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Acosh = struct
@@ -178,7 +214,11 @@ module Acosh = struct
 
   let op_type = "Acosh"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Atanh = struct
@@ -191,7 +231,11 @@ module Atanh = struct
 
   let op_type = "Atanh"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Sqrt = struct
@@ -204,7 +248,11 @@ module Sqrt = struct
 
   let op_type = "Sqrt"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Exp = struct
@@ -217,7 +265,11 @@ module Exp = struct
 
   let op_type = "Exp"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Log = struct
@@ -230,7 +282,11 @@ module Log = struct
 
   let op_type = "Log"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Abs = struct
@@ -243,7 +299,11 @@ module Abs = struct
 
   let op_type = "Abs"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Neg = struct
@@ -256,7 +316,11 @@ module Neg = struct
 
   let op_type = "Neg"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Floor = struct
@@ -269,7 +333,11 @@ module Floor = struct
 
   let op_type = "Floor"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Ceil = struct
@@ -282,7 +350,11 @@ module Ceil = struct
 
   let op_type = "Ceil"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Round = struct
@@ -295,7 +367,11 @@ module Round = struct
 
   let op_type = "Round"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Relu = struct
@@ -308,7 +384,11 @@ module Relu = struct
 
   let op_type = "Relu"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 (** Two inputs *)
@@ -324,11 +404,11 @@ module Add = struct
 
   let op_type = "Add"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
-
-  let type_constraints = []
-
-  let doc_string = "Addition"
+  let create name x y =
+    let input = [| x; y |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Sub = struct
@@ -341,7 +421,11 @@ module Sub = struct
 
   let op_type = "Sub"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create name x y =
+    let input = [| x; y |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Mul = struct
@@ -354,7 +438,11 @@ module Mul = struct
 
   let op_type = "Mul"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create name x y =
+    let input = [| x; y |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Div = struct
@@ -367,7 +455,11 @@ module Div = struct
 
   let op_type = "Div"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create name x y =
+    let input = [| x; y |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Pow = struct
@@ -380,7 +472,11 @@ module Pow = struct
 
   let op_type = "Pow"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create name x y =
+    let input = [| x; y |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 module Gemm = struct
@@ -408,7 +504,11 @@ module MatMul = struct
 
   let op_type = "MatMul"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create name x y =
+    let input = [| x; y |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None }
 end
 
 (* TODO: how should we position this operation? *)

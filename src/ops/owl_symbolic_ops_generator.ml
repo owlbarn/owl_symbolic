@@ -5,6 +5,8 @@
 
 open Owl_symbolic_types
 
+(* TODO: rename file name to input? *)
+
 (* Constant, ConstantOfShape, EyeLike, RandomUniform, RandomNormal, 
 RandomUniformLike, RandomNormalLike, Multinomial, Range *)
 
