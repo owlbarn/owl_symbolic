@@ -18,27 +18,40 @@ let make_expr0 () =
 
 let make_expr1 () =
   (* construct *)
-  let x = variable "x_i" in
-  let y = (int 6 / int 4 * x) + (int 2 * x) in
-  let expr = SymGraph.make_graph [| y |] "sym_graph" in
-  (* initial simplification *)
-  let _ = Owl_symbolic_cas_canonical.canonical_form expr in
-  (* print to html for debugging *)
-  (* let s = Owl_symbolic_graph.to_dot expr in 
-  let _ = Owl_io.write_file "example_08.dot" s in
-  Sys.command "dot -Tpdf example_08.dot -o example_08.pdf" |> ignore; *)
-  LaTeX_Engine.of_symbolic expr |> print_endline;
-  expr
-
-
-let make_expr2 () =
-  (* construct *)
   let y = int 6 + variable "x_0" + variable "x_1" in
   let expr = SymGraph.make_graph [| y |] "sym_graph" in
   LaTeX_Engine.of_symbolic expr |> print_endline;
   expr
 
 
+let make_expr2 () =
+  (* construct *)
+  let x = variable "x_i" in
+  let y = (int 6 / int 4 * x) + (int 2 * x) in
+  let expr1 = SymGraph.make_graph [| y |] "sym_graph" in
+  (* initial simplification *)
+  let expr2 = Owl_symbolic_cas_canonical.canonical_form expr1 in
+  (* print to html for debugging *)
+  (* let s = Owl_symbolic_graph.to_dot expr in 
+  let _ = Owl_io.write_file "example_08.dot" s in
+  Sys.command "dot -Tpdf example_08.dot -o example_08.pdf" |> ignore; *)
+  LaTeX_Engine.of_symbolic expr2 |> print_endline;
+  let z = equal expr1.sym_nodes.(0) expr2.sym_nodes.(0) in
+  SymGraph.make_graph [| z |] "sym_graph"
+
+
+let make_expr3 () =
+  let x = variable "x_i" in
+  let y = (int 2 * x) + (int 9 / int 6 * x) in
+  (* TODO: this doesn't work: (int 2 * x) + (x * (int 9 / int 6)) *)
+  let expr1 = SymGraph.make_graph [| y |] "sym_graph" in
+  let expr2 = Owl_symbolic_cas_canonical.canonical_form expr1 in
+  LaTeX_Engine.of_symbolic expr2 |> print_endline;
+  LaTeX_Engine.of_symbolic expr2 |> print_endline;
+  let z = equal expr1.sym_nodes.(0) expr2.sym_nodes.(0) in
+  SymGraph.make_graph [| z |] "sym_graph"
+
+
 let _ =
-  let exprs = [ make_expr0 (); make_expr2 () ] in
+  let exprs = [ make_expr0 (); make_expr1 (); make_expr2 (); make_expr3 () ] in
   LaTeX_Engine.html ~dot:true ~exprs "example_08.html"

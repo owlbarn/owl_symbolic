@@ -19,14 +19,15 @@ let rec to_latex sym_node =
     else string_of_float v
   | Complex _  -> to_latex_complex sym_node
   | Pi _       -> "\\pi"
-  | Rational _ -> to_latex_rational sym_node
   | Variable _ -> name sym
   | Exp _      -> to_latex_exp sym_node
   | Sin _      -> to_latex_sin sym_node
   | Cos _      -> to_latex_cos sym_node
   | Add _      -> to_latex_add sym_node
   | Mul _      -> to_latex_mul sym_node
+  | Div _      -> to_latex_div sym_node
   | Pow _      -> to_latex_pow sym_node
+  | Equal _    -> to_latex_equal sym_node
   | _          -> failwith (Printf.sprintf "Not implemented: %s" (op_type sym))
 
 
@@ -46,7 +47,7 @@ and to_latex_complex node =
   else Printf.sprintf "%.2f+%.2fi" real img
 
 
-and to_latex_rational node =
+and to_latex_div node =
   let parents = Owl_graph.parents node in
   let p = to_latex parents.(0) in
   let q = to_latex parents.(1) in
@@ -101,6 +102,16 @@ and to_latex_cos node =
   assert (Array.length parents = 1);
   let p = to_latex parents.(0) in
   Printf.sprintf "\\cos(%s)" p
+
+
+(* TODO: but do we really need a class for each symbol, e.g \doteq, \approx... ? 
+ * Perhaps set them as parameters.
+ *)
+and to_latex_equal node =
+  let parents = Owl_graph.parents node in
+  let lhs = to_latex parents.(0) in
+  let rhs = to_latex parents.(1) in
+  Printf.sprintf "%s = %s" lhs rhs
 
 
 let of_symbolic (sym_graph : Owl_symbolic_graph.t) =

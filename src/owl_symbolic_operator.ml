@@ -622,6 +622,30 @@ let maxpool ?name input kernel strides padding dilations =
   make_node sym [| input |]
 
 
+(** Special ops *)
+
+let equal_sym ?name () =
+  let suffix = generate_suffix () in
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> Printf.sprintf "equal_%i" suffix
+  in
+  let input = [||] in
+  let attrs = [||] in
+  let o = Owl_symbolic_ops_math.Equal.create name input attrs in
+  Owl_symbolic_symbol.Equal o
+
+
+let equal ?name lhs rhs =
+  let sym = equal_sym ?name () in
+  let lhs_name = Owl_symbolic_graph.name lhs in
+  let rhs_name = Owl_symbolic_graph.name rhs in
+  let input = [| lhs_name; rhs_name |] in
+  Owl_symbolic_symbol.set_input sym input;
+  make_node sym [| lhs; rhs |]
+
+
 (** The frequently used constants *)
 
 let expconst () = exp (float 1.)

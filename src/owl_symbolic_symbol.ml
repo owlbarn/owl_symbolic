@@ -49,6 +49,8 @@ type t =
   | Reshape of Reshape.t
   | Conv of Conv.t
   | MaxPool of MaxPool.t
+  (* special ops *)
+  | Equal of Equal.t
 
 (* TODO: GEMM or MatMul? *)
 
@@ -82,6 +84,7 @@ let name = function
   | Reshape x       -> Reshape.(x.name)
   | Conv x          -> Conv.(x.name)
   | MaxPool x       -> MaxPool.(x.name)
+  | Equal x         -> Equal.(x.name)
   | _               -> failwith "owl_symbolic_symbol.name"
 
 
@@ -115,6 +118,7 @@ let input = function
   | ReduceMax x     -> ReduceMax.(x.input)
   | Conv x          -> Conv.(x.input)
   | MaxPool x       -> MaxPool.(x.input)
+  | Equal x         -> Equal.(x.input)
   | _               -> failwith "owl_symbolic_symbol.input"
 
 
@@ -139,7 +143,8 @@ let set_input sym inputs =
   | ReduceMax x -> x.input <- inputs
   | Conv x      -> x.input <- inputs
   | MaxPool x   -> x.input <- inputs
-  | _           -> failwith "owl_symbolic_symbol.input"
+  | Equal x     -> x.input <- inputs
+  | _           -> failwith "owl_symbolic_symbol.set_input"
 
 
 let op_type = function
@@ -172,6 +177,7 @@ let op_type = function
   | ReduceMax _     -> ReduceMax.op_type
   | Conv _          -> Conv.op_type
   | MaxPool _       -> MaxPool.op_type
+  | Equal _         -> Equal.op_type
   | _               -> failwith "owl_symbolic_symbol.op_type"
 
 
@@ -205,6 +211,7 @@ let sym_attrs = function
   | ReduceMax x     -> ReduceMax.(x.attrs)
   | Conv x          -> Conv.(x.attrs)
   | MaxPool x       -> MaxPool.(x.attrs)
+  | Equal x         -> Equal.(x.attrs)
   | _               -> failwith "owl_symbolic_symbol.sym_attrs: unsupported symbol."
 
 
@@ -274,6 +281,7 @@ let set_out_shape sym shape =
   | ReduceMax x     -> x.out_shape <- shape
   | Conv x          -> x.out_shape <- shape
   | MaxPool x       -> x.out_shape <- shape
+  | Equal x         -> x.out_shape <- shape
   | _               -> failwith "set_out_shape: unsupported op."
 
 
