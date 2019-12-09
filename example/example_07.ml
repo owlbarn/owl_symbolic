@@ -43,5 +43,7 @@ let dnn =
 
 
 let g = SymGraph.make_graph [| dnn |] "sym_graph"
+
 let onnx_graph = ONNX_Engine.of_symbolic g
+
 let _ = ONNX_Engine.save onnx_graph "test.onnx"

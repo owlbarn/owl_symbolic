@@ -8,6 +8,7 @@ open Owl_symbolic_graph
 open Owl_symbolic_types
 
 let noop_sym = Owl_symbolic_symbol.NOOP
+
 let noop = make_node noop_sym [||]
 
 let int_sym ?name value =

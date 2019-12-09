@@ -14,6 +14,7 @@ module Int = struct
     }
 
   let op_type = "Int"
+
   let create name attrs value = { name; attrs; value; out_shape = Some [||] }
 end
 
@@ -26,6 +27,7 @@ module Float = struct
     }
 
   let op_type = "Float"
+
   let create name attrs value = { name; attrs; value; out_shape = Some [||] }
 end
 
@@ -39,6 +41,7 @@ module Complex = struct
     }
 
   let op_type = "Complex"
+
   let create name attrs real img = { name; attrs; real; img; out_shape = Some [||] }
 end
 
@@ -51,6 +54,7 @@ module Tensor = struct
     }
 
   let op_type = "Tensor"
+
   let create name attrs value = { name; attrs; value; out_shape = Some value.shape }
 end
 
@@ -98,6 +102,7 @@ module Zero = struct
     }
 
   let op_type = "Zero"
+
   let create name attrs = { name; attrs; out_shape = Some [||] }
 end
 
@@ -109,6 +114,7 @@ module One = struct
     }
 
   let op_type = "One"
+
   let create name attrs = { name; attrs; out_shape = Some [||] }
 end
 
@@ -120,6 +126,7 @@ module NegOne = struct
     }
 
   let op_type = "NegOne"
+
   let create name attrs = { name; attrs; out_shape = Some [||] }
 end
 

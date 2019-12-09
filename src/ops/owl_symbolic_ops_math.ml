@@ -31,6 +31,7 @@ module Sin = struct
     }
 
   let op_type = "Sin"
+
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
 
@@ -43,6 +44,7 @@ module Cos = struct
     }
 
   let op_type = "Cos"
+
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
 
@@ -55,6 +57,7 @@ module Sqrt = struct
     }
 
   let op_type = "Sqrt"
+
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
 
@@ -67,6 +70,7 @@ module Exp = struct
     }
 
   let op_type = "Exp"
+
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
 
@@ -79,6 +83,7 @@ module Log = struct
     }
 
   let op_type = "Log"
+
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
 
@@ -91,6 +96,7 @@ module Neg = struct
     }
 
   let op_type = "Neg"
+
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
 
@@ -103,6 +109,7 @@ module Relu = struct
     }
 
   let op_type = "Relu"
+
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
 
@@ -116,8 +123,11 @@ module Add = struct
     }
 
   let op_type = "Add"
+
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+
   let type_constraints = []
+
   let doc_string = "Addition"
 end
 
@@ -130,6 +140,7 @@ module Sub = struct
     }
 
   let op_type = "Sub"
+
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
 
@@ -142,6 +153,7 @@ module Mul = struct
     }
 
   let op_type = "Mul"
+
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
 
@@ -154,6 +166,7 @@ module Div = struct
     }
 
   let op_type = "Div"
+
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
 
@@ -166,6 +179,7 @@ module Pow = struct
     }
 
   let op_type = "Pow"
+
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end
 
@@ -180,5 +194,6 @@ module MatMul = struct
     }
 
   let op_type = "MatMul"
+
   let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
 end

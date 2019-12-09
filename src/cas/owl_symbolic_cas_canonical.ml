@@ -24,6 +24,7 @@ let rec _to_canonical node =
 
 
 and canonical_int _node = ()
+
 and canonical_float _node = ()
 
 and canonical_div node =

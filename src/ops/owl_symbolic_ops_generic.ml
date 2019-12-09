@@ -11,7 +11,9 @@ module type Sig = sig
     }
 
   val op_type : string
+
   val type_constraints : string list
+
   val doc_string : string
 end
 
@@ -19,8 +21,12 @@ module Make (M : Sig) = struct
   type t = M.t
 
   let name (x : t) = x.name
+
   let op_type () = M.op_type
+
   let doc_string () = M.doc_string
+
   let of_onnx (_x : t) = ()
+
   let to_onnx (_x : t) = ()
 end

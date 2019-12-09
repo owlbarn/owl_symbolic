@@ -7,8 +7,11 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) : sig
   type t = G.graph
 
   val to_symbolic : t -> Owl_symbolic_graph.t
+
   val of_symbolic : Owl_symbolic_graph.t -> t
+
   val save : 'a -> 'b -> unit
+
   val load : 'a -> 'b
 end
 

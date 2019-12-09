@@ -10,24 +10,24 @@ open Owl_graph
 let rec cas_add (x : t node) (y : t node) =
   let ax = attr x in
   match ax with
-  | Div _ -> _add_div x y 
+  | Div _ -> _add_div x y
   | Int _ -> _add_int x y
   | _     -> add x y
 
 
-and _add_int x y = 
+and _add_int x y =
   let ax = attr x in
   let ay = attr y in
   match ay with
-    | Div _   -> cas_add y x
-    | Int _   ->
-      let v = int_value ax + int_value ay in
-      int v
-    | Float _ -> cas_add y x
-    | _       -> add x y
+  | Div _   -> cas_add y x
+  | Int _   ->
+    let v = int_value ax + int_value ay in
+    int v
+  | Float _ -> cas_add y x
+  | _       -> add x y
 
 
-and _add_div x y = 
+and _add_div x y =
   (* TODO: we need the inference rules *)
   let ay = attr y in
   let ps = parents x in
