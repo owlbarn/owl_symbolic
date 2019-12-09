@@ -10,16 +10,12 @@ type t = string (* or other type? json? *)
 let rec to_latex sym_node =
   let sym = Owl_graph.attr sym_node in
   match sym with
-  | One _      -> "1"
-  | Int _      -> Owl_symbolic_symbol.int_value sym |> string_of_int
-  | Float _    ->
-    let v = Owl_symbolic_symbol.float_value sym in
-    if Owl_symbolic_utils.flt_is_int v
-    then int_of_float v |> string_of_int
-    else string_of_float v
+  | One _      -> to_latex_one sym_node
+  | Int _      -> to_latex_int sym_node
+  | Float _    -> to_latex_float sym_node
   | Complex _  -> to_latex_complex sym_node
-  | Pi _       -> "\\pi"
-  | Variable _ -> name sym
+  | Pi _       -> to_latex_pi sym_node
+  | Variable _ -> to_latex_variable sym_node
   | Exp _      -> to_latex_exp sym_node
   | Sin _      -> to_latex_sin sym_node
   | Cos _      -> to_latex_cos sym_node
@@ -29,6 +25,29 @@ let rec to_latex sym_node =
   | Pow _      -> to_latex_pow sym_node
   | Equal _    -> to_latex_equal sym_node
   | _          -> failwith (Printf.sprintf "Not implemented: %s" (op_type sym))
+
+
+and to_latex_one _ = "1"
+
+and to_latex_pi _ = "\\pi"
+
+and to_latex_variable node =
+  let sym = Owl_graph.attr node in
+  name sym
+
+
+and to_latex_int node =
+  let sym = Owl_graph.attr node in
+  let v = Owl_symbolic_symbol.int_value sym in
+  string_of_int v
+
+
+and to_latex_float node =
+  let sym = Owl_graph.attr node in
+  let v = Owl_symbolic_symbol.float_value sym in
+  if Owl_symbolic_utils.flt_is_int v
+  then int_of_float v |> string_of_int
+  else string_of_float v
 
 
 and to_latex_complex node =
