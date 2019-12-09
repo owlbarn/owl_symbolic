@@ -1,5 +1,7 @@
 # Owl Symbolic Library
 
+[![Build Status](https://travis-ci.org/owlbarn/owl_symbolic.svg?branch=master)](https://travis-ci.org/owlbarn/owl_symbolic)
+
 ## Introduction
 
 Working in progress ...
@@ -7,15 +9,4 @@ Working in progress ...
 
 ## Example 
 
-
-```ocaml
-#require "owl-symbolic";;
-
-open Owl_symbolic;; 
-
-let x = Op.(add (flt 3.) (sin (tensor [|3;3|])))
-let g = SymGraph.make_graph [|x|] "sym_graph"
-
-let y = ONNX_Engine.of_symbolic g
-let _ = ONNX_Engine.save y "test.onnx"
-```
+Check the [example](/example) directory for current examples. 
