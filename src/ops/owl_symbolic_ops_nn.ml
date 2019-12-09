@@ -3,6 +3,13 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
+(** AveragePool, MaxPool, MaxUnpool, LpPool, MaxRoiPool,
+Conv, QLinearConv,ConvInteger, ConvTranspose, GlobalAveragePool, 
+GlobalMaxPool, GlobalLpPool, BatchNormalization, 
+InstanceNormalization, LpNormalization, Dropout, Shrink, Flatten, 
+LRN, TfIdfVectorizer, StringNormalizer, MeanVarianceNormalization
+*)
+
 open Owl_symbolic_types
 
 module Conv = struct

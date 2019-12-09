@@ -5,6 +5,9 @@
 
 open Owl_symbolic_types
 
+(* Constant, ConstantOfShape, EyeLike, RandomUniform, RandomNormal, 
+RandomUniformLike, RandomNormalLike, Multinomial, Range *)
+
 module Int = struct
   type t =
     { mutable name : string
