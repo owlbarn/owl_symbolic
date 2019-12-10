@@ -78,8 +78,6 @@ let tan ?name x =
   make_node (Owl_symbolic_symbol.Tan s) [| x |]
 
 
-(* TODO: are these `input` truely necessary for an symbol? ... *)
-
 let sqrt ?name x =
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_math.Sqrt.create ?name xn in
@@ -182,39 +180,36 @@ let reshape ?name data shape =
 
 (** Neural Network *)
 
-let conv ?name ?padding ?strides ?dilations ?bias input kernel  =
+let conv ?name ?dim ?padding ?strides ?dilations ?bias input kernel =
   let i_name = Owl_symbolic_graph.name input in
   let k_name = Owl_symbolic_graph.name kernel in
-  let kernel_shp = Owl_graph.attr kernel 
-    |> Owl_symbolic_symbol.shape 
-  in
   match bias with
-  | Some b -> 
+  | Some b ->
     let b_name = Owl_symbolic_graph.name b in
     let s =
-    Owl_symbolic_ops_nn.Conv.create
-      ?name
-      ?padding
-      ?strides
-      ?dilations
-      ~bias_name:b_name
-      i_name
-      k_name
-      kernel_shp
+      Owl_symbolic_ops_nn.Conv.create
+        ?name
+        ?padding
+        ?strides
+        ?dilations
+        ~bias_name:b_name
+        i_name
+        k_name
     in
     make_node (Owl_symbolic_symbol.Conv s) [| input; kernel; b |]
-  | None   -> 
+  | None   ->
     let s =
-    Owl_symbolic_ops_nn.Conv.create
-      ?name
-      ?padding
-      ?strides
-      ?dilations
-      i_name
-      k_name
-      kernel_shp 
+      Owl_symbolic_ops_nn.Conv.create
+        ?name
+        ?dim
+        ?padding
+        ?strides
+        ?dilations
+        i_name
+        k_name
     in
     make_node (Owl_symbolic_symbol.Conv s) [| input; kernel |]
+
 
 (* !!!! Currently ignore its second optional output -- that may require some structural change *)
 let maxpool ?name ?strides ?dilations ?padding input kernel_shp =

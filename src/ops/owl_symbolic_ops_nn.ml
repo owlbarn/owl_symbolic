@@ -21,30 +21,26 @@ module Conv = struct
     ; mutable auto_pad : string
           (* one of NOTSET (default), SAME_UPPER, SAME_LOWER and VALID *)
     ; mutable dilations : int array
-    ; mutable kernel_shp : int array
     ; mutable pads : int array option
-          (* This attribute cannot be used simultaneously with auto_pad attribute 
-           * TODO: Currently set to None; only use auto_pad
-           *)
     ; mutable strides : int array
-    ; mutable group : int (* TODO: currently use default value *)
+    ; mutable group : int
+    ; mutable dim : int
     }
 
   let op_type = "Conv"
 
   let create
       ?name
+      ?(dim = 2)
       ?strides
       ?(padding = VALID)
       ?dilations
       ?bias_name
       input_name
       kernel_name
-      kernel_shp
     =
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    let dim = Array.length kernel_shp in
     let dilations =
       match dilations with
       | Some d ->
@@ -79,10 +75,10 @@ module Conv = struct
     ; out_shape = None
     ; auto_pad
     ; dilations
-    ; kernel_shp
     ; pads
     ; strides
     ; group = 1
+    ; dim
     }
 end
 

@@ -115,7 +115,7 @@ let infer_shape input_shapes sym =
   | ReduceMax x     -> _infer_shape_10 input_shapes x.axes x.keepdims
   | Reshape x       -> [| Some x.shape |]
   | Conv x          ->
-    let l = Array.length x.strides in
+    let l = x.dim in
     let padding = if x.auto_pad = "VALID" then Owl_types.VALID else Owl_types.SAME in
     if l = 1
     then _infer_shape_11 input_shapes padding x.strides
@@ -125,15 +125,13 @@ let infer_shape input_shapes sym =
     then _infer_shape_13 input_shapes padding x.strides
     else failwith "Owl_symbolic_shape: illegal conv dimensions."
   | MaxPool x       ->
-    let l1 = Array.length x.kernel_shp in
-    let l2 = Array.length x.strides in
-    let l3 = Array.length x.dilations in
+    let l = Array.length x.kernel_shp in
     let ndim =
       match input_shapes.(0) with
       | Some i -> Array.length i
       | None   -> failwith "infer_shape_maxpool: input shape is none"
     in
-    assert (ndim = l1 && ndim = l2 && ndim = l3);
+    assert (ndim = l);
     let padding = if x.auto_pad = "VALID" then Owl_types.VALID else Owl_types.SAME in
     if ndim = 1
     then _infer_shape_15 input_shapes padding x.kernel_shp x.strides

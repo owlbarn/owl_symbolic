@@ -463,18 +463,13 @@ let _build_onnx_attrs_conv (x : Owl_symbolic_ops_nn.Conv.t) =
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Int in
   let i = Some (Int64.of_int x.group) in
   let attr_group = PT.default_attribute_proto ~name:name_group ~type_ ~i () in
-  (* create "kernel_shape"  attribute *)
-  let name_kernel = Some "kernel_shape" in
-  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
-  let ints = Array.map Int64.of_int x.kernel_shp |> Array.to_list in
-  let attr_kernel = PT.default_attribute_proto ~name:name_kernel ~type_ ~ints () in
   (* create "strides"  attribute *)
   let name_strides = Some "strides" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
   let ints = Array.map Int64.of_int x.strides |> Array.to_list in
   let attr_strides = PT.default_attribute_proto ~name:name_strides ~type_ ~ints () in
   (* TODO: pads *)
-  [ attr_pad; attr_dil; attr_group; attr_kernel; attr_strides ]
+  [ attr_pad; attr_dil; attr_group; attr_strides ]
 
 
 let _build_onnx_attrs_maxpool (x : Owl_symbolic_ops_nn.MaxPool.t) =
