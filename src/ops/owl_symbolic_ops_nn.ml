@@ -73,26 +73,31 @@ module MaxPool = struct
 
   let op_type = "MaxPool"
 
-  let create
-      ?(out_shape = None)
-      ?(auto_pad = "NOTSET")
-      ?(pads = None)
-      name
-      input
-      attrs
-      kernel_shp
-      strides
-      dilations
-    =
+  let create ?(padding = "NOTSET") ?strides ?dilations ?name input_name kernel_shp =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| input_name |] in
+    let dilations =
+      match dilations with
+      | Some d -> d
+      | None   -> [||]
+    in
+    let strides =
+      match strides with
+      | Some s -> s
+      | None   -> [||]
+    in
+    let pads = None in
+    let auto_pad = padding in
     { name
     ; input
     ; attrs
-    ; out_shape
+    ; out_shape = None
     ; auto_pad
+    ; pads
     ; ceil_mode = 0 (* TODO: should we use floor or ceil? *)
     ; dilations
     ; kernel_shp
-    ; pads
     ; storage_order = 0 (* We stick with Row-major *)
     ; strides
     }

@@ -206,29 +206,18 @@ let conv ?name ?bias input kernel padding dilations strides =
 
 (* TODO: every problem in conv applies here *)
 (* !!!! Currently ignore its second optional output -- that may require some structural change *)
-let maxpool ?name input kernel strides padding dilations =
-  let suffix = generate_suffix () in
-  let name =
-    match name with
-    | Some n -> n
-    | None   -> Printf.sprintf "maxpool_%i" suffix
-  in
-  let auto_pad = if padding = "SAME" then "SAME_LOWER" else "VALID" in
-  let attrs = [||] in
-  let i_name = Owl_symbolic_graph.name input in
-  let inputs = [| i_name |] in
-  let o =
+let maxpool ?name ?strides ?dilations ?padding input kernel_shp =
+  let input_name = Owl_symbolic_graph.name input in
+  let s =
     Owl_symbolic_ops_nn.MaxPool.create
-      ~auto_pad
-      name
-      inputs
-      attrs
-      kernel
-      strides
-      dilations
+      ?name
+      ?strides
+      ?dilations
+      ?padding
+      input_name
+      kernel_shp
   in
-  let sym = Owl_symbolic_symbol.MaxPool o in
-  make_node sym [| input |]
+  make_node (Owl_symbolic_symbol.MaxPool s) [| input |]
 
 
 (** Special ops *)
