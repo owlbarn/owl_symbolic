@@ -233,7 +233,7 @@ and to_latex_abs node =
   let parents = Owl_graph.parents node in
   assert (Array.length parents = 1);
   let p = to_latex parents.(0) in
-  Printf.sprintf "\left| %s \right|" p
+  Printf.sprintf "\\left| %s \\right|" p
 
 
 and to_latex_floor node =
