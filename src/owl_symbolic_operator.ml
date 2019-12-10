@@ -114,6 +114,24 @@ let tanh ?name x =
   make_node (Owl_symbolic_symbol.Tanh s) [| x |]
 
 
+let asinh ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Asin.create ?name xn in
+  make_node (Owl_symbolic_symbol.Asin s) [| x |]
+
+
+let acosh ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Acos.create ?name xn in
+  make_node (Owl_symbolic_symbol.Acos s) [| x |]
+
+
+let atanh ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Atan.create ?name xn in
+  make_node (Owl_symbolic_symbol.Atan s) [| x |]
+
+
 let sqrt ?name x =
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_math.Sqrt.create ?name xn in
@@ -132,10 +150,34 @@ let log ?name x =
   make_node (Owl_symbolic_symbol.Exp s) [| x |]
 
 
+let abs ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Abs.create ?name xn in
+  make_node (Owl_symbolic_symbol.Abs s) [| x |]
+
+
 let neg ?name x =
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_math.Neg.create ?name xn in
   make_node (Owl_symbolic_symbol.Neg s) [| x |]
+
+
+let floor ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Floor.create ?name xn in
+  make_node (Owl_symbolic_symbol.Floor s) [| x |]
+
+
+let ceil ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Ceil.create ?name xn in
+  make_node (Owl_symbolic_symbol.Ceil s) [| x |]
+
+
+let round ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Round.create ?name xn in
+  make_node (Owl_symbolic_symbol.Round s) [| x |]
 
 
 let relu ?name x =

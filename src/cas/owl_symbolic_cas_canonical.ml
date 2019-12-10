@@ -62,7 +62,7 @@ and canonical_div node =
       else if q < 0
       then -p, -q
       else (
-        let gcd = Owl_symbolic_utils.gcd (abs p) q in
+        let gcd = Owl_symbolic_utils.gcd (Pervasives.abs p) q in
         p / gcd, q / gcd)
     in
     if q == 1

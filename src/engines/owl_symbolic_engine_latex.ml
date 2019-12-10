@@ -26,6 +26,9 @@ let rec to_latex sym_node =
   | Sinh _     -> to_latex_sinh sym_node
   | Cosh _     -> to_latex_cosh sym_node
   | Tanh _     -> to_latex_tanh sym_node
+  | Asinh _    -> to_latex_asinh sym_node
+  | Acosh _    -> to_latex_acosh sym_node
+  | Atanh _    -> to_latex_atanh sym_node
   | Add _      -> to_latex_add sym_node
   | Sub _      -> to_latex_sub sym_node
   | Mul _      -> to_latex_mul sym_node
@@ -34,7 +37,7 @@ let rec to_latex sym_node =
   | Sqrt _     -> to_latex_sqrt sym_node
   | Equal _    -> to_latex_equal sym_node
   | _          -> failwith (Printf.sprintf "Not implemented: %s" (op_type sym))
-
+  (* TODO: reducesum *)
 
 and to_latex_one _ = "1"
 
@@ -188,6 +191,27 @@ and to_latex_cosh node =
 
 
 and to_latex_tanh node =
+  let parents = Owl_graph.parents node in
+  assert (Array.length parents = 1);
+  let p = to_latex parents.(0) in
+  Printf.sprintf "\\tanh(%s)" p
+
+
+and to_latex_asinh node =
+  let parents = Owl_graph.parents node in
+  assert (Array.length parents = 1);
+  let p = to_latex parents.(0) in
+  Printf.sprintf "\\sinh(%s)" p
+
+
+and to_latex_acosh node =
+  let parents = Owl_graph.parents node in
+  assert (Array.length parents = 1);
+  let p = to_latex parents.(0) in
+  Printf.sprintf "\\cosh(%s)" p
+
+
+and to_latex_atanh node =
   let parents = Owl_graph.parents node in
   assert (Array.length parents = 1);
   let p = to_latex parents.(0) in

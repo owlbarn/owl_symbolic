@@ -100,10 +100,24 @@ let infer_shape input_shapes sym =
     [| Some shp |]
   | Sin _           -> _infer_shape_01 input_shapes
   | Cos _           -> _infer_shape_01 input_shapes
+  | Tan _           -> _infer_shape_01 input_shapes
+  | Asin _          -> _infer_shape_01 input_shapes
+  | Acos _          -> _infer_shape_01 input_shapes
+  | Atan _          -> _infer_shape_01 input_shapes
+  | Sinh _          -> _infer_shape_01 input_shapes
+  | Cosh _          -> _infer_shape_01 input_shapes
+  | Tanh _          -> _infer_shape_01 input_shapes
+  | Asinh _         -> _infer_shape_01 input_shapes
+  | Acosh _         -> _infer_shape_01 input_shapes
+  | Atanh _         -> _infer_shape_01 input_shapes
   | Sqrt _          -> _infer_shape_01 input_shapes
   | Exp _           -> _infer_shape_01 input_shapes
   | Log _           -> _infer_shape_01 input_shapes
+  | Abs _           -> _infer_shape_01 input_shapes
   | Neg _           -> _infer_shape_01 input_shapes
+  | Floor _         -> _infer_shape_01 input_shapes
+  | Ceil _          -> _infer_shape_01 input_shapes
+  | Round _         -> _infer_shape_01 input_shapes
   | Relu _          -> _infer_shape_01 input_shapes
   | Add _           -> _infer_shape_03 input_shapes
   | Sub _           -> _infer_shape_03 input_shapes
