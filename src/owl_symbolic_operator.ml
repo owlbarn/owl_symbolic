@@ -8,6 +8,8 @@ open Owl_symbolic_graph
 
 let noop = make_node Owl_symbolic_symbol.NOOP [||]
 
+(** Generator *)
+
 let int ?name value =
   let sym = Owl_symbolic_ops_generator.Int.create ?name value in
   make_node (Owl_symbolic_symbol.Int sym) [||]
@@ -47,6 +49,17 @@ let random_uniform ?dtype ?seed ?low ?high ?name shape =
   in
   make_node (Owl_symbolic_symbol.RandomUniform s) [||]
 
+
+(** Logical *)
+
+let equal ?name lhs rhs =
+  let lhs_name = Owl_symbolic_graph.name lhs in
+  let rhs_name = Owl_symbolic_graph.name rhs in
+  let s = Owl_symbolic_ops_logical.Equal.create ?name lhs_name rhs_name in
+  make_node (Owl_symbolic_symbol.Equal s) [| lhs; rhs |]
+
+
+(** Math *)
 
 let sin ?name x =
   let xn = Owl_symbolic_graph.name x in
@@ -218,32 +231,3 @@ let maxpool ?name ?strides ?dilations ?padding input kernel_shp =
       kernel_shp
   in
   make_node (Owl_symbolic_symbol.MaxPool s) [| input |]
-
-
-(** Special ops *)
-
-let equal_sym ?name () =
-  let suffix = generate_suffix () in
-  let name =
-    match name with
-    | Some n -> n
-    | None   -> Printf.sprintf "equal_%i" suffix
-  in
-  let input = [||] in
-  let attrs = [||] in
-  let o = Owl_symbolic_ops_math.Equal.create name input attrs in
-  Owl_symbolic_symbol.Equal o
-
-
-let equal ?name lhs rhs =
-  let sym = equal_sym ?name () in
-  let lhs_name = Owl_symbolic_graph.name lhs in
-  let rhs_name = Owl_symbolic_graph.name rhs in
-  let input = [| lhs_name; rhs_name |] in
-  Owl_symbolic_symbol.set_input sym input;
-  make_node sym [| lhs; rhs |]
-
-
-(** The frequently used constants *)
-
-let expconst () = exp (float 1.)

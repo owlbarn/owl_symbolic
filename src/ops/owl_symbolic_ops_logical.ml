@@ -4,3 +4,22 @@
  *)
 
 (** And, Or, Xor, Greater, Less, Equal, Not, BitShift  *)
+
+open Owl_symbolic_types
+
+module Equal = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    }
+
+  let op_type = "Equal"
+
+  let create ?name lhs_name rhs_name =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| lhs_name; rhs_name |] in
+    { name; input; attrs; out_shape = None }
+end

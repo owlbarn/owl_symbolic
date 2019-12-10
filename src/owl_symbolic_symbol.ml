@@ -12,11 +12,12 @@
  *)
 
 open Owl_symbolic_types
-open Owl_symbolic_ops_math
 open Owl_symbolic_ops_reduction
 open Owl_symbolic_ops_generator
-open Owl_symbolic_ops_tensor
+open Owl_symbolic_ops_logical
+open Owl_symbolic_ops_math
 open Owl_symbolic_ops_nn
+open Owl_symbolic_ops_tensor
 
 type t =
   | NOOP
