@@ -158,7 +158,7 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
     | Reshape shp -> _build_symbol_reshape shp name sym_inputs
     | Conv2d (padding, strides) ->
       let pad =
-        if padding = SAME then Owl_symbolic_types.SAME_LOWER else Owl_symbolic_types.VALID
+        if padding = SAME then Owl_symbolic_types.SAME_UPPER else Owl_symbolic_types.VALID
       in
       Owl_symbolic_operator.conv ~name ~padding:pad ~strides sym_inputs.(0) sym_inputs.(1)
     | MaxPool2d (padding, kernel, strides) ->

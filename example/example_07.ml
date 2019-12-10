@@ -1,13 +1,13 @@
 open Owl_symbolic
-open Infix
 open Op
+open Infix
 open Type
 
 let dnn =
   let x = variable ~shape:[| 100; 3; 32; 32 |] "X" in
   let t_conv0 =
     conv
-      ~padding:Type.SAME_LOWER
+      ~padding:Type.SAME_UPPER
       x
       (random_uniform ~low:(-0.138) ~high:0.138 [| 32; 3; 3; 3 |])
   in

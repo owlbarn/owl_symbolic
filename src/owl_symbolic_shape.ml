@@ -128,7 +128,7 @@ let infer_shape input_shapes sym =
     let l = Array.length x.kernel_shp in
     let ndim =
       match input_shapes.(0) with
-      | Some i -> Array.length i
+      | Some i -> Array.length i - 2
       | None   -> failwith "infer_shape_maxpool: input shape is none"
     in
     assert (ndim = l);
