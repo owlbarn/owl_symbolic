@@ -20,8 +20,11 @@ module ReduceSum = struct
 
   let op_type = "ReduceSum"
 
-  let create ?(out_shape = None) ?(keepdims = true) name input attrs axes =
-    { name; input; attrs; out_shape; axes; keepdims }
+  let create ?(keepdims = true) ?name x axes =
+    let attrs = [||] in
+    let input = [| x |] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None; axes; keepdims }
 end
 
 module ReduceMax = struct
@@ -36,6 +39,9 @@ module ReduceMax = struct
 
   let op_type = "ReduceMax"
 
-  let create ?(out_shape = None) ?(keepdims = true) name input attrs axes =
-    { name; input; attrs; out_shape; axes; keepdims }
+  let create ?(keepdims = true) ?name x axes =
+    let attrs = [||] in
+    let input = [| x |] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = None; axes; keepdims }
 end

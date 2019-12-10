@@ -5,7 +5,6 @@
 
 open Owl_symbolic_namespace
 open Owl_symbolic_graph
-open Owl_symbolic_types
 
 let noop = make_node Owl_symbolic_symbol.NOOP [||]
 
@@ -141,55 +140,26 @@ let matmul ?name x y =
   make_node (Owl_symbolic_symbol.MatMul s) [| x; y |]
 
 
-let reduce_sum ?(keepdims = true) ?name x axes =
-  let suffix = generate_suffix () in
-  let name =
-    match name with
-    | Some n -> n
-    | None   -> Printf.sprintf "reduce_sum_%i" suffix
-  in
-  let x_name = Owl_symbolic_graph.name x in
-  let input = [| x_name |] in
-  let attrs = [||] in
-  let o = Owl_symbolic_ops_reduction.ReduceSum.create ~keepdims name input attrs axes in
-  let sym = Owl_symbolic_symbol.ReduceSum o in
-  make_node sym [| x |]
+let reduce_sum ?keepdims ?name x axes =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_reduction.ReduceSum.create ?keepdims ?name xn axes in
+  make_node (Owl_symbolic_symbol.ReduceSum s) [| x |]
 
 
-let reduce_max ?(keepdims = true) ?name x axes =
-  let suffix = generate_suffix () in
-  let name =
-    match name with
-    | Some n -> n
-    | None   -> Printf.sprintf "reduce_max_%i" suffix
-  in
-  let x_name = Owl_symbolic_graph.name x in
-  let input = [| x_name |] in
-  let attrs = [||] in
-  let o = Owl_symbolic_ops_reduction.ReduceMax.create ~keepdims name input attrs axes in
-  let sym = Owl_symbolic_symbol.ReduceMax o in
-  make_node sym [| x |]
+let reduce_max ?keepdims ?name x axes =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_reduction.ReduceMax.create ?keepdims ?name xn axes in
+  make_node (Owl_symbolic_symbol.ReduceMax s) [| x |]
 
 
-(* NOTEICE that reshape accept a shape tensor as input node; not as attributes *)
 let reshape ?name data shape =
-  let suffix = generate_suffix () in
-  let name =
-    match name with
-    | Some n -> n
-    | None   -> Printf.sprintf "reduce_max_%i" suffix
-  in
-  let x_name = Owl_symbolic_graph.name data in
-  let y_name = Owl_symbolic_graph.name shape in
-  let input = [| x_name; y_name |] in
-  let attrs = [||] in
-  let shp = (Owl_symbolic_symbol.tensor_value (Owl_graph.attr shape)).int_val in
+  let data_name = Owl_symbolic_graph.name data in
   let shp =
-    match shp with
-    | Some s -> s
-    | None   -> failwith "Owl_symbolic_operator.reshape: empty shape input."
+    match Owl_graph.attr shape with
+    | Owl_symbolic_symbol.Tensor s -> s
+    | _                            -> failwith "reshape op: unmatched op type shape"
   in
-  let o = Owl_symbolic_ops_tensor.Reshape.create name input shp attrs in
+  let o = Owl_symbolic_ops_tensor.Reshape.create ?name data_name shp in
   let sym = Owl_symbolic_symbol.Reshape o in
   make_node sym [| data; shape |]
 

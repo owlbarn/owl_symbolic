@@ -22,6 +22,19 @@ module Reshape = struct
 
   let op_type = "Reshape"
 
-  let create ?(out_shape = None) name input shape attrs =
-    { name; input; attrs; shape; out_shape }
+  let create
+      ?(out_shape = None)
+      ?name
+      data_name
+      (shape : Owl_symbolic_ops_generator.Tensor.t)
+    =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| data_name; shape.name |] in
+    let shp =
+      match shape.value.int_val with
+      | Some s -> s
+      | None   -> failwith "Owl_symbolic_ops_tensor.reshape: empty shape input."
+    in
+    { name; input; attrs; shape = shp; out_shape }
 end
