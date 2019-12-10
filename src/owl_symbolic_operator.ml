@@ -153,6 +153,8 @@ let matmul ?name x y =
   make_node (Owl_symbolic_symbol.MatMul s) [| x; y |]
 
 
+(** Reduction *)
+
 let reduce_sum ?keepdims ?name x axes =
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_reduction.ReduceSum.create ?keepdims ?name xn axes in
@@ -165,6 +167,8 @@ let reduce_max ?keepdims ?name x axes =
   make_node (Owl_symbolic_symbol.ReduceMax s) [| x |]
 
 
+(** Tensor *)
+
 let reshape ?name data shape =
   let data_name = Owl_symbolic_graph.name data in
   let shp =
@@ -176,6 +180,8 @@ let reshape ?name data shape =
   let sym = Owl_symbolic_symbol.Reshape o in
   make_node sym [| data; shape |]
 
+
+(** Neural Network *)
 
 (* This interface needs to be updated; make dilations and strides default value *)
 let conv ?name ?bias input kernel padding dilations strides =

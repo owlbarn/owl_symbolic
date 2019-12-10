@@ -73,22 +73,34 @@ module MaxPool = struct
 
   let op_type = "MaxPool"
 
-  let create ?(padding = "NOTSET") ?strides ?dilations ?name input_name kernel_shp =
+  let create ?(padding = VALID) ?strides ?dilations ?name input_name kernel_shp =
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| input_name |] in
+    let dim = Array.length kernel_shp in
     let dilations =
       match dilations with
-      | Some d -> d
-      | None   -> [||]
+      | Some d ->
+        assert (Array.length d = dim);
+        d
+      | None   -> Array.make dim 1
     in
     let strides =
       match strides with
-      | Some s -> s
-      | None   -> [||]
+      | Some s ->
+        assert (Array.length s = dim);
+        s
+      | None   -> Array.make dim 1
     in
-    let pads = None in
-    let auto_pad = padding in
+    let auto_pad, pads =
+      match padding with
+      | SAME_UPPER -> "SAME_UPPER", None
+      | SAME_LOWER -> "SAME_LOWRE", None
+      | VALID      -> "VALID", None
+      | PAD p      ->
+        assert (Array.length p = dim);
+        "NOTSET", Some p
+    in
     { name
     ; input
     ; attrs

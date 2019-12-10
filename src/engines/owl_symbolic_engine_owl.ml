@@ -160,7 +160,9 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
       let pad = if padding = SAME then "SAME" else "VALID" in
       Owl_symbolic_operator.conv ~name sym_inputs.(0) sym_inputs.(1) pad stride [| 1; 1 |]
     | MaxPool2d (padding, kernel, strides) ->
-      let pad = if padding = SAME then "SAME" else "VALID" in
+      let pad =
+        if padding = SAME then Owl_symbolic_types.SAME_LOWER else Owl_symbolic_types.VALID
+      in
       Owl_symbolic_operator.maxpool ~name ~strides ~padding:pad sym_inputs.(0) kernel
     | _ ->
       failwith

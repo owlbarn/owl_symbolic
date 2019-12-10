@@ -50,6 +50,12 @@ type tensor =
   ; raw_val : bytes option
   }
 
+type pad =
+  | SAME_UPPER
+  | SAME_LOWER
+  | VALID
+  | PAD of int array
+
 (* One and only one of the value arguments should be used *)
 let make_tensor ?dtype ?flt_val ?int_val ?str_val ?raw_val shape =
   let counter = ref 0 in
