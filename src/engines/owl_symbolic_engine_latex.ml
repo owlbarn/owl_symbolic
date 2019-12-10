@@ -20,6 +20,7 @@ let rec to_latex sym_node =
   | Sin _      -> to_latex_sin sym_node
   | Cos _      -> to_latex_cos sym_node
   | Add _      -> to_latex_add sym_node
+  | Sub _      -> to_latex_sub sym_node
   | Mul _      -> to_latex_mul sym_node
   | Div _      -> to_latex_div sym_node
   | Pow _      -> to_latex_pow sym_node
@@ -82,6 +83,19 @@ and to_latex_add node =
         (* TODO: if p contains negone use -; if we need brackets *)
         let ptex = to_latex p in
         s ^ "+" ^ ptex)
+      ""
+      parents
+  in
+  String.sub tex 1 (String.length tex - 1)
+
+
+and to_latex_sub node =
+  let parents = Owl_graph.parents node in
+  let tex =
+    Array.fold_left
+      (fun s p ->
+        let ptex = to_latex p in
+        s ^ "-" ^ ptex)
       ""
       parents
   in
