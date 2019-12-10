@@ -19,6 +19,10 @@ let rec to_latex sym_node =
   | Exp _      -> to_latex_exp sym_node
   | Sin _      -> to_latex_sin sym_node
   | Cos _      -> to_latex_cos sym_node
+  | Tan _      -> to_latex_tan sym_node
+  | Sinh _     -> to_latex_sinh sym_node
+  | Cosh _     -> to_latex_cosh sym_node
+  | Tanh _     -> to_latex_tanh sym_node
   | Add _      -> to_latex_add sym_node
   | Sub _      -> to_latex_sub sym_node
   | Mul _      -> to_latex_mul sym_node
@@ -136,6 +140,34 @@ and to_latex_cos node =
   assert (Array.length parents = 1);
   let p = to_latex parents.(0) in
   Printf.sprintf "\\cos(%s)" p
+
+
+and to_latex_tan node =
+  let parents = Owl_graph.parents node in
+  assert (Array.length parents = 1);
+  let p = to_latex parents.(0) in
+  Printf.sprintf "\\tan(%s)" p
+
+
+and to_latex_sinh node =
+  let parents = Owl_graph.parents node in
+  assert (Array.length parents = 1);
+  let p = to_latex parents.(0) in
+  Printf.sprintf "\\sinh(%s)" p
+
+
+and to_latex_cosh node =
+  let parents = Owl_graph.parents node in
+  assert (Array.length parents = 1);
+  let p = to_latex parents.(0) in
+  Printf.sprintf "\\cosh(%s)" p
+
+
+and to_latex_tanh node =
+  let parents = Owl_graph.parents node in
+  assert (Array.length parents = 1);
+  let p = to_latex parents.(0) in
+  Printf.sprintf "\\tanh(%s)" p
 
 
 and to_latex_sqrt node =
