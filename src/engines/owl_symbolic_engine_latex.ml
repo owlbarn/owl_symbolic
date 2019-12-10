@@ -156,21 +156,21 @@ and to_latex_asin node =
   let parents = Owl_graph.parents node in
   assert (Array.length parents = 1);
   let p = to_latex parents.(0) in
-  Printf.sprintf "asin(%s)" p
+  Printf.sprintf "\\mathrm{asin}(%s)" p
 
 
 and to_latex_acos node =
   let parents = Owl_graph.parents node in
   assert (Array.length parents = 1);
   let p = to_latex parents.(0) in
-  Printf.sprintf "acos(%s)" p
+  Printf.sprintf "\\mathrm{acos}(%s)" p
 
 
 and to_latex_atan node =
   let parents = Owl_graph.parents node in
   assert (Array.length parents = 1);
   let p = to_latex parents.(0) in
-  Printf.sprintf "atan(%s)" p
+  Printf.sprintf "\\mathrm{atan}(%s)" p
 
 
 and to_latex_sinh node =
