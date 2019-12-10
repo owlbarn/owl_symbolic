@@ -176,7 +176,7 @@ let make_onnx_model graph =
 
 (** Functions to build part of onnx graph *)
 
-let _check_same types name =
+let check_same types name =
   let flag = ref true in
   if Array.length types = 0
   then failwith "build_onnx_type_check: empty parents for non-input ops";
@@ -187,7 +187,7 @@ let _check_same types name =
     raise (TYPE_CHECK msg))
 
 
-let _check_constraint t constraints name =
+let check_constraint t constraints name =
   if Array.mem t constraints = false
   then (
     let msg = Printf.sprintf "%s: input type not in constraints." name in
@@ -234,22 +234,22 @@ let _types_constraint03 =
   |]
 
 
-let _type_check_pattern00 sym = Owl_symbolic_symbol.dtype sym
+let type_check_pattern00 sym = Owl_symbolic_symbol.dtype sym
 
-let _type_check_pattern01 target_type type_constraint name =
-  _check_constraint target_type type_constraint name;
+let type_check_pattern01 target_type type_constraint name =
+  check_constraint target_type type_constraint name;
   target_type
 
 
-let _type_check_pattern02 target_types type_constraint name =
-  _check_same target_types name;
-  _check_constraint target_types.(0) type_constraint name;
+let type_check_pattern02 target_types type_constraint name =
+  check_same target_types name;
+  check_constraint target_types.(0) type_constraint name;
   target_types.(0)
 
 
-let _type_check_pattern03 target_types type_constraint0 type_constraint1 name =
-  _check_constraint target_types.(0) type_constraint0 name;
-  _check_constraint target_types.(1) type_constraint1 name;
+let type_check_pattern03 target_types type_constraint0 type_constraint1 name =
+  check_constraint target_types.(0) type_constraint0 name;
+  check_constraint target_types.(1) type_constraint1 name;
   target_types.(0)
 
 
@@ -278,34 +278,34 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
       (* Type checking *)
       let out_type =
         match sym with
-        | Float _         -> _type_check_pattern00 sym
-        | Int _           -> _type_check_pattern00 sym
-        | Pi _            -> _type_check_pattern00 sym
-        | Tensor _        -> _type_check_pattern00 sym
-        | Complex _       -> _type_check_pattern00 sym
-        | Variable _      -> _type_check_pattern00 sym
+        | Float _         -> type_check_pattern00 sym
+        | Int _           -> type_check_pattern00 sym
+        | Pi _            -> type_check_pattern00 sym
+        | Tensor _        -> type_check_pattern00 sym
+        | Complex _       -> type_check_pattern00 sym
+        | Variable _      -> type_check_pattern00 sym
         | RandomUniform _ ->
           let dt = Owl_symbolic_symbol.dtype sym in
-          _type_check_pattern01 dt _types_constraint00 name
-        | Sin _           -> _type_check_pattern01 ptypes.(0) _types_constraint00 name
-        | Cos _           -> _type_check_pattern01 ptypes.(0) _types_constraint00 name
-        | Sqrt _          -> _type_check_pattern01 ptypes.(0) _types_constraint00 name
-        | Exp _           -> _type_check_pattern01 ptypes.(0) _types_constraint00 name
-        | Log _           -> _type_check_pattern01 ptypes.(0) _types_constraint00 name
-        | Neg _           -> _type_check_pattern01 ptypes.(0) _types_constraint01 name
-        | Relu _          -> _type_check_pattern01 ptypes.(0) _types_constraint00 name
-        | Add _           -> _type_check_pattern02 ptypes _types_constraint02 name
-        | Sub _           -> _type_check_pattern02 ptypes _types_constraint02 name
-        | Mul _           -> _type_check_pattern02 ptypes _types_constraint02 name
-        | Div _           -> _type_check_pattern02 ptypes _types_constraint02 name
-        | Pow _           -> _type_check_pattern02 ptypes _types_constraint00 name
-        | MatMul _        -> _type_check_pattern02 ptypes _types_constraint02 name
-        | ReduceSum _     -> _type_check_pattern01 ptypes.(0) _types_constraint02 name
-        | ReduceMax _     -> _type_check_pattern01 ptypes.(0) _types_constraint02 name
+          type_check_pattern01 dt _types_constraint00 name
+        | Sin _           -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Cos _           -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Sqrt _          -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Exp _           -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Log _           -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Neg _           -> type_check_pattern01 ptypes.(0) _types_constraint01 name
+        | Relu _          -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Add _           -> type_check_pattern02 ptypes _types_constraint02 name
+        | Sub _           -> type_check_pattern02 ptypes _types_constraint02 name
+        | Mul _           -> type_check_pattern02 ptypes _types_constraint02 name
+        | Div _           -> type_check_pattern02 ptypes _types_constraint02 name
+        | Pow _           -> type_check_pattern02 ptypes _types_constraint00 name
+        | MatMul _        -> type_check_pattern02 ptypes _types_constraint02 name
+        | ReduceSum _     -> type_check_pattern01 ptypes.(0) _types_constraint02 name
+        | ReduceMax _     -> type_check_pattern01 ptypes.(0) _types_constraint02 name
         | Reshape _       ->
-          _type_check_pattern03 ptypes _types_constraint03 [| SNT_Int64 |] name
-        | Conv _          -> _type_check_pattern02 ptypes _types_constraint00 name
-        | MaxPool _       -> _type_check_pattern01 ptypes.(0) _types_constraint00 name
+          type_check_pattern03 ptypes _types_constraint03 [| SNT_Int64 |] name
+        | Conv _          -> type_check_pattern02 ptypes _types_constraint00 name
+        | MaxPool _       -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | _               -> SNT_Noop
       in
       Hashtbl.add dtypes name out_type)
@@ -317,7 +317,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
  * Attributes scheme: https://github.com/onnx/onnx/blob/master/docs/Operators.md
  *)
 
-let _build_onnx_attrs_float sym =
+let build_onnx_attrs_float sym =
   (* create "value" attribute for Constant *)
   let name = Some "value" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
@@ -327,7 +327,7 @@ let _build_onnx_attrs_float sym =
   [ a_value ]
 
 
-let _build_onnx_attrs_int sym =
+let build_onnx_attrs_int sym =
   (* create "value" attribute for Constant *)
   let name = Some "value" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
@@ -337,7 +337,7 @@ let _build_onnx_attrs_int sym =
   [ a_value ]
 
 
-let _build_onnx_attrs_complex sym =
+let build_onnx_attrs_complex sym =
   let name = Some "value" in
   (* create "value" attribute for Constant *)
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
@@ -347,7 +347,7 @@ let _build_onnx_attrs_complex sym =
   [ a_value ]
 
 
-let _build_onnx_attrs_pi _sym =
+let build_onnx_attrs_pi _sym =
   (* create "value" attribute for Constant *)
   let name = Some "value" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
@@ -357,7 +357,7 @@ let _build_onnx_attrs_pi _sym =
   [ a_value ]
 
 
-let _build_onnx_attrs_tensor sym =
+let build_onnx_attrs_tensor sym =
   (* create "value" attribute for Constant *)
   let name = Some "value" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
@@ -394,7 +394,7 @@ let _build_onnx_attrs_tensor sym =
   [ a_value ]
 
 
-let _build_onnx_attrs_randomuniform (x : Owl_symbolic_ops_generator.RandomUniform.t) =
+let build_onnx_attrs_randomuniform (x : Owl_symbolic_ops_generator.RandomUniform.t) =
   (* create "dtype" attribute *)
   let name_dtype = Some "dtype" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Int in
@@ -419,7 +419,7 @@ let _build_onnx_attrs_randomuniform (x : Owl_symbolic_ops_generator.RandomUnifor
   [ attr_dtype; attr_high; attr_low; attr_shape ]
 
 
-let _build_onnx_attrs_reducesum (x : Owl_symbolic_ops_reduction.ReduceSum.t) =
+let build_onnx_attrs_reducesum (x : Owl_symbolic_ops_reduction.ReduceSum.t) =
   let name_axes = Some "axes" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
   let ints = Array.map Int64.of_int x.axes |> Array.to_list in
@@ -433,7 +433,7 @@ let _build_onnx_attrs_reducesum (x : Owl_symbolic_ops_reduction.ReduceSum.t) =
   [ attr_axes; attr_keepdims ]
 
 
-let _build_onnx_attrs_reducemax (x : Owl_symbolic_ops_reduction.ReduceMax.t) =
+let build_onnx_attrs_reducemax (x : Owl_symbolic_ops_reduction.ReduceMax.t) =
   let name_axes = Some "axes" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
   let ints = Array.map Int64.of_int x.axes |> Array.to_list in
@@ -447,7 +447,7 @@ let _build_onnx_attrs_reducemax (x : Owl_symbolic_ops_reduction.ReduceMax.t) =
   [ attr_axes; attr_keepdims ]
 
 
-let _build_onnx_attrs_conv (x : Owl_symbolic_ops_nn.Conv.t) =
+let build_onnx_attrs_conv (x : Owl_symbolic_ops_nn.Conv.t) =
   (* create "auto_pad" attribute *)
   let name_pad = Some "auto_pad" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.String in
@@ -472,7 +472,7 @@ let _build_onnx_attrs_conv (x : Owl_symbolic_ops_nn.Conv.t) =
   [ attr_pad; attr_dil; attr_group; attr_strides ]
 
 
-let _build_onnx_attrs_maxpool (x : Owl_symbolic_ops_nn.MaxPool.t) =
+let build_onnx_attrs_maxpool (x : Owl_symbolic_ops_nn.MaxPool.t) =
   (* create "auto_pad" attribute *)
   let name_pad = Some "auto_pad" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.String in
@@ -510,16 +510,16 @@ let _build_onnx_attrs_maxpool (x : Owl_symbolic_ops_nn.MaxPool.t) =
 let build_onnx_attrs sym =
   let onnx_attrs =
     match sym with
-    | S.Float _         -> _build_onnx_attrs_float sym
-    | S.Int _           -> _build_onnx_attrs_int sym
-    | S.Complex _       -> _build_onnx_attrs_complex sym
-    | S.Pi _            -> _build_onnx_attrs_pi sym
-    | S.Tensor _        -> _build_onnx_attrs_tensor sym
-    | S.RandomUniform x -> _build_onnx_attrs_randomuniform x
-    | S.ReduceSum x     -> _build_onnx_attrs_reducesum x
-    | S.ReduceMax x     -> _build_onnx_attrs_reducemax x
-    | S.Conv x          -> _build_onnx_attrs_conv x
-    | S.MaxPool x       -> _build_onnx_attrs_maxpool x
+    | S.Float _         -> build_onnx_attrs_float sym
+    | S.Int _           -> build_onnx_attrs_int sym
+    | S.Complex _       -> build_onnx_attrs_complex sym
+    | S.Pi _            -> build_onnx_attrs_pi sym
+    | S.Tensor _        -> build_onnx_attrs_tensor sym
+    | S.RandomUniform x -> build_onnx_attrs_randomuniform x
+    | S.ReduceSum x     -> build_onnx_attrs_reducesum x
+    | S.ReduceMax x     -> build_onnx_attrs_reducemax x
+    | S.Conv x          -> build_onnx_attrs_conv x
+    | S.MaxPool x       -> build_onnx_attrs_maxpool x
     | _                 -> []
   in
   onnx_attrs

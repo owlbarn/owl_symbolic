@@ -62,9 +62,9 @@ and canonical_div node =
       else if q < 0
       then -p, -q
       else (
-        let gcd = Owl_symbolic_utils.gcd 
-          ((Owl_base_maths.abs (float_of_int p)) |> int_of_float)
-        q in
+        let gcd =
+          Owl_symbolic_utils.gcd (Owl_base_maths.abs (float_of_int p) |> int_of_float) q
+        in
         p / gcd, q / gcd)
     in
     if q == 1

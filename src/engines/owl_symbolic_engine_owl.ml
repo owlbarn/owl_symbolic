@@ -16,7 +16,7 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
 
   type t = G.graph
 
-  let _build_symbol_var op name =
+  let build_symbol_var op name =
     let shape = op.shape in
     let s =
       match shape.(0) with
@@ -28,7 +28,7 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
     Owl_symbolic_operator.variable ~shape:s ~dtype:SNT_Float name
 
 
-  let _build_symbol_zeros shp name =
+  let build_symbol_zeros shp name =
     let shp = Owl_symbolic_utils.to_nchw_order shp in
     (* HACK *)
     let ele_num = Owl_symbolic_utils.nelt shp in
@@ -37,7 +37,7 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
     Owl_symbolic_operator.tensor ~name tensor
 
 
-  let _build_symbol_ones shp name =
+  let build_symbol_ones shp name =
     let shp = Owl_symbolic_utils.to_nchw_order shp in
     (* HACK *)
     let ele_num = Owl_symbolic_utils.nelt shp in
@@ -46,7 +46,7 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
     Owl_symbolic_operator.tensor ~name tensor
 
 
-  let _build_symbol_uniform shp node =
+  let build_symbol_uniform shp node =
     let name = Owl_graph.name node in
     let shp = Owl_symbolic_utils.hwio_to_oihw_order shp in
     (* HACK *)
@@ -62,7 +62,7 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
     Owl_symbolic_operator.random_uniform ~name ~high ~low shp
 
 
-  let _build_symbol_const node =
+  let build_symbol_const node =
     let cnode_attr = Owl_graph.attr node in
     let name = Owl_graph.name node in
     let shape =
@@ -87,7 +87,7 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
     Owl_symbolic_operator.tensor ~name t
 
 
-  let _build_symbol_sum' cnode_attr name sym_inputs =
+  let build_symbol_sum' cnode_attr name sym_inputs =
     let shape = cnode_attr.shape in
     let len =
       match shape.(0) with
@@ -98,7 +98,7 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
     Owl_symbolic_operator.reduce_sum ~name ~keepdims:false sym_inputs.(0) axes
 
 
-  let _build_symbol_reshape shp name sym_inputs =
+  let build_symbol_reshape shp name sym_inputs =
     let shp = Owl_symbolic_utils.to_nchw_order shp in
     (* HACK *)
     let t =
@@ -121,11 +121,11 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
     in
     match cnode_attr.op with
     (* TODO: unify interfaces *)
-    | Var -> _build_symbol_var cnode_attr name
-    | Zeros shp -> _build_symbol_zeros shp name
-    | Ones shp -> _build_symbol_ones shp name
-    | Uniform shp -> _build_symbol_uniform shp node
-    | Const -> _build_symbol_const node
+    | Var -> build_symbol_var cnode_attr name
+    | Zeros shp -> build_symbol_zeros shp name
+    | Ones shp -> build_symbol_ones shp name
+    | Uniform shp -> build_symbol_uniform shp node
+    | Const -> build_symbol_const node
     | Sin -> Owl_symbolic_operator.sin ~name sym_inputs.(0)
     | Cos -> Owl_symbolic_operator.cos ~name sym_inputs.(0)
     | Sqrt -> Owl_symbolic_operator.sqrt ~name sym_inputs.(0)
@@ -153,9 +153,9 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
     | Dot (_, _, _, _) -> Owl_symbolic_operator.matmul ~name sym_inputs.(0) sym_inputs.(1)
     | SumReduce a -> Owl_symbolic_operator.reduce_sum ~name sym_inputs.(0) a
     | Sum a -> Owl_symbolic_operator.reduce_sum ~name sym_inputs.(0) [| a |]
-    | Sum' -> _build_symbol_sum' cnode_attr name sym_inputs
+    | Sum' -> build_symbol_sum' cnode_attr name sym_inputs
     | Max a -> Owl_symbolic_operator.reduce_max ~name sym_inputs.(0) [| a |]
-    | Reshape shp -> _build_symbol_reshape shp name sym_inputs
+    | Reshape shp -> build_symbol_reshape shp name sym_inputs
     | Conv2d (padding, strides) ->
       let pad =
         if padding = SAME then Owl_symbolic_types.SAME_UPPER else Owl_symbolic_types.VALID

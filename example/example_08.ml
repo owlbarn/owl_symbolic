@@ -21,7 +21,7 @@ let make_expr1 () =
   let alpha = variable "\\alpha" in
   let beta = variable "\\beta" in
   let theta = variable "\\theta" in
-  let y = sqrt(alpha + atan(int 6)) - tanh(beta / theta) in
+  let y = sqrt (alpha + atan (int 6)) - tanh (beta / theta) in
   let expr = SymGraph.make_graph [| y |] "sym_graph" in
   LaTeX_Engine.of_symbolic expr |> print_endline;
   expr

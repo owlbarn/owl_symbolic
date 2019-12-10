@@ -37,8 +37,9 @@ let rec to_latex sym_node =
   | Sqrt _     -> to_latex_sqrt sym_node
   | Equal _    -> to_latex_equal sym_node
   | _          -> failwith (Printf.sprintf "Not implemented: %s" (op_type sym))
-  (* TODO: reducesum *)
 
+
+(* TODO: reducesum *)
 and to_latex_one _ = "1"
 
 and to_latex_pi _ = "\\pi"
