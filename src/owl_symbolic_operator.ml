@@ -3,7 +3,6 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-open Owl_symbolic_namespace
 open Owl_symbolic_graph
 
 let noop = make_node Owl_symbolic_symbol.NOOP [||]
@@ -183,47 +182,39 @@ let reshape ?name data shape =
 
 (** Neural Network *)
 
-(* This interface needs to be updated; make dilations and strides default value *)
-let conv ?name ?bias input kernel padding dilations strides =
-  let suffix = generate_suffix () in
-  let name =
-    match name with
-    | Some n -> n
-    | None   -> Printf.sprintf "conv_%i" suffix
-  in
-  (* TODO: or new padding type? Should we use same_lower or same_upper?  *)
-  let auto_pad = if padding = "SAME" then "SAME_LOWER" else "VALID" in
-  let attrs = [||] in
-  let kernel_shp = Owl_symbolic_symbol.shape (Owl_graph.attr kernel) in
-  (* NOTE: kernel_shp only takes the h and w part, not channels *)
-  let ndims = Array.length strides + 2 in
-  let kernel_shp = Array.sub kernel_shp 2 (ndims - 2) in
+let conv ?name ?padding ?strides ?dilations ?bias input kernel =
   let i_name = Owl_symbolic_graph.name input in
   let k_name = Owl_symbolic_graph.name kernel in
-  let inputs =
-    match bias with
-    | Some n ->
-      let b_name = Owl_symbolic_graph.name n in
-      [| i_name; k_name; b_name |]
-    | None   -> [| i_name; k_name |]
-  in
-  let o =
-    Owl_symbolic_ops_nn.Conv.create
-      ~auto_pad
-      name
-      inputs
-      attrs
-      kernel_shp
-      strides
-      dilations
-  in
-  let sym = Owl_symbolic_symbol.Conv o in
+  let kernel_shp = Owl_graph.attr kernel |> Owl_symbolic_symbol.shape in
   match bias with
-  | Some b -> make_node sym [| input; kernel; b |]
-  | None   -> make_node sym [| input; kernel |]
+  | Some b ->
+    let b_name = Owl_symbolic_graph.name b in
+    let s =
+      Owl_symbolic_ops_nn.Conv.create
+        ?name
+        ?padding
+        ?strides
+        ?dilations
+        ~bias_name:b_name
+        i_name
+        k_name
+        kernel_shp
+    in
+    make_node (Owl_symbolic_symbol.Conv s) [| input; kernel; b |]
+  | None   ->
+    let s =
+      Owl_symbolic_ops_nn.Conv.create
+        ?name
+        ?padding
+        ?strides
+        ?dilations
+        i_name
+        k_name
+        kernel_shp
+    in
+    make_node (Owl_symbolic_symbol.Conv s) [| input; kernel |]
 
 
-(* TODO: every problem in conv applies here *)
 (* !!!! Currently ignore its second optional output -- that may require some structural change *)
 let maxpool ?name ?strides ?dilations ?padding input kernel_shp =
   let input_name = Owl_symbolic_graph.name input in

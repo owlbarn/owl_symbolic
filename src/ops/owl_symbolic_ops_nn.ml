@@ -33,20 +33,50 @@ module Conv = struct
   let op_type = "Conv"
 
   let create
-      ?(out_shape = None)
-      ?(auto_pad = "NOTSET")
-      ?(pads = None)
-      name
-      input
-      attrs
+      ?name
+      ?strides
+      ?(padding = VALID)
+      ?dilations
+      ?bias_name
+      input_name
+      kernel_name
       kernel_shp
-      strides
-      dilations
     =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let dim = Array.length kernel_shp in
+    let dilations =
+      match dilations with
+      | Some d ->
+        assert (Array.length d = dim);
+        d
+      | None   -> Array.make dim 1
+    in
+    let strides =
+      match strides with
+      | Some s ->
+        assert (Array.length s = dim);
+        s
+      | None   -> Array.make dim 1
+    in
+    let auto_pad, pads =
+      match padding with
+      | SAME_UPPER -> "SAME_UPPER", None
+      | SAME_LOWER -> "SAME_LOWRE", None
+      | VALID      -> "VALID", None
+      | PAD p      ->
+        assert (Array.length p = dim);
+        "NOTSET", Some p
+    in
+    let input =
+      match bias_name with
+      | Some b -> [| input_name; kernel_name; b |]
+      | None   -> [| input_name; kernel_name |]
+    in
     { name
     ; input
     ; attrs
-    ; out_shape
+    ; out_shape = None
     ; auto_pad
     ; dilations
     ; kernel_shp

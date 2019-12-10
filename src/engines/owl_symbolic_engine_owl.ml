@@ -156,9 +156,11 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
     | Sum' -> _build_symbol_sum' cnode_attr name sym_inputs
     | Max a -> Owl_symbolic_operator.reduce_max ~name sym_inputs.(0) [| a |]
     | Reshape shp -> _build_symbol_reshape shp name sym_inputs
-    | Conv2d (padding, stride) ->
-      let pad = if padding = SAME then "SAME" else "VALID" in
-      Owl_symbolic_operator.conv ~name sym_inputs.(0) sym_inputs.(1) pad stride [| 1; 1 |]
+    | Conv2d (padding, strides) ->
+      let pad =
+        if padding = SAME then Owl_symbolic_types.SAME_LOWER else Owl_symbolic_types.VALID
+      in
+      Owl_symbolic_operator.conv ~name ~padding:pad ~strides sym_inputs.(0) sym_inputs.(1)
     | MaxPool2d (padding, kernel, strides) ->
       let pad =
         if padding = SAME then Owl_symbolic_types.SAME_LOWER else Owl_symbolic_types.VALID
