@@ -23,6 +23,7 @@ let rec to_latex sym_node =
   | Mul _      -> to_latex_mul sym_node
   | Div _      -> to_latex_div sym_node
   | Pow _      -> to_latex_pow sym_node
+  | Sqrt _     -> to_latex_sqrt sym_node
   | Equal _    -> to_latex_equal sym_node
   | _          -> failwith (Printf.sprintf "Not implemented: %s" (op_type sym))
 
@@ -92,7 +93,7 @@ and to_latex_mul node =
   let parents = Owl_graph.parents node in
   assert (Array.length parents = 2);
   let ps = Array.map to_latex parents in
-  Printf.sprintf "%s\\times %s" ps.(0) ps.(1)
+  Printf.sprintf "%s \\times %s" ps.(0) ps.(1)
 
 
 and to_latex_pow node =
@@ -121,6 +122,13 @@ and to_latex_cos node =
   assert (Array.length parents = 1);
   let p = to_latex parents.(0) in
   Printf.sprintf "\\cos(%s)" p
+
+
+and to_latex_sqrt node =
+  let parents = Owl_graph.parents node in
+  assert (Array.length parents = 1);
+  let p = to_latex parents.(0) in
+  Printf.sprintf "\\sqrt{%s}" p
 
 
 (* TODO: but do we really need a class for each symbol, e.g \doteq, \approx... ? 
