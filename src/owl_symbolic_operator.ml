@@ -78,6 +78,24 @@ let tan ?name x =
   make_node (Owl_symbolic_symbol.Tan s) [| x |]
 
 
+let sinh ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Sinh.create ?name xn in
+  make_node (Owl_symbolic_symbol.Sinh s) [| x |]
+
+
+let cosh ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Cosh.create ?name xn in
+  make_node (Owl_symbolic_symbol.Cosh s) [| x |]
+
+
+let tanh ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Tanh.create ?name xn in
+  make_node (Owl_symbolic_symbol.Tanh s) [| x |]
+
+
 let sqrt ?name x =
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_math.Sqrt.create ?name xn in
