@@ -34,6 +34,9 @@ let rec to_latex sym_node =
   | Mul _      -> to_latex_mul sym_node
   | Div _      -> to_latex_div sym_node
   | Pow _      -> to_latex_pow sym_node
+  | Abs _      -> to_latex_abs sym_node
+  | Floor _    -> to_latex_floor sym_node
+  | Ceil _     -> to_latex_ceil sym_node
   | Sqrt _     -> to_latex_sqrt sym_node
   | Equal _    -> to_latex_equal sym_node
   | _          -> failwith (Printf.sprintf "Not implemented: %s" (op_type sym))
@@ -224,6 +227,31 @@ and to_latex_sqrt node =
   assert (Array.length parents = 1);
   let p = to_latex parents.(0) in
   Printf.sprintf "\\sqrt{%s}" p
+
+
+and to_latex_abs node =
+  let parents = Owl_graph.parents node in
+  assert (Array.length parents = 1);
+  let p = to_latex parents.(0) in
+  Printf.sprintf "\\left\\| %s \\right\\|" p
+
+
+and to_latex_floor node =
+  (* A better solution is to use mathtools and \DeclarePairedDelimiter
+   * https://tex.stackexchange.com/questions/42271/floor-and-ceiling-functions/42274
+   * but not sure how we could do that in KaTeX.
+   *)
+  let parents = Owl_graph.parents node in
+  assert (Array.length parents = 1);
+  let p = to_latex parents.(0) in
+  Printf.sprintf "\\lfloor %s \\rfloor" p
+
+
+and to_latex_ceil node =
+  let parents = Owl_graph.parents node in
+  assert (Array.length parents = 1);
+  let p = to_latex parents.(0) in
+  Printf.sprintf "\\lceil %s \\rceil" p
 
 
 (* TODO: but do we really need a class for each symbol, e.g \doteq, \approx... ? 
