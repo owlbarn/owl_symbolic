@@ -207,27 +207,12 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
           Hashtbl.find syms name)
         outputs
     in
-    (* TODO: why the fxxk can't I use cgraph.name? *)
     Owl_symbolic_graph.make_graph output_sym_nodes ""
 
 
-  (* Dummy *)
   let of_symbolic (_sym_graph : Owl_symbolic_graph.t) =
     G.make_graph ~input:[||] ~output:[||] "dummy-graph"
 
-
-  (*
-  let eval_arr (sym_graph : Owl_symbolic_graph.t) =
-    let cgraph_arr = of_symbolic sym_graph |> G.node_to_arr in
-    G.eval_arr [| cgraph_arr |];
-    G.unpack_arr cgraph_arr
-
-
-  let eval_elt (sym_graph : Owl_symbolic_graph.t) =
-    let cgraph_elt = of_symbolic sym_graph |> G.node_to_elt in
-    G.eval_elt [| cgraph_elt |];
-    G.unpack_elt cgraph_elt
-  *)
 
   (** save an cgraph model to file *)
   let save _cgraph _filename = ()
