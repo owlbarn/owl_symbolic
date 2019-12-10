@@ -18,7 +18,10 @@ let make_expr0 () =
 
 let make_expr1 () =
   (* construct *)
-  let y = sqrt(variable "x_0" + int 6) + variable "x_1" in
+  let alpha = variable "\\alpha" in
+  let beta = variable "\\beta" in
+  let theta = variable "\\theta" in
+  let y = sqrt(alpha + int 6) + beta / theta in
   let expr = SymGraph.make_graph [| y |] "sym_graph" in
   LaTeX_Engine.of_symbolic expr |> print_endline;
   expr
