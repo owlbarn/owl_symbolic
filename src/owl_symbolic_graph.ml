@@ -59,7 +59,6 @@ let make_graph (nodes : symbolic_node array) name =
       let x = Owl_graph.attr n |> Owl_symbolic_symbol.name in
       node_names := Array.append [| x |] !node_names)
     nodes;
-  (* TODO: add the names of `nodes` in `node_names` *)
   let node_names = !node_names in
   if Owl_symbolic_utils.check_uniq node_names = false
   then raise (INVALID_NAME "make_graph: the nodes contain duplicated names");
@@ -108,7 +107,6 @@ let name sym_node =
 
 let length (g : t) =
   let cnt = ref 0 in
-  (* TODO: also add in the *)
   topo_iter (fun _ -> cnt := !cnt + 1) g;
   !cnt
 

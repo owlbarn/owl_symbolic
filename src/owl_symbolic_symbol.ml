@@ -3,14 +3,6 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-(* TODO: The Pi is quite interesting -- 
- * how should we represent these mathematical constant, especially an irrational one? 
- * Perhaps just define a new type and wrap it in tensor? ...
- * Currently I would put it side-by-side with int/float/complex as a stand-alone type
- * But we shall see how it works. 
- * One problem is its type: is it float or double? For now, let the user decide. 
- *)
-
 open Owl_symbolic_types
 open Owl_symbolic_ops_reduction
 open Owl_symbolic_ops_generator
@@ -21,6 +13,7 @@ open Owl_symbolic_ops_tensor
 
 type t =
   | NOOP
+  (* Input *)
   | Int of Int.t
   | Complex of Complex.t
   | Float of Float.t
@@ -60,15 +53,15 @@ type t =
   | Div of Div.t
   | Pow of Pow.t
   | MatMul of MatMul.t
+  (* Reduction *)
   | ReduceSum of ReduceSum.t
   | ReduceMax of ReduceMax.t
   | Reshape of Reshape.t
+  (* NN *)
   | Conv of Conv.t
   | MaxPool of MaxPool.t
-  (* special ops *)
+  (* Logical ops *)
   | Equal of Equal.t
-
-(* TODO: GEMM or MatMul? *)
 
 let name = function
   | Int x           -> Int.(x.name)
@@ -116,6 +109,54 @@ let name = function
   | MaxPool x       -> MaxPool.(x.name)
   | Equal x         -> Equal.(x.name)
   | _               -> failwith "owl_symbolic_symbol.name"
+
+
+let op_type = function
+  | Int _           -> Int.op_type
+  | Float _         -> Float.op_type
+  | Complex _       -> Complex.op_type
+  | Tensor _        -> Tensor.op_type
+  | Variable _      -> Variable.op_type
+  | RandomUniform _ -> RandomUniform.op_type
+  | Zero _          -> Zero.op_type
+  | One _           -> One.op_type
+  | NegOne _        -> NegOne.op_type
+  | Pi _            -> Pi.op_type
+  | Sin _           -> Sin.op_type
+  | Cos _           -> Cos.op_type
+  | Tan _           -> Tan.op_type
+  | Asin _          -> Asin.op_type
+  | Acos _          -> Acos.op_type
+  | Atan _          -> Atan.op_type
+  | Sinh _          -> Sinh.op_type
+  | Cosh _          -> Cosh.op_type
+  | Tanh _          -> Tanh.op_type
+  | Asinh _         -> Asinh.op_type
+  | Acosh _         -> Acosh.op_type
+  | Atanh _         -> Atanh.op_type
+  | Sqrt _          -> Sqrt.op_type
+  | Exp _           -> Exp.op_type
+  | Log _           -> Log.op_type
+  | Rational _      -> Rational.op_type
+  | Neg _           -> Neg.op_type
+  | Abs _           -> Abs.op_type
+  | Floor _         -> Floor.op_type
+  | Ceil _          -> Ceil.op_type
+  | Round _         -> Round.op_type
+  | Relu _          -> Relu.op_type
+  | Add _           -> Add.op_type
+  | Sub _           -> Sub.op_type
+  | Mul _           -> Mul.op_type
+  | Div _           -> Div.op_type
+  | Pow _           -> Pow.op_type
+  | MatMul _        -> MatMul.op_type
+  | Reshape _       -> Reshape.op_type
+  | ReduceSum _     -> ReduceSum.op_type
+  | ReduceMax _     -> ReduceMax.op_type
+  | Conv _          -> Conv.op_type
+  | MaxPool _       -> MaxPool.op_type
+  | Equal _         -> Equal.op_type
+  | _               -> failwith "owl_symbolic_symbol.op_type"
 
 
 let input = function
@@ -203,97 +244,6 @@ let set_input sym inputs =
   | MaxPool x   -> x.input <- inputs
   | Equal x     -> x.input <- inputs
   | _           -> failwith "owl_symbolic_symbol.set_input"
-
-
-let op_type = function
-  | Int _           -> Int.op_type
-  | Float _         -> Float.op_type
-  | Complex _       -> Complex.op_type
-  | Tensor _        -> Tensor.op_type
-  | Variable _      -> Variable.op_type
-  | RandomUniform _ -> RandomUniform.op_type
-  | Zero _          -> Zero.op_type
-  | One _           -> One.op_type
-  | NegOne _        -> NegOne.op_type
-  | Pi _            -> Pi.op_type
-  | Sin _           -> Sin.op_type
-  | Cos _           -> Cos.op_type
-  | Tan _           -> Tan.op_type
-  | Asin _          -> Asin.op_type
-  | Acos _          -> Acos.op_type
-  | Atan _          -> Atan.op_type
-  | Sinh _          -> Sinh.op_type
-  | Cosh _          -> Cosh.op_type
-  | Tanh _          -> Tanh.op_type
-  | Asinh _         -> Asinh.op_type
-  | Acosh _         -> Acosh.op_type
-  | Atanh _         -> Atanh.op_type
-  | Sqrt _          -> Sqrt.op_type
-  | Exp _           -> Exp.op_type
-  | Log _           -> Log.op_type
-  | Rational _      -> Rational.op_type
-  | Neg _           -> Neg.op_type
-  | Abs _           -> Abs.op_type
-  | Floor _         -> Floor.op_type
-  | Ceil _          -> Ceil.op_type
-  | Round _         -> Round.op_type
-  | Relu _          -> Relu.op_type
-  | Add _           -> Add.op_type
-  | Sub _           -> Sub.op_type
-  | Mul _           -> Mul.op_type
-  | Div _           -> Div.op_type
-  | Pow _           -> Pow.op_type
-  | MatMul _        -> MatMul.op_type
-  | Reshape _       -> Reshape.op_type
-  | ReduceSum _     -> ReduceSum.op_type
-  | ReduceMax _     -> ReduceMax.op_type
-  | Conv _          -> Conv.op_type
-  | MaxPool _       -> MaxPool.op_type
-  | Equal _         -> Equal.op_type
-  | _               -> failwith "owl_symbolic_symbol.op_type"
-
-
-let sym_attrs = function
-  | Int x           -> Int.(x.attrs)
-  | Float x         -> Float.(x.attrs)
-  | Complex x       -> Complex.(x.attrs)
-  | Tensor x        -> Tensor.(x.attrs)
-  | Variable x      -> Variable.(x.attrs)
-  | RandomUniform x -> RandomUniform.(x.attrs)
-  | Zero x          -> Zero.(x.attrs)
-  | One x           -> One.(x.attrs)
-  | NegOne x        -> NegOne.(x.attrs)
-  | Pi x            -> Pi.(x.attrs)
-  | Sin x           -> Sin.(x.attrs)
-  | Cos x           -> Cos.(x.attrs)
-  | Sqrt x          -> Sqrt.(x.attrs)
-  | Exp x           -> Exp.(x.attrs)
-  | Log x           -> Log.(x.attrs)
-  | Rational x      -> Rational.(x.attrs)
-  | Neg x           -> Neg.(x.attrs)
-  | Relu x          -> Relu.(x.attrs)
-  | Add x           -> Add.(x.attrs)
-  | Sub x           -> Sub.(x.attrs)
-  | Mul x           -> Mul.(x.attrs)
-  | Div x           -> Div.(x.attrs)
-  | Pow x           -> Pow.(x.attrs)
-  | MatMul x        -> MatMul.(x.attrs)
-  | Reshape x       -> Reshape.(x.attrs)
-  | ReduceSum x     -> ReduceSum.(x.attrs)
-  | ReduceMax x     -> ReduceMax.(x.attrs)
-  | Conv x          -> Conv.(x.attrs)
-  | MaxPool x       -> MaxPool.(x.attrs)
-  | Equal x         -> Equal.(x.attrs)
-  | _               -> [||]
-
-
-let shape = function
-  | Tensor x        ->
-    let (t : tensor) = Tensor.(x.value) in
-    t.shape
-  | Variable x      -> Variable.(x.shape)
-  | RandomUniform x -> RandomUniform.(x.shape)
-  | _               -> [||]
 
 
 let out_shape = function
@@ -385,6 +335,77 @@ let set_out_shape sym shape =
   | _               -> failwith "set_out_shape: unsupported op."
 
 
+(** operaations that only apply to certain symbol *)
+
+let attrs = function
+  | Int x           -> Int.(x.attrs)
+  | Float x         -> Float.(x.attrs)
+  | Complex x       -> Complex.(x.attrs)
+  | Tensor x        -> Tensor.(x.attrs)
+  | Variable x      -> Variable.(x.attrs)
+  | RandomUniform x -> RandomUniform.(x.attrs)
+  | Zero x          -> Zero.(x.attrs)
+  | One x           -> One.(x.attrs)
+  | NegOne x        -> NegOne.(x.attrs)
+  | Pi x            -> Pi.(x.attrs)
+  | Sin x           -> Sin.(x.attrs)
+  | Cos x           -> Cos.(x.attrs)
+  | Sqrt x          -> Sqrt.(x.attrs)
+  | Exp x           -> Exp.(x.attrs)
+  | Log x           -> Log.(x.attrs)
+  | Rational x      -> Rational.(x.attrs)
+  | Neg x           -> Neg.(x.attrs)
+  | Relu x          -> Relu.(x.attrs)
+  | Add x           -> Add.(x.attrs)
+  | Sub x           -> Sub.(x.attrs)
+  | Mul x           -> Mul.(x.attrs)
+  | Div x           -> Div.(x.attrs)
+  | Pow x           -> Pow.(x.attrs)
+  | MatMul x        -> MatMul.(x.attrs)
+  | Reshape x       -> Reshape.(x.attrs)
+  | ReduceSum x     -> ReduceSum.(x.attrs)
+  | ReduceMax x     -> ReduceMax.(x.attrs)
+  | Conv x          -> Conv.(x.attrs)
+  | MaxPool x       -> MaxPool.(x.attrs)
+  | Equal x         -> Equal.(x.attrs)
+  | _               -> [||]
+
+
+let set_attrs sym a =
+  match sym with
+  | Int x           -> x.attrs <- a
+  | Float x         -> x.attrs <- a
+  | Complex x       -> x.attrs <- a
+  | Tensor x        -> x.attrs <- a
+  | Variable x      -> x.attrs <- a
+  | RandomUniform x -> x.attrs <- a
+  | Zero x          -> x.attrs <- a
+  | One x           -> x.attrs <- a
+  | NegOne x        -> x.attrs <- a
+  | Pi x            -> x.attrs <- a
+  | Sin x           -> x.attrs <- a
+  | Cos x           -> x.attrs <- a
+  | Sqrt x          -> x.attrs <- a
+  | Exp x           -> x.attrs <- a
+  | Log x           -> x.attrs <- a
+  | Rational x      -> x.attrs <- a
+  | Neg x           -> x.attrs <- a
+  | Relu x          -> x.attrs <- a
+  | Add x           -> x.attrs <- a
+  | Sub x           -> x.attrs <- a
+  | Mul x           -> x.attrs <- a
+  | Div x           -> x.attrs <- a
+  | Pow x           -> x.attrs <- a
+  | MatMul x        -> x.attrs <- a
+  | Reshape x       -> x.attrs <- a
+  | ReduceSum x     -> x.attrs <- a
+  | ReduceMax x     -> x.attrs <- a
+  | Conv x          -> x.attrs <- a
+  | MaxPool x       -> x.attrs <- a
+  | Equal x         -> x.attrs <- a
+  | _               -> ()
+
+
 let dtype = function
   | Float _         -> SNT_Float
   | Int _           -> SNT_Int32
@@ -398,7 +419,14 @@ let dtype = function
   | _               -> failwith "owl_symboic_symobl.dtype: not var or constant op"
 
 
-(** operaations that only apply to certain symbol *)
+let shape = function
+  | Tensor x        ->
+    let (t : tensor) = Tensor.(x.value) in
+    t.shape
+  | Variable x      -> Variable.(x.shape)
+  | RandomUniform x -> RandomUniform.(x.shape)
+  | _               -> [||]
+
 
 let axes = function
   | ReduceSum x -> x.axes

@@ -1,16 +1,15 @@
 open Owl_symbolic
 open Infix
 open Op
+open Type
 
 let dnn =
   let x = variable ~shape:[| 100; 3; 32; 32 |] "X" in
   let t_conv0 =
     conv
+      ~padding:Type.SAME_LOWER
       x
       (random_uniform ~low:(-0.138) ~high:0.138 [| 32; 3; 3; 3 |])
-      "SAME"
-      [| 1; 1 |]
-      [| 1; 1 |]
   in
   let t_zero0 =
     let flt_val = Array.make 32 0. in
@@ -18,7 +17,7 @@ let dnn =
     tensor t
   in
   let t_relu0 = relu (t_conv0 + t_zero0) in
-  let t_maxpool0 = maxpool t_relu0 [| 2; 2 |] [| 2; 2 |] "VALID" [| 1; 1 |] in
+  let t_maxpool0 = maxpool t_relu0 ~padding:VALID ~strides:[| 2; 2 |] [| 2; 2 |] in
   let t_shape0 =
     let t = Type.make_tensor ~dtype:SNT_Int64 ~int_val:[| 100; 8192 |] [| 2 |] in
     tensor t

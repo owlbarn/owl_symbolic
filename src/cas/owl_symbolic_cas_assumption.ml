@@ -65,6 +65,7 @@ Assumption rules :
  *)
 
 open Owl_symbolic_symbol
+open Owl_symbolic_types
 
 (* TODO: These temporary rules are only hacks tailored for the example *)
 
@@ -81,3 +82,12 @@ let is_zero n =
   | Float s   -> s.value = 0.
   | Complex s -> s.real = 0. && s.img = 0.
   | _         -> false
+
+
+let set_rational n =
+  let sym = Owl_graph.attr n in
+  let attr = Owl_symbolic_symbol.attrs sym in
+  let a = "is_rational", ATTR_Bool true in
+  let attr = Array.append attr [| a |] in
+  Owl_symbolic_symbol.set_attrs sym attr;
+  Owl_graph.set_attr n sym
