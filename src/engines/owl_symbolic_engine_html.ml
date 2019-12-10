@@ -3,7 +3,7 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-(** HTML engine must be used together with LaTex engine. *)
+(** HTML engine must be used together with LaTeX engine. *)
 
 let html_section symbol_to_latex section_id embed_dot expr =
   let expr_tex = symbol_to_latex expr in
