@@ -78,6 +78,24 @@ let tan ?name x =
   make_node (Owl_symbolic_symbol.Tan s) [| x |]
 
 
+let asin ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Asin.create ?name xn in
+  make_node (Owl_symbolic_symbol.Asin s) [| x |]
+
+
+let acos ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Acos.create ?name xn in
+  make_node (Owl_symbolic_symbol.Acos s) [| x |]
+
+
+let atan ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Atan.create ?name xn in
+  make_node (Owl_symbolic_symbol.Atan s) [| x |]
+
+
 let sinh ?name x =
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_math.Sinh.create ?name xn in

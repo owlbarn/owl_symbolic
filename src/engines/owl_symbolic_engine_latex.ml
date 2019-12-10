@@ -20,6 +20,9 @@ let rec to_latex sym_node =
   | Sin _      -> to_latex_sin sym_node
   | Cos _      -> to_latex_cos sym_node
   | Tan _      -> to_latex_tan sym_node
+  | Asin _     -> to_latex_asin sym_node
+  | Acos _     -> to_latex_acos sym_node
+  | Atan _     -> to_latex_atan sym_node
   | Sinh _     -> to_latex_sinh sym_node
   | Cosh _     -> to_latex_cosh sym_node
   | Tanh _     -> to_latex_tanh sym_node
@@ -147,6 +150,27 @@ and to_latex_tan node =
   assert (Array.length parents = 1);
   let p = to_latex parents.(0) in
   Printf.sprintf "\\tan(%s)" p
+
+
+and to_latex_asin node =
+  let parents = Owl_graph.parents node in
+  assert (Array.length parents = 1);
+  let p = to_latex parents.(0) in
+  Printf.sprintf "asin(%s)" p
+
+
+and to_latex_acos node =
+  let parents = Owl_graph.parents node in
+  assert (Array.length parents = 1);
+  let p = to_latex parents.(0) in
+  Printf.sprintf "acos(%s)" p
+
+
+and to_latex_atan node =
+  let parents = Owl_graph.parents node in
+  assert (Array.length parents = 1);
+  let p = to_latex parents.(0) in
+  Printf.sprintf "atan(%s)" p
 
 
 and to_latex_sinh node =
