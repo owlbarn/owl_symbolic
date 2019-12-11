@@ -96,7 +96,7 @@ and to_latex_add node =
       (fun s p ->
         (* TODO: if p contains negone use -; if we need brackets *)
         let ptex = to_latex p in
-        s ^ "+" ^ ptex)
+        s ^ " + " ^ ptex)
       ""
       parents
   in
@@ -109,7 +109,7 @@ and to_latex_sub node =
     Array.fold_left
       (fun s p ->
         let ptex = to_latex p in
-        s ^ "-" ^ ptex)
+        s ^ " - " ^ ptex)
       ""
       parents
   in
@@ -128,7 +128,7 @@ and to_latex_pow node =
   let parents = Owl_graph.parents node in
   assert (Array.length parents = 2);
   let ps = Array.map to_latex parents in
-  ps.(0) ^ "^" ^ ps.(1)
+  ps.(0) ^ " ^ " ^ ps.(1)
 
 
 and to_latex_exp node =
