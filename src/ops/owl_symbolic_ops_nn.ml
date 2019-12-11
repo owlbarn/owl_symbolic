@@ -140,3 +140,32 @@ module MaxPool = struct
     ; strides
     }
 end
+
+module BatchNormalization = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option
+    ; mutable epsilon : float
+    ; mutable momentum : float
+    }
+
+  let op_type = "BatchNormalization"
+
+  let create ?name ?eps ?momentum x_n scale_n b_n mean_n var_n =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| x_n; scale_n; b_n; mean_n; var_n |] in
+    let epsilon =
+      match eps with
+      | Some e -> e
+      | None   -> 1e-5
+    in
+    let momentum =
+      match momentum with
+      | Some m -> m
+      | None   -> 0.9
+    in
+    { name; input; attrs; out_shape = None; epsilon; momentum }
+end
