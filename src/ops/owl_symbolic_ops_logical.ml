@@ -12,7 +12,7 @@ module Equal = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Equal"
@@ -21,5 +21,5 @@ module Equal = struct
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| lhs_name; rhs_name |] in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end

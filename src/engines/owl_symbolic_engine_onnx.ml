@@ -567,7 +567,7 @@ let build_onnx_outputs sym_graph type_dict =
       let elt_type = Hashtbl.find type_dict name |> map_elt_type_to_int32 in
       let shape = S.out_shape sym in
       let shape =
-        match shape with
+        match shape.(0) with
         | Some s -> s
         | None   -> failwith "build_onnx_outputs: non-specified output shape."
       in

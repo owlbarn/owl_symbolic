@@ -17,7 +17,7 @@ module Conv = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     ; mutable auto_pad : string
           (* one of NOTSET (default), SAME_UPPER, SAME_LOWER and VALID *)
     ; mutable dilations : int array
@@ -72,7 +72,7 @@ module Conv = struct
     { name
     ; input
     ; attrs
-    ; out_shape = None
+    ; out_shape = [| None |]
     ; auto_pad
     ; dilations
     ; pads
@@ -87,7 +87,7 @@ module MaxPool = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     ; mutable auto_pad : string
     ; mutable ceil_mode : int
     ; mutable dilations : int array
@@ -130,7 +130,7 @@ module MaxPool = struct
     { name
     ; input
     ; attrs
-    ; out_shape = None
+    ; out_shape = [| None |]
     ; auto_pad
     ; pads
     ; ceil_mode = 0 (* TODO: should we use floor or ceil? *)
@@ -146,7 +146,7 @@ module BatchNormalization = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     ; mutable epsilon : float
     ; mutable momentum : float
     }
@@ -167,5 +167,5 @@ module BatchNormalization = struct
       | Some m -> m
       | None   -> 0.9
     in
-    { name; input; attrs; out_shape = None; epsilon; momentum }
+    { name; input; attrs; out_shape = [| None |]; epsilon; momentum }
 end

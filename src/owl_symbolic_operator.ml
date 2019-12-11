@@ -289,7 +289,6 @@ let conv ?name ?dim ?padding ?strides ?dilations ?bias input kernel =
     make_node (Owl_symbolic_symbol.Conv s) [| input; kernel |]
 
 
-(* !!!! Currently ignore its second optional output -- that may require some structural change *)
 let maxpool ?name ?strides ?dilations ?padding input kernel_shp =
   let input_name = Owl_symbolic_graph.name input in
   let s =
@@ -302,3 +301,23 @@ let maxpool ?name ?strides ?dilations ?padding input kernel_shp =
       kernel_shp
   in
   make_node (Owl_symbolic_symbol.MaxPool s) [| input |]
+
+
+let batch_norm ?name ?eps ?momentum x scale bias mean var =
+  let x_name = Owl_symbolic_graph.name x in
+  let scale_name = Owl_symbolic_graph.name scale in
+  let bias_name = Owl_symbolic_graph.name bias in
+  let mean_name = Owl_symbolic_graph.name mean in
+  let var_name = Owl_symbolic_graph.name var in
+  let s =
+    Owl_symbolic_ops_nn.BatchNormalization.create
+      ?name
+      ?eps
+      ?momentum
+      x_name
+      scale_name
+      bias_name
+      mean_name
+      var_name
+  in
+  make_node (Owl_symbolic_symbol.BatchNormalization s) [| x; scale; bias; mean; var |]

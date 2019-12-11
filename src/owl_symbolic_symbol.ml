@@ -299,46 +299,46 @@ let out_shape = function
   | _                    -> failwith "out_shape: unsupported op."
 
 
-let set_out_shape sym shape =
+let set_out_shape sym shapes =
   match sym with
-  | Tensor x             -> x.out_shape <- shape
-  | Variable x           -> x.out_shape <- shape
-  | RandomUniform x      -> x.out_shape <- shape
-  | Sin x                -> x.out_shape <- shape
-  | Cos x                -> x.out_shape <- shape
-  | Tan x                -> x.out_shape <- shape
-  | Asin x               -> x.out_shape <- shape
-  | Acos x               -> x.out_shape <- shape
-  | Atan x               -> x.out_shape <- shape
-  | Sinh x               -> x.out_shape <- shape
-  | Cosh x               -> x.out_shape <- shape
-  | Tanh x               -> x.out_shape <- shape
-  | Asinh x              -> x.out_shape <- shape
-  | Acosh x              -> x.out_shape <- shape
-  | Atanh x              -> x.out_shape <- shape
-  | Sqrt x               -> x.out_shape <- shape
-  | Exp x                -> x.out_shape <- shape
-  | Log x                -> x.out_shape <- shape
-  | Neg x                -> x.out_shape <- shape
-  | Abs x                -> x.out_shape <- shape
-  | Floor x              -> x.out_shape <- shape
-  | Ceil x               -> x.out_shape <- shape
-  | Round x              -> x.out_shape <- shape
-  | Relu x               -> x.out_shape <- shape
-  | Rational x           -> x.out_shape <- shape
-  | Add x                -> x.out_shape <- shape
-  | Sub x                -> x.out_shape <- shape
-  | Mul x                -> x.out_shape <- shape
-  | Div x                -> x.out_shape <- shape
-  | Pow x                -> x.out_shape <- shape
-  | MatMul x             -> x.out_shape <- shape
-  | Reshape x            -> x.out_shape <- shape
-  | ReduceSum x          -> x.out_shape <- shape
-  | ReduceMax x          -> x.out_shape <- shape
-  | Conv x               -> x.out_shape <- shape
-  | MaxPool x            -> x.out_shape <- shape
-  | BatchNormalization x -> x.out_shape <- shape
-  | Equal x              -> x.out_shape <- shape
+  | Tensor x             -> x.out_shape <- shapes
+  | Variable x           -> x.out_shape <- shapes
+  | RandomUniform x      -> x.out_shape <- shapes
+  | Sin x                -> x.out_shape <- shapes
+  | Cos x                -> x.out_shape <- shapes
+  | Tan x                -> x.out_shape <- shapes
+  | Asin x               -> x.out_shape <- shapes
+  | Acos x               -> x.out_shape <- shapes
+  | Atan x               -> x.out_shape <- shapes
+  | Sinh x               -> x.out_shape <- shapes
+  | Cosh x               -> x.out_shape <- shapes
+  | Tanh x               -> x.out_shape <- shapes
+  | Asinh x              -> x.out_shape <- shapes
+  | Acosh x              -> x.out_shape <- shapes
+  | Atanh x              -> x.out_shape <- shapes
+  | Sqrt x               -> x.out_shape <- shapes
+  | Exp x                -> x.out_shape <- shapes
+  | Log x                -> x.out_shape <- shapes
+  | Neg x                -> x.out_shape <- shapes
+  | Abs x                -> x.out_shape <- shapes
+  | Floor x              -> x.out_shape <- shapes
+  | Ceil x               -> x.out_shape <- shapes
+  | Round x              -> x.out_shape <- shapes
+  | Relu x               -> x.out_shape <- shapes
+  | Rational x           -> x.out_shape <- shapes
+  | Add x                -> x.out_shape <- shapes
+  | Sub x                -> x.out_shape <- shapes
+  | Mul x                -> x.out_shape <- shapes
+  | Div x                -> x.out_shape <- shapes
+  | Pow x                -> x.out_shape <- shapes
+  | MatMul x             -> x.out_shape <- shapes
+  | Reshape x            -> x.out_shape <- shapes
+  | ReduceSum x          -> x.out_shape <- shapes
+  | ReduceMax x          -> x.out_shape <- shapes
+  | Conv x               -> x.out_shape <- shapes
+  | MaxPool x            -> x.out_shape <- shapes
+  | BatchNormalization x -> x.out_shape <- shapes
+  | Equal x              -> x.out_shape <- shapes
   | _                    -> failwith "set_out_shape: unsupported op."
 
 

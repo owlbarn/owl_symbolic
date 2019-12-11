@@ -29,21 +29,20 @@ let make_node (sym : Owl_symbolic_symbol.t) (parents : symbolic_node array) =
         (fun sym_node -> Owl_graph.attr sym_node |> Owl_symbolic_symbol.out_shape)
         parents
     in
-    let shape = Owl_symbolic_shape.infer_shape in_shapes sym in
+    let (shape : int array option array) = Owl_symbolic_shape.infer_shape in_shapes sym in
     (* TODO: remove this part in product code *)
-    if _debug_shape = true
+    (* if _debug_shape = true
     then (
       let foo =
-        match shape.(0) with
+        match shape.(0).(0) with
         | Some s -> s
         | None   -> [||]
       in
       Owl_log.info
         "%s: %s\n"
         (Owl_symbolic_symbol.name sym)
-        (Owl_utils_array.to_string string_of_int foo));
-    (* Currently only use the first shape *)
-    Owl_symbolic_symbol.set_out_shape sym shape.(0));
+        (Owl_utils_array.to_string string_of_int foo)); *)
+    Owl_symbolic_symbol.set_out_shape sym shape);
   (* Connect child with parents *)
   connect_ancestors parents [| child |];
   let uniq_parents = Owl_utils_array.unique parents in

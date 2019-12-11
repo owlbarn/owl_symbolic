@@ -21,15 +21,15 @@ module Rational = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     ; mutable p : int
     ; mutable q : int
     }
 
   let op_type = "Rational"
 
-  let create ?(out_shape = None) name input attrs =
-    { name; input; attrs; out_shape; p = 0; q = 0 }
+  let create name input attrs =
+    { name; input; attrs; out_shape = [| None |]; p = 0; q = 0 }
 end
 
 (** One input *)
@@ -39,7 +39,7 @@ module Sin = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Sin"
@@ -48,7 +48,7 @@ module Sin = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Cos = struct
@@ -56,7 +56,7 @@ module Cos = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Cos"
@@ -65,7 +65,7 @@ module Cos = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Tan = struct
@@ -73,7 +73,7 @@ module Tan = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Tan"
@@ -82,7 +82,7 @@ module Tan = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Asin = struct
@@ -90,7 +90,7 @@ module Asin = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Asin"
@@ -99,7 +99,7 @@ module Asin = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Acos = struct
@@ -107,7 +107,7 @@ module Acos = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Acos"
@@ -116,7 +116,7 @@ module Acos = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Atan = struct
@@ -124,7 +124,7 @@ module Atan = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Atan"
@@ -133,7 +133,7 @@ module Atan = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Sinh = struct
@@ -141,7 +141,7 @@ module Sinh = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Sinh"
@@ -150,7 +150,7 @@ module Sinh = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Cosh = struct
@@ -158,7 +158,7 @@ module Cosh = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Cosh"
@@ -167,7 +167,7 @@ module Cosh = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Tanh = struct
@@ -175,7 +175,7 @@ module Tanh = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Tanh"
@@ -184,7 +184,7 @@ module Tanh = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Asinh = struct
@@ -192,7 +192,7 @@ module Asinh = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Asinh"
@@ -201,7 +201,7 @@ module Asinh = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Acosh = struct
@@ -209,7 +209,7 @@ module Acosh = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Acosh"
@@ -218,7 +218,7 @@ module Acosh = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Atanh = struct
@@ -226,7 +226,7 @@ module Atanh = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Atanh"
@@ -235,7 +235,7 @@ module Atanh = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Sqrt = struct
@@ -243,7 +243,7 @@ module Sqrt = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Sqrt"
@@ -252,7 +252,7 @@ module Sqrt = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Exp = struct
@@ -260,7 +260,7 @@ module Exp = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Exp"
@@ -269,7 +269,7 @@ module Exp = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Log = struct
@@ -277,7 +277,7 @@ module Log = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Log"
@@ -286,7 +286,7 @@ module Log = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Abs = struct
@@ -294,7 +294,7 @@ module Abs = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Abs"
@@ -303,7 +303,7 @@ module Abs = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Neg = struct
@@ -311,7 +311,7 @@ module Neg = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Neg"
@@ -320,7 +320,7 @@ module Neg = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Floor = struct
@@ -328,7 +328,7 @@ module Floor = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Floor"
@@ -337,7 +337,7 @@ module Floor = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Ceil = struct
@@ -345,7 +345,7 @@ module Ceil = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Ceil"
@@ -354,7 +354,7 @@ module Ceil = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Round = struct
@@ -362,7 +362,7 @@ module Round = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Round"
@@ -371,7 +371,7 @@ module Round = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Relu = struct
@@ -379,7 +379,7 @@ module Relu = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Relu"
@@ -388,7 +388,7 @@ module Relu = struct
     let input = [| x_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 (** Two inputs *)
@@ -398,7 +398,7 @@ module Add = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
           (* ; mutable pos_scalar : int --> differentiate add (0), scalaradd(-1), and addscalar(1) *)
     }
 
@@ -408,7 +408,7 @@ module Add = struct
     let input = [| x; y |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Sub = struct
@@ -416,7 +416,7 @@ module Sub = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Sub"
@@ -425,7 +425,7 @@ module Sub = struct
     let input = [| x; y |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Mul = struct
@@ -433,7 +433,7 @@ module Mul = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Mul"
@@ -442,7 +442,7 @@ module Mul = struct
     let input = [| x; y |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Div = struct
@@ -450,7 +450,7 @@ module Div = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Div"
@@ -459,7 +459,7 @@ module Div = struct
     let input = [| x; y |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Pow = struct
@@ -467,7 +467,7 @@ module Pow = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "Pow"
@@ -476,7 +476,7 @@ module Pow = struct
     let input = [| x; y |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Gemm = struct
@@ -484,12 +484,15 @@ module Gemm = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "MatMul"
 
-  let create ?(out_shape = None) name input attrs = { name; input; attrs; out_shape }
+  let create ?name input =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 (* Matrix product that behaves like numpy.matmul:
@@ -499,7 +502,7 @@ module MatMul = struct
     { mutable name : string
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option
+    ; mutable out_shape : int array option array
     }
 
   let op_type = "MatMul"
@@ -508,5 +511,5 @@ module MatMul = struct
     let input = [| x; y |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = None }
+    { name; input; attrs; out_shape = [| None |] }
 end
