@@ -100,7 +100,7 @@ and to_latex_add node =
       ""
       parents
   in
-  String.sub tex 1 (String.length tex - 1)
+  String.sub tex 3 (String.length tex - 3)
 
 
 and to_latex_sub node =
@@ -113,7 +113,7 @@ and to_latex_sub node =
       ""
       parents
   in
-  String.sub tex 1 (String.length tex - 1)
+  String.sub tex 3 (String.length tex - 3)
 
 
 (* TODO: a lot more special cases... *)

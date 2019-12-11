@@ -130,7 +130,7 @@ module MaxPool = struct
     { name
     ; input
     ; attrs
-    ; out_shape = [| None |]
+    ; out_shape = [| None; None |]
     ; auto_pad
     ; pads
     ; ceil_mode = 0 (* TODO: should we use floor or ceil? *)
@@ -167,5 +167,6 @@ module BatchNormalization = struct
       | Some m -> m
       | None   -> 0.9
     in
-    { name; input; attrs; out_shape = [| None |]; epsilon; momentum }
+    let out_shape = [| None; None; None; None; None |] in
+    { name; input; attrs; out_shape; epsilon; momentum }
 end
