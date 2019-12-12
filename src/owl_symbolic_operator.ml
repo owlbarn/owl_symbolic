@@ -294,26 +294,21 @@ let maxpool ?name ?strides ?dilations ?padding input kernel_shp =
   let n = Owl_symbolic_utils.node_name ?name "MaxPool" in
   let n1 = n ^ "_y" in
   let n2 = n ^ "_indices" in
-  let s1 = 
+  let s =
     Owl_symbolic_ops_nn.MaxPool.create
-      ~name:n1 
+      ~name:n
       ?strides
       ?dilations
       ?padding
       input_name
       kernel_shp
   in
-  let s2 = 
-    Owl_symbolic_ops_nn.MaxPool.create
-      ~name:n2
-      ?strides
-      ?dilations
-      ?padding
-      input_name
-      kernel_shp
-  in
-  make_node (Owl_symbolic_symbol.MaxPool s1) [| input |],
-  make_node (Owl_symbolic_symbol.MaxPool s2) [| input |]
+  let o1 = Owl_symbolic_ops_tensor.Identity.create ~idx:0 ~name:n1 n in
+  let o2 = Owl_symbolic_ops_tensor.Identity.create ~idx:1 ~name:n2 n in
+  let maxp = make_node (Owl_symbolic_symbol.MaxPool s) [| input |] in
+  let out_1 = make_node (Owl_symbolic_symbol.Identity o1) [| maxp |] in
+  let out_2 = make_node (Owl_symbolic_symbol.Identity o2) [| maxp |] in
+  out_1, out_2
 
 
 let batch_norm ?name ?eps ?momentum x scale bias mean var =

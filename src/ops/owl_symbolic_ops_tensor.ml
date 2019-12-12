@@ -33,3 +33,19 @@ module Reshape = struct
     in
     { name; input; attrs; shape = shp; out_shape = [| Some shp |] }
 end
+
+module Identity = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable idx : int (* the index of its parent's corresonding output *)
+    }
+
+  let op_type = "Identity"
+
+  let create ?name ?(idx = 0) x =
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input = [| x |]; attrs = [||]; out_shape = [| Some [||] |]; idx }
+end

@@ -130,6 +130,9 @@ let infer_shape input_shapes sym =
   | ReduceSum x     -> infer_shape_10 input_shapes x.axes x.keepdims
   | ReduceMax x     -> infer_shape_10 input_shapes x.axes x.keepdims
   | Reshape x       -> [| Some x.shape |]
+  | Identity x      ->
+    let idx = x.idx in
+    [| input_shapes.(0).(idx) |]
   | Conv x          ->
     let l = x.dim in
     let padding = if x.auto_pad = "VALID" then Owl_types.VALID else Owl_types.SAME in
@@ -149,11 +152,14 @@ let infer_shape input_shapes sym =
     in
     assert (ndim = l);
     let padding = if x.auto_pad = "VALID" then Owl_types.VALID else Owl_types.SAME in
-    if ndim = 1
-    then infer_shape_15 input_shapes padding x.kernel_shp x.strides
-    else if ndim = 2
-    then infer_shape_21 input_shapes padding x.kernel_shp x.strides
-    else if ndim = 3
-    then infer_shape_17 input_shapes padding x.kernel_shp x.strides
-    else failwith "Owl_symbolic_shape: illegal maxpool dimensions."
+    let dim =
+      if ndim = 1
+      then infer_shape_15 input_shapes padding x.kernel_shp x.strides
+      else if ndim = 2
+      then infer_shape_21 input_shapes padding x.kernel_shp x.strides
+      else if ndim = 3
+      then infer_shape_17 input_shapes padding x.kernel_shp x.strides
+      else failwith "Owl_symbolic_shape: illegal maxpool dimensions."
+    in
+    [| dim.(0); dim.(0) |]
   | _               -> [| None |]
