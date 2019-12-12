@@ -139,3 +139,8 @@ let node_name ?name op_typ =
   | None   ->
     let suffix = Owl_symbolic_namespace.generate_suffix () in
     Printf.sprintf "%s_%i" (String.lowercase_ascii op_typ) suffix
+
+
+let get_option_value msg = function
+  | Some n -> n
+  | None   -> failwith msg

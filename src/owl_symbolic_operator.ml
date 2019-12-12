@@ -317,9 +317,10 @@ let batch_norm ?name ?eps ?momentum x scale bias mean var =
   let bias_name = Owl_symbolic_graph.name bias in
   let mean_name = Owl_symbolic_graph.name mean in
   let var_name = Owl_symbolic_graph.name var in
+  let n = Owl_symbolic_utils.node_name ?name "BatchNormalization" in
   let s =
     Owl_symbolic_ops_nn.BatchNormalization.create
-      ?name
+      ~name:n
       ?eps
       ?momentum
       x_name
@@ -328,4 +329,22 @@ let batch_norm ?name ?eps ?momentum x scale bias mean var =
       mean_name
       var_name
   in
-  make_node (Owl_symbolic_symbol.BatchNormalization s) [| x; scale; bias; mean; var |]
+  let bn_node =
+    make_node (Owl_symbolic_symbol.BatchNormalization s) [| x; scale; bias; mean; var |]
+  in
+  let n1 = n ^ "_y" in
+  let n2 = n ^ "_mean" in
+  let n3 = n ^ "_var" in
+  let n4 = n ^ "_saved_mean" in
+  let n5 = n ^ "_saved_var" in
+  let o1 = Owl_symbolic_ops_tensor.Identity.create ~idx:0 ~name:n1 n in
+  let o2 = Owl_symbolic_ops_tensor.Identity.create ~idx:1 ~name:n2 n in
+  let o3 = Owl_symbolic_ops_tensor.Identity.create ~idx:2 ~name:n3 n in
+  let o4 = Owl_symbolic_ops_tensor.Identity.create ~idx:3 ~name:n4 n in
+  let o5 = Owl_symbolic_ops_tensor.Identity.create ~idx:4 ~name:n5 n in
+  let out_1 = make_node (Owl_symbolic_symbol.Identity o1) [| bn_node |] in
+  let out_2 = make_node (Owl_symbolic_symbol.Identity o2) [| bn_node |] in
+  let out_3 = make_node (Owl_symbolic_symbol.Identity o3) [| bn_node |] in
+  let out_4 = make_node (Owl_symbolic_symbol.Identity o4) [| bn_node |] in
+  let out_5 = make_node (Owl_symbolic_symbol.Identity o5) [| bn_node |] in
+  out_1, out_2, out_3, out_4, out_5

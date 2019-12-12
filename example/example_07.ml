@@ -17,7 +17,7 @@ let dnn =
     tensor t
   in
   let t_relu0 = relu (t_conv0 + t_zero0) in
-  let t_maxpool0, _  = maxpool t_relu0 ~padding:VALID ~strides:[| 2; 2 |] [| 2; 2 |] in
+  let t_maxpool0, _ = maxpool t_relu0 ~padding:VALID ~strides:[| 2; 2 |] [| 2; 2 |] in
   let t_shape0 =
     let t = Type.make_tensor ~dtype:SNT_Int64 ~int_val:[| 100; 8192 |] [| 2 |] in
     tensor t
