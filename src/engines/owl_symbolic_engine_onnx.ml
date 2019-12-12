@@ -234,23 +234,23 @@ let _types_constraint03 =
   |]
 
 
-let type_check_pattern00 sym = Owl_symbolic_symbol.dtype sym
+let type_check_pattern00 sym = [| Owl_symbolic_symbol.dtype sym |]
 
 let type_check_pattern01 target_type type_constraint name =
-  check_constraint target_type type_constraint name;
-  target_type
+  check_constraint target_type.(0) type_constraint name;
+  [| target_type.(0) |]
 
 
 let type_check_pattern02 target_types type_constraint name =
   check_same target_types name;
-  check_constraint target_types.(0) type_constraint name;
-  target_types.(0)
+  check_constraint target_types.(0).(0) type_constraint name;
+  [| target_types.(0).(0) |]
 
 
 let type_check_pattern03 target_types type_constraint0 type_constraint1 name =
-  check_constraint target_types.(0) type_constraint0 name;
-  check_constraint target_types.(1) type_constraint1 name;
-  target_types.(0)
+  check_constraint target_types.(0).(0) type_constraint0 name;
+  check_constraint target_types.(1).(0) type_constraint1 name;
+  [| target_types.(0).(0) |]
 
 
 let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
@@ -267,11 +267,11 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           (fun sym_node ->
             let s = Owl_graph.attr sym_node in
             match s with
-            | Owl_symbolic_symbol.Float _ -> Owl_symbolic_symbol.dtype s
-            | Owl_symbolic_symbol.Int _ -> Owl_symbolic_symbol.dtype s
-            | Owl_symbolic_symbol.Tensor _ -> Owl_symbolic_symbol.dtype s
-            | Owl_symbolic_symbol.Complex _ -> Owl_symbolic_symbol.dtype s
-            | Owl_symbolic_symbol.Variable _ -> Owl_symbolic_symbol.dtype s
+            | Owl_symbolic_symbol.Float _ -> [| Owl_symbolic_symbol.dtype s |]
+            | Owl_symbolic_symbol.Int _ -> [| Owl_symbolic_symbol.dtype s |]
+            | Owl_symbolic_symbol.Tensor _ -> [| Owl_symbolic_symbol.dtype s |]
+            | Owl_symbolic_symbol.Complex _ -> [| Owl_symbolic_symbol.dtype s |]
+            | Owl_symbolic_symbol.Variable _ -> [| Owl_symbolic_symbol.dtype s |]
             | _ -> Hashtbl.find dtypes (S.name s))
           parents
       in
@@ -286,7 +286,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Variable _      -> type_check_pattern00 sym
         | RandomUniform _ ->
           let dt = Owl_symbolic_symbol.dtype sym in
-          type_check_pattern01 dt _types_constraint00 name
+          type_check_pattern01 [| dt |] _types_constraint00 name
         | Sin _           -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Cos _           -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Sqrt _          -> type_check_pattern01 ptypes.(0) _types_constraint00 name
@@ -304,9 +304,15 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | ReduceMax _     -> type_check_pattern01 ptypes.(0) _types_constraint02 name
         | Reshape _       ->
           type_check_pattern03 ptypes _types_constraint03 [| SNT_Int64 |] name
+        | Identity s      ->
+          let idx = s.idx in
+          ptypes.(idx)
         | Conv _          -> type_check_pattern02 ptypes _types_constraint00 name
-        | MaxPool _       -> type_check_pattern01 ptypes.(0) _types_constraint00 name
-        | _               -> SNT_Noop
+        | MaxPool _       ->
+          let t1 = type_check_pattern01 ptypes.(0) _types_constraint00 name in
+          let t2 = SNT_Int64 in
+          [| t1.(0); t2 |]
+        | _               -> [| SNT_Noop |]
       in
       Hashtbl.add dtypes name out_type)
     sym_graph;
@@ -564,7 +570,8 @@ let build_onnx_outputs sym_graph type_dict =
     (fun sym_node ->
       let sym = Owl_graph.attr sym_node in
       let name = S.name sym in
-      let elt_type = Hashtbl.find type_dict name |> map_elt_type_to_int32 in
+      (* assertion: final output node must contain only one output *)
+      let elt_type = (Hashtbl.find type_dict name).(0) |> map_elt_type_to_int32 in
       let shape = S.out_shape sym in
       let shape =
         match shape.(0) with
