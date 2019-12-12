@@ -165,7 +165,8 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
       let pad =
         if padding = SAME then Owl_symbolic_types.SAME_LOWER else Owl_symbolic_types.VALID
       in
-      Owl_symbolic_operator.maxpool ~name ~strides ~padding:pad sym_inputs.(0) kernel
+      let y, _ = Owl_symbolic_operator.maxpool ~name ~strides ~padding:pad sym_inputs.(0) kernel in
+      y
     | _ ->
       failwith
         (Printf.sprintf
