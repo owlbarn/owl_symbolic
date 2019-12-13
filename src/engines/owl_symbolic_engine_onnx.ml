@@ -278,41 +278,48 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
       (* Type checking *)
       let out_type =
         match sym with
-        | Float _         -> type_check_pattern00 sym
-        | Int _           -> type_check_pattern00 sym
-        | Pi _            -> type_check_pattern00 sym
-        | Tensor _        -> type_check_pattern00 sym
-        | Complex _       -> type_check_pattern00 sym
-        | Variable _      -> type_check_pattern00 sym
-        | RandomUniform _ ->
+        | Float _              -> type_check_pattern00 sym
+        | Int _                -> type_check_pattern00 sym
+        | Pi _                 -> type_check_pattern00 sym
+        | Tensor _             -> type_check_pattern00 sym
+        | Complex _            -> type_check_pattern00 sym
+        | Variable _           -> type_check_pattern00 sym
+        | RandomUniform _      ->
           let dt = Owl_symbolic_symbol.dtype sym in
           type_check_pattern01 [| dt |] _types_constraint00 name
-        | Sin _           -> type_check_pattern01 ptypes.(0) _types_constraint00 name
-        | Cos _           -> type_check_pattern01 ptypes.(0) _types_constraint00 name
-        | Sqrt _          -> type_check_pattern01 ptypes.(0) _types_constraint00 name
-        | Exp _           -> type_check_pattern01 ptypes.(0) _types_constraint00 name
-        | Log _           -> type_check_pattern01 ptypes.(0) _types_constraint00 name
-        | Neg _           -> type_check_pattern01 ptypes.(0) _types_constraint01 name
-        | Relu _          -> type_check_pattern01 ptypes.(0) _types_constraint00 name
-        | Add _           -> type_check_pattern02 ptypes _types_constraint02 name
-        | Sub _           -> type_check_pattern02 ptypes _types_constraint02 name
-        | Mul _           -> type_check_pattern02 ptypes _types_constraint02 name
-        | Div _           -> type_check_pattern02 ptypes _types_constraint02 name
-        | Pow _           -> type_check_pattern02 ptypes _types_constraint00 name
-        | MatMul _        -> type_check_pattern02 ptypes _types_constraint02 name
-        | ReduceSum _     -> type_check_pattern01 ptypes.(0) _types_constraint02 name
-        | ReduceMax _     -> type_check_pattern01 ptypes.(0) _types_constraint02 name
-        | Reshape _       ->
+        | Sin _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Cos _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Sqrt _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Exp _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Log _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Neg _                -> type_check_pattern01 ptypes.(0) _types_constraint01 name
+        | Relu _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Add _                -> type_check_pattern02 ptypes _types_constraint02 name
+        | Sub _                -> type_check_pattern02 ptypes _types_constraint02 name
+        | Mul _                -> type_check_pattern02 ptypes _types_constraint02 name
+        | Div _                -> type_check_pattern02 ptypes _types_constraint02 name
+        | Pow _                -> type_check_pattern02 ptypes _types_constraint00 name
+        | MatMul _             -> type_check_pattern02 ptypes _types_constraint02 name
+        | ReduceSum _          -> type_check_pattern01 ptypes.(0) _types_constraint02 name
+        | ReduceMax _          -> type_check_pattern01 ptypes.(0) _types_constraint02 name
+        | Reshape _            ->
           type_check_pattern03 ptypes _types_constraint03 [| SNT_Int64 |] name
-        | Identity s      ->
+        | Identity s           ->
           let idx = s.idx in
           ptypes.(idx)
-        | Conv _          -> type_check_pattern02 ptypes _types_constraint00 name
-        | MaxPool _       ->
+        | Split s              ->
+          let n = Array.length s.split in
+          let t = type_check_pattern01 ptypes.(0) _types_constraint03 name in
+          Array.make n t.(0)
+        | Conv _               -> type_check_pattern02 ptypes _types_constraint00 name
+        | MaxPool _            ->
           let t1 = type_check_pattern01 ptypes.(0) _types_constraint00 name in
           let t2 = SNT_Int64 in
           [| t1.(0); t2 |]
-        | _               -> [| SNT_Noop |]
+        | BatchNormalization _ ->
+          let t = type_check_pattern02 ptypes _types_constraint00 name in
+          Array.make 5 t.(0)
+        | _                    -> [| SNT_Noop |]
       in
       Hashtbl.add dtypes name out_type)
     sym_graph;
@@ -453,6 +460,18 @@ let build_onnx_attrs_reducemax (x : Owl_symbolic_ops_reduction.ReduceMax.t) =
   [ attr_axes; attr_keepdims ]
 
 
+let build_onnx_attrs_split (x : Owl_symbolic_ops_tensor.Split.t) =
+  let name_axis = Some "axis" in
+  let type_ = Some PT.Int in
+  let i = Int64.of_int x.axis in
+  let attr_axis = PT.default_attribute_proto ~name:name_axis ~type_ ~i:(Some i) () in
+  let name_split = Some "split" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
+  let ints = Array.map Int64.of_int x.split |> Array.to_list in
+  let attr_split = PT.default_attribute_proto ~name:name_split ~type_ ~ints () in
+  [ attr_axis; attr_split ]
+
+
 let build_onnx_attrs_conv (x : Owl_symbolic_ops_nn.Conv.t) =
   (* create "auto_pad" attribute *)
   let name_pad = Some "auto_pad" in
@@ -524,6 +543,7 @@ let build_onnx_attrs sym =
     | S.RandomUniform x -> build_onnx_attrs_randomuniform x
     | S.ReduceSum x     -> build_onnx_attrs_reducesum x
     | S.ReduceMax x     -> build_onnx_attrs_reducemax x
+    | S.Split x         -> build_onnx_attrs_split x
     | S.Conv x          -> build_onnx_attrs_conv x
     | S.MaxPool x       -> build_onnx_attrs_maxpool x
     | _                 -> []

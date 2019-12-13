@@ -21,6 +21,14 @@ let infer_shape_03 input_shapes =
   | _, _             -> [| None |]
 
 
+let infer_shape_08 input_shapes axis splits =
+  match input_shapes.(0).(0) with
+  | Some s ->
+    let s0 = Owl_utils_infer_shape.(split s axis splits) in
+    Array.map (fun s -> Some s) s0
+  | None   -> Array.(make (length splits) None)
+
+
 let infer_shape_10 input_shapes axis keepdims =
   match input_shapes.(0).(0) with
   | Some s -> [| Some Owl_symbolic_utils.(reduce s axis keepdims) |]
@@ -186,6 +194,7 @@ let infer_shape input_shapes sym =
   | Identity x           ->
     let idx = x.idx in
     [| input_shapes.(0).(idx) |]
+  | Split x              -> infer_shape_08 input_shapes x.axis x.split
   | Conv x               -> infer_shape_conv x input_shapes
   | MaxPool x            -> infer_shape_maxpool x input_shapes
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes
