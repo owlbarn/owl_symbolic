@@ -59,6 +59,7 @@ type t =
   (* Tensor *)
   | Reshape of Reshape.t
   | Identity of Identity.t
+  | Split of Split.t
   (* NN *)
   | Conv of Conv.t
   | MaxPool of MaxPool.t
@@ -109,6 +110,7 @@ let name = function
   | ReduceMax x          -> ReduceMax.(x.name)
   | Reshape x            -> Reshape.(x.name)
   | Identity x           -> Identity.(x.name)
+  | Split x              -> Split.(x.name)
   | Conv x               -> Conv.(x.name)
   | MaxPool x            -> MaxPool.(x.name)
   | BatchNormalization x -> BatchNormalization.(x.name)
@@ -159,6 +161,7 @@ let op_type = function
   | ReduceMax _          -> ReduceMax.op_type
   | Reshape _            -> Reshape.op_type
   | Identity _           -> Identity.op_type
+  | Split _              -> Split.op_type
   | Conv _               -> Conv.op_type
   | MaxPool _            -> MaxPool.op_type
   | BatchNormalization _ -> BatchNormalization.op_type
@@ -209,6 +212,7 @@ let input = function
   | ReduceMax x          -> ReduceMax.(x.input)
   | Reshape x            -> Reshape.(x.input)
   | Identity x           -> Identity.(x.input)
+  | Split x              -> Split.(x.input)
   | Conv x               -> Conv.(x.input)
   | MaxPool x            -> MaxPool.(x.input)
   | BatchNormalization x -> BatchNormalization.(x.input)
@@ -250,6 +254,7 @@ let set_input sym inputs =
   | ReduceMax x          -> x.input <- inputs
   | Reshape x            -> x.input <- inputs
   | Identity x           -> x.input <- inputs
+  | Split x              -> x.input <- inputs
   | Conv x               -> x.input <- inputs
   | MaxPool x            -> x.input <- inputs
   | BatchNormalization x -> x.input <- inputs
@@ -300,6 +305,7 @@ let out_shape = function
   | ReduceMax x          -> ReduceMax.(x.out_shape)
   | Reshape x            -> Reshape.(x.out_shape)
   | Identity x           -> Identity.(x.out_shape)
+  | Split x              -> Split.(x.out_shape)
   | Conv x               -> Conv.(x.out_shape)
   | MaxPool x            -> MaxPool.(x.out_shape)
   | BatchNormalization x -> BatchNormalization.(x.out_shape)
@@ -343,6 +349,7 @@ let set_out_shape sym shapes =
   | ReduceMax x          -> x.out_shape <- shapes
   | Reshape x            -> x.out_shape <- shapes
   | Identity x           -> x.out_shape <- shapes
+  | Split x              -> x.out_shape <- shapes
   | Conv x               -> x.out_shape <- shapes
   | MaxPool x            -> x.out_shape <- shapes
   | BatchNormalization x -> x.out_shape <- shapes
@@ -381,6 +388,7 @@ let attrs = function
   | ReduceMax x          -> ReduceMax.(x.attrs)
   | Reshape x            -> Reshape.(x.attrs)
   | Identity x           -> Identity.(x.attrs)
+  | Split x              -> Split.(x.attrs)
   | Conv x               -> Conv.(x.attrs)
   | MaxPool x            -> MaxPool.(x.attrs)
   | BatchNormalization x -> BatchNormalization.(x.attrs)
@@ -417,6 +425,7 @@ let set_attrs sym a =
   | ReduceSum x          -> x.attrs <- a
   | Reshape x            -> x.attrs <- a
   | Identity x           -> x.attrs <- a
+  | Split x              -> x.attrs <- a
   | ReduceMax x          -> x.attrs <- a
   | Conv x               -> x.attrs <- a
   | MaxPool x            -> x.attrs <- a

@@ -4,14 +4,15 @@
  *)
 
 open Owl_symbolic_graph
+open Owl_symbolic_symbol
 
-let noop = make_node Owl_symbolic_symbol.NOOP [||]
+let noop = make_node NOOP [||]
 
 (** Generator *)
 
 let int ?name value =
   let sym = Owl_symbolic_ops_generator.Int.create ?name value in
-  make_node (Owl_symbolic_symbol.Int sym) [||]
+  make_node (Int sym) [||]
 
 
 let float ?name value =
@@ -254,6 +255,22 @@ let reshape ?name data shape =
   let o = Owl_symbolic_ops_tensor.Reshape.create ?name data_name shp in
   let sym = Owl_symbolic_symbol.Reshape o in
   make_node sym [| data; shape |]
+
+
+let split ?name ?axis x split =
+  let num = Array.length split in
+  assert (num > 0);
+  let x_name = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_tensor.Split.create ?name ?axis x_name split in
+  let split_node = make_node (Owl_symbolic_symbol.Split s) [| x |] in
+  let split_name = Owl_symbolic_utils.node_name ?name "Split" in
+  let id_nodes = Array.make num 0 in
+  Array.mapi
+    (fun idx _ ->
+      let n = Printf.sprintf "%s_%d" split_name idx in
+      let o = Owl_symbolic_ops_tensor.Identity.create ~idx ~name:n split_name in
+      make_node (Owl_symbolic_symbol.Identity o) [| split_node |])
+    id_nodes
 
 
 (** Neural Network *)

@@ -49,3 +49,22 @@ module Identity = struct
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; input = [| x |]; attrs = [||]; out_shape = [| Some [||] |]; idx }
 end
+
+module Split = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable axis : int
+    ; mutable split : int array
+    }
+
+  let op_type = "Split"
+
+  let create ?name ?(axis = 0) x split =
+    let attrs = [||] in
+    let input = [| x |] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| Some [||] |]; axis; split }
+end
