@@ -229,6 +229,21 @@ let matmul ?name x y =
   make_node (Owl_symbolic_symbol.MatMul s) [| x; y |]
 
 
+let gemm ?name ?alpha ?beta ?transA ?transB ?c a b =
+  let an = Owl_symbolic_graph.name a in
+  let bn = Owl_symbolic_graph.name b in
+  match c with
+  | Some c ->
+    let cn = Owl_symbolic_graph.name c in
+    let s =
+      Owl_symbolic_ops_math.Gemm.create ?name ?alpha ?beta ?transA ?transB ~c:cn an bn
+    in
+    make_node (Owl_symbolic_symbol.Gemm s) [| a; b; c |]
+  | None   ->
+    let s = Owl_symbolic_ops_math.Gemm.create ?name ?alpha ?beta ?transA ?transB an bn in
+    make_node (Owl_symbolic_symbol.Gemm s) [| a; b |]
+
+
 (** Reduction *)
 
 let reduce_sum ?keepdims ?name x axes =

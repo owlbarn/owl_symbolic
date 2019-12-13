@@ -3,34 +3,17 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-(* Add, Sub, Mod, Mul, Div, Neg, Abs, Reciprocal, Floor, Ceil,
-Sqrt, Relu, LeakyRelu, ThreasholdedRelu, Selu, Elu, Exp, Log, 
-Pow, PRelu, Sigmoid, HardSigmoid, Max, Min, Sum, Mean, Clip, 
-Softmax, LogSoftmax, Hardmax, Softsign, Softplus, Gemm, MatMul,
-Sin, Cos, Tan, Asin, Acos, Atan, Expand, Sinh, Cosh, Tanh, Asinh, 
-Acosh, Atanh, Sign, Erf, QLinearMatMul, MatMulInteger, Cumsum, 
-Round, Det 
+(* To be implemented: Mod, Reciprocal, LeakyRelu, ThreasholdedRelu, Selu, Elu, 
+PRelu, Sigmoid, HardSigmoid, Max, Min, Sum, Mean, Clip, 
+Softmax, LogSoftmax, Hardmax, Softsign, Softplus, 
+Expand, Sign, Erf, QLinearMatMul, MatMulInteger, Cumsum, Det 
 *)
 
+(* Implemented: Sin, Cos, Tan, Asin, Acos, Atan, Sinh, Cosh, Tanh, Asinh, 
+Acosh, Atanh, Add, Sub, Mul, Div, Neg, Abs, Floor, Ceil, Sqrt, Relu, Exp, Log,
+Pow, Round, Gemm, MatMul *)
+
 open Owl_symbolic_types
-
-(* p and q are not specified by user; but rather later calculated in canonical part *)
-(* TODO: remove this op *)
-module Rational = struct
-  type t =
-    { mutable name : string
-    ; mutable input : string array
-    ; mutable attrs : (string * attrvalue) array
-    ; mutable out_shape : int array option array
-    ; mutable p : int
-    ; mutable q : int
-    }
-
-  let op_type = "Rational"
-
-  let create name input attrs =
-    { name; input; attrs; out_shape = [| None |]; p = 0; q = 0 }
-end
 
 (** One input *)
 
@@ -485,14 +468,23 @@ module Gemm = struct
     ; mutable input : string array
     ; mutable attrs : (string * attrvalue) array
     ; mutable out_shape : int array option array
+    ; mutable alpha : float
+    ; mutable beta : float
+    ; mutable transA : bool
+    ; mutable transB : bool
     }
 
-  let op_type = "MatMul"
+  let op_type = "Gemm"
 
-  let create ?name input =
+  let create ?name ?(alpha = 1.) ?(beta = 1.) ?(transA = false) ?(transB = false) ?c a b =
     let attrs = [||] in
+    let input =
+      match c with
+      | Some c -> [| a; b; c |]
+      | _      -> [| a; b |]
+    in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = [| None |] }
+    { name; input; attrs; out_shape = [| None |]; alpha; beta; transA; transB }
 end
 
 (* Matrix product that behaves like numpy.matmul:
@@ -512,4 +504,22 @@ module MatMul = struct
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; input; attrs; out_shape = [| None |] }
+end
+
+(* p and q are not specified by user; but rather later calculated in canonical part *)
+(* TODO: remove this op *)
+module Rational = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable p : int
+    ; mutable q : int
+    }
+
+  let op_type = "Rational"
+
+  let create name input attrs =
+    { name; input; attrs; out_shape = [| None |]; p = 0; q = 0 }
 end

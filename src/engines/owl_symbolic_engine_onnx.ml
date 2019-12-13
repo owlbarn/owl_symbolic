@@ -301,6 +301,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Div _                -> type_check_pattern02 ptypes _types_constraint02 name
         | Pow _                -> type_check_pattern02 ptypes _types_constraint00 name
         | MatMul _             -> type_check_pattern02 ptypes _types_constraint02 name
+        | Gemm _               -> type_check_pattern02 ptypes _types_constraint02 name
         | ReduceSum _          -> type_check_pattern01 ptypes.(0) _types_constraint02 name
         | ReduceMax _          -> type_check_pattern01 ptypes.(0) _types_constraint02 name
         | Reshape _            ->
@@ -438,6 +439,30 @@ let build_onnx_attrs_randomuniform (x : Owl_symbolic_ops_generator.RandomUniform
   [ attr_dtype; attr_high; attr_low; attr_shape ]
 
 
+let build_onnx_attrs_gemm (x : Owl_symbolic_ops_math.Gemm.t) =
+  (* create "alpha" attribute *)
+  let name_alpha = Some "alpha" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Float in
+  let f = Some x.alpha in
+  let attr_alpha = PT.default_attribute_proto ~name:name_alpha ~type_ ~f () in
+  (* create "beta" attribute *)
+  let name_beta = Some "beta" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Float in
+  let f = Some x.beta in
+  let attr_beta = PT.default_attribute_proto ~name:name_beta ~type_ ~f () in
+  (* create "transA" attribute *)
+  let name_transA = Some "transA" in
+  let type_ = Some PT.Int in
+  let i = if x.transA then Int64.one else Int64.zero in
+  let attr_transA = PT.default_attribute_proto ~name:name_transA ~type_ ~i:(Some i) () in
+  (* create "transB" attribute *)
+  let name_transB = Some "transB" in
+  let type_ = Some PT.Int in
+  let i = if x.transB then Int64.one else Int64.zero in
+  let attr_transB = PT.default_attribute_proto ~name:name_transB ~type_ ~i:(Some i) () in
+  [ attr_alpha; attr_beta; attr_transA; attr_transB ]
+
+
 let build_onnx_attrs_reducesum (x : Owl_symbolic_ops_reduction.ReduceSum.t) =
   let name_axes = Some "axes" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
@@ -571,6 +596,7 @@ let build_onnx_attrs sym =
     | S.Pi _            -> build_onnx_attrs_pi sym
     | S.Tensor _        -> build_onnx_attrs_tensor sym
     | S.RandomUniform x -> build_onnx_attrs_randomuniform x
+    | S.Gemm x          -> build_onnx_attrs_gemm x
     | S.ReduceSum x     -> build_onnx_attrs_reducesum x
     | S.ReduceMax x     -> build_onnx_attrs_reducemax x
     | S.Split x         -> build_onnx_attrs_split x

@@ -54,6 +54,7 @@ type t =
   | Div of Div.t
   | Pow of Pow.t
   | MatMul of MatMul.t
+  | Gemm of Gemm.t
   (* Reduction *)
   | ReduceSum of ReduceSum.t
   | ReduceMax of ReduceMax.t
@@ -111,6 +112,7 @@ let name = function
   | Div x                -> Div.(x.name)
   | Pow x                -> Pow.(x.name)
   | MatMul x             -> MatMul.(x.name)
+  | Gemm x               -> Gemm.(x.name)
   | ReduceSum x          -> ReduceSum.(x.name)
   | ReduceMax x          -> ReduceMax.(x.name)
   | Reshape x            -> Reshape.(x.name)
@@ -165,6 +167,7 @@ let op_type = function
   | Div _                -> Div.op_type
   | Pow _                -> Pow.op_type
   | MatMul _             -> MatMul.op_type
+  | Gemm _               -> Gemm.op_type
   | ReduceSum _          -> ReduceSum.op_type
   | ReduceMax _          -> ReduceMax.op_type
   | Reshape _            -> Reshape.op_type
@@ -219,6 +222,7 @@ let input = function
   | Div x                -> Div.(x.input)
   | Pow x                -> Pow.(x.input)
   | MatMul x             -> MatMul.(x.input)
+  | Gemm x               -> Gemm.(x.input)
   | ReduceSum x          -> ReduceSum.(x.input)
   | ReduceMax x          -> ReduceMax.(x.input)
   | Reshape x            -> Reshape.(x.input)
@@ -264,6 +268,7 @@ let set_input sym inputs =
   | Div x                -> x.input <- inputs
   | Pow x                -> x.input <- inputs
   | MatMul x             -> x.input <- inputs
+  | Gemm x               -> x.input <- inputs
   | ReduceSum x          -> x.input <- inputs
   | ReduceMax x          -> x.input <- inputs
   | Reshape x            -> x.input <- inputs
@@ -317,6 +322,7 @@ let out_shape = function
   | Div x                -> Div.(x.out_shape)
   | Pow x                -> Pow.(x.out_shape)
   | MatMul x             -> MatMul.(x.out_shape)
+  | Gemm x               -> Gemm.(x.out_shape)
   | ReduceSum x          -> ReduceSum.(x.out_shape)
   | ReduceMax x          -> ReduceMax.(x.out_shape)
   | Reshape x            -> Reshape.(x.out_shape)
@@ -364,6 +370,7 @@ let set_out_shape sym shapes =
   | Div x                -> x.out_shape <- shapes
   | Pow x                -> x.out_shape <- shapes
   | MatMul x             -> x.out_shape <- shapes
+  | Gemm x               -> x.out_shape <- shapes
   | ReduceSum x          -> x.out_shape <- shapes
   | ReduceMax x          -> x.out_shape <- shapes
   | Reshape x            -> x.out_shape <- shapes
@@ -406,6 +413,7 @@ let attrs = function
   | Div x                -> Div.(x.attrs)
   | Pow x                -> Pow.(x.attrs)
   | MatMul x             -> MatMul.(x.attrs)
+  | Gemm x               -> Gemm.(x.attrs)
   | ReduceSum x          -> ReduceSum.(x.attrs)
   | ReduceMax x          -> ReduceMax.(x.attrs)
   | Reshape x            -> Reshape.(x.attrs)
@@ -447,6 +455,7 @@ let set_attrs sym a =
   | Div x                -> x.attrs <- a
   | Pow x                -> x.attrs <- a
   | MatMul x             -> x.attrs <- a
+  | Gemm x               -> x.attrs <- a
   | ReduceSum x          -> x.attrs <- a
   | ReduceMax x          -> x.attrs <- a
   | Reshape x            -> x.attrs <- a

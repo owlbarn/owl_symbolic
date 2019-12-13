@@ -110,6 +110,21 @@ let infer_shape_21 input_shapes padding kernel stride =
   | _          -> [| None |]
 
 
+let infer_shape_gemm (x : Owl_symbolic_ops_math.Gemm.t) input_shapes =
+  let msg = "Owl_symbolic_shape: error unpacking Gemm input shapes." in
+  let unpack = Owl_symbolic_utils.get_option_value msg in
+  let l = Array.length input_shapes in
+  assert (l = 2 || l = 3);
+  let a_shp = unpack input_shapes.(0).(0) in
+  let b_shp = unpack input_shapes.(1).(0) in
+  assert (Array.length a_shp = 2);
+  assert (Array.length b_shp = 2);
+  let a_shp = if x.transA then [| a_shp.(1); a_shp.(0) |] else a_shp in
+  let b_shp = if x.transB then [| b_shp.(1); b_shp.(0) |] else b_shp in
+  assert (a_shp.(1) = b_shp.(0));
+  [| Some [| a_shp.(0); b_shp.(1) |] |]
+
+
 let infer_shape_conv (x : Owl_symbolic_ops_nn.Conv.t) input_shapes =
   let l = x.dim in
   let padding = if x.auto_pad = "VALID" then Owl_types.VALID else Owl_types.SAME in
@@ -207,6 +222,7 @@ let infer_shape input_shapes sym =
   | Div _                -> infer_shape_03 input_shapes
   | Pow _                -> infer_shape_01 input_shapes
   | MatMul _             -> infer_shape_19 input_shapes
+  | Gemm x               -> infer_shape_gemm x input_shapes
   | ReduceSum x          -> infer_shape_10 input_shapes x.axes x.keepdims
   | ReduceMax x          -> infer_shape_10 input_shapes x.axes x.keepdims
   | Reshape x            -> [| Some x.shape |]
