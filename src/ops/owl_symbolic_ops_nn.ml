@@ -170,3 +170,22 @@ module BatchNormalization = struct
     let out_shape = [| None; None; None; None; None |] in
     { name; input; attrs; out_shape; epsilon; momentum }
 end
+
+module Dropout = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable ratio : float
+    }
+
+  let op_type = "Dropout"
+
+  let create ?name ?(ratio = 0.5) x =
+    assert (ratio >= 0. && ratio <= 1.);
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| x |] in
+    { name; input; attrs; out_shape = [| None; None |]; ratio }
+end

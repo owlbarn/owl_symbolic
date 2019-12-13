@@ -66,6 +66,7 @@ type t =
   | Conv of Conv.t
   | MaxPool of MaxPool.t
   | BatchNormalization of BatchNormalization.t
+  | Dropout of Dropout.t
   (* Logical ops *)
   | Equal of Equal.t
   (* Sequence *)
@@ -119,6 +120,7 @@ let name = function
   | Conv x               -> Conv.(x.name)
   | MaxPool x            -> MaxPool.(x.name)
   | BatchNormalization x -> BatchNormalization.(x.name)
+  | Dropout x            -> Dropout.(x.name)
   | Equal x              -> Equal.(x.name)
   | SequenceEmpty x      -> SequenceEmpty.(x.name)
   | _                    -> failwith "owl_symbolic_symbol.name"
@@ -172,6 +174,7 @@ let op_type = function
   | Conv _               -> Conv.op_type
   | MaxPool _            -> MaxPool.op_type
   | BatchNormalization _ -> BatchNormalization.op_type
+  | Dropout _            -> Dropout.op_type
   | Equal _              -> Equal.op_type
   | SequenceEmpty _      -> SequenceEmpty.op_type
   | _                    -> failwith "owl_symbolic_symbol.op_type"
@@ -225,6 +228,7 @@ let input = function
   | Conv x               -> Conv.(x.input)
   | MaxPool x            -> MaxPool.(x.input)
   | BatchNormalization x -> BatchNormalization.(x.input)
+  | Dropout x            -> Dropout.(x.input)
   | Equal x              -> Equal.(x.input)
   | SequenceEmpty _      -> [||]
   | _                    -> failwith "owl_symbolic_symbol.input"
@@ -269,6 +273,7 @@ let set_input sym inputs =
   | Conv x               -> x.input <- inputs
   | MaxPool x            -> x.input <- inputs
   | BatchNormalization x -> x.input <- inputs
+  | Dropout x            -> x.input <- inputs
   | Equal x              -> x.input <- inputs
   | _                    -> failwith "owl_symbolic_symbol.set_input"
 
@@ -321,6 +326,7 @@ let out_shape = function
   | Conv x               -> Conv.(x.out_shape)
   | MaxPool x            -> MaxPool.(x.out_shape)
   | BatchNormalization x -> BatchNormalization.(x.out_shape)
+  | Dropout x            -> Dropout.(x.out_shape)
   | SequenceEmpty x      -> SequenceEmpty.(x.out_shape)
   | _                    -> failwith "out_shape: unsupported op."
 
@@ -368,6 +374,7 @@ let set_out_shape sym shapes =
   | MaxPool x            -> x.out_shape <- shapes
   | BatchNormalization x -> x.out_shape <- shapes
   | Equal x              -> x.out_shape <- shapes
+  | Dropout x            -> x.out_shape <- shapes
   | SequenceEmpty x      -> x.out_shape <- shapes
   | _                    -> failwith "set_out_shape: unsupported op."
 
@@ -408,6 +415,7 @@ let attrs = function
   | Conv x               -> Conv.(x.attrs)
   | MaxPool x            -> MaxPool.(x.attrs)
   | BatchNormalization x -> BatchNormalization.(x.attrs)
+  | Dropout x            -> Dropout.(x.attrs)
   | Equal x              -> Equal.(x.attrs)
   | SequenceEmpty x      -> SequenceEmpty.(x.attrs)
   | _                    -> [||]
@@ -448,6 +456,7 @@ let set_attrs sym a =
   | Conv x               -> x.attrs <- a
   | MaxPool x            -> x.attrs <- a
   | BatchNormalization x -> x.attrs <- a
+  | Dropout x            -> x.attrs <- a
   | Equal x              -> x.attrs <- a
   | SequenceEmpty x      -> x.attrs <- a
   | _                    -> ()

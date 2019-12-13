@@ -260,10 +260,10 @@ let reshape ?name data shape =
 let split ?name ?axis x split =
   let num = Array.length split in
   assert (num > 0);
-  let x_name = Owl_symbolic_graph.name x in
-  let s = Owl_symbolic_ops_tensor.Split.create ?name ?axis x_name split in
-  let split_node = make_node (Owl_symbolic_symbol.Split s) [| x |] in
   let split_name = Owl_symbolic_utils.node_name ?name "Split" in
+  let x_name = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_tensor.Split.create ~name:split_name ?axis x_name split in
+  let split_node = make_node (Owl_symbolic_symbol.Split s) [| x |] in
   let id_nodes = Array.make num 0 in
   Array.mapi
     (fun idx _ ->
@@ -371,6 +371,20 @@ let batch_norm ?name ?eps ?momentum x scale bias mean var =
   let out_4 = make_node (Owl_symbolic_symbol.Identity o4) [| bn_node |] in
   let out_5 = make_node (Owl_symbolic_symbol.Identity o5) [| bn_node |] in
   out_1, out_2, out_3, out_4, out_5
+
+
+let dropout ?name ?ratio x =
+  let x_name = Owl_symbolic_graph.name x in
+  let d_name = Owl_symbolic_utils.node_name ?name "Dropout" in
+  let s = Owl_symbolic_ops_nn.Dropout.create ~name:d_name ?ratio x_name in
+  let d_node = make_node (Owl_symbolic_symbol.Dropout s) [| x |] in
+  let n1 = d_name ^ "_output" in
+  let n2 = d_name ^ "_mask" in
+  let o1 = Owl_symbolic_ops_tensor.Identity.create ~idx:0 ~name:n1 d_name in
+  let o2 = Owl_symbolic_ops_tensor.Identity.create ~idx:1 ~name:n2 d_name in
+  let out1 = make_node (Owl_symbolic_symbol.Identity o1) [| d_node |] in
+  let out2 = make_node (Owl_symbolic_symbol.Identity o2) [| d_node |] in
+  out1, out2
 
 
 let seq_empty ?name ?dtype () =

@@ -321,6 +321,9 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | BatchNormalization _ ->
           let t = type_check_pattern02 ptypes _types_constraint00 name in
           Array.make 5 t.(0)
+        | Dropout _            ->
+          let t = type_check_pattern01 ptypes.(0) _types_constraint00 name in
+          [| t.(0); SNT_Bool |]
         | SequenceEmpty s      -> [| SNT_SEQ s.dtype |]
         | _                    -> [| SNT_Noop |]
       in
@@ -543,6 +546,14 @@ let build_onnx_attrs_maxpool (x : Owl_symbolic_ops_nn.MaxPool.t) =
   [ attr_pad; attr_ceil; attr_dil; attr_kernel; attr_strides; attr_order ]
 
 
+let build_onnx_attrs_dropout (x : Owl_symbolic_ops_nn.Dropout.t) =
+  let name_axis = Some "ratio" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Float in
+  let f = Some x.ratio in
+  let attr_axis = PT.default_attribute_proto ~name:name_axis ~type_ ~f () in
+  [ attr_axis ]
+
+
 let build_onnx_attrs_seq_empty (x : Owl_symbolic_ops_sequence.SequenceEmpty.t) =
   let name = Some "dtype" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Int in
@@ -567,6 +578,7 @@ let build_onnx_attrs sym =
     | S.Conv x          -> build_onnx_attrs_conv x
     | S.MaxPool x       -> build_onnx_attrs_maxpool x
     | S.SequenceEmpty x -> build_onnx_attrs_seq_empty x
+    | S.Dropout x       -> build_onnx_attrs_dropout x
     | _                 -> []
   in
   onnx_attrs
