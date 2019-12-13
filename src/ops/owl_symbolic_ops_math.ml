@@ -387,7 +387,7 @@ module Add = struct
 
   let op_type = "Add"
 
-  let create name x y =
+  let create ?name x y =
     let input = [| x; y |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
@@ -404,7 +404,7 @@ module Sub = struct
 
   let op_type = "Sub"
 
-  let create name x y =
+  let create ?name x y =
     let input = [| x; y |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
@@ -421,7 +421,7 @@ module Mul = struct
 
   let op_type = "Mul"
 
-  let create name x y =
+  let create ?name x y =
     let input = [| x; y |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
@@ -438,7 +438,7 @@ module Div = struct
 
   let op_type = "Div"
 
-  let create name x y =
+  let create ?name x y =
     let input = [| x; y |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
@@ -455,7 +455,7 @@ module Pow = struct
 
   let op_type = "Pow"
 
-  let create name x y =
+  let create ?name x y =
     let input = [| x; y |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
@@ -499,7 +499,7 @@ module MatMul = struct
 
   let op_type = "MatMul"
 
-  let create name x y =
+  let create ?name x y =
     let input = [| x; y |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in

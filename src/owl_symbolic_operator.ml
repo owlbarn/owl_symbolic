@@ -190,42 +190,42 @@ let relu ?name x =
 let add ?name x y =
   let xn = Owl_symbolic_graph.name x in
   let yn = Owl_symbolic_graph.name y in
-  let s = Owl_symbolic_ops_math.Add.create name xn yn in
+  let s = Owl_symbolic_ops_math.Add.create ?name xn yn in
   make_node (Owl_symbolic_symbol.Add s) [| x; y |]
 
 
 let sub ?name x y =
   let xn = Owl_symbolic_graph.name x in
   let yn = Owl_symbolic_graph.name y in
-  let s = Owl_symbolic_ops_math.Sub.create name xn yn in
+  let s = Owl_symbolic_ops_math.Sub.create ?name xn yn in
   make_node (Owl_symbolic_symbol.Sub s) [| x; y |]
 
 
 let mul ?name x y =
   let xn = Owl_symbolic_graph.name x in
   let yn = Owl_symbolic_graph.name y in
-  let s = Owl_symbolic_ops_math.Mul.create name xn yn in
+  let s = Owl_symbolic_ops_math.Mul.create ?name xn yn in
   make_node (Owl_symbolic_symbol.Mul s) [| x; y |]
 
 
 let div ?name x y =
   let xn = Owl_symbolic_graph.name x in
   let yn = Owl_symbolic_graph.name y in
-  let s = Owl_symbolic_ops_math.Div.create name xn yn in
+  let s = Owl_symbolic_ops_math.Div.create ?name xn yn in
   make_node (Owl_symbolic_symbol.Div s) [| x; y |]
 
 
 let pow ?name x y =
   let xn = Owl_symbolic_graph.name x in
   let yn = Owl_symbolic_graph.name y in
-  let s = Owl_symbolic_ops_math.Pow.create name xn yn in
+  let s = Owl_symbolic_ops_math.Pow.create ?name xn yn in
   make_node (Owl_symbolic_symbol.Pow s) [| x; y |]
 
 
 let matmul ?name x y =
   let xn = Owl_symbolic_graph.name x in
   let yn = Owl_symbolic_graph.name y in
-  let s = Owl_symbolic_ops_math.MatMul.create name xn yn in
+  let s = Owl_symbolic_ops_math.MatMul.create ?name xn yn in
   make_node (Owl_symbolic_symbol.MatMul s) [| x; y |]
 
 
