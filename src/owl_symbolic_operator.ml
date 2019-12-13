@@ -244,6 +244,24 @@ let gemm ?name ?alpha ?beta ?transA ?transB ?c a b =
     make_node (Owl_symbolic_symbol.Gemm s) [| a; b |]
 
 
+let max ?name xs =
+  let xn = Array.map Owl_symbolic_graph.name xs in
+  let s = Owl_symbolic_ops_math.Max.create ?name xn in
+  make_node (Owl_symbolic_symbol.Max s) xs
+
+
+let min ?name xs =
+  let xn = Array.map Owl_symbolic_graph.name xs in
+  let s = Owl_symbolic_ops_math.Min.create ?name xn in
+  make_node (Owl_symbolic_symbol.Min s) xs
+
+
+let sum ?name xs =
+  let xn = Array.map Owl_symbolic_graph.name xs in
+  let s = Owl_symbolic_ops_math.Sum.create ?name xn in
+  make_node (Owl_symbolic_symbol.Sum s) xs
+
+
 (** Reduction *)
 
 let reduce_sum ?keepdims ?name x axes =

@@ -302,6 +302,9 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Pow _                -> type_check_pattern02 ptypes _types_constraint00 name
         | MatMul _             -> type_check_pattern02 ptypes _types_constraint02 name
         | Gemm _               -> type_check_pattern02 ptypes _types_constraint02 name
+        | Max _                -> type_check_pattern02 ptypes _types_constraint00 name
+        | Min _                -> type_check_pattern02 ptypes _types_constraint00 name
+        | Sum _                -> type_check_pattern02 ptypes _types_constraint00 name
         | ReduceSum _          -> type_check_pattern01 ptypes.(0) _types_constraint02 name
         | ReduceMax _          -> type_check_pattern01 ptypes.(0) _types_constraint02 name
         | Reshape _            ->

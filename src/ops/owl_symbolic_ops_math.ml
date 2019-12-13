@@ -506,6 +506,57 @@ module MatMul = struct
     { name; input; attrs; out_shape = [| None |] }
 end
 
+module Max = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "Max"
+
+  let create ?name xs =
+    let input = xs in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |] }
+end
+
+module Min = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "Min"
+
+  let create ?name xs =
+    let input = xs in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |] }
+end
+
+module Sum = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "Sum"
+
+  let create ?name xs =
+    let input = xs in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |] }
+end
+
 (* p and q are not specified by user; but rather later calculated in canonical part *)
 (* TODO: remove this op *)
 module Rational = struct

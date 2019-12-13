@@ -110,6 +110,20 @@ let infer_shape_21 input_shapes padding kernel stride =
   | _          -> [| None |]
 
 
+let infer_shape_31 input_shapes =
+  let msg = "Owl_symbolic_shape/infer_shape_31: error unpacking input shapes." in
+  let unpack = Owl_symbolic_utils.get_option_value msg in
+  let broadcast_shp =
+    Array.fold_left
+      (fun accu shps ->
+        let shp = shps.(0) |> unpack in
+        Owl_utils_infer_shape.broadcast1 shp accu)
+      [||]
+      input_shapes
+  in
+  [| Some broadcast_shp |]
+
+
 let infer_shape_gemm (x : Owl_symbolic_ops_math.Gemm.t) input_shapes =
   let msg = "Owl_symbolic_shape: error unpacking Gemm input shapes." in
   let unpack = Owl_symbolic_utils.get_option_value msg in
@@ -223,6 +237,9 @@ let infer_shape input_shapes sym =
   | Pow _                -> infer_shape_01 input_shapes
   | MatMul _             -> infer_shape_19 input_shapes
   | Gemm x               -> infer_shape_gemm x input_shapes
+  | Max _                -> infer_shape_31 input_shapes
+  | Min _                -> infer_shape_31 input_shapes
+  | Sum _                -> infer_shape_31 input_shapes
   | ReduceSum x          -> infer_shape_10 input_shapes x.axes x.keepdims
   | ReduceMax x          -> infer_shape_10 input_shapes x.axes x.keepdims
   | Reshape x            -> [| Some x.shape |]
