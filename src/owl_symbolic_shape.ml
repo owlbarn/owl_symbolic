@@ -21,6 +21,25 @@ let infer_shape_03 input_shapes =
   | _, _             -> [| None |]
 
 
+let infer_shape_07 input_shapes axis =
+  let s0 = Array.map (fun s -> s.(0)) input_shapes in
+  if Array.exists
+       (function
+         | Some _ -> false
+         | None   -> true)
+       s0
+  then [| None |]
+  else (
+    let s1 =
+      Array.map
+        (function
+          | Some a -> a
+          | None   -> failwith "infer_shape_07")
+        s0
+    in
+    [| Some Owl_utils_infer_shape.(concatenate s1 axis) |])
+
+
 let infer_shape_08 input_shapes axis splits =
   match input_shapes.(0).(0) with
   | Some s ->
@@ -195,6 +214,7 @@ let infer_shape input_shapes sym =
     let idx = x.idx in
     [| input_shapes.(0).(idx) |]
   | Split x              -> infer_shape_08 input_shapes x.axis x.split
+  | Concat x             -> infer_shape_07 input_shapes x.axis
   | Conv x               -> infer_shape_conv x input_shapes
   | MaxPool x            -> infer_shape_maxpool x input_shapes
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes

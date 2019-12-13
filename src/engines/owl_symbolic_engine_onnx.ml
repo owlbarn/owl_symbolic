@@ -311,6 +311,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           let n = Array.length s.split in
           let t = type_check_pattern01 ptypes.(0) _types_constraint03 name in
           Array.make n t.(0)
+        | Concat _             -> type_check_pattern02 ptypes _types_constraint03 name
         | Conv _               -> type_check_pattern02 ptypes _types_constraint00 name
         | MaxPool _            ->
           let t1 = type_check_pattern01 ptypes.(0) _types_constraint00 name in
@@ -472,6 +473,14 @@ let build_onnx_attrs_split (x : Owl_symbolic_ops_tensor.Split.t) =
   [ attr_axis; attr_split ]
 
 
+let build_onnx_attrs_concat (x : Owl_symbolic_ops_tensor.Concat.t) =
+  let name_axis = Some "axis" in
+  let type_ = Some PT.Int in
+  let i = Int64.of_int x.axis in
+  let attr_axis = PT.default_attribute_proto ~name:name_axis ~type_ ~i:(Some i) () in
+  [ attr_axis ]
+
+
 let build_onnx_attrs_conv (x : Owl_symbolic_ops_nn.Conv.t) =
   (* create "auto_pad" attribute *)
   let name_pad = Some "auto_pad" in
@@ -544,6 +553,7 @@ let build_onnx_attrs sym =
     | S.ReduceSum x     -> build_onnx_attrs_reducesum x
     | S.ReduceMax x     -> build_onnx_attrs_reducemax x
     | S.Split x         -> build_onnx_attrs_split x
+    | S.Concat x        -> build_onnx_attrs_concat x
     | S.Conv x          -> build_onnx_attrs_conv x
     | S.MaxPool x       -> build_onnx_attrs_maxpool x
     | _                 -> []
