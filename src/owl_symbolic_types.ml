@@ -21,8 +21,9 @@ type number_type =
   | SNT_Uint32
   | SNT_Uint64
   | SNT_Float16
+  | SNT_SEQ of number_type
 
-let number_type_to_string = function
+let rec number_type_to_string = function
   | SNT_Noop      -> "SNT_Noop"
   | SNT_Float     -> "SNT_Float"
   | SNT_Uint8     -> "SNT_Uint8"
@@ -39,6 +40,7 @@ let number_type_to_string = function
   | SNT_Uint64    -> "SNT_Uint64"
   | SNT_Complex32 -> "SNT_Complex32"
   | SNT_Complex64 -> "SNT_Complex64"
+  | SNT_SEQ x     -> number_type_to_string x ^ " Sequence"
 
 
 type tensor =

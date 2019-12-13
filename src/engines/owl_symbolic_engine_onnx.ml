@@ -29,6 +29,7 @@ let map_elt_type_to_int32 typ =
   | SNT_Uint64    -> Int32.of_int 13
   | SNT_Complex32 -> Int32.of_int 14
   | SNT_Complex64 -> Int32.of_int 15
+  | SNT_SEQ _     -> failwith "map_elt_type_to_int32: type is sequence"
 
 
 let map_sym_optyp_to_onnx sym_optyp =
@@ -320,6 +321,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | BatchNormalization _ ->
           let t = type_check_pattern02 ptypes _types_constraint00 name in
           Array.make 5 t.(0)
+        | SequenceEmpty s      -> [| SNT_SEQ s.dtype |]
         | _                    -> [| SNT_Noop |]
       in
       Hashtbl.add dtypes name out_type)
@@ -541,6 +543,14 @@ let build_onnx_attrs_maxpool (x : Owl_symbolic_ops_nn.MaxPool.t) =
   [ attr_pad; attr_ceil; attr_dil; attr_kernel; attr_strides; attr_order ]
 
 
+let build_onnx_attrs_seq_empty (x : Owl_symbolic_ops_sequence.SequenceEmpty.t) =
+  let name = Some "dtype" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Int in
+  let i = Some (map_elt_type_to_int32 x.dtype |> Int64.of_int32) in
+  let a_dtype = PT.default_attribute_proto ~name ~type_ ~i () in
+  [ a_dtype ]
+
+
 let build_onnx_attrs sym =
   let onnx_attrs =
     match sym with
@@ -556,6 +566,7 @@ let build_onnx_attrs sym =
     | S.Concat x        -> build_onnx_attrs_concat x
     | S.Conv x          -> build_onnx_attrs_conv x
     | S.MaxPool x       -> build_onnx_attrs_maxpool x
+    | S.SequenceEmpty x -> build_onnx_attrs_seq_empty x
     | _                 -> []
   in
   onnx_attrs

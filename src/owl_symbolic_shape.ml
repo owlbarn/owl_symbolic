@@ -218,4 +218,5 @@ let infer_shape input_shapes sym =
   | Conv x               -> infer_shape_conv x input_shapes
   | MaxPool x            -> infer_shape_maxpool x input_shapes
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes
+  | SequenceEmpty _      -> [||]
   | _                    -> [| None |]

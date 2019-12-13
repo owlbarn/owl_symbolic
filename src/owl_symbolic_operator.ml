@@ -371,3 +371,8 @@ let batch_norm ?name ?eps ?momentum x scale bias mean var =
   let out_4 = make_node (Owl_symbolic_symbol.Identity o4) [| bn_node |] in
   let out_5 = make_node (Owl_symbolic_symbol.Identity o5) [| bn_node |] in
   out_1, out_2, out_3, out_4, out_5
+
+
+let seq_empty ?name ?dtype () =
+  let s = Owl_symbolic_ops_sequence.SequenceEmpty.create ?name ?dtype () in
+  make_node (Owl_symbolic_symbol.SequenceEmpty s) [||]
