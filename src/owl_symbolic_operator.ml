@@ -351,37 +351,49 @@ let conv ?name ?dim ?padding ?strides ?dilations ?bias input kernel =
 
 
 let maxpool ?name ?strides ?dilations ?padding input kernel_shp =
-  let input_name = Owl_symbolic_graph.name input in
+  (* build multiple outputs of split *)
   let n = Owl_symbolic_utils.node_name ?name "MaxPool" in
   let n1 = n ^ "_y" in
   let n2 = n ^ "_indices" in
+  (* create symbol *)
+  let input_name = Owl_symbolic_graph.name input in
   let s =
     Owl_symbolic_ops_nn.MaxPool.create
       ~name:n
+      ~output:[| n1; n2 |]
       ?strides
       ?dilations
       ?padding
       input_name
       kernel_shp
   in
-  let o1 = Owl_symbolic_ops_tensor.Identity.create ~idx:0 ~name:n1 n in
-  let o2 = Owl_symbolic_ops_tensor.Identity.create ~idx:1 ~name:n2 n in
   let maxp = make_node (Owl_symbolic_symbol.MaxPool s) [| input |] in
+  (* create identity nodes *)
+  let o1 = Owl_symbolic_ops_tensor.Identity.create ~idx:0 ?name n1 in
+  let o2 = Owl_symbolic_ops_tensor.Identity.create ~idx:1 ?name n2 in
   let out_1 = make_node (Owl_symbolic_symbol.Identity o1) [| maxp |] in
   let out_2 = make_node (Owl_symbolic_symbol.Identity o2) [| maxp |] in
   out_1, out_2
 
 
 let batch_norm ?name ?eps ?momentum x scale bias mean var =
+  (* build multiple outputs of split *)
+  let n = Owl_symbolic_utils.node_name ?name "BatchNormalization" in
+  let n1 = n ^ "_y" in
+  let n2 = n ^ "_mean" in
+  let n3 = n ^ "_var" in
+  let n4 = n ^ "_saved_mean" in
+  let n5 = n ^ "_saved_var" in
+  (* create symbol *)
   let x_name = Owl_symbolic_graph.name x in
   let scale_name = Owl_symbolic_graph.name scale in
   let bias_name = Owl_symbolic_graph.name bias in
   let mean_name = Owl_symbolic_graph.name mean in
   let var_name = Owl_symbolic_graph.name var in
-  let n = Owl_symbolic_utils.node_name ?name "BatchNormalization" in
   let s =
     Owl_symbolic_ops_nn.BatchNormalization.create
       ~name:n
+      ~output:[| n1; n2; n3; n4; n5 |]
       ?eps
       ?momentum
       x_name
@@ -393,16 +405,12 @@ let batch_norm ?name ?eps ?momentum x scale bias mean var =
   let bn_node =
     make_node (Owl_symbolic_symbol.BatchNormalization s) [| x; scale; bias; mean; var |]
   in
-  let n1 = n ^ "_y" in
-  let n2 = n ^ "_mean" in
-  let n3 = n ^ "_var" in
-  let n4 = n ^ "_saved_mean" in
-  let n5 = n ^ "_saved_var" in
-  let o1 = Owl_symbolic_ops_tensor.Identity.create ~idx:0 ~name:n1 n in
-  let o2 = Owl_symbolic_ops_tensor.Identity.create ~idx:1 ~name:n2 n in
-  let o3 = Owl_symbolic_ops_tensor.Identity.create ~idx:2 ~name:n3 n in
-  let o4 = Owl_symbolic_ops_tensor.Identity.create ~idx:3 ~name:n4 n in
-  let o5 = Owl_symbolic_ops_tensor.Identity.create ~idx:4 ~name:n5 n in
+  (* create identity nodes *)
+  let o1 = Owl_symbolic_ops_tensor.Identity.create ~idx:0 ?name n1 in
+  let o2 = Owl_symbolic_ops_tensor.Identity.create ~idx:1 ?name n2 in
+  let o3 = Owl_symbolic_ops_tensor.Identity.create ~idx:2 ?name n3 in
+  let o4 = Owl_symbolic_ops_tensor.Identity.create ~idx:3 ?name n4 in
+  let o5 = Owl_symbolic_ops_tensor.Identity.create ~idx:4 ?name n5 in
   let out_1 = make_node (Owl_symbolic_symbol.Identity o1) [| bn_node |] in
   let out_2 = make_node (Owl_symbolic_symbol.Identity o2) [| bn_node |] in
   let out_3 = make_node (Owl_symbolic_symbol.Identity o3) [| bn_node |] in
@@ -412,14 +420,18 @@ let batch_norm ?name ?eps ?momentum x scale bias mean var =
 
 
 let dropout ?name ?ratio x =
-  let x_name = Owl_symbolic_graph.name x in
+  (* build multiple outputs of split *)
   let d_name = Owl_symbolic_utils.node_name ?name "Dropout" in
-  let s = Owl_symbolic_ops_nn.Dropout.create ~name:d_name ?ratio x_name in
-  let d_node = make_node (Owl_symbolic_symbol.Dropout s) [| x |] in
   let n1 = d_name ^ "_output" in
   let n2 = d_name ^ "_mask" in
-  let o1 = Owl_symbolic_ops_tensor.Identity.create ~idx:0 ~name:n1 d_name in
-  let o2 = Owl_symbolic_ops_tensor.Identity.create ~idx:1 ~name:n2 d_name in
+  (* create symbol *)
+  let x_name = Owl_symbolic_graph.name x in
+  let output = [| n1; n2 |] in
+  let s = Owl_symbolic_ops_nn.Dropout.create ~output ~name:d_name ?ratio x_name in
+  let d_node = make_node (Owl_symbolic_symbol.Dropout s) [| x |] in
+  (* create identity nodes *)
+  let o1 = Owl_symbolic_ops_tensor.Identity.create ~idx:0 ?name n1 in
+  let o2 = Owl_symbolic_ops_tensor.Identity.create ~idx:1 ?name n2 in
   let out1 = make_node (Owl_symbolic_symbol.Identity o1) [| d_node |] in
   let out2 = make_node (Owl_symbolic_symbol.Identity o2) [| d_node |] in
   out1, out2

@@ -409,12 +409,6 @@ let set_out_shape sym shapes =
 
 (** operaations that only apply to certain symbol *)
 
-let output sym =
-  match sym with
-  | Split x -> Split.(x.output)
-  | _       -> [| name sym |]
-
-
 let attrs = function
   | Int x                -> Int.(x.attrs)
   | Float x              -> Float.(x.attrs)
@@ -502,6 +496,15 @@ let set_attrs sym a =
   | Equal x              -> x.attrs <- a
   | SequenceEmpty x      -> x.attrs <- a
   | _                    -> ()
+
+
+let output sym =
+  match sym with
+  | Split x              -> Split.(x.output)
+  | BatchNormalization x -> BatchNormalization.(x.output)
+  | MaxPool x            -> MaxPool.(x.output)
+  | Dropout x            -> Dropout.(x.output)
+  | _                    -> [| name sym |]
 
 
 let dtype = function

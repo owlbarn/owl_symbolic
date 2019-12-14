@@ -86,6 +86,7 @@ module MaxPool = struct
   type t =
     { mutable name : string
     ; mutable input : string array
+    ; mutable output : string array
     ; mutable attrs : (string * attrvalue) array
     ; mutable out_shape : int array option array
     ; mutable auto_pad : string
@@ -99,10 +100,15 @@ module MaxPool = struct
 
   let op_type = "MaxPool"
 
-  let create ?(padding = VALID) ?strides ?dilations ?name input_name kernel_shp =
+  let create ?output ?(padding = VALID) ?strides ?dilations ?name input_name kernel_shp =
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| input_name |] in
+    let output =
+      match output with
+      | Some o -> o
+      | None   -> [| name |]
+    in
     let dim = Array.length kernel_shp in
     let dilations =
       match dilations with
@@ -129,6 +135,7 @@ module MaxPool = struct
     in
     { name
     ; input
+    ; output
     ; attrs
     ; out_shape = [| None; None |]
     ; auto_pad
@@ -145,6 +152,7 @@ module BatchNormalization = struct
   type t =
     { mutable name : string
     ; mutable input : string array
+    ; mutable output : string array
     ; mutable attrs : (string * attrvalue) array
     ; mutable out_shape : int array option array
     ; mutable epsilon : float
@@ -153,10 +161,15 @@ module BatchNormalization = struct
 
   let op_type = "BatchNormalization"
 
-  let create ?name ?eps ?momentum x_n scale_n b_n mean_n var_n =
+  let create ?output ?name ?eps ?momentum x_n scale_n b_n mean_n var_n =
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| x_n; scale_n; b_n; mean_n; var_n |] in
+    let output =
+      match output with
+      | Some o -> o
+      | None   -> [| name |]
+    in
     let epsilon =
       match eps with
       | Some e -> e
@@ -168,13 +181,14 @@ module BatchNormalization = struct
       | None   -> 0.9
     in
     let out_shape = [| None; None; None; None; None |] in
-    { name; input; attrs; out_shape; epsilon; momentum }
+    { name; input; output; attrs; out_shape; epsilon; momentum }
 end
 
 module Dropout = struct
   type t =
     { mutable name : string
     ; mutable input : string array
+    ; mutable output : string array
     ; mutable attrs : (string * attrvalue) array
     ; mutable out_shape : int array option array
     ; mutable ratio : float
@@ -182,10 +196,15 @@ module Dropout = struct
 
   let op_type = "Dropout"
 
-  let create ?name ?(ratio = 0.5) x =
+  let create ?output ?name ?(ratio = 0.5) x =
     assert (ratio >= 0. && ratio <= 1.);
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| x |] in
-    { name; input; attrs; out_shape = [| None; None |]; ratio }
+    let output =
+      match output with
+      | Some o -> o
+      | None   -> [| name |]
+    in
+    { name; input; output; attrs; out_shape = [| None; None |]; ratio }
 end
