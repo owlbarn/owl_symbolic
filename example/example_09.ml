@@ -1,6 +1,8 @@
 open Owl_symbolic
 open Op
 
+(** TODO: automaticall test all examples *)
+
 (* 
 let test_gemm () =
   let a = variable ~shape:[| 3; 4 |] "a" in
@@ -31,6 +33,7 @@ let test_maxpool () =
   ONNX_Engine.save z "test.onnx"
 *)
 
+(*
 let test_concat () =
   let a = variable ~shape:[| 2; 2 |] "a" in
   let b = variable ~shape:[| 2; 1 |] "b" in
@@ -38,6 +41,16 @@ let test_concat () =
   let g = SymGraph.make_graph [| x |] "sym_graph" in
   let y = ONNX_Engine.of_symbolic g in
   ONNX_Engine.save y "test.onnx"
+*)
+
+let test_sum () =
+  let a = variable ~shape:[| 3; 2 |] "a" in
+  let b = variable ~shape:[| 3; 1 |] "b" in
+  let c = variable ~shape:[| 3; 2 |] "c" in
+  let x = sum [| a; b; c |] in
+  let g = SymGraph.make_graph [| x |] "sym_graph" in
+  let y = ONNX_Engine.of_symbolic g in
+  ONNX_Engine.save y "test.onnx"
 
 
-let _ = test_concat ()
+let _ = test_sum ()
