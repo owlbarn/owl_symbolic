@@ -318,6 +318,12 @@ let concat ?name ?axis xs =
   make_node (Owl_symbolic_symbol.Concat s) xs
 
 
+let cast ?name x target =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_tensor.Cast.create ?name xn target in
+  make_node (Owl_symbolic_symbol.Cast s) [| x |]
+
+
 (* TODO: Currently we only allow statically specified pads value *)
 let pad ?name ?mode ?v x pads =
   let xn = Owl_symbolic_graph.name x in

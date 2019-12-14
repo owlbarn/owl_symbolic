@@ -279,6 +279,7 @@ let infer_shape input_shapes sym =
   | Split x              -> infer_shape_08 input_shapes x.axis x.split
   | Concat x             -> infer_shape_07 input_shapes x.axis
   | Pad x                -> infer_shape_pad x input_shapes
+  | Cast _               -> infer_shape_01 input_shapes
   | Conv x               -> infer_shape_conv x input_shapes
   | MaxPool x            -> infer_shape_maxpool x input_shapes
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes

@@ -251,6 +251,23 @@ let _types_constraint04 =
   |]
 
 
+let _types_constraint05 =
+  [| SNT_Uint8
+   ; SNT_Uint16
+   ; SNT_Uint32
+   ; SNT_Uint64
+   ; SNT_Int8
+   ; SNT_Int16
+   ; SNT_Int32
+   ; SNT_Int64
+   ; SNT_Float16
+   ; SNT_Float
+   ; SNT_Double
+   ; SNT_String
+   ; SNT_Bool
+  |]
+
+
 let type_check_pattern00 sym = [| Owl_symbolic_symbol.dtype sym |]
 
 let type_check_pattern01 target_type type_constraint name =
@@ -340,6 +357,10 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           then type_check_pattern01 ptypes.(2) _types_constraint04 name |> ignore;
           t
         | Conv _               -> type_check_pattern02 ptypes _types_constraint00 name
+        | Cast x               ->
+          type_check_pattern01 ptypes.(0) _types_constraint05 name |> ignore;
+          let t = x.target in
+          type_check_pattern01 [| t |] _types_constraint05 name
         | MaxPool _            ->
           let t1 = type_check_pattern01 ptypes.(0) _types_constraint00 name in
           let t2 = SNT_Int64 in
@@ -544,6 +565,14 @@ let build_onnx_attrs_pad (x : Owl_symbolic_ops_tensor.Pad.t) =
   [ attr_mode ]
 
 
+let build_onnx_attrs_cast (x : Owl_symbolic_ops_tensor.Cast.t) =
+  let name_to = Some "to" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Int in
+  let i = Some (x.target |> map_elt_type_to_int32 |> Int64.of_int32) in
+  let attr_to = PT.default_attribute_proto ~name:name_to ~type_ ~i () in
+  [ attr_to ]
+
+
 let build_onnx_attrs_conv (x : Owl_symbolic_ops_nn.Conv.t) =
   (* create "auto_pad" attribute *)
   let name_pad = Some "auto_pad" in
@@ -635,6 +664,7 @@ let build_onnx_attrs sym =
     | S.Split x         -> build_onnx_attrs_split x
     | S.Concat x        -> build_onnx_attrs_concat x
     | S.Pad x           -> build_onnx_attrs_pad x
+    | S.Cast x          -> build_onnx_attrs_cast x
     | S.Conv x          -> build_onnx_attrs_conv x
     | S.MaxPool x       -> build_onnx_attrs_maxpool x
     | S.SequenceEmpty x -> build_onnx_attrs_seq_empty x

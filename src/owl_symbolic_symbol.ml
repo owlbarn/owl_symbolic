@@ -67,6 +67,7 @@ type t =
   | Split of Split.t
   | Concat of Concat.t
   | Pad of Pad.t
+  | Cast of Cast.t
   (* NN *)
   | Conv of Conv.t
   | MaxPool of MaxPool.t
@@ -127,6 +128,7 @@ let name = function
   | Split x              -> Split.(x.name)
   | Concat x             -> Concat.(x.name)
   | Pad x                -> Pad.(x.name)
+  | Cast x               -> Cast.(x.name)
   | Conv x               -> Conv.(x.name)
   | MaxPool x            -> MaxPool.(x.name)
   | BatchNormalization x -> BatchNormalization.(x.name)
@@ -186,6 +188,7 @@ let op_type = function
   | Split _              -> Split.op_type
   | Concat _             -> Concat.op_type
   | Pad _                -> Pad.op_type
+  | Cast _               -> Cast.op_type
   | Conv _               -> Conv.op_type
   | MaxPool _            -> MaxPool.op_type
   | BatchNormalization _ -> BatchNormalization.op_type
@@ -245,6 +248,7 @@ let input = function
   | Split x              -> Split.(x.input)
   | Concat x             -> Concat.(x.input)
   | Pad x                -> Pad.(x.input)
+  | Cast x               -> Cast.(x.input)
   | Conv x               -> Conv.(x.input)
   | MaxPool x            -> MaxPool.(x.input)
   | BatchNormalization x -> BatchNormalization.(x.input)
@@ -295,6 +299,7 @@ let set_input sym inputs =
   | Split x              -> x.input <- inputs
   | Concat x             -> x.input <- inputs
   | Pad x                -> x.input <- inputs
+  | Cast x               -> x.input <- inputs
   | Conv x               -> x.input <- inputs
   | MaxPool x            -> x.input <- inputs
   | BatchNormalization x -> x.input <- inputs
@@ -353,6 +358,7 @@ let out_shape = function
   | Split x              -> Split.(x.out_shape)
   | Concat x             -> Concat.(x.out_shape)
   | Pad x                -> Pad.(x.out_shape)
+  | Cast x               -> Cast.(x.out_shape)
   | Conv x               -> Conv.(x.out_shape)
   | MaxPool x            -> MaxPool.(x.out_shape)
   | BatchNormalization x -> BatchNormalization.(x.out_shape)
@@ -405,6 +411,7 @@ let set_out_shape sym shapes =
   | Split x              -> x.out_shape <- shapes
   | Concat x             -> x.out_shape <- shapes
   | Pad x                -> x.out_shape <- shapes
+  | Cast x               -> x.out_shape <- shapes
   | Conv x               -> x.out_shape <- shapes
   | MaxPool x            -> x.out_shape <- shapes
   | BatchNormalization x -> x.out_shape <- shapes
@@ -452,6 +459,7 @@ let attrs = function
   | Split x              -> Split.(x.attrs)
   | Concat x             -> Concat.(x.attrs)
   | Pad x                -> Pad.(x.attrs)
+  | Cast x               -> Cast.(x.attrs)
   | Conv x               -> Conv.(x.attrs)
   | MaxPool x            -> MaxPool.(x.attrs)
   | BatchNormalization x -> BatchNormalization.(x.attrs)
@@ -498,6 +506,7 @@ let set_attrs sym a =
   | Split x              -> x.attrs <- a
   | Concat x             -> x.attrs <- a
   | Pad x                -> x.attrs <- a
+  | Cast x               -> x.attrs <- a
   | Conv x               -> x.attrs <- a
   | MaxPool x            -> x.attrs <- a
   | BatchNormalization x -> x.attrs <- a

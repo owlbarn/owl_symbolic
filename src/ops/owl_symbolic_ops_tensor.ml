@@ -3,12 +3,12 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-(** Implemented: Reshape, Concat, Split, Identity, *)
+(** Implemented: Reshape, Concat, Split, Identity, Pad *)
 
 (** Cast, Shape, Size, Slice, Transpose, Scatter,
  ScatterND, ScatterElements, Gather, GatherElements, Squeeze, UnSqueeze, 
  SpaceToDepth, DepthToSpace, Tile, Upsample, Resize, Compress, 
- OneHot, IsNaN, IsInf, Where, NonZero, ReverseSequence, Unique, GatherND, Pad 
+ OneHot, IsNaN, IsInf, Where, NonZero, ReverseSequence, Unique, GatherND 
  *)
 
 open Owl_symbolic_types
@@ -123,4 +123,20 @@ module Pad = struct
     in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; input; attrs; out_shape = [| None |]; mode; p = pdata }
+end
+
+module Cast = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable target : number_type
+    }
+
+  let op_type = "Cast"
+
+  let create ?name x target =
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input = [| x |]; attrs = [||]; out_shape = [| None |]; target }
 end
