@@ -293,17 +293,22 @@ let reshape ?name data shape =
 let split ?name ?axis x split =
   let num = Array.length split in
   assert (num > 0);
+  (* build multiple outputs of split *)
   let split_name = Owl_symbolic_utils.node_name ?name "Split" in
-  let x_name = Owl_symbolic_graph.name x in
-  let s = Owl_symbolic_ops_tensor.Split.create ~name:split_name ?axis x_name split in
-  let split_node = make_node (Owl_symbolic_symbol.Split s) [| x |] in
   let id_nodes = Array.make num 0 in
+  let output = Array.mapi (fun idx _ -> Printf.sprintf "%s_%d" split_name idx) id_nodes in
+  (* create symbol *)
+  let x_name = Owl_symbolic_graph.name x in
+  let s =
+    Owl_symbolic_ops_tensor.Split.create ~output ~name:split_name ?axis x_name split
+  in
+  let split_node = make_node (Owl_symbolic_symbol.Split s) [| x |] in
+  (* create identity nodes *)
   Array.mapi
-    (fun idx _ ->
-      let n = Printf.sprintf "%s_%d" split_name idx in
-      let o = Owl_symbolic_ops_tensor.Identity.create ~idx ~name:n split_name in
+    (fun idx n ->
+      let o = Owl_symbolic_ops_tensor.Identity.create ?name ~idx n in
       make_node (Owl_symbolic_symbol.Identity o) [| split_node |])
-    id_nodes
+    output
 
 
 let concat ?name ?axis x =

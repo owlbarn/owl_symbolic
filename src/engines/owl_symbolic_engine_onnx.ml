@@ -116,6 +116,7 @@ let make_onnx_io name elt_type shape =
 
 let make_onnx_node op_type input_names output_names name attr =
   let input_names = Array.to_list input_names in
+  let output_names = Array.to_list output_names in
   PT.default_node_proto
     ~input:input_names
     ~output:output_names
@@ -311,7 +312,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           type_check_pattern03 ptypes _types_constraint03 [| SNT_Int64 |] name
         | Identity s           ->
           let idx = s.idx in
-          ptypes.(idx)
+          [| ptypes.(0).(idx) |]
         | Split s              ->
           let n = Array.length s.split in
           let t = type_check_pattern01 ptypes.(0) _types_constraint03 name in
@@ -625,7 +626,7 @@ let build_onnx_nodes (sym_graph : Owl_symbolic_graph.t) =
       then (
         let name = S.name sym in
         let input_names = S.input sym in
-        let output_names = [ name ] in
+        let output_names = S.output sym in
         let op_type = Some (map_sym_optyp_to_onnx op_type) in
         (* Build onnx attributes  *)
         let onnx_attrs = build_onnx_attrs sym in
@@ -652,7 +653,6 @@ let build_onnx_outputs sym_graph type_dict =
     (fun sym_node ->
       let sym = Owl_graph.attr sym_node in
       let name = S.name sym in
-      (* assertion: final output node must contain only one output *)
       let elt_type = (Hashtbl.find type_dict name).(0) |> map_elt_type_to_int32 in
       let shape = S.out_shape sym in
       let shape =

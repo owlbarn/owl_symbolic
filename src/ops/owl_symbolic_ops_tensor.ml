@@ -54,6 +54,7 @@ module Split = struct
   type t =
     { mutable name : string
     ; mutable input : string array
+    ; mutable output : string array
     ; mutable attrs : (string * attrvalue) array
     ; mutable out_shape : int array option array
     ; mutable axis : int
@@ -62,12 +63,17 @@ module Split = struct
 
   let op_type = "Split"
 
-  let create ?name ?(axis = 0) x split =
+  let create ?output ?name ?(axis = 0) x split =
     let attrs = [||] in
     let input = [| x |] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
+    let output =
+      match output with
+      | Some o -> o
+      | None   -> [| name |]
+    in
     let out_shape = Array.(make (length split) None) in
-    { name; input; attrs; out_shape; axis; split }
+    { name; input; output; attrs; out_shape; axis; split }
 end
 
 module Concat = struct

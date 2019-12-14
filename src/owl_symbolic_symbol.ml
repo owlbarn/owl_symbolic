@@ -409,6 +409,12 @@ let set_out_shape sym shapes =
 
 (** operaations that only apply to certain symbol *)
 
+let output sym =
+  match sym with
+  | Split x -> Split.(x.output)
+  | _       -> [| name sym |]
+
+
 let attrs = function
   | Int x                -> Int.(x.attrs)
   | Float x              -> Float.(x.attrs)
