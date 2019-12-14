@@ -7,6 +7,7 @@
 
 open Owl_symbolic_types
 
+(* TODO: this op is not Equal; it should be renamed EqualTo or Assign etc. *)
 module Equal = struct
   type t =
     { mutable name : string

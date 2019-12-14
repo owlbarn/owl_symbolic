@@ -3,9 +3,9 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-(** Implemented: Reshape, Concat, Split, Identity, Pad *)
+(** Implemented: Reshape, Concat, Split, Identity, Pad, Cast *)
 
-(** Cast, Shape, Size, Slice, Transpose, Scatter,
+(** Shape, Size, Slice, Transpose, Scatter,
  ScatterND, ScatterElements, Gather, GatherElements, Squeeze, UnSqueeze, 
  SpaceToDepth, DepthToSpace, Tile, Upsample, Resize, Compress, 
  OneHot, IsNaN, IsInf, Where, NonZero, ReverseSequence, Unique, GatherND 

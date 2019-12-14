@@ -5,8 +5,8 @@
 
 (** Implemented: Conv, MaxPool, BatchNormalization, Dropout *)
 
-(** AveragePool, MaxPool, MaxUnpool, LpPool, MaxRoiPool,
-Conv, QLinearConv,ConvInteger, ConvTranspose, GlobalAveragePool, 
+(** AveragePool, MaxUnpool, LpPool, MaxRoiPool,
+QLinearConv,ConvInteger, ConvTranspose, GlobalAveragePool, 
 GlobalMaxPool, GlobalLpPool, 
 InstanceNormalization, LpNormalization, Shrink, Flatten, 
 LRN, TfIdfVectorizer, StringNormalizer, MeanVarianceNormalization

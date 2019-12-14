@@ -3,7 +3,9 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-(** SequenceEmpty, SequenceConstruct, SequenceInsert, SequenceAt, 
+(** Implemented: SequenceEmpty *)
+
+(** SequenceConstruct, SequenceInsert, SequenceAt, 
 SequenceErease, SequenceLength, SplitToSequence, ConcatFromSequence *)
 
 open Owl_symbolic_types

@@ -3,15 +3,15 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-(* To be implemented: Mod, Reciprocal, LeakyRelu, ThreasholdedRelu, Selu, Elu, 
+(* Implemented: Sin, Cos, Tan, Asin, Acos, Atan, Sinh, Cosh, Tanh, Asinh, 
+Acosh, Atanh, Add, Sub, Mul, Div, Neg, Abs, Floor, Ceil, Sqrt, Relu, Exp, Log,
+Pow, Round, Gemm, MatMul *)
+
+(* Mod, Reciprocal, LeakyRelu, ThreasholdedRelu, Selu, Elu, 
 PRelu, Sigmoid, HardSigmoid, Max, Min, Sum, Mean, Clip, 
 Softmax, LogSoftmax, Hardmax, Softsign, Softplus, 
 Expand, Sign, Erf, QLinearMatMul, MatMulInteger, Cumsum, Det 
 *)
-
-(* Implemented: Sin, Cos, Tan, Asin, Acos, Atan, Sinh, Cosh, Tanh, Asinh, 
-Acosh, Atanh, Add, Sub, Mul, Div, Neg, Abs, Floor, Ceil, Sqrt, Relu, Exp, Log,
-Pow, Round, Gemm, MatMul *)
 
 open Owl_symbolic_types
 
