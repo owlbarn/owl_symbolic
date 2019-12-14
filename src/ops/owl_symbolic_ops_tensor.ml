@@ -87,9 +87,9 @@ module Concat = struct
 
   let op_type = "Concat"
 
-  let create ?name ?(axis = 0) x =
+  let create ?name ?(axis = 0) xs =
     let attrs = [||] in
-    let input = [| x |] in
+    let input = xs in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; input; attrs; out_shape = [| None |]; axis }
 end

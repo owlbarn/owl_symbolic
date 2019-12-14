@@ -311,10 +311,10 @@ let split ?name ?axis x split =
     output
 
 
-let concat ?name ?axis x =
-  let xn = Owl_symbolic_graph.name x in
+let concat ?name ?axis xs =
+  let xn = Array.map Owl_symbolic_graph.name xs in
   let s = Owl_symbolic_ops_tensor.Concat.create ?name ?axis xn in
-  make_node (Owl_symbolic_symbol.Concat s) [| x |]
+  make_node (Owl_symbolic_symbol.Concat s) xs
 
 
 (** Neural Network *)
