@@ -5,6 +5,8 @@
 
 open Owl_symbolic_symbol
 
+(* If an input is None, it means the static shape checking is not possible, and returns None. *)
+
 let infer_shape_00 _input_shapes = [| Some [||] |]
 
 let infer_shape_01 input_shapes =
@@ -111,33 +113,51 @@ let infer_shape_21 input_shapes padding kernel stride =
 
 
 let infer_shape_31 input_shapes =
-  let msg = "Owl_symbolic_shape/infer_shape_31: error unpacking input shapes." in
+  let msg = "Owl_symbolic_shape: infer_shape_31." in
   let unpack = Owl_symbolic_utils.get_option_value msg in
-  let broadcast_shp =
-    Array.fold_left
-      (fun accu shps ->
-        let shp = shps.(0) |> unpack in
-        Owl_utils_infer_shape.broadcast1 shp accu)
-      [||]
-      input_shapes
-  in
-  [| Some broadcast_shp |]
+  let flag = Array.exists (fun x -> x.(0) = None) input_shapes in
+  if flag
+  then [| None |]
+  else (
+    let broadcast_shp =
+      Array.fold_left
+        (fun accu shps ->
+          let shp = shps.(0) |> unpack in
+          Owl_utils_infer_shape.broadcast1 shp accu)
+        [||]
+        input_shapes
+    in
+    [| Some broadcast_shp |])
 
 
 let infer_shape_gemm (x : Owl_symbolic_ops_math.Gemm.t) input_shapes =
-  let msg = "Owl_symbolic_shape: error unpacking Gemm input shapes." in
-  let unpack = Owl_symbolic_utils.get_option_value msg in
   let l = Array.length input_shapes in
   assert (l = 2 || l = 3);
-  let a_shp = unpack input_shapes.(0).(0) in
-  let b_shp = unpack input_shapes.(1).(0) in
-  assert (Array.length a_shp = 2);
-  assert (Array.length b_shp = 2);
-  let a_shp = if x.transA then [| a_shp.(1); a_shp.(0) |] else a_shp in
-  let b_shp = if x.transB then [| b_shp.(1); b_shp.(0) |] else b_shp in
-  assert (a_shp.(1) = b_shp.(0));
-  [| Some [| a_shp.(0); b_shp.(1) |] |]
+  match input_shapes.(0).(0), input_shapes.(1).(0) with
+  | Some a_shp, Some b_shp ->
+    assert (Array.length a_shp = 2);
+    assert (Array.length b_shp = 2);
+    let a_shp = if x.transA then [| a_shp.(1); a_shp.(0) |] else a_shp in
+    let b_shp = if x.transB then [| b_shp.(1); b_shp.(0) |] else b_shp in
+    assert (a_shp.(1) = b_shp.(0));
+    [| Some [| a_shp.(0); b_shp.(1) |] |]
+  | _, _                   -> [| None |]
 
+
+(*
+let infer_shape_pad (x : Owl_symbolic_ops_tensor.Pad.t) input_shapes = 
+  assert (Array.length input_shapes >= 2);
+  let msg = "Owl_symbolic_shape: Pad input shapes is None." in
+  let unpack = Owl_symbolic_utils.get_option_value msg in
+  let data_shp = unpack input_shapes.(0) in
+  let pads_shp = unpack input_shapes.(1) in
+  assert (Array.length pads_shp = 1);
+  assert (pads_shp.(0) = 2 * (Array.length data_shp));
+  let return_shp = Array.mapi (fun i d ->
+    pads d + 
+
+  ) data_shp
+*)
 
 let infer_shape_conv (x : Owl_symbolic_ops_nn.Conv.t) input_shapes =
   let l = x.dim in
@@ -153,43 +173,43 @@ let infer_shape_conv (x : Owl_symbolic_ops_nn.Conv.t) input_shapes =
 
 let infer_shape_maxpool (x : Owl_symbolic_ops_nn.MaxPool.t) input_shapes =
   let l = Array.length x.kernel_shp in
-  let ndim =
-    match input_shapes.(0).(0) with
-    | Some i -> Array.length i - 2
-    | None   -> failwith "infer_shape_maxpool: input shape is none"
-  in
-  assert (ndim = l);
-  let padding = if x.auto_pad = "VALID" then Owl_types.VALID else Owl_types.SAME in
-  let dim =
-    if ndim = 1
-    then infer_shape_15 input_shapes padding x.kernel_shp x.strides
-    else if ndim = 2
-    then infer_shape_21 input_shapes padding x.kernel_shp x.strides
-    else if ndim = 3
-    then infer_shape_17 input_shapes padding x.kernel_shp x.strides
-    else failwith "Owl_symbolic_shape: illegal maxpool dimensions."
-  in
-  [| dim.(0); dim.(0) |]
+  match input_shapes.(0).(0) with
+  | Some i ->
+    let ndim = Array.length i - 2 in
+    assert (ndim = l);
+    let padding = if x.auto_pad = "VALID" then Owl_types.VALID else Owl_types.SAME in
+    let dim =
+      if ndim = 1
+      then infer_shape_15 input_shapes padding x.kernel_shp x.strides
+      else if ndim = 2
+      then infer_shape_21 input_shapes padding x.kernel_shp x.strides
+      else if ndim = 3
+      then infer_shape_17 input_shapes padding x.kernel_shp x.strides
+      else failwith "Owl_symbolic_shape: illegal maxpool dimensions."
+    in
+    [| dim.(0); dim.(0) |]
+  | None   -> [| None; None |]
 
 
 let infer_shape_batch_normalization input_shapes =
-  let msg = "Owl_symbolic_shape: error unpacking BatchNormalisation input shapes." in
-  let unpack = Owl_symbolic_utils.get_option_value msg in
-  let shp_x = unpack input_shapes.(0).(0) in
-  let shp_scale = unpack input_shapes.(1).(0) in
-  let shp_b = unpack input_shapes.(2).(0) in
-  let shp_mean = unpack input_shapes.(3).(0) in
-  let shp_var = unpack input_shapes.(4).(0) in
-  let c = shp_x.(0) in
-  assert (Array.length shp_scale = 1);
-  assert (Array.length shp_b = 1);
-  assert (Array.length shp_mean = 1);
-  assert (Array.length shp_var = 1);
-  assert (c = shp_scale.(0));
-  assert (c = shp_b.(0));
-  assert (c = shp_mean.(0));
-  assert (c = shp_var.(0));
-  [| Some shp_x; Some [||]; Some [||]; Some [||]; Some [||] |]
+  let shp_x = input_shapes.(0).(0) in
+  let shp_scale = input_shapes.(1).(0) in
+  let shp_b = input_shapes.(2).(0) in
+  let shp_mean = input_shapes.(3).(0) in
+  let shp_var = input_shapes.(4).(0) in
+  match shp_x, shp_scale, shp_b, shp_mean, shp_var with
+  | Some x, Some scale, Some b, Some mean, Some var ->
+    let c = x.(0) in
+    assert (Array.length scale = 1);
+    assert (Array.length b = 1);
+    assert (Array.length mean = 1);
+    assert (Array.length var = 1);
+    assert (c = scale.(0));
+    assert (c = b.(0));
+    assert (c = mean.(0));
+    assert (c = var.(0));
+    [| Some x; Some [||]; Some [||]; Some [||]; Some [||] |]
+  | _, _, _, _, _ -> [| None; None; None; None; None |]
 
 
 (** Main entry *)
@@ -248,6 +268,7 @@ let infer_shape input_shapes sym =
     [| input_shapes.(0).(idx) |]
   | Split x              -> infer_shape_08 input_shapes x.axis x.split
   | Concat x             -> infer_shape_07 input_shapes x.axis
+  (* | Pad x                -> infer_shape_pad input_shapes *)
   | Conv x               -> infer_shape_conv x input_shapes
   | MaxPool x            -> infer_shape_maxpool x input_shapes
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes

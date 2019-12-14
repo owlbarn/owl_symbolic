@@ -3,9 +3,11 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-(** Cast, Reshape, Shape, Size, Concat, Split, Slice, Transpose, Scatter,
+(** Implemented: Reshape, Concat, Split, Identity, *)
+
+(** Cast, Shape, Size, Slice, Transpose, Scatter,
  ScatterND, ScatterElements, Gather, GatherElements, Squeeze, UnSqueeze, 
- SpaceToDepth, DepthToSpace, Tile, Upsample, Resize, Identity, Compress, 
+ SpaceToDepth, DepthToSpace, Tile, Upsample, Resize, Compress, 
  OneHot, IsNaN, IsInf, Where, NonZero, ReverseSequence, Unique, GatherND, Pad 
  *)
 
@@ -92,4 +94,28 @@ module Concat = struct
     let input = xs in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; input; attrs; out_shape = [| None |]; axis }
+end
+
+module Pad = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable mode : string
+    }
+
+  let op_type = "Pad"
+
+  let create ?name ?(mode = "constant") ?value data pads =
+    if mode <> "constant" && mode <> "reflect" && mode <> "edge"
+    then failwith "Pad mode should be constant, reflect, or edge.";
+    let attrs = [||] in
+    let input =
+      match value with
+      | Some v -> [| data; pads; v |]
+      | None   -> [| data; pads |]
+    in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |]; mode }
 end
