@@ -96,6 +96,10 @@ module Concat = struct
     { name; input; attrs; out_shape = [| None |]; axis }
 end
 
+(* Note: The pads value are made part of t, but we also make a ``pads'' node  
+ * when building graph, so as to meet the specification of ONNX. 
+ *)
+
 module Pad = struct
   type t =
     { mutable name : string
@@ -103,11 +107,12 @@ module Pad = struct
     ; mutable attrs : (string * attrvalue) array
     ; mutable out_shape : int array option array
     ; mutable mode : string
+    ; mutable p : int array
     }
 
   let op_type = "Pad"
 
-  let create ?name ?(mode = "constant") ?value data pads =
+  let create ?name ?(mode = "constant") ?value data pads pdata =
     if mode <> "constant" && mode <> "reflect" && mode <> "edge"
     then failwith "Pad mode should be constant, reflect, or edge.";
     let attrs = [||] in
@@ -117,5 +122,5 @@ module Pad = struct
       | None   -> [| data; pads |]
     in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = [| None |]; mode }
+    { name; input; attrs; out_shape = [| None |]; mode; p = pdata }
 end

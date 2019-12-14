@@ -236,6 +236,21 @@ let _types_constraint03 =
   |]
 
 
+let _types_constraint04 =
+  [| SNT_Uint8
+   ; SNT_Uint16
+   ; SNT_Uint32
+   ; SNT_Uint64
+   ; SNT_Int8
+   ; SNT_Int16
+   ; SNT_Int32
+   ; SNT_Int64
+   ; SNT_Float16
+   ; SNT_Float
+   ; SNT_Double
+  |]
+
+
 let type_check_pattern00 sym = [| Owl_symbolic_symbol.dtype sym |]
 
 let type_check_pattern01 target_type type_constraint name =
@@ -318,6 +333,12 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           let t = type_check_pattern01 ptypes.(0) _types_constraint03 name in
           Array.make n t.(0)
         | Concat _             -> type_check_pattern02 ptypes _types_constraint03 name
+        | Pad _                ->
+          let t = type_check_pattern01 ptypes.(0) _types_constraint04 name in
+          type_check_pattern01 ptypes.(1) [| SNT_Int64 |] name |> ignore;
+          if Array.length ptypes = 3
+          then type_check_pattern01 ptypes.(2) _types_constraint04 name |> ignore;
+          t
         | Conv _               -> type_check_pattern02 ptypes _types_constraint00 name
         | MaxPool _            ->
           let t1 = type_check_pattern01 ptypes.(0) _types_constraint00 name in
@@ -509,10 +530,18 @@ let build_onnx_attrs_split (x : Owl_symbolic_ops_tensor.Split.t) =
 
 let build_onnx_attrs_concat (x : Owl_symbolic_ops_tensor.Concat.t) =
   let name_axis = Some "axis" in
-  let type_ = Some PT.Int in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Int in
   let i = Int64.of_int x.axis in
   let attr_axis = PT.default_attribute_proto ~name:name_axis ~type_ ~i:(Some i) () in
   [ attr_axis ]
+
+
+let build_onnx_attrs_pad (x : Owl_symbolic_ops_tensor.Pad.t) =
+  let name_mode = Some "mode" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.String in
+  let s = Some (Bytes.of_string x.mode) in
+  let attr_mode = PT.default_attribute_proto ~name:name_mode ~type_ ~s () in
+  [ attr_mode ]
 
 
 let build_onnx_attrs_conv (x : Owl_symbolic_ops_nn.Conv.t) =
@@ -605,6 +634,7 @@ let build_onnx_attrs sym =
     | S.ReduceMax x     -> build_onnx_attrs_reducemax x
     | S.Split x         -> build_onnx_attrs_split x
     | S.Concat x        -> build_onnx_attrs_concat x
+    | S.Pad x           -> build_onnx_attrs_pad x
     | S.Conv x          -> build_onnx_attrs_conv x
     | S.MaxPool x       -> build_onnx_attrs_maxpool x
     | S.SequenceEmpty x -> build_onnx_attrs_seq_empty x

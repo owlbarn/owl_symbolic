@@ -144,20 +144,30 @@ let infer_shape_gemm (x : Owl_symbolic_ops_math.Gemm.t) input_shapes =
   | _, _                   -> [| None |]
 
 
-(*
-let infer_shape_pad (x : Owl_symbolic_ops_tensor.Pad.t) input_shapes = 
+(* TODO: check the impl of this function *)
+let infer_shape_pad (x : Owl_symbolic_ops_tensor.Pad.t) input_shapes =
   assert (Array.length input_shapes >= 2);
-  let msg = "Owl_symbolic_shape: Pad input shapes is None." in
-  let unpack = Owl_symbolic_utils.get_option_value msg in
-  let data_shp = unpack input_shapes.(0) in
-  let pads_shp = unpack input_shapes.(1) in
-  assert (Array.length pads_shp = 1);
-  assert (pads_shp.(0) = 2 * (Array.length data_shp));
-  let return_shp = Array.mapi (fun i d ->
-    pads d + 
+  let return_shp =
+    match input_shapes.(0).(0), input_shapes.(1).(0) with
+    | Some data_shp, Some pads_shp ->
+      assert (Array.length pads_shp = 1);
+      let l = Array.length data_shp in
+      assert (pads_shp.(0) = 2 * l);
+      (* we cannot do shape checking of a graph containing Pad ndoe
+       if the pads value is dynamically got from nodes, not as arguments in x.p *)
+      let s = Array.mapi (fun i d -> x.p.(i) + d + x.p.(i + l)) data_shp in
+      [| Some s |]
+    | _, _                         -> [| None |]
+  in
+  if Array.length input_shapes = 3
+  then (
+    match input_shapes.(2).(0) with
+    | Some s ->
+      assert (Array.length s = 0);
+      return_shp
+    | _      -> [| None |])
+  else return_shp
 
-  ) data_shp
-*)
 
 let infer_shape_conv (x : Owl_symbolic_ops_nn.Conv.t) input_shapes =
   let l = x.dim in
@@ -268,7 +278,7 @@ let infer_shape input_shapes sym =
     [| input_shapes.(0).(idx) |]
   | Split x              -> infer_shape_08 input_shapes x.axis x.split
   | Concat x             -> infer_shape_07 input_shapes x.axis
-  (* | Pad x                -> infer_shape_pad input_shapes *)
+  | Pad x                -> infer_shape_pad x input_shapes
   | Conv x               -> infer_shape_conv x input_shapes
   | MaxPool x            -> infer_shape_maxpool x input_shapes
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes

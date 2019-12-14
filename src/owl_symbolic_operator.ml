@@ -5,6 +5,7 @@
 
 open Owl_symbolic_graph
 open Owl_symbolic_symbol
+open Owl_symbolic_types
 
 let noop = make_node NOOP [||]
 
@@ -315,6 +316,25 @@ let concat ?name ?axis xs =
   let xn = Array.map Owl_symbolic_graph.name xs in
   let s = Owl_symbolic_ops_tensor.Concat.create ?name ?axis xn in
   make_node (Owl_symbolic_symbol.Concat s) xs
+
+
+(* TODO: Currently we only allow statically specified pads value *)
+let pad ?name ?mode ?v x pads =
+  let xn = Owl_symbolic_graph.name x in
+  let l = Array.length pads in
+  let pads_tensor = make_tensor ~dtype:SNT_Int64 ~int_val:pads [| l |] in
+  let pads_sym = Owl_symbolic_ops_generator.Tensor.create pads_tensor in
+  let pads_node = make_node (Owl_symbolic_symbol.Tensor pads_sym) [||] in
+  match v with
+  | Some v ->
+    let vn = Owl_symbolic_graph.name v in
+    let s =
+      Owl_symbolic_ops_tensor.Pad.create ?name ?mode ~value:vn xn pads_sym.name pads
+    in
+    make_node (Owl_symbolic_symbol.Pad s) [| x; pads_node; v |]
+  | None   ->
+    let s = Owl_symbolic_ops_tensor.Pad.create ?name ?mode xn pads_sym.name pads in
+    make_node (Owl_symbolic_symbol.Pad s) [| x; pads_node |]
 
 
 (** Neural Network *)
