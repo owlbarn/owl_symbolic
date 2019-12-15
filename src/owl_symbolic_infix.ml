@@ -14,3 +14,5 @@ let ( / ) = Owl_symbolic_operator.div
 let ( ** ) = Owl_symbolic_operator.pow
 
 let ( *@ ) = Owl_symbolic_operator.matmul
+
+let ( % ) = Owl_symbolic_operator.modular

@@ -53,6 +53,7 @@ type t =
   | Mul of Mul.t
   | Div of Div.t
   | Pow of Pow.t
+  | Mod of Mod.t
   | MatMul of MatMul.t
   | Gemm of Gemm.t
   | Max of Max.t
@@ -118,6 +119,7 @@ let name = function
   | Mul x                -> Mul.(x.name)
   | Div x                -> Div.(x.name)
   | Pow x                -> Pow.(x.name)
+  | Mod x                -> Mod.(x.name)
   | MatMul x             -> MatMul.(x.name)
   | Gemm x               -> Gemm.(x.name)
   | Max x                -> Max.(x.name)
@@ -180,6 +182,7 @@ let op_type = function
   | Mul _                -> Mul.op_type
   | Div _                -> Div.op_type
   | Pow _                -> Pow.op_type
+  | Mod _                -> Mod.op_type
   | MatMul _             -> MatMul.op_type
   | Gemm _               -> Gemm.op_type
   | Max _                -> Max.op_type
@@ -242,6 +245,7 @@ let input = function
   | Mul x                -> Mul.(x.input)
   | Div x                -> Div.(x.input)
   | Pow x                -> Pow.(x.input)
+  | Mod x                -> Mod.(x.input)
   | MatMul x             -> MatMul.(x.input)
   | Gemm x               -> Gemm.(x.input)
   | Max x                -> Max.(x.input)
@@ -295,6 +299,7 @@ let set_input sym inputs =
   | Mul x                -> x.input <- inputs
   | Div x                -> x.input <- inputs
   | Pow x                -> x.input <- inputs
+  | Mod x                -> x.input <- inputs
   | MatMul x             -> x.input <- inputs
   | Gemm x               -> x.input <- inputs
   | Max x                -> x.input <- inputs
@@ -356,6 +361,7 @@ let out_shape = function
   | Mul x                -> Mul.(x.out_shape)
   | Div x                -> Div.(x.out_shape)
   | Pow x                -> Pow.(x.out_shape)
+  | Mod x                -> Mod.(x.out_shape)
   | MatMul x             -> MatMul.(x.out_shape)
   | Gemm x               -> Gemm.(x.out_shape)
   | Max x                -> Max.(x.out_shape)
@@ -411,6 +417,7 @@ let set_out_shape sym shapes =
   | Mul x                -> x.out_shape <- shapes
   | Div x                -> x.out_shape <- shapes
   | Pow x                -> x.out_shape <- shapes
+  | Mod x                -> x.out_shape <- shapes
   | MatMul x             -> x.out_shape <- shapes
   | Gemm x               -> x.out_shape <- shapes
   | Max x                -> x.out_shape <- shapes
@@ -461,6 +468,7 @@ let attrs = function
   | Mul x                -> Mul.(x.attrs)
   | Div x                -> Div.(x.attrs)
   | Pow x                -> Pow.(x.attrs)
+  | Mod x                -> Mod.(x.attrs)
   | MatMul x             -> MatMul.(x.attrs)
   | Gemm x               -> Gemm.(x.attrs)
   | Max x                -> Max.(x.attrs)
@@ -510,6 +518,7 @@ let set_attrs sym a =
   | Mul x                -> x.attrs <- a
   | Div x                -> x.attrs <- a
   | Pow x                -> x.attrs <- a
+  | Mod x                -> x.attrs <- a
   | MatMul x             -> x.attrs <- a
   | Gemm x               -> x.attrs <- a
   | Max x                -> x.attrs <- a

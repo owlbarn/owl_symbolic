@@ -223,6 +223,13 @@ let pow ?name x y =
   make_node (Owl_symbolic_symbol.Pow s) [| x; y |]
 
 
+let modular ?name ?fmod x y =
+  let xn = Owl_symbolic_graph.name x in
+  let yn = Owl_symbolic_graph.name y in
+  let s = Owl_symbolic_ops_math.Mod.create ?name ?fmod xn yn in
+  make_node (Owl_symbolic_symbol.Mod s) [| x; y |]
+
+
 let matmul ?name x y =
   let xn = Owl_symbolic_graph.name x in
   let yn = Owl_symbolic_graph.name y in

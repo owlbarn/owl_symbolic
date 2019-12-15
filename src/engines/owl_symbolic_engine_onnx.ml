@@ -333,6 +333,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Mul _                -> type_check_pattern02 ptypes _types_constraint02 name
         | Div _                -> type_check_pattern02 ptypes _types_constraint02 name
         | Pow _                -> type_check_pattern02 ptypes _types_constraint00 name
+        | Mod _                -> type_check_pattern02 ptypes _types_constraint04 name
         | MatMul _             -> type_check_pattern02 ptypes _types_constraint02 name
         | Gemm _               -> type_check_pattern02 ptypes _types_constraint02 name
         | Max _                -> type_check_pattern02 ptypes _types_constraint00 name
@@ -487,6 +488,14 @@ let build_onnx_attrs_randomuniform (x : Owl_symbolic_ops_generator.RandomUniform
   let ints = Array.map Int64.of_int x.shape |> Array.to_list in
   let attr_shape = PT.default_attribute_proto ~name:name_shape ~type_ ~ints () in
   [ attr_dtype; attr_high; attr_low; attr_shape ]
+
+
+let build_onnx_attrs_fmod (x : Owl_symbolic_ops_math.Mod.t) =
+  let name_fmod = Some "fmod" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Int in
+  let i = Some (Int64.of_int x.fmod) in
+  let attr_fmod = PT.default_attribute_proto ~name:name_fmod ~type_ ~i () in
+  [ attr_fmod ]
 
 
 let build_onnx_attrs_gemm (x : Owl_symbolic_ops_math.Gemm.t) =
@@ -673,6 +682,7 @@ let build_onnx_attrs sym =
     | S.Pi _            -> build_onnx_attrs_pi sym
     | S.Tensor _        -> build_onnx_attrs_tensor sym
     | S.RandomUniform x -> build_onnx_attrs_randomuniform x
+    | S.Mod x           -> build_onnx_attrs_fmod x
     | S.Gemm x          -> build_onnx_attrs_gemm x
     | S.ReduceSum x     -> build_onnx_attrs_reducesum x
     | S.ReduceMax x     -> build_onnx_attrs_reducemax x

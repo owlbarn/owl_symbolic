@@ -292,6 +292,7 @@ let infer_shape input_shapes sym =
   | Mul _                -> infer_shape_03 input_shapes
   | Div _                -> infer_shape_03 input_shapes
   | Pow _                -> infer_shape_01 input_shapes
+  | Mod _                -> infer_shape_01 input_shapes
   | MatMul _             -> infer_shape_19 input_shapes
   | Gemm x               -> infer_shape_gemm x input_shapes
   | Max _                -> infer_shape_31 input_shapes

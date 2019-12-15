@@ -3,12 +3,13 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-(** Implemented: Reshape, Concat, Split, Identity, Pad, Cast, Squeeze *)
+(** Implemented: Reshape, Concat, Split, Identity, Pad, Cast, Squeeze, Tile *)
 
-(** Shape, Size, Slice, Transpose, Scatter,
+(** Shape, Size, Slice, Transpose, 
  ScatterND, ScatterElements, Gather, GatherElements, UnSqueeze, 
- SpaceToDepth, DepthToSpace, Tile, Upsample(deprecated), Resize, Compress, 
- OneHot, IsNaN, IsInf, Where, NonZero, ReverseSequence, Unique, GatherND 
+ SpaceToDepth, DepthToSpace, Resize, Compress, 
+ OneHot, IsNaN, IsInf, Where, NonZero, ReverseSequence, Unique, GatherND
+ Scatter(deprecated), Upsample(deprecated),
  *)
 
 open Owl_symbolic_types
