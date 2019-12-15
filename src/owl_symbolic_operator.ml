@@ -349,6 +349,15 @@ let squeeze ?name ?axes x =
   make_node (Owl_symbolic_symbol.Squeeze s) [| x |]
 
 
+let tile ?name x repeats =
+  let rep_tensor = make_tensor ~int_val:repeats [| Array.length repeats |] in
+  let rep_sym = Owl_symbolic_ops_generator.Tensor.create rep_tensor in
+  let rep_node = make_node (Owl_symbolic_symbol.Tensor rep_sym) [||] in
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_tensor.Tile.create ?name xn rep_sym.name repeats in
+  make_node (Owl_symbolic_symbol.Tile s) [| x; rep_node |]
+
+
 (** Neural Network *)
 
 let conv ?name ?dim ?padding ?strides ?dilations ?bias input kernel =

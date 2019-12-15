@@ -23,6 +23,12 @@ let infer_shape_03 input_shapes =
   | _, _             -> [| None |]
 
 
+let infer_shape_05 input_shapes repeats =
+  match input_shapes.(0).(0) with
+  | Some s -> [| Some Owl_utils_infer_shape.(tile s repeats) |]
+  | None   -> [| None |]
+
+
 let infer_shape_07 input_shapes axis =
   let s0 = Array.map (fun s -> s.(0)) input_shapes in
   if Array.exists
@@ -302,6 +308,7 @@ let infer_shape input_shapes sym =
   | Pad x                -> infer_shape_pad x input_shapes
   | Cast _               -> infer_shape_01 input_shapes
   | Squeeze x            -> infer_shape_squeeze input_shapes x.axes
+  | Tile x               -> infer_shape_05 input_shapes x.repeats
   | Conv x               -> infer_shape_conv x input_shapes
   | MaxPool x            -> infer_shape_maxpool x input_shapes
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes
