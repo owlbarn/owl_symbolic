@@ -281,6 +281,7 @@ let infer_shape input_shapes sym =
   | Sqrt _               -> infer_shape_01 input_shapes
   | Exp _                -> infer_shape_01 input_shapes
   | Log _                -> infer_shape_01 input_shapes
+  | Sigmoid _            -> infer_shape_01 input_shapes
   | Abs _                -> infer_shape_01 input_shapes
   | Neg _                -> infer_shape_01 input_shapes
   | Floor _              -> infer_shape_01 input_shapes

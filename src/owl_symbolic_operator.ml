@@ -148,8 +148,14 @@ let exp ?name x =
 
 let log ?name x =
   let xn = Owl_symbolic_graph.name x in
-  let s = Owl_symbolic_ops_math.Exp.create ?name xn in
-  make_node (Owl_symbolic_symbol.Exp s) [| x |]
+  let s = Owl_symbolic_ops_math.Log.create ?name xn in
+  make_node (Owl_symbolic_symbol.Log s) [| x |]
+
+
+let sigmoid ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Sigmoid.create ?name xn in
+  make_node (Owl_symbolic_symbol.Sigmoid s) [| x |]
 
 
 let abs ?name x =
