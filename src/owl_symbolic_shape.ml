@@ -222,6 +222,27 @@ let infer_shape_batch_normalization input_shapes =
   | _, _, _, _, _ -> [| None; None; None; None; None |]
 
 
+let infer_shape_squeeze (input_shapes : int array option array array) axes =
+  let input_shape = input_shapes.(0).(0) in
+  match input_shape, axes with
+  | Some shp, Some ax ->
+    let l = Array.length shp in
+    Array.iter
+      (fun a ->
+        assert (a < l);
+        if shp.(a) <> 1
+        then failwith "infer_shape_squeeze: specified axis is not single-dim")
+      ax;
+    let new_shp =
+      Owl_utils_array.filteri (fun i _ -> not (Array.exists (fun a -> a = i) ax)) shp
+    in
+    [| Some new_shp |]
+  | Some shp, None    ->
+    let new_shp = Owl_utils_array.filter (fun s -> s <> 1) shp in
+    [| Some new_shp |]
+  | _, _              -> [| None |]
+
+
 (** Main entry *)
 
 let infer_shape input_shapes sym =
@@ -280,6 +301,7 @@ let infer_shape input_shapes sym =
   | Concat x             -> infer_shape_07 input_shapes x.axis
   | Pad x                -> infer_shape_pad x input_shapes
   | Cast _               -> infer_shape_01 input_shapes
+  | Squeeze x            -> infer_shape_squeeze input_shapes x.axes
   | Conv x               -> infer_shape_conv x input_shapes
   | MaxPool x            -> infer_shape_maxpool x input_shapes
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes

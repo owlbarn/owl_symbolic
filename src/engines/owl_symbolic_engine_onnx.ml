@@ -361,6 +361,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           type_check_pattern01 ptypes.(0) _types_constraint05 name |> ignore;
           let t = x.target in
           type_check_pattern01 [| t |] _types_constraint05 name
+        | Squeeze _            -> type_check_pattern01 ptypes.(0) _types_constraint03 name
         | MaxPool _            ->
           let t1 = type_check_pattern01 ptypes.(0) _types_constraint00 name in
           let t2 = SNT_Int64 in
@@ -573,6 +574,17 @@ let build_onnx_attrs_cast (x : Owl_symbolic_ops_tensor.Cast.t) =
   [ attr_to ]
 
 
+let build_onnx_attrs_squeeze (x : Owl_symbolic_ops_tensor.Squeeze.t) =
+  match x.axes with
+  | Some axes ->
+    let name_axes = Some "axes" in
+    let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
+    let ints = Array.map Int64.of_int axes |> Array.to_list in
+    let attr_axes = PT.default_attribute_proto ~name:name_axes ~type_ ~ints () in
+    [ attr_axes ]
+  | None      -> []
+
+
 let build_onnx_attrs_conv (x : Owl_symbolic_ops_nn.Conv.t) =
   (* create "auto_pad" attribute *)
   let name_pad = Some "auto_pad" in
@@ -665,6 +677,7 @@ let build_onnx_attrs sym =
     | S.Concat x        -> build_onnx_attrs_concat x
     | S.Pad x           -> build_onnx_attrs_pad x
     | S.Cast x          -> build_onnx_attrs_cast x
+    | S.Squeeze x       -> build_onnx_attrs_squeeze x
     | S.Conv x          -> build_onnx_attrs_conv x
     | S.MaxPool x       -> build_onnx_attrs_maxpool x
     | S.SequenceEmpty x -> build_onnx_attrs_seq_empty x

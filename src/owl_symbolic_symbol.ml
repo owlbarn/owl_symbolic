@@ -68,6 +68,7 @@ type t =
   | Concat of Concat.t
   | Pad of Pad.t
   | Cast of Cast.t
+  | Squeeze of Squeeze.t
   (* NN *)
   | Conv of Conv.t
   | MaxPool of MaxPool.t
@@ -129,6 +130,7 @@ let name = function
   | Concat x             -> Concat.(x.name)
   | Pad x                -> Pad.(x.name)
   | Cast x               -> Cast.(x.name)
+  | Squeeze x            -> Squeeze.(x.name)
   | Conv x               -> Conv.(x.name)
   | MaxPool x            -> MaxPool.(x.name)
   | BatchNormalization x -> BatchNormalization.(x.name)
@@ -189,6 +191,7 @@ let op_type = function
   | Concat _             -> Concat.op_type
   | Pad _                -> Pad.op_type
   | Cast _               -> Cast.op_type
+  | Squeeze _            -> Squeeze.op_type
   | Conv _               -> Conv.op_type
   | MaxPool _            -> MaxPool.op_type
   | BatchNormalization _ -> BatchNormalization.op_type
@@ -249,6 +252,7 @@ let input = function
   | Concat x             -> Concat.(x.input)
   | Pad x                -> Pad.(x.input)
   | Cast x               -> Cast.(x.input)
+  | Squeeze x            -> Squeeze.(x.input)
   | Conv x               -> Conv.(x.input)
   | MaxPool x            -> MaxPool.(x.input)
   | BatchNormalization x -> BatchNormalization.(x.input)
@@ -300,6 +304,7 @@ let set_input sym inputs =
   | Concat x             -> x.input <- inputs
   | Pad x                -> x.input <- inputs
   | Cast x               -> x.input <- inputs
+  | Squeeze x            -> x.input <- inputs
   | Conv x               -> x.input <- inputs
   | MaxPool x            -> x.input <- inputs
   | BatchNormalization x -> x.input <- inputs
@@ -359,6 +364,7 @@ let out_shape = function
   | Concat x             -> Concat.(x.out_shape)
   | Pad x                -> Pad.(x.out_shape)
   | Cast x               -> Cast.(x.out_shape)
+  | Squeeze x            -> Squeeze.(x.out_shape)
   | Conv x               -> Conv.(x.out_shape)
   | MaxPool x            -> MaxPool.(x.out_shape)
   | BatchNormalization x -> BatchNormalization.(x.out_shape)
@@ -412,6 +418,7 @@ let set_out_shape sym shapes =
   | Concat x             -> x.out_shape <- shapes
   | Pad x                -> x.out_shape <- shapes
   | Cast x               -> x.out_shape <- shapes
+  | Squeeze x            -> x.out_shape <- shapes
   | Conv x               -> x.out_shape <- shapes
   | MaxPool x            -> x.out_shape <- shapes
   | BatchNormalization x -> x.out_shape <- shapes
@@ -460,6 +467,7 @@ let attrs = function
   | Concat x             -> Concat.(x.attrs)
   | Pad x                -> Pad.(x.attrs)
   | Cast x               -> Cast.(x.attrs)
+  | Squeeze x            -> Squeeze.(x.attrs)
   | Conv x               -> Conv.(x.attrs)
   | MaxPool x            -> MaxPool.(x.attrs)
   | BatchNormalization x -> BatchNormalization.(x.attrs)
@@ -507,6 +515,7 @@ let set_attrs sym a =
   | Concat x             -> x.attrs <- a
   | Pad x                -> x.attrs <- a
   | Cast x               -> x.attrs <- a
+  | Squeeze x            -> x.attrs <- a
   | Conv x               -> x.attrs <- a
   | MaxPool x            -> x.attrs <- a
   | BatchNormalization x -> x.attrs <- a
