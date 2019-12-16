@@ -438,6 +438,12 @@ let size ?name x =
   make_node (Owl_symbolic_symbol.Size s) [| x |]
 
 
+let transpose ?name ?perm x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_tensor.Transpose.create ?name ?perm xn in
+  make_node (Owl_symbolic_symbol.Transpose s) [| x |]
+
+
 (** Neural Network *)
 
 let conv ?name ?dim ?padding ?strides ?dilations ?bias input kernel =

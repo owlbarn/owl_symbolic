@@ -70,6 +70,7 @@ type t =
   | Tile of Owl_symbolic_ops_tensor.Tile.t
   | Shape of Owl_symbolic_ops_tensor.Shape.t
   | Size of Owl_symbolic_ops_tensor.Size.t
+  | Transpose of Owl_symbolic_ops_tensor.Transpose.t
   | Conv of Owl_symbolic_ops_nn.Conv.t
   | MaxPool of Owl_symbolic_ops_nn.MaxPool.t
   | BatchNormalization of Owl_symbolic_ops_nn.BatchNormalization.t

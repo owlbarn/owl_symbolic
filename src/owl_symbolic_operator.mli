@@ -217,6 +217,8 @@ val shape : ?name:string -> symbolic_node -> symbolic_node
 
 val size : ?name:string -> symbolic_node -> symbolic_node
 
+val transpose : ?name:string -> ?perm:int array -> symbolic_node -> symbolic_node
+
 val conv
   :  ?name:string
   -> ?dim:int

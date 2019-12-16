@@ -190,6 +190,28 @@ let infer_shape_pad (x : Owl_symbolic_ops_tensor.Pad.t) input_shapes =
   else return_shp
 
 
+(* NOTE: this function set default parameters of symbol, 
+ * something other than shape checking *)
+let infer_shape_transpose input_shapes (x : Owl_symbolic_ops_tensor.Transpose.t) =
+  let perm = x.perm in
+  match input_shapes.(0).(0) with
+  | Some s ->
+    let l = Array.length s in
+    (match perm with
+    | Some p ->
+      assert (Array.length p = l);
+      let p' = Array.copy p in
+      Array.sort Stdlib.compare p';
+      assert (p' = Owl_utils_array.range 0 (l - 1));
+      [| Some Owl_utils_infer_shape.(transpose s p) |]
+    | None   ->
+      let p = Owl_utils_array.range 0 (l - 1) in
+      Owl_utils_array.reverse p;
+      x.perm <- Some p;
+      [| Some Owl_utils_infer_shape.(transpose s p) |])
+  | None   -> [| None |]
+
+
 let infer_shape_conv (x : Owl_symbolic_ops_nn.Conv.t) input_shapes =
   let l = x.dim in
   let padding = if x.auto_pad = "VALID" then Owl_types.VALID else Owl_types.SAME in
@@ -339,6 +361,7 @@ let infer_shape input_shapes sym =
   | Tile x               -> infer_shape_05 input_shapes x.repeats
   | Shape _              -> infer_shape_32 input_shapes
   | Size _               -> infer_shape_33 input_shapes
+  | Transpose x          -> infer_shape_transpose input_shapes x
   | Conv x               -> infer_shape_conv x input_shapes
   | MaxPool x            -> infer_shape_maxpool x input_shapes
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes

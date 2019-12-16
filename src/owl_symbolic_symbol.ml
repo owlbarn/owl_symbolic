@@ -83,6 +83,7 @@ type t =
   | Tile of Tile.t
   | Shape of Shape.t
   | Size of Size.t
+  | Transpose of Transpose.t
   (* NN *)
   | Conv of Conv.t
   | MaxPool of MaxPool.t
@@ -155,6 +156,7 @@ let name = function
   | Tile x               -> Tile.(x.name)
   | Shape x              -> Shape.(x.name)
   | Size x               -> Size.(x.name)
+  | Transpose x          -> Transpose.(x.name)
   | Conv x               -> Conv.(x.name)
   | MaxPool x            -> MaxPool.(x.name)
   | BatchNormalization x -> BatchNormalization.(x.name)
@@ -226,6 +228,7 @@ let op_type = function
   | Tile _               -> Tile.op_type
   | Shape _              -> Shape.op_type
   | Size _               -> Size.op_type
+  | Transpose _          -> Transpose.op_type
   | Conv _               -> Conv.op_type
   | MaxPool _            -> MaxPool.op_type
   | BatchNormalization _ -> BatchNormalization.op_type
@@ -297,6 +300,7 @@ let input = function
   | Tile x               -> Tile.(x.input)
   | Shape x              -> Shape.(x.input)
   | Size x               -> Size.(x.input)
+  | Transpose x          -> Transpose.(x.input)
   | Conv x               -> Conv.(x.input)
   | MaxPool x            -> MaxPool.(x.input)
   | BatchNormalization x -> BatchNormalization.(x.input)
@@ -358,6 +362,7 @@ let set_input sym inputs =
   | Tile x               -> x.input <- inputs
   | Shape x              -> x.input <- inputs
   | Size x               -> x.input <- inputs
+  | Transpose x          -> x.input <- inputs
   | Conv x               -> x.input <- inputs
   | MaxPool x            -> x.input <- inputs
   | BatchNormalization x -> x.input <- inputs
@@ -428,6 +433,7 @@ let out_shape = function
   | Tile x               -> Tile.(x.out_shape)
   | Shape x              -> Shape.(x.out_shape)
   | Size x               -> Size.(x.out_shape)
+  | Transpose x          -> Transpose.(x.out_shape)
   | Conv x               -> Conv.(x.out_shape)
   | MaxPool x            -> MaxPool.(x.out_shape)
   | BatchNormalization x -> BatchNormalization.(x.out_shape)
@@ -491,6 +497,8 @@ let set_out_shape sym shapes =
   | Squeeze x            -> x.out_shape <- shapes
   | Tile x               -> x.out_shape <- shapes
   | Shape x              -> x.out_shape <- shapes
+  | Size x               -> x.out_shape <- shapes
+  | Transpose x          -> x.out_shape <- shapes
   | Conv x               -> x.out_shape <- shapes
   | MaxPool x            -> x.out_shape <- shapes
   | BatchNormalization x -> x.out_shape <- shapes
@@ -549,6 +557,8 @@ let attrs = function
   | Squeeze x            -> Squeeze.(x.attrs)
   | Tile x               -> Tile.(x.attrs)
   | Shape x              -> Shape.(x.attrs)
+  | Size x               -> Size.(x.attrs)
+  | Transpose x          -> Transpose.(x.attrs)
   | Conv x               -> Conv.(x.attrs)
   | MaxPool x            -> MaxPool.(x.attrs)
   | BatchNormalization x -> BatchNormalization.(x.attrs)
@@ -606,6 +616,8 @@ let set_attrs sym a =
   | Squeeze x            -> x.attrs <- a
   | Tile x               -> x.attrs <- a
   | Shape x              -> x.attrs <- a
+  | Size x               -> x.attrs <- a
+  | Transpose x          -> x.attrs <- a
   | Conv x               -> x.attrs <- a
   | MaxPool x            -> x.attrs <- a
   | BatchNormalization x -> x.attrs <- a

@@ -384,6 +384,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Size _               ->
           type_check_pattern01 ptypes.(0) _types_constraint03 name |> ignore;
           [| SNT_Int64 |]
+        | Transpose _          -> type_check_pattern01 ptypes.(0) _types_constraint03 name
         | MaxPool _            ->
           let t1 = type_check_pattern01 ptypes.(0) _types_constraint00 name in
           let t2 = SNT_Int64 in
@@ -499,13 +500,46 @@ let build_onnx_attrs_randomuniform (x : Owl_symbolic_ops_generator.RandomUniform
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Float in
   let f = Some x.low in
   let attr_low = PT.default_attribute_proto ~name:name_low ~type_ ~f () in
-  (* TODO: create "seed" attribute -- currently leave to ONNX *)
+  (* create "seed" attribute *)
+  let name_seed = Some "seed" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Float in
+  let f = x.seed in
+  let attr_seed = PT.default_attribute_proto ~name:name_seed ~type_ ~f () in
   (* create "shape" attribute *)
   let name_shape = Some "shape" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
   let ints = Array.map Int64.of_int x.shape |> Array.to_list in
   let attr_shape = PT.default_attribute_proto ~name:name_shape ~type_ ~ints () in
-  [ attr_dtype; attr_high; attr_low; attr_shape ]
+  [ attr_dtype; attr_high; attr_low; attr_seed; attr_shape ]
+
+
+let build_onnx_attrs_randomnormal (x : Owl_symbolic_ops_generator.RandomNormal.t) =
+  (* create "dtype" attribute *)
+  let name_dtype = Some "dtype" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Int in
+  let i = x.dtype |> map_elt_type_to_int32 |> Int64.of_int32 in
+  let attr_dtype = PT.default_attribute_proto ~name:name_dtype ~type_ ~i:(Some i) () in
+  (* create "mean" attribute *)
+  let name_mean = Some "mean" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Float in
+  let f = Some x.mean in
+  let attr_mean = PT.default_attribute_proto ~name:name_mean ~type_ ~f () in
+  (* create "scale" attribute (stddev) *)
+  let name_scale = Some "scale" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Float in
+  let f = Some x.stddev in
+  let attr_scale = PT.default_attribute_proto ~name:name_scale ~type_ ~f () in
+  (* create "seed" attribute *)
+  let name_seed = Some "seed" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Float in
+  let f = x.seed in
+  let attr_seed = PT.default_attribute_proto ~name:name_seed ~type_ ~f () in
+  (* create "shape" attribute *)
+  let name_shape = Some "shape" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
+  let ints = Array.map Int64.of_int x.shape |> Array.to_list in
+  let attr_shape = PT.default_attribute_proto ~name:name_shape ~type_ ~ints () in
+  [ attr_dtype; attr_mean; attr_scale; attr_seed; attr_shape ]
 
 
 let build_onnx_attrs_fmod (x : Owl_symbolic_ops_math.Mod.t) =
@@ -601,6 +635,17 @@ let build_onnx_attrs_squeeze (x : Owl_symbolic_ops_tensor.Squeeze.t) =
   | None      -> []
 
 
+let build_onnx_attrs_transpose (x : Owl_symbolic_ops_tensor.Transpose.t) =
+  match x.perm with
+  | Some p ->
+    let name_perm = Some "perm" in
+    let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
+    let ints = Array.map Int64.of_int p |> Array.to_list in
+    let attr_perm = PT.default_attribute_proto ~name:name_perm ~type_ ~ints () in
+    [ attr_perm ]
+  | None   -> []
+
+
 let build_onnx_attrs_conv (x : Owl_symbolic_ops_nn.Conv.t) =
   (* create "auto_pad" attribute *)
   let name_pad = Some "auto_pad" in
@@ -686,6 +731,7 @@ let build_onnx_attrs sym =
     | S.Pi _              -> build_onnx_attrs_pi sym
     | S.Tensor _          -> build_onnx_attrs_tensor sym
     | S.RandomUniform x   -> build_onnx_attrs_randomuniform x
+    | S.RandomNormal x    -> build_onnx_attrs_randomnormal x
     | S.Mod x             -> build_onnx_attrs_fmod x
     | S.Gemm x            -> build_onnx_attrs_gemm x
     | S.ReduceSum x       -> build_onnx_attrs_reduce x.axes x.keepdims
@@ -703,6 +749,7 @@ let build_onnx_attrs sym =
     | S.Pad x             -> build_onnx_attrs_pad x
     | S.Cast x            -> build_onnx_attrs_cast x
     | S.Squeeze x         -> build_onnx_attrs_squeeze x
+    | S.Transpose x       -> build_onnx_attrs_transpose x
     | S.Conv x            -> build_onnx_attrs_conv x
     | S.MaxPool x         -> build_onnx_attrs_maxpool x
     | S.SequenceEmpty x   -> build_onnx_attrs_seq_empty x
