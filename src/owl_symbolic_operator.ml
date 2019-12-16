@@ -296,7 +296,7 @@ let reduce_min ?keepdims ?name x axes =
   make_node (Owl_symbolic_symbol.ReduceMin s) [| x |]
 
 
-let reduce_meam ?keepdims ?name x axes =
+let reduce_mean ?keepdims ?name x axes =
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_reduction.ReduceMean.create ?keepdims ?name xn axes in
   make_node (Owl_symbolic_symbol.ReduceMean s) [| x |]

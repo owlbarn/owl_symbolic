@@ -51,6 +51,10 @@ type t =
   | Sum of Owl_symbolic_ops_math.Sum.t
   | ReduceSum of Owl_symbolic_ops_reduction.ReduceSum.t
   | ReduceMax of Owl_symbolic_ops_reduction.ReduceMax.t
+  | ReduceMin of Owl_symbolic_ops_reduction.ReduceMin.t
+  | ReduceMean of Owl_symbolic_ops_reduction.ReduceMean.t
+  | ReduceSumSquare of Owl_symbolic_ops_reduction.ReduceSumSquare.t
+  | ReduceProd of Owl_symbolic_ops_reduction.ReduceProd.t
   | Reshape of Owl_symbolic_ops_tensor.Reshape.t
   | Identity of Owl_symbolic_ops_tensor.Identity.t
   | Split of Owl_symbolic_ops_tensor.Split.t

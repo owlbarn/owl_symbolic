@@ -124,6 +124,34 @@ val reduce_max
   -> int array
   -> symbolic_node
 
+val reduce_min
+  :  ?keepdims:bool
+  -> ?name:string
+  -> symbolic_node
+  -> int array
+  -> symbolic_node
+
+val reduce_mean
+  :  ?keepdims:bool
+  -> ?name:string
+  -> symbolic_node
+  -> int array
+  -> symbolic_node
+
+val reduce_sum_square
+  :  ?keepdims:bool
+  -> ?name:string
+  -> symbolic_node
+  -> int array
+  -> symbolic_node
+
+val reduce_prod
+  :  ?keepdims:bool
+  -> ?name:string
+  -> symbolic_node
+  -> int array
+  -> symbolic_node
+
 val reshape : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
 
 val split : ?name:string -> ?axis:int -> symbolic_node -> int array -> symbolic_node array
