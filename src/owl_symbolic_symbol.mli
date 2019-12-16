@@ -55,6 +55,10 @@ type t =
   | ReduceMean of Owl_symbolic_ops_reduction.ReduceMean.t
   | ReduceSumSquare of Owl_symbolic_ops_reduction.ReduceSumSquare.t
   | ReduceProd of Owl_symbolic_ops_reduction.ReduceProd.t
+  | ReduceLogSum of Owl_symbolic_ops_reduction.ReduceLogSum.t
+  | ReduceLogSumExp of Owl_symbolic_ops_reduction.ReduceLogSumExp.t
+  | ReduceL1 of Owl_symbolic_ops_reduction.ReduceL1.t
+  | ReduceL2 of Owl_symbolic_ops_reduction.ReduceL2.t
   | Reshape of Owl_symbolic_ops_tensor.Reshape.t
   | Identity of Owl_symbolic_ops_tensor.Identity.t
   | Split of Owl_symbolic_ops_tensor.Split.t

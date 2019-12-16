@@ -152,6 +152,34 @@ val reduce_prod
   -> int array
   -> symbolic_node
 
+val reduce_logsum
+  :  ?keepdims:bool
+  -> ?name:string
+  -> symbolic_node
+  -> int array
+  -> symbolic_node
+
+val reduce_logsumexp
+  :  ?keepdims:bool
+  -> ?name:string
+  -> symbolic_node
+  -> int array
+  -> symbolic_node
+
+val reduce_l1
+  :  ?keepdims:bool
+  -> ?name:string
+  -> symbolic_node
+  -> int array
+  -> symbolic_node
+
+val reduce_l2
+  :  ?keepdims:bool
+  -> ?name:string
+  -> symbolic_node
+  -> int array
+  -> symbolic_node
+
 val reshape : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
 
 val split : ?name:string -> ?axis:int -> symbolic_node -> int array -> symbolic_node array

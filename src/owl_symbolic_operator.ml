@@ -314,6 +314,30 @@ let reduce_prod ?keepdims ?name x axes =
   make_node (Owl_symbolic_symbol.ReduceProd s) [| x |]
 
 
+let reduce_logsum ?keepdims ?name x axes =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_reduction.ReduceLogSum.create ?keepdims ?name xn axes in
+  make_node (Owl_symbolic_symbol.ReduceLogSum s) [| x |]
+
+
+let reduce_logsumexp ?keepdims ?name x axes =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_reduction.ReduceLogSumExp.create ?keepdims ?name xn axes in
+  make_node (Owl_symbolic_symbol.ReduceLogSumExp s) [| x |]
+
+
+let reduce_l1 ?keepdims ?name x axes =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_reduction.ReduceL1.create ?keepdims ?name xn axes in
+  make_node (Owl_symbolic_symbol.ReduceL1 s) [| x |]
+
+
+let reduce_l2 ?keepdims ?name x axes =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_reduction.ReduceL2.create ?keepdims ?name xn axes in
+  make_node (Owl_symbolic_symbol.ReduceL2 s) [| x |]
+
+
 (** Tensor *)
 
 let reshape ?name data shape =

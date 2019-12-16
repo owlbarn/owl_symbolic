@@ -67,6 +67,10 @@ type t =
   | ReduceMean of ReduceMean.t
   | ReduceSumSquare of ReduceSumSquare.t
   | ReduceProd of ReduceProd.t
+  | ReduceLogSum of ReduceLogSum.t
+  | ReduceLogSumExp of ReduceLogSumExp.t
+  | ReduceL1 of ReduceL1.t
+  | ReduceL2 of ReduceL2.t
   (* Tensor *)
   | Reshape of Reshape.t
   | Identity of Identity.t

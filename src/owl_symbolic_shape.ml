@@ -304,6 +304,14 @@ let infer_shape input_shapes sym =
   | Sum _                -> infer_shape_31 input_shapes
   | ReduceSum x          -> infer_shape_10 input_shapes x.axes x.keepdims
   | ReduceMax x          -> infer_shape_10 input_shapes x.axes x.keepdims
+  | ReduceMin x          -> infer_shape_10 input_shapes x.axes x.keepdims
+  | ReduceMean x         -> infer_shape_10 input_shapes x.axes x.keepdims
+  | ReduceSumSquare x    -> infer_shape_10 input_shapes x.axes x.keepdims
+  | ReduceProd x         -> infer_shape_10 input_shapes x.axes x.keepdims
+  | ReduceLogSum x       -> infer_shape_10 input_shapes x.axes x.keepdims
+  | ReduceLogSumExp x    -> infer_shape_10 input_shapes x.axes x.keepdims
+  | ReduceL1 x           -> infer_shape_10 input_shapes x.axes x.keepdims
+  | ReduceL2 x           -> infer_shape_10 input_shapes x.axes x.keepdims
   | Reshape x            -> [| Some x.shape |]
   | Identity x           ->
     let idx = x.idx in

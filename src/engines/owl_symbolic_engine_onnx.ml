@@ -346,6 +346,10 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | ReduceMean _         -> type_check_pattern01 ptypes.(0) _types_constraint02 name
         | ReduceSumSquare _    -> type_check_pattern01 ptypes.(0) _types_constraint02 name
         | ReduceProd _         -> type_check_pattern01 ptypes.(0) _types_constraint02 name
+        | ReduceLogSum _       -> type_check_pattern01 ptypes.(0) _types_constraint02 name
+        | ReduceLogSumExp _    -> type_check_pattern01 ptypes.(0) _types_constraint02 name
+        | ReduceL1 _           -> type_check_pattern01 ptypes.(0) _types_constraint02 name
+        | ReduceL2 _           -> type_check_pattern01 ptypes.(0) _types_constraint02 name
         | Reshape _            ->
           type_check_pattern03 ptypes _types_constraint03 [| SNT_Int64 |] name
         | Identity s           ->
@@ -681,6 +685,10 @@ let build_onnx_attrs sym =
     | S.ReduceMean x      -> build_onnx_attrs_reduce x.axes x.keepdims
     | S.ReduceSumSquare x -> build_onnx_attrs_reduce x.axes x.keepdims
     | S.ReduceProd x      -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.ReduceLogSum x    -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.ReduceLogSumExp x -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.ReduceL1 x        -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.ReduceL2 x        -> build_onnx_attrs_reduce x.axes x.keepdims
     | S.Split x           -> build_onnx_attrs_split x
     | S.Concat x          -> build_onnx_attrs_concat x
     | S.Pad x             -> build_onnx_attrs_pad x
