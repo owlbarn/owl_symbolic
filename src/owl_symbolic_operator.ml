@@ -459,6 +459,12 @@ let slice ?name ?axes ?steps starts ends x =
   | _, _ -> make_node (Owl_symbolic_symbol.Slice s) [| x; start_node; end_node |]
 
 
+let space_to_depth ?name blocksize x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_tensor.SpaceToDepth.create ?name xn blocksize in
+  make_node (Owl_symbolic_symbol.SpaceToDepth s) [| x |]
+
+
 (** Neural Network *)
 
 let conv ?name ?dim ?padding ?strides ?dilations ?bias input kernel =

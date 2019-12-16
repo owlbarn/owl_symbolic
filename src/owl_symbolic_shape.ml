@@ -260,7 +260,18 @@ let infer_shape_slice input_shapes (x : Owl_symbolic_ops_tensor.Slice.t) =
   | None   -> [| None |]
 
 
-let infer_shape_conv (x : Owl_symbolic_ops_nn.Conv.t) input_shapes =
+let infer_shape_space_to_depth input_shapes block_size =
+  match input_shapes.(0).(0) with
+  | Some s ->
+    assert (Array.length s = 4);
+    let shp =
+      [| s.(0); s.(1) * block_size * block_size; s.(2) / block_size; s.(3) / block_size |]
+    in
+    [| Some shp |]
+  | None   -> [| None |]
+
+
+let infer_shape_conv input_shapes (x : Owl_symbolic_ops_nn.Conv.t) =
   let l = x.dim in
   let padding = if x.auto_pad = "VALID" then Owl_types.VALID else Owl_types.SAME in
   if l = 1
@@ -272,7 +283,7 @@ let infer_shape_conv (x : Owl_symbolic_ops_nn.Conv.t) input_shapes =
   else failwith "Owl_symbolic_shape: illegal conv dimensions."
 
 
-let infer_shape_maxpool (x : Owl_symbolic_ops_nn.MaxPool.t) input_shapes =
+let infer_shape_maxpool input_shapes (x : Owl_symbolic_ops_nn.MaxPool.t) =
   let l = Array.length x.kernel_shp in
   match input_shapes.(0).(0) with
   | Some i ->
@@ -411,8 +422,9 @@ let infer_shape input_shapes sym =
   | Size _               -> infer_shape_33 input_shapes
   | Transpose x          -> infer_shape_transpose input_shapes x
   | Slice x              -> infer_shape_slice input_shapes x
-  | Conv x               -> infer_shape_conv x input_shapes
-  | MaxPool x            -> infer_shape_maxpool x input_shapes
+  | SpaceToDepth x       -> infer_shape_space_to_depth input_shapes x.blocksize
+  | Conv x               -> infer_shape_conv input_shapes x
+  | MaxPool x            -> infer_shape_maxpool input_shapes x
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes
   | Dropout _            ->
     let t = infer_shape_01 input_shapes in

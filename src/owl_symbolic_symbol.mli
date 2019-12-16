@@ -72,6 +72,7 @@ type t =
   | Size of Owl_symbolic_ops_tensor.Size.t
   | Transpose of Owl_symbolic_ops_tensor.Transpose.t
   | Slice of Owl_symbolic_ops_tensor.Slice.t
+  | SpaceToDepth of Owl_symbolic_ops_tensor.SpaceToDepth.t
   | Conv of Owl_symbolic_ops_nn.Conv.t
   | MaxPool of Owl_symbolic_ops_nn.MaxPool.t
   | BatchNormalization of Owl_symbolic_ops_nn.BatchNormalization.t

@@ -18,6 +18,8 @@ val make_node
 
 val make_graph : symbolic_node array -> string -> t
 
+(* TODO: The function in graph module is messy *)
+
 val topo_iter : (Owl_symbolic_symbol.t Owl_graph.node -> unit) -> t -> unit
 
 val get_input_nodes : t -> Owl_symbolic_symbol.t Owl_graph.node array

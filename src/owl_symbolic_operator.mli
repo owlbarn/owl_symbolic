@@ -228,6 +228,8 @@ val slice
   -> symbolic_node
   -> symbolic_node
 
+val space_to_depth : ?name:string -> int -> symbolic_node -> symbolic_node
+
 val conv
   :  ?name:string
   -> ?dim:int

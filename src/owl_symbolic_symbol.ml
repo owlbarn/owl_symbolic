@@ -85,6 +85,7 @@ type t =
   | Size of Size.t
   | Transpose of Transpose.t
   | Slice of Slice.t
+  | SpaceToDepth of SpaceToDepth.t
   (* NN *)
   | Conv of Conv.t
   | MaxPool of MaxPool.t
@@ -159,6 +160,7 @@ let name = function
   | Size x               -> Size.(x.name)
   | Transpose x          -> Transpose.(x.name)
   | Slice x              -> Slice.(x.name)
+  | SpaceToDepth x       -> SpaceToDepth.(x.name)
   | Conv x               -> Conv.(x.name)
   | MaxPool x            -> MaxPool.(x.name)
   | BatchNormalization x -> BatchNormalization.(x.name)
@@ -232,6 +234,7 @@ let op_type = function
   | Size _               -> Size.op_type
   | Transpose _          -> Transpose.op_type
   | Slice _              -> Slice.op_type
+  | SpaceToDepth _       -> SpaceToDepth.op_type
   | Conv _               -> Conv.op_type
   | MaxPool _            -> MaxPool.op_type
   | BatchNormalization _ -> BatchNormalization.op_type
@@ -305,6 +308,7 @@ let input = function
   | Size x               -> Size.(x.input)
   | Transpose x          -> Transpose.(x.input)
   | Slice x              -> Slice.(x.input)
+  | SpaceToDepth x       -> SpaceToDepth.(x.input)
   | Conv x               -> Conv.(x.input)
   | MaxPool x            -> MaxPool.(x.input)
   | BatchNormalization x -> BatchNormalization.(x.input)
@@ -368,6 +372,7 @@ let set_input sym inputs =
   | Size x               -> x.input <- inputs
   | Transpose x          -> x.input <- inputs
   | Slice x              -> x.input <- inputs
+  | SpaceToDepth x       -> x.input <- inputs
   | Conv x               -> x.input <- inputs
   | MaxPool x            -> x.input <- inputs
   | BatchNormalization x -> x.input <- inputs
@@ -440,6 +445,7 @@ let out_shape = function
   | Size x               -> Size.(x.out_shape)
   | Transpose x          -> Transpose.(x.out_shape)
   | Slice x              -> Slice.(x.out_shape)
+  | SpaceToDepth x       -> SpaceToDepth.(x.out_shape)
   | Conv x               -> Conv.(x.out_shape)
   | MaxPool x            -> MaxPool.(x.out_shape)
   | BatchNormalization x -> BatchNormalization.(x.out_shape)
@@ -506,6 +512,7 @@ let set_out_shape sym shapes =
   | Size x               -> x.out_shape <- shapes
   | Transpose x          -> x.out_shape <- shapes
   | Slice x              -> x.out_shape <- shapes
+  | SpaceToDepth x       -> x.out_shape <- shapes
   | Conv x               -> x.out_shape <- shapes
   | MaxPool x            -> x.out_shape <- shapes
   | BatchNormalization x -> x.out_shape <- shapes
@@ -567,6 +574,7 @@ let attrs = function
   | Size x               -> Size.(x.attrs)
   | Transpose x          -> Transpose.(x.attrs)
   | Slice x              -> Slice.(x.attrs)
+  | SpaceToDepth x       -> SpaceToDepth.(x.attrs)
   | Conv x               -> Conv.(x.attrs)
   | MaxPool x            -> MaxPool.(x.attrs)
   | BatchNormalization x -> BatchNormalization.(x.attrs)
@@ -627,6 +635,7 @@ let set_attrs sym a =
   | Size x               -> x.attrs <- a
   | Transpose x          -> x.attrs <- a
   | Slice x              -> x.attrs <- a
+  | SpaceToDepth x       -> x.attrs <- a
   | Conv x               -> x.attrs <- a
   | MaxPool x            -> x.attrs <- a
   | BatchNormalization x -> x.attrs <- a
