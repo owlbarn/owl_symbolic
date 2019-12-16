@@ -232,6 +232,8 @@ val space_to_depth : ?name:string -> int -> symbolic_node -> symbolic_node
 
 val is_nan : ?name:string -> symbolic_node -> symbolic_node
 
+val non_zero : ?name:string -> symbolic_node -> symbolic_node
+
 val conv
   :  ?name:string
   -> ?dim:int

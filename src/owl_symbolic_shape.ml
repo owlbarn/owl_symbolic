@@ -424,6 +424,7 @@ let infer_shape input_shapes sym =
   | Slice x              -> infer_shape_slice input_shapes x
   | SpaceToDepth x       -> infer_shape_space_to_depth input_shapes x.blocksize
   | IsNaN _              -> infer_shape_01 input_shapes
+  | NonZero _            -> [| None |]
   | Conv x               -> infer_shape_conv input_shapes x
   | MaxPool x            -> infer_shape_maxpool input_shapes x
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes

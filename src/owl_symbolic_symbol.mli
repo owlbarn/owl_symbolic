@@ -74,6 +74,7 @@ type t =
   | Slice of Owl_symbolic_ops_tensor.Slice.t
   | SpaceToDepth of Owl_symbolic_ops_tensor.SpaceToDepth.t
   | IsNaN of Owl_symbolic_ops_tensor.IsNaN.t
+  | NonZero of Owl_symbolic_ops_tensor.NonZero.t
   | Conv of Owl_symbolic_ops_nn.Conv.t
   | MaxPool of Owl_symbolic_ops_nn.MaxPool.t
   | BatchNormalization of Owl_symbolic_ops_nn.BatchNormalization.t

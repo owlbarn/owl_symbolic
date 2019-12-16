@@ -471,6 +471,12 @@ let is_nan ?name x =
   make_node (Owl_symbolic_symbol.IsNaN s) [| x |]
 
 
+let non_zero ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_tensor.NonZero.create ?name xn in
+  make_node (Owl_symbolic_symbol.NonZero s) [| x |]
+
+
 (** Neural Network *)
 
 let conv ?name ?dim ?padding ?strides ?dilations ?bias input kernel =

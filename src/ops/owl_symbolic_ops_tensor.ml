@@ -4,11 +4,11 @@
  *)
 
 (** Implemented: Reshape, Concat, Split, Identity, Pad, Cast, Squeeze, Tile 
-  * Shape, Size, Transpose, Slice, SpaceToDepth, 
+  * Shape, Size, Transpose, Slice, SpaceToDepth, IsNaN, NonZero, 
   *)
 
 (** 
- IsNaN, IsInf, Where, NonZero, 
+ IsInf, Where, 
  ScatterND, ScatterElements, 
  Gather, GatherElements, GatherND
  UnSqueeze, 
@@ -284,6 +284,23 @@ module IsNaN = struct
     }
 
   let op_type = "IsNaN"
+
+  let create ?name x_name =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| x_name |] in
+    { name; input; attrs; out_shape = [| None |] }
+end
+
+module NonZero = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "NonZero"
 
   let create ?name x_name =
     let attrs = [||] in
