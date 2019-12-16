@@ -114,6 +114,15 @@ let infer_shape_19 input_shapes =
   | _, _             -> [| None |]
 
 
+let infer_shape_20 input_shapes axis =
+  match input_shapes.(0).(0) with
+  | Some s ->
+    let axis = List.map (fun i -> Owl_types.R_ (Array.of_list i)) axis |> Array.of_list in
+    let axis = Owl_base_slicing.check_slice_definition axis s in
+    [| Some Owl_base_slicing.(calc_slice_shape axis) |]
+  | None   -> [| None |]
+
+
 let infer_shape_21 input_shapes padding kernel stride =
   let input_shape = input_shapes.(0).(0) in
   match input_shape with
@@ -209,6 +218,45 @@ let infer_shape_transpose input_shapes (x : Owl_symbolic_ops_tensor.Transpose.t)
       Owl_utils_array.reverse p;
       x.perm <- Some p;
       [| Some Owl_utils_infer_shape.(transpose s p) |])
+  | None   -> [| None |]
+
+
+(* TODO: test *)
+let infer_shape_slice input_shapes (x : Owl_symbolic_ops_tensor.Slice.t) =
+  match input_shapes.(0).(0) with
+  | Some s ->
+    let dim = Array.length s in
+    let axes =
+      match x.axes with
+      | Some a ->
+        assert (Array.for_all (fun x -> x >= ~-dim && x <= dim - 1) a);
+        a
+      | None   -> Owl_utils_array.range 0 (dim - 1)
+    in
+    let steps =
+      match x.steps with
+      | Some x -> x
+      | None   -> Array.make dim 1
+    in
+    let l = Array.length axes in
+    assert (Array.length steps = l);
+    assert (Array.length x.starts = l);
+    assert (Array.length x.ends = l);
+    (* full index of [start; end; step] list *)
+    let index = Array.make dim [ 0 ] in
+    let c = ref 0 in
+    for i = 0 to dim - 1 do
+      let idx =
+        if Array.mem i axes
+        then (
+          let ret = [ x.starts.(!c); x.ends.(!c); steps.(!c) ] in
+          c := !c + 1;
+          ret)
+        else [ 0; s.(i) - 1; 1 ]
+      in
+      index.(i) <- idx
+    done;
+    infer_shape_20 input_shapes (Array.to_list index)
   | None   -> [| None |]
 
 
@@ -362,6 +410,7 @@ let infer_shape input_shapes sym =
   | Shape _              -> infer_shape_32 input_shapes
   | Size _               -> infer_shape_33 input_shapes
   | Transpose x          -> infer_shape_transpose input_shapes x
+  | Slice x              -> infer_shape_slice input_shapes x
   | Conv x               -> infer_shape_conv x input_shapes
   | MaxPool x            -> infer_shape_maxpool x input_shapes
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes

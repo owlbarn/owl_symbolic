@@ -4,10 +4,10 @@
  *)
 
 (** Implemented: Reshape, Concat, Split, Identity, Pad, Cast, Squeeze, Tile 
-  * Shape, Size,  Transpose
+  * Shape, Size, Transpose, Slice,
   *)
 
-(** Slice,
+(** 
  ScatterND, ScatterElements, Gather, GatherElements, UnSqueeze, 
  SpaceToDepth, DepthToSpace, Resize, Compress, 
  OneHot, IsNaN, IsInf, Where, NonZero, ReverseSequence, Unique, GatherND
@@ -230,4 +230,25 @@ module Transpose = struct
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| x_name |] in
     { name; input; attrs; out_shape = [| None |]; perm }
+end
+
+module Slice = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable axes : int array option
+    ; mutable starts : int array
+    ; mutable ends : int array
+    ; mutable steps : int array option
+    }
+
+  let op_type = "Slice"
+
+  let create ?name ?axes ?steps starts ends x_name =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| x_name |] in
+    { name; input; attrs; out_shape = [| None |]; axes; starts; ends; steps }
 end

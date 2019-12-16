@@ -369,7 +369,6 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           if Array.length ptypes = 3
           then type_check_pattern01 ptypes.(2) _types_constraint04 name |> ignore;
           t
-        | Conv _               -> type_check_pattern02 ptypes _types_constraint00 name
         | Cast x               ->
           type_check_pattern01 ptypes.(0) _types_constraint05 name |> ignore;
           let t = x.target in
@@ -385,6 +384,14 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           type_check_pattern01 ptypes.(0) _types_constraint03 name |> ignore;
           [| SNT_Int64 |]
         | Transpose _          -> type_check_pattern01 ptypes.(0) _types_constraint03 name
+        | Slice _              ->
+          type_check_pattern02
+            (Array.sub ptypes 1 (Array.length ptypes - 1))
+            [| SNT_Int32; SNT_Int64 |]
+            name
+          |> ignore;
+          type_check_pattern01 ptypes.(0) _types_constraint03 name
+        | Conv _               -> type_check_pattern02 ptypes _types_constraint00 name
         | MaxPool _            ->
           let t1 = type_check_pattern01 ptypes.(0) _types_constraint00 name in
           let t2 = SNT_Int64 in

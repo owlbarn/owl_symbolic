@@ -84,6 +84,7 @@ type t =
   | Shape of Shape.t
   | Size of Size.t
   | Transpose of Transpose.t
+  | Slice of Slice.t
   (* NN *)
   | Conv of Conv.t
   | MaxPool of MaxPool.t
@@ -157,6 +158,7 @@ let name = function
   | Shape x              -> Shape.(x.name)
   | Size x               -> Size.(x.name)
   | Transpose x          -> Transpose.(x.name)
+  | Slice x              -> Slice.(x.name)
   | Conv x               -> Conv.(x.name)
   | MaxPool x            -> MaxPool.(x.name)
   | BatchNormalization x -> BatchNormalization.(x.name)
@@ -229,6 +231,7 @@ let op_type = function
   | Shape _              -> Shape.op_type
   | Size _               -> Size.op_type
   | Transpose _          -> Transpose.op_type
+  | Slice _              -> Slice.op_type
   | Conv _               -> Conv.op_type
   | MaxPool _            -> MaxPool.op_type
   | BatchNormalization _ -> BatchNormalization.op_type
@@ -301,6 +304,7 @@ let input = function
   | Shape x              -> Shape.(x.input)
   | Size x               -> Size.(x.input)
   | Transpose x          -> Transpose.(x.input)
+  | Slice x              -> Slice.(x.input)
   | Conv x               -> Conv.(x.input)
   | MaxPool x            -> MaxPool.(x.input)
   | BatchNormalization x -> BatchNormalization.(x.input)
@@ -363,6 +367,7 @@ let set_input sym inputs =
   | Shape x              -> x.input <- inputs
   | Size x               -> x.input <- inputs
   | Transpose x          -> x.input <- inputs
+  | Slice x              -> x.input <- inputs
   | Conv x               -> x.input <- inputs
   | MaxPool x            -> x.input <- inputs
   | BatchNormalization x -> x.input <- inputs
@@ -434,6 +439,7 @@ let out_shape = function
   | Shape x              -> Shape.(x.out_shape)
   | Size x               -> Size.(x.out_shape)
   | Transpose x          -> Transpose.(x.out_shape)
+  | Slice x              -> Slice.(x.out_shape)
   | Conv x               -> Conv.(x.out_shape)
   | MaxPool x            -> MaxPool.(x.out_shape)
   | BatchNormalization x -> BatchNormalization.(x.out_shape)
@@ -499,6 +505,7 @@ let set_out_shape sym shapes =
   | Shape x              -> x.out_shape <- shapes
   | Size x               -> x.out_shape <- shapes
   | Transpose x          -> x.out_shape <- shapes
+  | Slice x              -> x.out_shape <- shapes
   | Conv x               -> x.out_shape <- shapes
   | MaxPool x            -> x.out_shape <- shapes
   | BatchNormalization x -> x.out_shape <- shapes
@@ -559,6 +566,7 @@ let attrs = function
   | Shape x              -> Shape.(x.attrs)
   | Size x               -> Size.(x.attrs)
   | Transpose x          -> Transpose.(x.attrs)
+  | Slice x              -> Slice.(x.attrs)
   | Conv x               -> Conv.(x.attrs)
   | MaxPool x            -> MaxPool.(x.attrs)
   | BatchNormalization x -> BatchNormalization.(x.attrs)
@@ -618,6 +626,7 @@ let set_attrs sym a =
   | Shape x              -> x.attrs <- a
   | Size x               -> x.attrs <- a
   | Transpose x          -> x.attrs <- a
+  | Slice x              -> x.attrs <- a
   | Conv x               -> x.attrs <- a
   | MaxPool x            -> x.attrs <- a
   | BatchNormalization x -> x.attrs <- a

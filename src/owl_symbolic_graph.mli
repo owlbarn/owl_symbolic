@@ -41,3 +41,5 @@ val refnum : 'a Owl_graph.node -> int
 val to_dot : t -> string
 
 val set_sym : symbolic_node -> Owl_symbolic_symbol.t -> unit
+
+val tensor_node_from_int_array : ?name:string -> int array -> symbolic_node
