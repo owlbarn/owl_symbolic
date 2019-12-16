@@ -160,6 +160,13 @@ let infer_shape_33 input_shapes =
   | None   -> [| None |]
 
 
+let infer_shape_34 input_shapes =
+  assert (Array.length input_shapes = 3);
+  match input_shapes.(0).(0), input_shapes.(1).(0), input_shapes.(2).(0) with
+  | Some cond, Some x, Some y -> [| Some (Owl_utils_infer_shape.broadcast2 cond x y) |]
+  | _, _, _                   -> [| None |]
+
+
 let infer_shape_gemm (x : Owl_symbolic_ops_math.Gemm.t) input_shapes =
   let l = Array.length input_shapes in
   assert (l = 2 || l = 3);
@@ -425,6 +432,7 @@ let infer_shape input_shapes sym =
   | SpaceToDepth x       -> infer_shape_space_to_depth input_shapes x.blocksize
   | IsNaN _              -> infer_shape_01 input_shapes
   | NonZero _            -> [| None |]
+  | Where _              -> infer_shape_34 input_shapes
   | Conv x               -> infer_shape_conv input_shapes x
   | MaxPool x            -> infer_shape_maxpool input_shapes x
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes

@@ -477,6 +477,14 @@ let non_zero ?name x =
   make_node (Owl_symbolic_symbol.NonZero s) [| x |]
 
 
+let where ?name cond x y =
+  let xn = Owl_symbolic_graph.name x in
+  let yn = Owl_symbolic_graph.name y in
+  let cn = Owl_symbolic_graph.name cond in
+  let s = Owl_symbolic_ops_tensor.Where.create ?name cn xn yn in
+  make_node (Owl_symbolic_symbol.Where s) [| cond; x; y |]
+
+
 (** Neural Network *)
 
 let conv ?name ?dim ?padding ?strides ?dilations ?bias input kernel =

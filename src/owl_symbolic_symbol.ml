@@ -88,6 +88,7 @@ type t =
   | SpaceToDepth of SpaceToDepth.t
   | IsNaN of IsNaN.t
   | NonZero of NonZero.t
+  | Where of Where.t
   (* NN *)
   | Conv of Conv.t
   | MaxPool of MaxPool.t
@@ -165,6 +166,7 @@ let name = function
   | SpaceToDepth x       -> SpaceToDepth.(x.name)
   | IsNaN x              -> IsNaN.(x.name)
   | NonZero x            -> NonZero.(x.name)
+  | Where x              -> Where.(x.name)
   | Conv x               -> Conv.(x.name)
   | MaxPool x            -> MaxPool.(x.name)
   | BatchNormalization x -> BatchNormalization.(x.name)
@@ -241,6 +243,7 @@ let op_type = function
   | SpaceToDepth _       -> SpaceToDepth.op_type
   | IsNaN _              -> IsNaN.op_type
   | NonZero _            -> NonZero.op_type
+  | Where _              -> Where.op_type
   | Conv _               -> Conv.op_type
   | MaxPool _            -> MaxPool.op_type
   | BatchNormalization _ -> BatchNormalization.op_type
@@ -317,6 +320,7 @@ let input = function
   | SpaceToDepth x       -> SpaceToDepth.(x.input)
   | IsNaN x              -> IsNaN.(x.input)
   | NonZero x            -> NonZero.(x.input)
+  | Where x              -> Where.(x.input)
   | Conv x               -> Conv.(x.input)
   | MaxPool x            -> MaxPool.(x.input)
   | BatchNormalization x -> BatchNormalization.(x.input)
@@ -383,6 +387,7 @@ let set_input sym inputs =
   | SpaceToDepth x       -> x.input <- inputs
   | IsNaN x              -> x.input <- inputs
   | NonZero x            -> x.input <- inputs
+  | Where x              -> x.input <- inputs
   | Conv x               -> x.input <- inputs
   | MaxPool x            -> x.input <- inputs
   | BatchNormalization x -> x.input <- inputs
@@ -458,6 +463,7 @@ let out_shape = function
   | SpaceToDepth x       -> SpaceToDepth.(x.out_shape)
   | IsNaN x              -> IsNaN.(x.out_shape)
   | NonZero x            -> NonZero.(x.out_shape)
+  | Where x              -> Where.(x.out_shape)
   | Conv x               -> Conv.(x.out_shape)
   | MaxPool x            -> MaxPool.(x.out_shape)
   | BatchNormalization x -> BatchNormalization.(x.out_shape)
@@ -527,6 +533,7 @@ let set_out_shape sym shapes =
   | SpaceToDepth x       -> x.out_shape <- shapes
   | IsNaN x              -> x.out_shape <- shapes
   | NonZero x            -> x.out_shape <- shapes
+  | Where x              -> x.out_shape <- shapes
   | Conv x               -> x.out_shape <- shapes
   | MaxPool x            -> x.out_shape <- shapes
   | BatchNormalization x -> x.out_shape <- shapes
@@ -591,6 +598,7 @@ let attrs = function
   | SpaceToDepth x       -> SpaceToDepth.(x.attrs)
   | IsNaN x              -> IsNaN.(x.attrs)
   | NonZero x            -> NonZero.(x.attrs)
+  | Where x              -> Where.(x.attrs)
   | Conv x               -> Conv.(x.attrs)
   | MaxPool x            -> MaxPool.(x.attrs)
   | BatchNormalization x -> BatchNormalization.(x.attrs)
@@ -654,6 +662,7 @@ let set_attrs sym a =
   | SpaceToDepth x       -> x.attrs <- a
   | IsNaN x              -> x.attrs <- a
   | NonZero x            -> x.attrs <- a
+  | Where x              -> x.attrs <- a
   | Conv x               -> x.attrs <- a
   | MaxPool x            -> x.attrs <- a
   | BatchNormalization x -> x.attrs <- a

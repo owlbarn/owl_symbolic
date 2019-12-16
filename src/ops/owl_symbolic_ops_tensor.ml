@@ -4,19 +4,13 @@
  *)
 
 (** Implemented: Reshape, Concat, Split, Identity, Pad, Cast, Squeeze, Tile 
-  * Shape, Size, Transpose, Slice, SpaceToDepth, IsNaN, NonZero, 
+  * Shape, Size, Transpose, Slice, SpaceToDepth, IsNaN, NonZero, Where
   *)
 
-(** 
- IsInf, Where, 
- ScatterND, ScatterElements, 
- Gather, GatherElements, GatherND
- UnSqueeze, 
- DepthToSpace,
- Resize, Compress, Unique, OneHot,
- ReverseSequence,
- Scatter(deprecated), Upsample(deprecated),
- *)
+(** IsInf, ScatterND, ScatterElements, Gather, GatherElements, GatherND, 
+  * UnSqueeze,DepthToSpace, Resize, Compress, Unique, OneHot,ReverseSequence,
+  * Scatter(deprecated), Upsample(deprecated),
+  *)
 
 open Owl_symbolic_types
 
@@ -306,5 +300,22 @@ module NonZero = struct
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| x_name |] in
+    { name; input; attrs; out_shape = [| None |] }
+end
+
+module Where = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "Where"
+
+  let create ?name cond_name x_name y_name =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| cond_name; x_name; y_name |] in
     { name; input; attrs; out_shape = [| None |] }
 end
