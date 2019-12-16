@@ -4,15 +4,16 @@
  *)
 
 (** Implemented: Reshape, Concat, Split, Identity, Pad, Cast, Squeeze, Tile 
-  * Shape, Size, Transpose, Slice, SpaceToDepth, DepthToSpace, 
+  * Shape, Size, Transpose, Slice, SpaceToDepth, 
   *)
 
 (** 
+ IsNaN, IsInf, Where, NonZero, 
  ScatterND, ScatterElements, 
  Gather, GatherElements, GatherND
  UnSqueeze, 
- Resize, Compress, Unique, OneHot,  
- IsNaN, IsInf, Where, NonZero, 
+ DepthToSpace,
+ Resize, Compress, Unique, OneHot,
  ReverseSequence,
  Scatter(deprecated), Upsample(deprecated),
  *)
@@ -272,4 +273,21 @@ module SpaceToDepth = struct
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| x_name |] in
     { name; input; attrs; out_shape = [| None |]; blocksize }
+end
+
+module IsNaN = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "IsNaN"
+
+  let create ?name x_name =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| x_name |] in
+    { name; input; attrs; out_shape = [| None |] }
 end

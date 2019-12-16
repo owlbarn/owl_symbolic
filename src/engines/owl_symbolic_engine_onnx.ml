@@ -392,6 +392,9 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           |> ignore;
           type_check_pattern01 ptypes.(0) _types_constraint03 name
         | SpaceToDepth _       -> type_check_pattern01 ptypes.(0) _types_constraint03 name
+        | IsNaN _              ->
+          type_check_pattern01 ptypes.(0) _types_constraint00 name |> ignore;
+          [| SNT_Bool |]
         | Conv _               -> type_check_pattern02 ptypes _types_constraint00 name
         | MaxPool _            ->
           let t1 = type_check_pattern01 ptypes.(0) _types_constraint00 name in
