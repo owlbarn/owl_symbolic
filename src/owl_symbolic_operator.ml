@@ -426,6 +426,12 @@ let tile ?name x repeats =
   make_node (Owl_symbolic_symbol.Tile s) [| x; rep_node |]
 
 
+let shape ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_tensor.Shape.create ?name xn in
+  make_node (Owl_symbolic_symbol.Shape s) [| x |]
+
+
 (** Neural Network *)
 
 let conv ?name ?dim ?padding ?strides ?dilations ?bias input kernel =

@@ -213,6 +213,8 @@ val squeeze : ?name:string -> ?axes:int array -> symbolic_node -> symbolic_node
 
 val tile : ?name:string -> symbolic_node -> int array -> symbolic_node
 
+val shape : ?name:string -> symbolic_node -> symbolic_node
+
 val conv
   :  ?name:string
   -> ?dim:int

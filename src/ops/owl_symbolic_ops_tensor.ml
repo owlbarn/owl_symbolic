@@ -3,7 +3,9 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-(** Implemented: Reshape, Concat, Split, Identity, Pad, Cast, Squeeze, Tile *)
+(** Implemented: Reshape, Concat, Split, Identity, Pad, Cast, Squeeze, Tile 
+  * 
+  *)
 
 (** Shape, Size, Slice, Transpose, 
  ScatterND, ScatterElements, Gather, GatherElements, UnSqueeze, 
@@ -176,4 +178,21 @@ module Tile = struct
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| x_name; repeats_name |] in
     { name; input; attrs; out_shape = [| None |]; repeats }
+end
+
+module Shape = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "Shape"
+
+  let create ?name x_name =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| x_name |] in
+    { name; input; attrs; out_shape = [| None |] }
 end
