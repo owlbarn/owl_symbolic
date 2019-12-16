@@ -342,6 +342,10 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Sum _                -> type_check_pattern02 ptypes _types_constraint00 name
         | ReduceSum _          -> type_check_pattern01 ptypes.(0) _types_constraint02 name
         | ReduceMax _          -> type_check_pattern01 ptypes.(0) _types_constraint02 name
+        | ReduceMin _          -> type_check_pattern01 ptypes.(0) _types_constraint02 name
+        | ReduceMean _         -> type_check_pattern01 ptypes.(0) _types_constraint02 name
+        | ReduceSumSquare _    -> type_check_pattern01 ptypes.(0) _types_constraint02 name
+        | ReduceProd _         -> type_check_pattern01 ptypes.(0) _types_constraint02 name
         | Reshape _            ->
           type_check_pattern03 ptypes _types_constraint03 [| SNT_Int64 |] name
         | Identity s           ->
@@ -523,28 +527,14 @@ let build_onnx_attrs_gemm (x : Owl_symbolic_ops_math.Gemm.t) =
   [ attr_alpha; attr_beta; attr_transA; attr_transB ]
 
 
-let build_onnx_attrs_reducesum (x : Owl_symbolic_ops_reduction.ReduceSum.t) =
+let build_onnx_attrs_reduce axes keepdims =
   let name_axes = Some "axes" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
-  let ints = Array.map Int64.of_int x.axes |> Array.to_list in
+  let ints = Array.map Int64.of_int axes |> Array.to_list in
   let attr_axes = PT.default_attribute_proto ~name:name_axes ~type_ ~ints () in
   let name_keepdims = Some "keepdims" in
   let type_ = Some PT.Int in
-  let i = if x.keepdims = true then Int64.one else Int64.zero in
-  let attr_keepdims =
-    PT.default_attribute_proto ~name:name_keepdims ~type_ ~i:(Some i) ()
-  in
-  [ attr_axes; attr_keepdims ]
-
-
-let build_onnx_attrs_reducemax (x : Owl_symbolic_ops_reduction.ReduceMax.t) =
-  let name_axes = Some "axes" in
-  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
-  let ints = Array.map Int64.of_int x.axes |> Array.to_list in
-  let attr_axes = PT.default_attribute_proto ~name:name_axes ~type_ ~ints () in
-  let name_keepdims = Some "keepdims" in
-  let type_ = Some PT.Int in
-  let i = if x.keepdims = true then Int64.one else Int64.zero in
+  let i = if keepdims = true then Int64.one else Int64.zero in
   let attr_keepdims =
     PT.default_attribute_proto ~name:name_keepdims ~type_ ~i:(Some i) ()
   in
@@ -677,26 +667,30 @@ let build_onnx_attrs_seq_empty (x : Owl_symbolic_ops_sequence.SequenceEmpty.t) =
 let build_onnx_attrs sym =
   let onnx_attrs =
     match sym with
-    | S.Float _         -> build_onnx_attrs_float sym
-    | S.Int _           -> build_onnx_attrs_int sym
-    | S.Complex _       -> build_onnx_attrs_complex sym
-    | S.Pi _            -> build_onnx_attrs_pi sym
-    | S.Tensor _        -> build_onnx_attrs_tensor sym
-    | S.RandomUniform x -> build_onnx_attrs_randomuniform x
-    | S.Mod x           -> build_onnx_attrs_fmod x
-    | S.Gemm x          -> build_onnx_attrs_gemm x
-    | S.ReduceSum x     -> build_onnx_attrs_reducesum x
-    | S.ReduceMax x     -> build_onnx_attrs_reducemax x
-    | S.Split x         -> build_onnx_attrs_split x
-    | S.Concat x        -> build_onnx_attrs_concat x
-    | S.Pad x           -> build_onnx_attrs_pad x
-    | S.Cast x          -> build_onnx_attrs_cast x
-    | S.Squeeze x       -> build_onnx_attrs_squeeze x
-    | S.Conv x          -> build_onnx_attrs_conv x
-    | S.MaxPool x       -> build_onnx_attrs_maxpool x
-    | S.SequenceEmpty x -> build_onnx_attrs_seq_empty x
-    | S.Dropout x       -> build_onnx_attrs_dropout x
-    | _                 -> []
+    | S.Float _           -> build_onnx_attrs_float sym
+    | S.Int _             -> build_onnx_attrs_int sym
+    | S.Complex _         -> build_onnx_attrs_complex sym
+    | S.Pi _              -> build_onnx_attrs_pi sym
+    | S.Tensor _          -> build_onnx_attrs_tensor sym
+    | S.RandomUniform x   -> build_onnx_attrs_randomuniform x
+    | S.Mod x             -> build_onnx_attrs_fmod x
+    | S.Gemm x            -> build_onnx_attrs_gemm x
+    | S.ReduceSum x       -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.ReduceMax x       -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.ReduceMin x       -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.ReduceMean x      -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.ReduceSumSquare x -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.ReduceProd x      -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.Split x           -> build_onnx_attrs_split x
+    | S.Concat x          -> build_onnx_attrs_concat x
+    | S.Pad x             -> build_onnx_attrs_pad x
+    | S.Cast x            -> build_onnx_attrs_cast x
+    | S.Squeeze x         -> build_onnx_attrs_squeeze x
+    | S.Conv x            -> build_onnx_attrs_conv x
+    | S.MaxPool x         -> build_onnx_attrs_maxpool x
+    | S.SequenceEmpty x   -> build_onnx_attrs_seq_empty x
+    | S.Dropout x         -> build_onnx_attrs_dropout x
+    | _                   -> []
   in
   onnx_attrs
 

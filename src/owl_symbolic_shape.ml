@@ -58,7 +58,10 @@ let infer_shape_08 input_shapes axis splits =
 
 let infer_shape_10 input_shapes axis keepdims =
   match input_shapes.(0).(0) with
-  | Some s -> [| Some Owl_symbolic_utils.(reduce s axis keepdims) |]
+  | Some s ->
+    let l = Array.length s in
+    assert (Array.for_all (fun a -> a >= ~-l && a <= l - 1) axis);
+    [| Some Owl_symbolic_utils.(reduce s axis keepdims) |]
   | None   -> [| None |]
 
 

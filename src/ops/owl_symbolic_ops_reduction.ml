@@ -47,3 +47,79 @@ module ReduceMax = struct
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; input; attrs; out_shape = [| None |]; axes; keepdims }
 end
+
+module ReduceMin = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable axes : int array
+    ; mutable keepdims : bool
+    }
+
+  let op_type = "ReduceMin"
+
+  let create ?(keepdims = true) ?name x axes =
+    let attrs = [||] in
+    let input = [| x |] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |]; axes; keepdims }
+end
+
+module ReduceMean = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable axes : int array
+    ; mutable keepdims : bool
+    }
+
+  let op_type = "ReduceMean"
+
+  let create ?(keepdims = true) ?name x axes =
+    let attrs = [||] in
+    let input = [| x |] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |]; axes; keepdims }
+end
+
+module ReduceSumSquare = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable axes : int array
+    ; mutable keepdims : bool
+    }
+
+  let op_type = "ReduceSumSquare"
+
+  let create ?(keepdims = true) ?name x axes =
+    let attrs = [||] in
+    let input = [| x |] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |]; axes; keepdims }
+end
+
+module ReduceProd = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable axes : int array
+    ; mutable keepdims : bool
+    }
+
+  let op_type = "ReduceProd"
+
+  let create ?(keepdims = true) ?name x axes =
+    let attrs = [||] in
+    let input = [| x |] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |]; axes; keepdims }
+end

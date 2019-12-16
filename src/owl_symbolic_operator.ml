@@ -290,6 +290,30 @@ let reduce_max ?keepdims ?name x axes =
   make_node (Owl_symbolic_symbol.ReduceMax s) [| x |]
 
 
+let reduce_min ?keepdims ?name x axes =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_reduction.ReduceMin.create ?keepdims ?name xn axes in
+  make_node (Owl_symbolic_symbol.ReduceMin s) [| x |]
+
+
+let reduce_meam ?keepdims ?name x axes =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_reduction.ReduceMean.create ?keepdims ?name xn axes in
+  make_node (Owl_symbolic_symbol.ReduceMean s) [| x |]
+
+
+let reduce_sum_square ?keepdims ?name x axes =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_reduction.ReduceSumSquare.create ?keepdims ?name xn axes in
+  make_node (Owl_symbolic_symbol.ReduceSumSquare s) [| x |]
+
+
+let reduce_prod ?keepdims ?name x axes =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_reduction.ReduceProd.create ?keepdims ?name xn axes in
+  make_node (Owl_symbolic_symbol.ReduceProd s) [| x |]
+
+
 (** Tensor *)
 
 let reshape ?name data shape =

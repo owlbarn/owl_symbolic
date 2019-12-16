@@ -63,6 +63,10 @@ type t =
   (* Reduction *)
   | ReduceSum of ReduceSum.t
   | ReduceMax of ReduceMax.t
+  | ReduceMin of ReduceMin.t
+  | ReduceMean of ReduceMean.t
+  | ReduceSumSquare of ReduceSumSquare.t
+  | ReduceProd of ReduceProd.t
   (* Tensor *)
   | Reshape of Reshape.t
   | Identity of Identity.t
@@ -129,6 +133,10 @@ let name = function
   | Sum x                -> Sum.(x.name)
   | ReduceSum x          -> ReduceSum.(x.name)
   | ReduceMax x          -> ReduceMax.(x.name)
+  | ReduceMin x          -> ReduceMin.(x.name)
+  | ReduceMean x         -> ReduceMean.(x.name)
+  | ReduceSumSquare x    -> ReduceSumSquare.(x.name)
+  | ReduceProd x         -> ReduceProd.(x.name)
   | Reshape x            -> Reshape.(x.name)
   | Identity x           -> Identity.(x.name)
   | Split x              -> Split.(x.name)
@@ -193,6 +201,10 @@ let op_type = function
   | Sum _                -> Sum.op_type
   | ReduceSum _          -> ReduceSum.op_type
   | ReduceMax _          -> ReduceMax.op_type
+  | ReduceMin _          -> ReduceMin.op_type
+  | ReduceMean _         -> ReduceMean.op_type
+  | ReduceSumSquare _    -> ReduceSumSquare.op_type
+  | ReduceProd _         -> ReduceProd.op_type
   | Reshape _            -> Reshape.op_type
   | Identity _           -> Identity.op_type
   | Split _              -> Split.op_type
@@ -257,6 +269,10 @@ let input = function
   | Sum x                -> Sum.(x.input)
   | ReduceSum x          -> ReduceSum.(x.input)
   | ReduceMax x          -> ReduceMax.(x.input)
+  | ReduceMin x          -> ReduceMin.(x.input)
+  | ReduceMean x         -> ReduceMean.(x.input)
+  | ReduceSumSquare x    -> ReduceSumSquare.(x.input)
+  | ReduceProd x         -> ReduceProd.(x.input)
   | Reshape x            -> Reshape.(x.input)
   | Identity x           -> Identity.(x.input)
   | Split x              -> Split.(x.input)
@@ -312,6 +328,10 @@ let set_input sym inputs =
   | Sum x                -> x.input <- inputs
   | ReduceSum x          -> x.input <- inputs
   | ReduceMax x          -> x.input <- inputs
+  | ReduceMin x          -> x.input <- inputs
+  | ReduceMean x         -> x.input <- inputs
+  | ReduceSumSquare x    -> x.input <- inputs
+  | ReduceProd x         -> x.input <- inputs
   | Reshape x            -> x.input <- inputs
   | Identity x           -> x.input <- inputs
   | Split x              -> x.input <- inputs
@@ -375,6 +395,10 @@ let out_shape = function
   | Sum x                -> Sum.(x.out_shape)
   | ReduceSum x          -> ReduceSum.(x.out_shape)
   | ReduceMax x          -> ReduceMax.(x.out_shape)
+  | ReduceMin x          -> ReduceMin.(x.out_shape)
+  | ReduceMean x         -> ReduceMean.(x.out_shape)
+  | ReduceSumSquare x    -> ReduceSumSquare.(x.out_shape)
+  | ReduceProd x         -> ReduceProd.(x.out_shape)
   | Reshape x            -> Reshape.(x.out_shape)
   | Identity x           -> Identity.(x.out_shape)
   | Split x              -> Split.(x.out_shape)
@@ -432,6 +456,10 @@ let set_out_shape sym shapes =
   | Sum x                -> x.out_shape <- shapes
   | ReduceSum x          -> x.out_shape <- shapes
   | ReduceMax x          -> x.out_shape <- shapes
+  | ReduceMin x          -> x.out_shape <- shapes
+  | ReduceMean x         -> x.out_shape <- shapes
+  | ReduceSumSquare x    -> x.out_shape <- shapes
+  | ReduceProd x         -> x.out_shape <- shapes
   | Reshape x            -> x.out_shape <- shapes
   | Identity x           -> x.out_shape <- shapes
   | Split x              -> x.out_shape <- shapes
@@ -484,6 +512,10 @@ let attrs = function
   | Sum x                -> Sum.(x.attrs)
   | ReduceSum x          -> ReduceSum.(x.attrs)
   | ReduceMax x          -> ReduceMax.(x.attrs)
+  | ReduceMin x          -> ReduceMin.(x.attrs)
+  | ReduceMean x         -> ReduceMean.(x.attrs)
+  | ReduceSumSquare x    -> ReduceSumSquare.(x.attrs)
+  | ReduceProd x         -> ReduceProd.(x.attrs)
   | Reshape x            -> Reshape.(x.attrs)
   | Identity x           -> Identity.(x.attrs)
   | Split x              -> Split.(x.attrs)
@@ -535,6 +567,10 @@ let set_attrs sym a =
   | Sum x                -> x.attrs <- a
   | ReduceSum x          -> x.attrs <- a
   | ReduceMax x          -> x.attrs <- a
+  | ReduceMin x          -> x.attrs <- a
+  | ReduceMean x         -> x.attrs <- a
+  | ReduceSumSquare x    -> x.attrs <- a
+  | ReduceProd x         -> x.attrs <- a
   | Reshape x            -> x.attrs <- a
   | Identity x           -> x.attrs <- a
   | Split x              -> x.attrs <- a
