@@ -7,10 +7,9 @@ open Owl_symbolic_types
 
 (* TODO: rename file name to input? *)
 
-(** Implemented: Constant, RandomUniform *)
+(** Implemented: Constant, RandomUniform,  RandomNormal *)
 
-(*  ConstantOfShape, EyeLike,  RandomNormal, 
-RandomUniformLike, RandomNormalLike, Multinomial, Range *)
+(*  ConstantOfShape, EyeLike, RandomUniformLike, RandomNormalLike, Multinomial, Range *)
 
 module Int = struct
   type t =
@@ -134,6 +133,26 @@ module RandomUniform = struct
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; attrs; dtype; shape; out_shape = [| Some shape |]; high; low; seed }
+end
+
+module RandomNormal = struct
+  type t =
+    { mutable name : string
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable dtype : number_type
+    ; mutable shape : int array
+    ; mutable out_shape : int array option array
+    ; mutable mean : float
+    ; mutable stddev : float
+    ; mutable seed : float option
+    }
+
+  let op_type = "RandomNormal"
+
+  let create ?(mean = 0.) ?(stddev = 1.) ?(seed = None) ?(dtype = SNT_Float) ?name shape =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; attrs; dtype; shape; out_shape = [| Some shape |]; mean; stddev; seed }
 end
 
 (** Special Numbers *)

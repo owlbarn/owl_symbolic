@@ -269,6 +269,9 @@ let infer_shape input_shapes sym =
   | RandomUniform _      ->
     let shp = Owl_symbolic_symbol.shape sym in
     [| Some shp |]
+  | RandomNormal _       ->
+    let shp = Owl_symbolic_symbol.shape sym in
+    [| Some shp |]
   | Sin _                -> infer_shape_01 input_shapes
   | Cos _                -> infer_shape_01 input_shapes
   | Tan _                -> infer_shape_01 input_shapes

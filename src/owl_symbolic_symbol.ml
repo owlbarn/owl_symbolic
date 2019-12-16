@@ -21,6 +21,7 @@ type t =
   | Tensor of Tensor.t
   | Variable of Variable.t
   | RandomUniform of RandomUniform.t
+  | RandomNormal of RandomNormal.t
   | Zero of Zero.t
   | One of One.t
   | NegOne of NegOne.t
@@ -97,6 +98,7 @@ let name = function
   | Tensor x             -> Tensor.(x.name)
   | Variable x           -> Variable.(x.name)
   | RandomUniform x      -> RandomUniform.(x.name)
+  | RandomNormal x       -> RandomNormal.(x.name)
   | Zero x               -> Zero.(x.name)
   | One x                -> One.(x.name)
   | NegOne x             -> NegOne.(x.name)
@@ -165,6 +167,7 @@ let op_type = function
   | Tensor _             -> Tensor.op_type
   | Variable _           -> Variable.op_type
   | RandomUniform _      -> RandomUniform.op_type
+  | RandomNormal _       -> RandomNormal.op_type
   | Zero _               -> Zero.op_type
   | One _                -> One.op_type
   | NegOne _             -> NegOne.op_type
@@ -233,6 +236,7 @@ let input = function
   | Tensor _             -> [||]
   | Variable _           -> [||]
   | RandomUniform _      -> [||]
+  | RandomNormal _       -> [||]
   | Zero _               -> [||]
   | One _                -> [||]
   | NegOne _             -> [||]
@@ -359,6 +363,7 @@ let out_shape = function
   | Tensor x             -> Tensor.(x.out_shape)
   | Variable x           -> Variable.(x.out_shape)
   | RandomUniform x      -> RandomUniform.(x.out_shape)
+  | RandomNormal x       -> RandomNormal.(x.out_shape)
   | Zero x               -> Zero.(x.out_shape)
   | One x                -> One.(x.out_shape)
   | NegOne x             -> NegOne.(x.out_shape)
@@ -424,6 +429,7 @@ let set_out_shape sym shapes =
   | Tensor x             -> x.out_shape <- shapes
   | Variable x           -> x.out_shape <- shapes
   | RandomUniform x      -> x.out_shape <- shapes
+  | RandomNormal x       -> x.out_shape <- shapes
   | Sin x                -> x.out_shape <- shapes
   | Cos x                -> x.out_shape <- shapes
   | Tan x                -> x.out_shape <- shapes
@@ -490,6 +496,7 @@ let attrs = function
   | Tensor x             -> Tensor.(x.attrs)
   | Variable x           -> Variable.(x.attrs)
   | RandomUniform x      -> RandomUniform.(x.attrs)
+  | RandomNormal x       -> RandomNormal.(x.attrs)
   | Zero x               -> Zero.(x.attrs)
   | One x                -> One.(x.attrs)
   | NegOne x             -> NegOne.(x.attrs)
@@ -545,6 +552,7 @@ let set_attrs sym a =
   | Tensor x             -> x.attrs <- a
   | Variable x           -> x.attrs <- a
   | RandomUniform x      -> x.attrs <- a
+  | RandomNormal x       -> x.attrs <- a
   | Zero x               -> x.attrs <- a
   | One x                -> x.attrs <- a
   | NegOne x             -> x.attrs <- a
@@ -611,6 +619,7 @@ let dtype = function
     t.dtype
   | Variable x      -> Variable.(x.dtype)
   | RandomUniform x -> RandomUniform.(x.dtype)
+  | RandomNormal x  -> RandomNormal.(x.dtype)
   | _               -> failwith "owl_symboic_symobl.dtype: not var or constant op"
 
 
@@ -620,6 +629,7 @@ let shape = function
     t.shape
   | Variable x      -> Variable.(x.shape)
   | RandomUniform x -> RandomUniform.(x.shape)
+  | RandomNormal x  -> RandomNormal.(x.shape)
   | _               -> [||]
 
 

@@ -33,6 +33,15 @@ val random_uniform
   -> int array
   -> symbolic_node
 
+val random_normal
+  :  ?dtype:Owl_symbolic_types.number_type
+  -> ?seed:float option
+  -> ?mean:float
+  -> ?stddev:float
+  -> ?name:string
+  -> int array
+  -> symbolic_node
+
 val equal : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
 
 val sin : ?name:string -> symbolic_node -> symbolic_node

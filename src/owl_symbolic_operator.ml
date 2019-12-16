@@ -51,6 +51,13 @@ let random_uniform ?dtype ?seed ?low ?high ?name shape =
   make_node (Owl_symbolic_symbol.RandomUniform s) [||]
 
 
+let random_normal ?dtype ?seed ?mean ?stddev ?name shape =
+  let s =
+    Owl_symbolic_ops_generator.RandomNormal.create ?dtype ?seed ?mean ?stddev ?name shape
+  in
+  make_node (Owl_symbolic_symbol.RandomNormal s) [||]
+
+
 (** Logical *)
 
 let equal ?name lhs rhs =

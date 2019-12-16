@@ -11,6 +11,7 @@ type t =
   | Tensor of Owl_symbolic_ops_generator.Tensor.t
   | Variable of Owl_symbolic_ops_generator.Variable.t
   | RandomUniform of Owl_symbolic_ops_generator.RandomUniform.t
+  | RandomNormal of Owl_symbolic_ops_generator.RandomNormal.t
   | Zero of Owl_symbolic_ops_generator.Zero.t
   | One of Owl_symbolic_ops_generator.One.t
   | NegOne of Owl_symbolic_ops_generator.NegOne.t

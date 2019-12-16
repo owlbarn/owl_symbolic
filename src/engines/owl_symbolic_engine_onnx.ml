@@ -321,6 +321,9 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | RandomUniform _      ->
           let dt = Owl_symbolic_symbol.dtype sym in
           type_check_pattern01 [| dt |] _types_constraint00 name
+        | RandomNormal _       ->
+          let dt = Owl_symbolic_symbol.dtype sym in
+          type_check_pattern01 [| dt |] _types_constraint00 name
         | Sin _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Cos _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Sqrt _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name

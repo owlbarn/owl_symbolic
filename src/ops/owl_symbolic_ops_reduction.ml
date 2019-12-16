@@ -4,10 +4,8 @@
  *)
 
 (** Implemented: ReduceMax, ReduceSum,  ReduceMin, ReduceSumSquare,
-  * ReduceMean, ReduceProd, 
+  * ReduceMean, ReduceProd, ReduceLogSum, ReduceLogSumExp, ReduceL1, ReduceL2
   *)
-
-(** ReduceLogSum, ReduceLogSumExp, ReduceL1, ReduceL2 *)
 
 open Owl_symbolic_types
 
