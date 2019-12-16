@@ -4,10 +4,10 @@
  *)
 
 (** Implemented: Reshape, Concat, Split, Identity, Pad, Cast, Squeeze, Tile 
-  * 
+  * Shape, Size, 
   *)
 
-(** Shape, Size, Slice, Transpose, 
+(** Size, Slice, Transpose, 
  ScatterND, ScatterElements, Gather, GatherElements, UnSqueeze, 
  SpaceToDepth, DepthToSpace, Resize, Compress, 
  OneHot, IsNaN, IsInf, Where, NonZero, ReverseSequence, Unique, GatherND
@@ -189,6 +189,23 @@ module Shape = struct
     }
 
   let op_type = "Shape"
+
+  let create ?name x_name =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| x_name |] in
+    { name; input; attrs; out_shape = [| None |] }
+end
+
+module Size = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "Size"
 
   let create ?name x_name =
     let attrs = [||] in

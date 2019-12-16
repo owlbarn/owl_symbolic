@@ -82,6 +82,7 @@ type t =
   | Squeeze of Squeeze.t
   | Tile of Tile.t
   | Shape of Shape.t
+  | Size of Size.t
   (* NN *)
   | Conv of Conv.t
   | MaxPool of MaxPool.t
@@ -153,6 +154,7 @@ let name = function
   | Squeeze x            -> Squeeze.(x.name)
   | Tile x               -> Tile.(x.name)
   | Shape x              -> Shape.(x.name)
+  | Size x               -> Size.(x.name)
   | Conv x               -> Conv.(x.name)
   | MaxPool x            -> MaxPool.(x.name)
   | BatchNormalization x -> BatchNormalization.(x.name)
@@ -223,6 +225,7 @@ let op_type = function
   | Squeeze _            -> Squeeze.op_type
   | Tile _               -> Tile.op_type
   | Shape _              -> Shape.op_type
+  | Size _               -> Size.op_type
   | Conv _               -> Conv.op_type
   | MaxPool _            -> MaxPool.op_type
   | BatchNormalization _ -> BatchNormalization.op_type
@@ -293,6 +296,7 @@ let input = function
   | Squeeze x            -> Squeeze.(x.input)
   | Tile x               -> Tile.(x.input)
   | Shape x              -> Shape.(x.input)
+  | Size x               -> Size.(x.input)
   | Conv x               -> Conv.(x.input)
   | MaxPool x            -> MaxPool.(x.input)
   | BatchNormalization x -> BatchNormalization.(x.input)
@@ -353,6 +357,7 @@ let set_input sym inputs =
   | Squeeze x            -> x.input <- inputs
   | Tile x               -> x.input <- inputs
   | Shape x              -> x.input <- inputs
+  | Size x               -> x.input <- inputs
   | Conv x               -> x.input <- inputs
   | MaxPool x            -> x.input <- inputs
   | BatchNormalization x -> x.input <- inputs
@@ -422,6 +427,7 @@ let out_shape = function
   | Squeeze x            -> Squeeze.(x.out_shape)
   | Tile x               -> Tile.(x.out_shape)
   | Shape x              -> Shape.(x.out_shape)
+  | Size x               -> Size.(x.out_shape)
   | Conv x               -> Conv.(x.out_shape)
   | MaxPool x            -> MaxPool.(x.out_shape)
   | BatchNormalization x -> BatchNormalization.(x.out_shape)

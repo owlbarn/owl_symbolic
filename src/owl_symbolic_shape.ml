@@ -145,6 +145,12 @@ let infer_shape_32 input_shapes =
   | None   -> [| None |]
 
 
+let infer_shape_33 input_shapes =
+  match input_shapes.(0).(0) with
+  | Some _ -> [| Some [||] |]
+  | None   -> [| None |]
+
+
 let infer_shape_gemm (x : Owl_symbolic_ops_math.Gemm.t) input_shapes =
   let l = Array.length input_shapes in
   assert (l = 2 || l = 3);
@@ -332,6 +338,7 @@ let infer_shape input_shapes sym =
   | Squeeze x            -> infer_shape_squeeze input_shapes x.axes
   | Tile x               -> infer_shape_05 input_shapes x.repeats
   | Shape _              -> infer_shape_32 input_shapes
+  | Size _               -> infer_shape_33 input_shapes
   | Conv x               -> infer_shape_conv x input_shapes
   | MaxPool x            -> infer_shape_maxpool x input_shapes
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes

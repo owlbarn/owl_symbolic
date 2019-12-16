@@ -381,6 +381,9 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Shape _              ->
           type_check_pattern01 ptypes.(0) _types_constraint03 name |> ignore;
           [| SNT_Int64 |]
+        | Size _               ->
+          type_check_pattern01 ptypes.(0) _types_constraint03 name |> ignore;
+          [| SNT_Int64 |]
         | MaxPool _            ->
           let t1 = type_check_pattern01 ptypes.(0) _types_constraint00 name in
           let t2 = SNT_Int64 in
