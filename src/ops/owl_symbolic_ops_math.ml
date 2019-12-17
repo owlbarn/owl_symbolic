@@ -7,10 +7,10 @@
 Acosh, Atanh, Add, Sub, Mul, Div, Neg, Abs, Floor, Ceil, Sqrt, Relu, Exp, Log,
 Pow, Round, Gemm, MatMul, Max, Min, Sum, Mod *)
 
-(* Reciprocal, LeakyRelu, ThreasholdedRelu, Selu, Elu, 
-PRelu, Sigmoid, HardSigmoid, Mean, Clip, 
-Softmax, LogSoftmax, Hardmax, Softsign, Softplus, 
-Expand, Sign, Erf, QLinearMatMul, MatMulInteger, Cumsum, Det 
+(* Sigmoid, Mean, Clip, Softmax, Sign,  Cumsum, Det
+
+Reciprocal, LeakyRelu, ThreasholdedRelu, Selu, Elu, PRelu, HardSigmoid,
+LogSoftmax, Hardmax, Softsign, Softplus, Expand, Erf, QLinearMatMul, MatMulInteger,
 *)
 
 open Owl_symbolic_types

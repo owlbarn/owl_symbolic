@@ -167,6 +167,16 @@ let infer_shape_34 input_shapes =
   | _, _, _                   -> [| None |]
 
 
+let infer_shape_35 input_shapes =
+  match input_shapes.(0).(0) with
+  | Some s ->
+    let l = Array.length s in
+    assert (l >= 3);
+    let axes = Owl_utils_array.range 2 (l - 1) in
+    [| Some Owl_utils_infer_shape.(reduce s axes) |]
+  | None   -> [| None |]
+
+
 let infer_shape_gemm (x : Owl_symbolic_ops_math.Gemm.t) input_shapes =
   let l = Array.length input_shapes in
   assert (l = 2 || l = 3);
@@ -508,6 +518,8 @@ let infer_shape input_shapes sym =
   | Dropout _            ->
     let t = infer_shape_01 input_shapes in
     [| t.(0); t.(0) |]
+  | GlobalAveragePool _  -> infer_shape_35 input_shapes
+  | GlobalMaxPool _      -> infer_shape_35 input_shapes
   | LSTM _               -> infer_shape_lstm input_shapes
   | SequenceEmpty _      -> [||]
   | _                    -> [| None |]

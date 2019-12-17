@@ -442,6 +442,8 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Dropout _            ->
           let t = type_check_pattern01 ptypes.(0) _types_constraint00 name in
           [| t.(0); SNT_Bool |]
+        | GlobalAveragePool _  -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | GlobalMaxPool _      -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | LSTM _               ->
           (* TODO: the optional sequence_len has int32 type *)
           let t = type_check_pattern02 ptypes _types_constraint00 name in
