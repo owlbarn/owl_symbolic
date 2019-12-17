@@ -560,6 +560,20 @@ let scatter_nd ?name data indices updates =
   make_node (Owl_symbolic_symbol.ScatterND s) [| data; indices; updates |]
 
 
+let gather_elem ?name ?axis data indices =
+  let datan = Owl_symbolic_graph.name data in
+  let indicesn = Owl_symbolic_graph.name indices in
+  let s = Owl_symbolic_ops_tensor.GatherElements.create ?name ?axis datan indicesn in
+  make_node (Owl_symbolic_symbol.GatherElements s) [| data; indices |]
+
+
+let gather_nd ?name data indices =
+  let datan = Owl_symbolic_graph.name data in
+  let indicesn = Owl_symbolic_graph.name indices in
+  let s = Owl_symbolic_ops_tensor.GatherND.create ?name datan indicesn in
+  make_node (Owl_symbolic_symbol.GatherND s) [| data; indices |]
+
+
 (** Neural Network *)
 
 let conv ?name ?dim ?padding ?strides ?dilations ?bias input kernel =

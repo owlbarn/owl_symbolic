@@ -423,6 +423,12 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | ScatterND _          ->
           type_check_pattern01 ptypes.(1) [| SNT_Int32; SNT_Int64 |] name |> ignore;
           type_check_pattern02 [| ptypes.(0); ptypes.(2) |] _types_constraint03 name
+        | GatherElements _     ->
+          type_check_pattern01 ptypes.(1) [| SNT_Int32; SNT_Int64 |] name |> ignore;
+          type_check_pattern01 ptypes.(0) _types_constraint03 name
+        | GatherND _           ->
+          type_check_pattern01 ptypes.(1) [| SNT_Int64 |] name |> ignore;
+          type_check_pattern01 ptypes.(0) _types_constraint03 name
         | Conv _               -> type_check_pattern02 ptypes _types_constraint00 name
         | MaxPool _            ->
           let t1 = type_check_pattern01 ptypes.(0) _types_constraint00 name in

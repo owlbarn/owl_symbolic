@@ -87,6 +87,8 @@ type t =
   | Where of Owl_symbolic_ops_tensor.Where.t
   | ScatterElements of Owl_symbolic_ops_tensor.ScatterElements.t
   | ScatterND of Owl_symbolic_ops_tensor.ScatterND.t
+  | GatherElements of Owl_symbolic_ops_tensor.GatherElements.t
+  | GatherND of Owl_symbolic_ops_tensor.GatherND.t
   | Conv of Owl_symbolic_ops_nn.Conv.t
   | MaxPool of Owl_symbolic_ops_nn.MaxPool.t
   | BatchNormalization of Owl_symbolic_ops_nn.BatchNormalization.t

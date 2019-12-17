@@ -196,6 +196,10 @@ val scatter_elem : ?name:string -> ?axis:int -> symbol -> symbol -> symbol -> sy
 
 val scatter_nd : ?name:string -> symbol -> symbol -> symbol -> symbol
 
+val gather_elem : ?name:string -> ?axis:int -> symbol -> symbol -> symbol
+
+val gather_nd : ?name:string -> symbol -> symbol -> symbol
+
 val conv
   :  ?name:string
   -> ?dim:int

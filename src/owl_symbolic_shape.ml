@@ -356,6 +356,7 @@ let infer_shape_scatter_elements input_shapes =
   assert (Array.length input_shapes = 3);
   match input_shapes.(0).(0), input_shapes.(1).(0), input_shapes.(2).(0) with
   | Some data_shp, Some indices_shp, Some updates_shp ->
+    assert (Array.length data_shp >= 1);
     assert (Array.(length data_shp = length indices_shp));
     assert (data_shp = updates_shp);
     [| Some data_shp |]
@@ -369,9 +370,20 @@ let infer_shape_scatter_nd input_shapes =
     let r = Array.length data_shp in
     let q = Array.length indices_shp in
     let p = Array.length updates_shp in
+    assert (r >= 1);
     assert (p = r + q - 1 - indices_shp.(q - 1));
     [| Some data_shp |]
   | _, _, _ -> [| None |]
+
+
+let infer_shape_gather_elements input_shapes =
+  assert (Array.length input_shapes = 2);
+  match input_shapes.(0).(0), input_shapes.(1).(0) with
+  | Some data_shp, Some indices_shp ->
+    assert (Array.length data_shp >= 1);
+    assert (Array.(length data_shp = length indices_shp));
+    [| Some indices_shp |]
+  | _, _ -> [| None |]
 
 
 (** Main entry *)
@@ -465,6 +477,8 @@ let infer_shape input_shapes sym =
   | Where _              -> infer_shape_34 input_shapes
   | ScatterElements _    -> infer_shape_scatter_elements input_shapes
   | ScatterND _          -> infer_shape_scatter_nd input_shapes
+  | GatherElements _     -> infer_shape_gather_elements input_shapes
+  | GatherND _           -> [| None |]
   | Conv x               -> infer_shape_conv input_shapes x
   | MaxPool x            -> infer_shape_maxpool input_shapes x
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes

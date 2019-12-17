@@ -5,11 +5,10 @@
 
 (** Implemented: Reshape, Concat, Split, Identity, Pad, Cast, Squeeze, Tile 
   * Shape, Size, Transpose, Slice, SpaceToDepth, IsNaN, NonZero, Where
-  * ScatterElements，ScatterND
+  * ScatterElements，ScatterND, GatherElements, GatherND, 
   *)
 
-(** IsInf, GatherElements, GatherND, 
-  * UnSqueeze,DepthToSpace, Resize, Compress, Unique, OneHot, ReverseSequence,
+(** IsInf, UnSqueeze, DepthToSpace, Resize, Compress, Unique, OneHot, ReverseSequence,
   * Gather, Scatter(deprecated), Upsample(deprecated),
   *)
 
@@ -353,5 +352,40 @@ module ScatterND = struct
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| data_name; indices_name; updates_name |] in
+    { name; input; attrs; out_shape = [| None |] }
+end
+
+module GatherElements = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable axis : int
+    }
+
+  let op_type = "GatherElements"
+
+  let create ?name ?(axis = 0) data_name indices_name =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| data_name; indices_name |] in
+    { name; input; attrs; out_shape = [| None |]; axis }
+end
+
+module GatherND = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "GatherND"
+
+  let create ?name data_name indices_name =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| data_name; indices_name |] in
     { name; input; attrs; out_shape = [| None |] }
 end
