@@ -344,6 +344,36 @@ let reduce_l2 ?keepdims ?name x axes =
   make_node (Owl_symbolic_symbol.ReduceL2 s) [| x |]
 
 
+(** Logical *)
+
+let and_ ?name x y =
+  let xn = Owl_symbolic_graph.name x in
+  let yn = Owl_symbolic_graph.name y in
+  let s = Owl_symbolic_ops_logical.And.create ?name xn yn in
+  make_node (Owl_symbolic_symbol.And s) [| x; y |]
+
+
+let or_ ?name x y =
+  let xn = Owl_symbolic_graph.name x in
+  let yn = Owl_symbolic_graph.name y in
+  let s = Owl_symbolic_ops_logical.And.create ?name xn yn in
+  make_node (Owl_symbolic_symbol.And s) [| x; y |]
+
+
+let not_ ?name x y =
+  let xn = Owl_symbolic_graph.name x in
+  let yn = Owl_symbolic_graph.name y in
+  let s = Owl_symbolic_ops_logical.And.create ?name xn yn in
+  make_node (Owl_symbolic_symbol.And s) [| x; y |]
+
+
+let xor ?name x y =
+  let xn = Owl_symbolic_graph.name x in
+  let yn = Owl_symbolic_graph.name y in
+  let s = Owl_symbolic_ops_logical.And.create ?name xn yn in
+  make_node (Owl_symbolic_symbol.And s) [| x; y |]
+
+
 (** Tensor *)
 
 let reshape ?name data shape =

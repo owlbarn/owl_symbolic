@@ -61,6 +61,12 @@ type t =
   | Max of Max.t
   | Min of Min.t
   | Sum of Sum.t
+  (* Logical ops *)
+  | And of And.t
+  | Or of Or.t
+  | Not of Not.t
+  | Xor of Xor.t
+  | Equal of Equal.t
   (* Reduction *)
   | ReduceSum of ReduceSum.t
   | ReduceMax of ReduceMax.t
@@ -94,8 +100,6 @@ type t =
   | MaxPool of MaxPool.t
   | BatchNormalization of BatchNormalization.t
   | Dropout of Dropout.t
-  (* Logical ops *)
-  | Equal of Equal.t
   (* Sequence *)
   | SequenceEmpty of SequenceEmpty.t
 
@@ -145,6 +149,8 @@ let name = function
   | Max x                -> Max.(x.name)
   | Min x                -> Min.(x.name)
   | Sum x                -> Sum.(x.name)
+  | And x                -> And.(x.name)
+  | Equal x              -> Equal.(x.name)
   | ReduceSum x          -> ReduceSum.(x.name)
   | ReduceMax x          -> ReduceMax.(x.name)
   | ReduceMin x          -> ReduceMin.(x.name)
@@ -171,7 +177,6 @@ let name = function
   | MaxPool x            -> MaxPool.(x.name)
   | BatchNormalization x -> BatchNormalization.(x.name)
   | Dropout x            -> Dropout.(x.name)
-  | Equal x              -> Equal.(x.name)
   | SequenceEmpty x      -> SequenceEmpty.(x.name)
   | _                    -> failwith "owl_symbolic_symbol.name"
 
@@ -222,6 +227,8 @@ let op_type = function
   | Max _                -> Max.op_type
   | Min _                -> Min.op_type
   | Sum _                -> Sum.op_type
+  | And _                -> And.op_type
+  | Equal _              -> Equal.op_type
   | ReduceSum _          -> ReduceSum.op_type
   | ReduceMax _          -> ReduceMax.op_type
   | ReduceMin _          -> ReduceMin.op_type
@@ -248,7 +255,6 @@ let op_type = function
   | MaxPool _            -> MaxPool.op_type
   | BatchNormalization _ -> BatchNormalization.op_type
   | Dropout _            -> Dropout.op_type
-  | Equal _              -> Equal.op_type
   | SequenceEmpty _      -> SequenceEmpty.op_type
   | _                    -> failwith "owl_symbolic_symbol.op_type"
 
@@ -299,6 +305,8 @@ let input = function
   | Max x                -> Max.(x.input)
   | Min x                -> Min.(x.input)
   | Sum x                -> Sum.(x.input)
+  | And x                -> And.(x.input)
+  | Equal x              -> Equal.(x.input)
   | ReduceSum x          -> ReduceSum.(x.input)
   | ReduceMax x          -> ReduceMax.(x.input)
   | ReduceMin x          -> ReduceMin.(x.input)
@@ -325,7 +333,6 @@ let input = function
   | MaxPool x            -> MaxPool.(x.input)
   | BatchNormalization x -> BatchNormalization.(x.input)
   | Dropout x            -> Dropout.(x.input)
-  | Equal x              -> Equal.(x.input)
   | SequenceEmpty _      -> [||]
   | _                    -> failwith "owl_symbolic_symbol.input"
 
@@ -366,6 +373,8 @@ let set_input sym inputs =
   | Max x                -> x.input <- inputs
   | Min x                -> x.input <- inputs
   | Sum x                -> x.input <- inputs
+  | And x                -> x.input <- inputs
+  | Equal x              -> x.input <- inputs
   | ReduceSum x          -> x.input <- inputs
   | ReduceMax x          -> x.input <- inputs
   | ReduceMin x          -> x.input <- inputs
@@ -392,7 +401,6 @@ let set_input sym inputs =
   | MaxPool x            -> x.input <- inputs
   | BatchNormalization x -> x.input <- inputs
   | Dropout x            -> x.input <- inputs
-  | Equal x              -> x.input <- inputs
   | _                    -> failwith "owl_symbolic_symbol.set_input"
 
 
@@ -442,6 +450,8 @@ let out_shape = function
   | Max x                -> Max.(x.out_shape)
   | Min x                -> Min.(x.out_shape)
   | Sum x                -> Sum.(x.out_shape)
+  | And x                -> And.(x.out_shape)
+  | Equal x              -> Equal.(x.out_shape)
   | ReduceSum x          -> ReduceSum.(x.out_shape)
   | ReduceMax x          -> ReduceMax.(x.out_shape)
   | ReduceMin x          -> ReduceMin.(x.out_shape)
@@ -512,6 +522,8 @@ let set_out_shape sym shapes =
   | Max x                -> x.out_shape <- shapes
   | Min x                -> x.out_shape <- shapes
   | Sum x                -> x.out_shape <- shapes
+  | And x                -> x.out_shape <- shapes
+  | Equal x              -> x.out_shape <- shapes
   | ReduceSum x          -> x.out_shape <- shapes
   | ReduceMax x          -> x.out_shape <- shapes
   | ReduceMin x          -> x.out_shape <- shapes
@@ -537,7 +549,6 @@ let set_out_shape sym shapes =
   | Conv x               -> x.out_shape <- shapes
   | MaxPool x            -> x.out_shape <- shapes
   | BatchNormalization x -> x.out_shape <- shapes
-  | Equal x              -> x.out_shape <- shapes
   | Dropout x            -> x.out_shape <- shapes
   | SequenceEmpty x      -> x.out_shape <- shapes
   | _                    -> failwith "set_out_shape: unsupported op."
@@ -577,6 +588,8 @@ let attrs = function
   | Max x                -> Max.(x.attrs)
   | Min x                -> Min.(x.attrs)
   | Sum x                -> Sum.(x.attrs)
+  | And x                -> And.(x.attrs)
+  | Equal x              -> Equal.(x.attrs)
   | ReduceSum x          -> ReduceSum.(x.attrs)
   | ReduceMax x          -> ReduceMax.(x.attrs)
   | ReduceMin x          -> ReduceMin.(x.attrs)
@@ -603,7 +616,6 @@ let attrs = function
   | MaxPool x            -> MaxPool.(x.attrs)
   | BatchNormalization x -> BatchNormalization.(x.attrs)
   | Dropout x            -> Dropout.(x.attrs)
-  | Equal x              -> Equal.(x.attrs)
   | SequenceEmpty x      -> SequenceEmpty.(x.attrs)
   | _                    -> [||]
 
@@ -641,6 +653,8 @@ let set_attrs sym a =
   | Max x                -> x.attrs <- a
   | Min x                -> x.attrs <- a
   | Sum x                -> x.attrs <- a
+  | And x                -> x.attrs <- a
+  | Equal x              -> x.attrs <- a
   | ReduceSum x          -> x.attrs <- a
   | ReduceMax x          -> x.attrs <- a
   | ReduceMin x          -> x.attrs <- a
@@ -667,7 +681,6 @@ let set_attrs sym a =
   | MaxPool x            -> x.attrs <- a
   | BatchNormalization x -> x.attrs <- a
   | Dropout x            -> x.attrs <- a
-  | Equal x              -> x.attrs <- a
   | SequenceEmpty x      -> x.attrs <- a
   | _                    -> ()
 

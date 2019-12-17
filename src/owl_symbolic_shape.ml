@@ -439,5 +439,9 @@ let infer_shape input_shapes sym =
   | Dropout _            ->
     let t = infer_shape_01 input_shapes in
     [| t.(0); t.(0) |]
+  | And _                -> infer_shape_03 input_shapes
+  | Or _                 -> infer_shape_03 input_shapes
+  | Not _                -> infer_shape_03 input_shapes
+  | Xor _                -> infer_shape_03 input_shapes
   | SequenceEmpty _      -> [||]
   | _                    -> [| None |]

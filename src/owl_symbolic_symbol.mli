@@ -50,6 +50,11 @@ type t =
   | Max of Owl_symbolic_ops_math.Max.t
   | Min of Owl_symbolic_ops_math.Min.t
   | Sum of Owl_symbolic_ops_math.Sum.t
+  | And of Owl_symbolic_ops_logical.And.t
+  | Or of Owl_symbolic_ops_logical.Or.t
+  | Not of Owl_symbolic_ops_logical.Not.t
+  | Xor of Owl_symbolic_ops_logical.Xor.t
+  | Equal of Owl_symbolic_ops_logical.Equal.t
   | ReduceSum of Owl_symbolic_ops_reduction.ReduceSum.t
   | ReduceMax of Owl_symbolic_ops_reduction.ReduceMax.t
   | ReduceMin of Owl_symbolic_ops_reduction.ReduceMin.t
@@ -80,7 +85,6 @@ type t =
   | MaxPool of Owl_symbolic_ops_nn.MaxPool.t
   | BatchNormalization of Owl_symbolic_ops_nn.BatchNormalization.t
   | Dropout of Owl_symbolic_ops_nn.Dropout.t
-  | Equal of Owl_symbolic_ops_logical.Equal.t
   | SequenceEmpty of Owl_symbolic_ops_sequence.SequenceEmpty.t
 
 val name : t -> string

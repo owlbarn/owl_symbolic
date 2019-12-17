@@ -119,6 +119,14 @@ val min : ?name:string -> symbolic_node array -> symbolic_node
 
 val sum : ?name:string -> symbolic_node array -> symbolic_node
 
+val and_ : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
+
+val or_ : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
+
+val not_ : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
+
+val xor : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
+
 val reduce_sum
   :  ?keepdims:bool
   -> ?name:string
