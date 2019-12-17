@@ -3,7 +3,7 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-(** And, Or, Xor, Not, Greater, Less, Equal, BitShift  *)
+(** Implemented: And, Or, Xor, Not, Greater, Less, Equal, BitShift *)
 
 open Owl_symbolic_types
 
@@ -124,6 +124,25 @@ module Equal = struct
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| x_name; y_name |] in
     { name; input; attrs; out_shape = [| None |] }
+end
+
+module BitShift = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable direction : string
+    }
+
+  let op_type = "BitShift"
+
+  let create ?name ?(rightshift = true) x_name y_name =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| x_name; y_name |] in
+    let direction = if rightshift then "RIGHT" else "LEFT" in
+    { name; input; attrs; out_shape = [| None |]; direction }
 end
 
 (* TODO: move to proper op classification *)

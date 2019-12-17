@@ -131,6 +131,8 @@ val less : ?name:string -> symbol -> symbol -> symbol
 
 val equal : ?name:string -> symbol -> symbol -> symbol
 
+val bitshift : ?name:string -> ?rightshift:bool -> symbol -> symbol -> symbol
+
 val equal_to : ?name:string -> symbol -> symbol -> symbol
 
 val reduce_sum : ?keepdims:bool -> ?name:string -> symbol -> int array -> symbol

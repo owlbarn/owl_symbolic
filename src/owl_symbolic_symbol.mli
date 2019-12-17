@@ -57,6 +57,7 @@ type t =
   | Greater of Owl_symbolic_ops_logical.Greater.t
   | Less of Owl_symbolic_ops_logical.Less.t
   | Equal of Owl_symbolic_ops_logical.Equal.t
+  | BitShift of Owl_symbolic_ops_logical.BitShift.t
   | EqualTo of Owl_symbolic_ops_logical.EqualTo.t
   | ReduceSum of Owl_symbolic_ops_reduction.ReduceSum.t
   | ReduceMax of Owl_symbolic_ops_reduction.ReduceMax.t

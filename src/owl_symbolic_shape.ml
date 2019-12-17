@@ -412,6 +412,7 @@ let infer_shape input_shapes sym =
   | Greater _            -> infer_shape_03 input_shapes
   | Less _               -> infer_shape_03 input_shapes
   | Equal _              -> infer_shape_03 input_shapes
+  | BitShift _           -> infer_shape_03 input_shapes
   | ReduceSum x          -> infer_shape_10 input_shapes x.axes x.keepdims
   | ReduceMax x          -> infer_shape_10 input_shapes x.axes x.keepdims
   | ReduceMin x          -> infer_shape_10 input_shapes x.axes x.keepdims

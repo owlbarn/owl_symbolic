@@ -386,6 +386,13 @@ let equal ?name x y =
   make_node (Owl_symbolic_symbol.Equal s) [| x; y |]
 
 
+let bitshift ?name ?rightshift x y =
+  let xn = Owl_symbolic_graph.name x in
+  let yn = Owl_symbolic_graph.name y in
+  let s = Owl_symbolic_ops_logical.BitShift.create ?name ?rightshift xn yn in
+  make_node (Owl_symbolic_symbol.BitShift s) [| x; y |]
+
+
 (* TODO: the rules for this op are unclear *)
 let equal_to ?name lhs rhs =
   let lhs_name = Owl_symbolic_graph.name lhs in

@@ -69,6 +69,7 @@ type t =
   | Greater of Greater.t
   | Less of Less.t
   | Equal of Equal.t
+  | BitShift of BitShift.t
   | EqualTo of EqualTo.t
   (* Reduction *)
   | ReduceSum of ReduceSum.t
@@ -159,6 +160,7 @@ let name = function
   | Greater x            -> Greater.(x.name)
   | Less x               -> Less.(x.name)
   | Equal x              -> Equal.(x.name)
+  | BitShift x           -> BitShift.(x.name)
   | EqualTo x            -> EqualTo.(x.name)
   | ReduceSum x          -> ReduceSum.(x.name)
   | ReduceMax x          -> ReduceMax.(x.name)
@@ -243,6 +245,7 @@ let op_type = function
   | Greater _            -> Greater.op_type
   | Less _               -> Less.op_type
   | Equal _              -> Equal.op_type
+  | BitShift _           -> BitShift.op_type
   | EqualTo _            -> EqualTo.op_type
   | ReduceSum _          -> ReduceSum.op_type
   | ReduceMax _          -> ReduceMax.op_type
@@ -327,6 +330,7 @@ let input = function
   | Greater x            -> Greater.(x.input)
   | Less x               -> Less.(x.input)
   | Equal x              -> Equal.(x.input)
+  | BitShift x           -> BitShift.(x.input)
   | EqualTo x            -> EqualTo.(x.input)
   | ReduceSum x          -> ReduceSum.(x.input)
   | ReduceMax x          -> ReduceMax.(x.input)
@@ -401,6 +405,7 @@ let set_input sym inputs =
   | Greater x            -> x.input <- inputs
   | Less x               -> x.input <- inputs
   | Equal x              -> x.input <- inputs
+  | BitShift x           -> x.input <- inputs
   | EqualTo x            -> x.input <- inputs
   | ReduceSum x          -> x.input <- inputs
   | ReduceMax x          -> x.input <- inputs
@@ -484,6 +489,7 @@ let out_shape = function
   | Less x               -> Less.(x.out_shape)
   | And x                -> And.(x.out_shape)
   | Equal x              -> Equal.(x.out_shape)
+  | BitShift x           -> BitShift.(x.out_shape)
   | EqualTo x            -> EqualTo.(x.out_shape)
   | ReduceSum x          -> ReduceSum.(x.out_shape)
   | ReduceMax x          -> ReduceMax.(x.out_shape)
@@ -562,6 +568,7 @@ let set_out_shape sym shapes =
   | Greater x            -> x.out_shape <- shapes
   | Less x               -> x.out_shape <- shapes
   | Equal x              -> x.out_shape <- shapes
+  | BitShift x           -> x.out_shape <- shapes
   | EqualTo x            -> x.out_shape <- shapes
   | ReduceSum x          -> x.out_shape <- shapes
   | ReduceMax x          -> x.out_shape <- shapes
@@ -634,6 +641,7 @@ let attrs = function
   | Greater x            -> Greater.(x.attrs)
   | Less x               -> Less.(x.attrs)
   | Equal x              -> Equal.(x.attrs)
+  | BitShift x           -> BitShift.(x.attrs)
   | EqualTo x            -> EqualTo.(x.attrs)
   | ReduceSum x          -> ReduceSum.(x.attrs)
   | ReduceMax x          -> ReduceMax.(x.attrs)
@@ -705,6 +713,7 @@ let set_attrs sym a =
   | Greater x            -> x.attrs <- a
   | Less x               -> x.attrs <- a
   | Equal x              -> x.attrs <- a
+  | BitShift x           -> x.attrs <- a
   | EqualTo x            -> x.attrs <- a
   | ReduceSum x          -> x.attrs <- a
   | ReduceMax x          -> x.attrs <- a

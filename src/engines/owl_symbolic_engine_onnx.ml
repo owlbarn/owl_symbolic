@@ -268,6 +268,8 @@ let _types_constraint05 =
   |]
 
 
+let _types_constraint06 = [| SNT_Uint8; SNT_Uint16; SNT_Uint32; SNT_Uint64 |]
+
 let type_check_pattern00 sym = [| Owl_symbolic_symbol.dtype sym |]
 
 let type_check_pattern01 target_type type_constraint name =
@@ -356,6 +358,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Equal _              ->
           type_check_pattern02 ptypes _types_constraint04 name |> ignore;
           [| SNT_Bool |]
+        | BitShift _           -> type_check_pattern02 ptypes _types_constraint06 name
         | ReduceSum _          -> type_check_pattern01 ptypes.(0) _types_constraint02 name
         | ReduceMax _          -> type_check_pattern01 ptypes.(0) _types_constraint02 name
         | ReduceMin _          -> type_check_pattern01 ptypes.(0) _types_constraint02 name
@@ -604,6 +607,14 @@ let build_onnx_attrs_gemm (x : Owl_symbolic_ops_math.Gemm.t) =
   [ attr_alpha; attr_beta; attr_transA; attr_transB ]
 
 
+let build_onnx_attrs_bitshift direction =
+  let name_dir = Some "direction" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.String in
+  let s = Some (Bytes.of_string direction) in
+  let attr_dir = PT.default_attribute_proto ~name:name_dir ~type_ ~s () in
+  [ attr_dir ]
+
+
 let build_onnx_attrs_reduce axes keepdims =
   let name_axes = Some "axes" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
@@ -772,6 +783,7 @@ let build_onnx_attrs sym =
     | S.RandomNormal x    -> build_onnx_attrs_randomnormal x
     | S.Mod x             -> build_onnx_attrs_fmod x
     | S.Gemm x            -> build_onnx_attrs_gemm x
+    | S.BitShift x        -> build_onnx_attrs_bitshift x.direction
     | S.ReduceSum x       -> build_onnx_attrs_reduce x.axes x.keepdims
     | S.ReduceMax x       -> build_onnx_attrs_reduce x.axes x.keepdims
     | S.ReduceMin x       -> build_onnx_attrs_reduce x.axes x.keepdims
