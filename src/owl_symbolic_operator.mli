@@ -231,6 +231,20 @@ val batch_norm
   -> symbol
   -> symbol * symbol * symbol * symbol * symbol
 
+val lstm
+  :  ?name:string
+  -> ?alpha:float array
+  -> ?beta:float array
+  -> ?clip:float
+  -> ?activations:Owl_symbolic_types.activation array
+  -> ?direction:string
+  -> ?input_forget:int
+  -> int
+  -> symbol
+  -> symbol
+  -> symbol
+  -> symbol * symbol * symbol
+
 val dropout : ?name:string -> ?ratio:float -> symbol -> symbol * symbol
 
 val seq_empty : ?name:string -> ?dtype:Owl_symbolic_types.number_type -> unit -> symbol

@@ -9,6 +9,8 @@ module S = Owl_symbolic_symbol
 
 type t = Onnx_types.model_proto
 
+(* TODO: refactoring-- simplify the building of attributions *)
+
 (** Mapping functions *)
 
 let map_elt_type_to_int32 typ =
@@ -440,6 +442,10 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Dropout _            ->
           let t = type_check_pattern01 ptypes.(0) _types_constraint00 name in
           [| t.(0); SNT_Bool |]
+        | LSTM _               ->
+          (* TODO: the optional sequence_len has int32 type *)
+          let t = type_check_pattern02 ptypes _types_constraint00 name in
+          [| t.(0); t.(0); t.(0) |]
         | SequenceEmpty s      -> [| SNT_SEQ s.dtype |]
         | _                    -> [| SNT_Noop |]
       in
@@ -783,6 +789,60 @@ let build_onnx_attrs_dropout (x : Owl_symbolic_ops_nn.Dropout.t) =
   [ attr_axis ]
 
 
+let build_onnx_attrs_lstm (x : Owl_symbolic_ops_rnn.LSTM.t) =
+  let name_hidden = Some "hidden_size" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Int in
+  let i = Some (Int64.of_int x.hidden_size) in
+  let attr_hidden = PT.default_attribute_proto ~name:name_hidden ~type_ ~i () in
+  let name_activation = Some "activations" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Strings in
+  let strings = Array.map Owl_symbolic_types.activation_to_string x.activations in
+  let strings = Array.map Bytes.of_string strings |> Array.to_list in
+  let attr_activation =
+    PT.default_attribute_proto ~name:name_activation ~type_ ~strings ()
+  in
+  let name_direction = Some "direction" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.String in
+  let s = Some (Bytes.of_string x.direction) in
+  let attr_direction = PT.default_attribute_proto ~name:name_direction ~type_ ~s () in
+  let name_forget = Some "input_forget" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Int in
+  let i = Some (Int64.of_int x.input_forget) in
+  let attr_forget = PT.default_attribute_proto ~name:name_forget ~type_ ~i () in
+  let attrs = [ attr_hidden; attr_activation; attr_direction; attr_forget ] in
+  let attrs =
+    match x.activation_alpha with
+    | Some a ->
+      let name_alpha = Some "activation_alpha" in
+      let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Floats in
+      let floats = Array.to_list a in
+      let attr_alpha = PT.default_attribute_proto ~name:name_alpha ~type_ ~floats () in
+      List.append attrs [ attr_alpha ]
+    | None   -> attrs
+  in
+  let attrs =
+    match x.activation_beta with
+    | Some a ->
+      let name_beta = Some "activation_beta" in
+      let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Floats in
+      let floats = Array.to_list a in
+      let attr_beta = PT.default_attribute_proto ~name:name_beta ~type_ ~floats () in
+      List.append attrs [ attr_beta ]
+    | None   -> attrs
+  in
+  let attrs =
+    match x.clip with
+    | Some c ->
+      let name_clip = Some "clip" in
+      let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Float in
+      let f = Some c in
+      let attr_clip = PT.default_attribute_proto ~name:name_clip ~type_ ~f () in
+      List.append attrs [ attr_clip ]
+    | None   -> attrs
+  in
+  attrs
+
+
 let build_onnx_attrs_seq_empty (x : Owl_symbolic_ops_sequence.SequenceEmpty.t) =
   let name = Some "dtype" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Int in
@@ -826,6 +886,7 @@ let build_onnx_attrs sym =
     | S.MaxPool x         -> build_onnx_attrs_maxpool x
     | S.SequenceEmpty x   -> build_onnx_attrs_seq_empty x
     | S.Dropout x         -> build_onnx_attrs_dropout x
+    | S.LSTM x            -> build_onnx_attrs_lstm x
     | _                   -> []
   in
   onnx_attrs

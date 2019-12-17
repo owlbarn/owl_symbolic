@@ -93,6 +93,7 @@ type t =
   | MaxPool of Owl_symbolic_ops_nn.MaxPool.t
   | BatchNormalization of Owl_symbolic_ops_nn.BatchNormalization.t
   | Dropout of Owl_symbolic_ops_nn.Dropout.t
+  | LSTM of Owl_symbolic_ops_rnn.LSTM.t
   | SequenceEmpty of Owl_symbolic_ops_sequence.SequenceEmpty.t
 
 val name : t -> string

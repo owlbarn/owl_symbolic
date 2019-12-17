@@ -50,6 +50,21 @@ val make_tensor
 
 val get_tensor_dtype : tensor -> number_type
 
+type activation =
+  | Relu
+  | Tanh
+  | Sigmoid
+  | Affine
+  | LeakyRelu
+  | ThresholdedRelu
+  | ScaledTanh
+  | HardSigmoid
+  | Elu
+  | Softsign
+  | Softplus
+
+val activation_to_string : activation -> string
+
 type attrvalue =
   | ATTR_Nil
   | ATTR_Int of int

@@ -694,6 +694,43 @@ let dropout ?name ?ratio x =
   out1, out2
 
 
+let lstm ?name ?alpha ?beta ?clip ?activations ?direction ?input_forget hidden_size x w r =
+  (* build multiple outputs of split *)
+  let l_name = Owl_symbolic_utils.node_name ?name "LSTM" in
+  let n0 = l_name ^ "_y" in
+  let n1 = l_name ^ "_yh" in
+  let n2 = l_name ^ "_yc" in
+  (* create symbol *)
+  let xn = Owl_symbolic_graph.name x in
+  let wn = Owl_symbolic_graph.name w in
+  let rn = Owl_symbolic_graph.name r in
+  let output = [| n0; n1; n2 |] in
+  let s =
+    Owl_symbolic_ops_rnn.LSTM.create
+      ~output
+      ~name:l_name
+      ?alpha
+      ?beta
+      ?clip
+      ?activations
+      ?direction
+      ?input_forget
+      hidden_size
+      xn
+      wn
+      rn
+  in
+  let l_node = make_node (Owl_symbolic_symbol.LSTM s) [| x; w; r |] in
+  (* create identity nodes *)
+  let o0 = Owl_symbolic_ops_tensor.Identity.create ~idx:0 ?name n0 in
+  let o1 = Owl_symbolic_ops_tensor.Identity.create ~idx:1 ?name n1 in
+  let o2 = Owl_symbolic_ops_tensor.Identity.create ~idx:2 ?name n2 in
+  let y = make_node (Owl_symbolic_symbol.Identity o0) [| l_node |] in
+  let yh = make_node (Owl_symbolic_symbol.Identity o1) [| l_node |] in
+  let yc = make_node (Owl_symbolic_symbol.Identity o2) [| l_node |] in
+  y, yh, yc
+
+
 let seq_empty ?name ?dtype () =
   let s = Owl_symbolic_ops_sequence.SequenceEmpty.create ?name ?dtype () in
   make_node (Owl_symbolic_symbol.SequenceEmpty s) [||]

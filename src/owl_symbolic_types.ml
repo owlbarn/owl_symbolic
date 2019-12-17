@@ -113,6 +113,35 @@ let make_tensor ?dtype ?flt_val ?int_val ?str_val ?raw_val shape =
 
 let get_tensor_dtype (t : tensor) = t.dtype
 
+(** Activation functions for LSTM *)
+
+type activation =
+  | Relu
+  | Tanh
+  | Sigmoid
+  | Affine
+  | LeakyRelu
+  | ThresholdedRelu
+  | ScaledTanh
+  | HardSigmoid
+  | Elu
+  | Softsign
+  | Softplus
+
+let activation_to_string = function
+  | Relu            -> "Relu"
+  | Tanh            -> "Tanh"
+  | Sigmoid         -> "Sigmoid"
+  | Affine          -> "Affine"
+  | LeakyRelu       -> "LeakyRelu"
+  | ThresholdedRelu -> "ThresholdedRelu"
+  | ScaledTanh      -> "ScaledTanh"
+  | HardSigmoid     -> "HardSigmoid"
+  | Elu             -> "Elu"
+  | Softsign        -> "Softsign"
+  | Softplus        -> "Softplus"
+
+
 (** Currently useless types: attrvalue *)
 
 type attrvalue =

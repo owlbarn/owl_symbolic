@@ -386,6 +386,29 @@ let infer_shape_gather_elements input_shapes =
   | _, _ -> [| None |]
 
 
+(* TODO: consider all the other optioanl parameters *)
+let infer_shape_lstm input_shapes =
+  match input_shapes.(0).(0), input_shapes.(1).(0), input_shapes.(2).(0) with
+  | Some xshp, Some wshp, Some rshp ->
+    assert (Array.length xshp = 3);
+    let seq_length = xshp.(0) in
+    let batch_size = xshp.(1) in
+    let input_size = xshp.(2) in
+    assert (Array.length wshp = 3);
+    let num_directions = wshp.(0) in
+    let hidden_size = wshp.(1) / 4 in
+    assert (input_size = wshp.(2));
+    assert (Array.length rshp = 3);
+    assert (num_directions = rshp.(0));
+    assert (hidden_size = rshp.(1) / 4);
+    assert (hidden_size = rshp.(2));
+    [| Some [| seq_length; num_directions; batch_size; hidden_size |]
+     ; Some [| num_directions; batch_size; hidden_size |]
+     ; Some [| num_directions; batch_size; hidden_size |]
+    |]
+  | _, _, _ -> [| None; None; None |]
+
+
 (** Main entry *)
 
 let infer_shape input_shapes sym =
@@ -485,5 +508,6 @@ let infer_shape input_shapes sym =
   | Dropout _            ->
     let t = infer_shape_01 input_shapes in
     [| t.(0); t.(0) |]
+  | LSTM _               -> infer_shape_lstm input_shapes
   | SequenceEmpty _      -> [||]
   | _                    -> [| None |]
