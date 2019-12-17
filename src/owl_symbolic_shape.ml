@@ -352,15 +352,24 @@ let infer_shape_squeeze input_shapes axes =
   | _, _              -> [| None |]
 
 
-let infer_shape_scatter_elements
-    (input_shapes : int array option array array)
-    (_x : Owl_symbolic_ops_tensor.ScatterElements.t)
-  =
+let infer_shape_scatter_elements input_shapes =
   assert (Array.length input_shapes = 3);
   match input_shapes.(0).(0), input_shapes.(1).(0), input_shapes.(2).(0) with
   | Some data_shp, Some indices_shp, Some updates_shp ->
     assert (Array.(length data_shp = length indices_shp));
     assert (data_shp = updates_shp);
+    [| Some data_shp |]
+  | _, _, _ -> [| None |]
+
+
+let infer_shape_scatter_nd input_shapes =
+  assert (Array.length input_shapes = 3);
+  match input_shapes.(0).(0), input_shapes.(1).(0), input_shapes.(2).(0) with
+  | Some data_shp, Some indices_shp, Some updates_shp ->
+    let r = Array.length data_shp in
+    let q = Array.length indices_shp in
+    let p = Array.length updates_shp in
+    assert (p = r + q - 1 - indices_shp.(q - 1));
     [| Some data_shp |]
   | _, _, _ -> [| None |]
 
@@ -454,7 +463,8 @@ let infer_shape input_shapes sym =
   | IsNaN _              -> infer_shape_01 input_shapes
   | NonZero _            -> [| None |]
   | Where _              -> infer_shape_34 input_shapes
-  | ScatterElements x    -> infer_shape_scatter_elements input_shapes x
+  | ScatterElements _    -> infer_shape_scatter_elements input_shapes
+  | ScatterND _          -> infer_shape_scatter_nd input_shapes
   | Conv x               -> infer_shape_conv input_shapes x
   | MaxPool x            -> infer_shape_maxpool input_shapes x
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes

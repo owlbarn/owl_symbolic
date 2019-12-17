@@ -100,6 +100,7 @@ type t =
   | NonZero of NonZero.t
   | Where of Where.t
   | ScatterElements of ScatterElements.t
+  | ScatterND of ScatterND.t
   (* NN *)
   | Conv of Conv.t
   | MaxPool of MaxPool.t
@@ -186,6 +187,7 @@ let name = function
   | NonZero x            -> NonZero.(x.name)
   | Where x              -> Where.(x.name)
   | ScatterElements x    -> ScatterElements.(x.name)
+  | ScatterND x          -> ScatterND.(x.name)
   | Conv x               -> Conv.(x.name)
   | MaxPool x            -> MaxPool.(x.name)
   | BatchNormalization x -> BatchNormalization.(x.name)
@@ -272,6 +274,7 @@ let op_type = function
   | NonZero _            -> NonZero.op_type
   | Where _              -> Where.op_type
   | ScatterElements _    -> ScatterElements.op_type
+  | ScatterND _          -> ScatterND.op_type
   | Conv _               -> Conv.op_type
   | MaxPool _            -> MaxPool.op_type
   | BatchNormalization _ -> BatchNormalization.op_type
@@ -358,6 +361,7 @@ let input = function
   | NonZero x            -> NonZero.(x.input)
   | Where x              -> Where.(x.input)
   | ScatterElements x    -> ScatterElements.(x.input)
+  | ScatterND x          -> ScatterND.(x.input)
   | Conv x               -> Conv.(x.input)
   | MaxPool x            -> MaxPool.(x.input)
   | BatchNormalization x -> BatchNormalization.(x.input)
@@ -434,6 +438,7 @@ let set_input sym inputs =
   | NonZero x            -> x.input <- inputs
   | Where x              -> x.input <- inputs
   | ScatterElements x    -> x.input <- inputs
+  | ScatterND x          -> x.input <- inputs
   | Conv x               -> x.input <- inputs
   | MaxPool x            -> x.input <- inputs
   | BatchNormalization x -> x.input <- inputs
@@ -519,6 +524,7 @@ let out_shape = function
   | NonZero x            -> NonZero.(x.out_shape)
   | Where x              -> Where.(x.out_shape)
   | ScatterElements x    -> ScatterElements.(x.out_shape)
+  | ScatterND x          -> ScatterND.(x.out_shape)
   | Conv x               -> Conv.(x.out_shape)
   | MaxPool x            -> MaxPool.(x.out_shape)
   | BatchNormalization x -> BatchNormalization.(x.out_shape)
@@ -599,6 +605,7 @@ let set_out_shape sym shapes =
   | NonZero x            -> x.out_shape <- shapes
   | Where x              -> x.out_shape <- shapes
   | ScatterElements x    -> x.out_shape <- shapes
+  | ScatterND x          -> x.out_shape <- shapes
   | Conv x               -> x.out_shape <- shapes
   | MaxPool x            -> x.out_shape <- shapes
   | BatchNormalization x -> x.out_shape <- shapes
@@ -673,6 +680,7 @@ let attrs = function
   | NonZero x            -> NonZero.(x.attrs)
   | Where x              -> Where.(x.attrs)
   | ScatterElements x    -> ScatterElements.(x.attrs)
+  | ScatterND x          -> ScatterND.(x.attrs)
   | Conv x               -> Conv.(x.attrs)
   | MaxPool x            -> MaxPool.(x.attrs)
   | BatchNormalization x -> BatchNormalization.(x.attrs)
@@ -746,6 +754,7 @@ let set_attrs sym a =
   | NonZero x            -> x.attrs <- a
   | Where x              -> x.attrs <- a
   | ScatterElements x    -> x.attrs <- a
+  | ScatterND x          -> x.attrs <- a
   | Conv x               -> x.attrs <- a
   | MaxPool x            -> x.attrs <- a
   | BatchNormalization x -> x.attrs <- a

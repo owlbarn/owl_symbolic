@@ -194,6 +194,8 @@ val where : ?name:string -> symbol -> symbol -> symbol -> symbol
 
 val scatter_elem : ?name:string -> ?axis:int -> symbol -> symbol -> symbol -> symbol
 
+val scatter_nd : ?name:string -> symbol -> symbol -> symbol -> symbol
+
 val conv
   :  ?name:string
   -> ?dim:int
