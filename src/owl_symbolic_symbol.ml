@@ -109,6 +109,8 @@ type t =
   | MaxPool of MaxPool.t
   | BatchNormalization of BatchNormalization.t
   | Dropout of Dropout.t
+  | GlobalMaxPool of GlobalMaxPool.t
+  | GlobalAveragePool of GlobalAveragePool.t
   (* RNN *)
   | LSTM of LSTM.t
   (* Sequence *)
@@ -199,6 +201,8 @@ let name = function
   | MaxPool x            -> MaxPool.(x.name)
   | BatchNormalization x -> BatchNormalization.(x.name)
   | Dropout x            -> Dropout.(x.name)
+  | GlobalMaxPool x      -> GlobalMaxPool.(x.name)
+  | GlobalAveragePool x  -> GlobalAveragePool.(x.name)
   | LSTM x               -> LSTM.(x.name)
   | SequenceEmpty x      -> SequenceEmpty.(x.name)
   | _                    -> failwith "owl_symbolic_symbol.name"
@@ -289,6 +293,8 @@ let op_type = function
   | MaxPool _            -> MaxPool.op_type
   | BatchNormalization _ -> BatchNormalization.op_type
   | Dropout _            -> Dropout.op_type
+  | GlobalMaxPool _      -> GlobalMaxPool.op_type
+  | GlobalAveragePool _  -> GlobalAveragePool.op_type
   | LSTM _               -> LSTM.op_type
   | SequenceEmpty _      -> SequenceEmpty.op_type
   | _                    -> failwith "owl_symbolic_symbol.op_type"
@@ -379,6 +385,8 @@ let input = function
   | MaxPool x            -> MaxPool.(x.input)
   | BatchNormalization x -> BatchNormalization.(x.input)
   | Dropout x            -> Dropout.(x.input)
+  | GlobalMaxPool x      -> GlobalMaxPool.(x.input)
+  | GlobalAveragePool x  -> GlobalAveragePool.(x.input)
   | LSTM x               -> LSTM.(x.input)
   | SequenceEmpty _      -> [||]
   | _                    -> failwith "owl_symbolic_symbol.input"
@@ -459,6 +467,8 @@ let set_input sym inputs =
   | MaxPool x            -> x.input <- inputs
   | BatchNormalization x -> x.input <- inputs
   | Dropout x            -> x.input <- inputs
+  | GlobalMaxPool x      -> x.input <- inputs
+  | GlobalAveragePool x  -> x.input <- inputs
   | LSTM x               -> x.input <- inputs
   | _                    -> failwith "owl_symbolic_symbol.set_input"
 
@@ -549,6 +559,8 @@ let out_shape = function
   | BatchNormalization x -> BatchNormalization.(x.out_shape)
   | Dropout x            -> Dropout.(x.out_shape)
   | LSTM x               -> LSTM.(x.out_shape)
+  | GlobalMaxPool x      -> GlobalMaxPool.(x.out_shape)
+  | GlobalAveragePool x  -> GlobalAveragePool.(x.out_shape)
   | SequenceEmpty x      -> SequenceEmpty.(x.out_shape)
   | _                    -> failwith "out_shape: unsupported op."
 
@@ -632,6 +644,8 @@ let set_out_shape sym shapes =
   | MaxPool x            -> x.out_shape <- shapes
   | BatchNormalization x -> x.out_shape <- shapes
   | Dropout x            -> x.out_shape <- shapes
+  | GlobalMaxPool x      -> x.out_shape <- shapes
+  | GlobalAveragePool x  -> x.out_shape <- shapes
   | LSTM x               -> x.out_shape <- shapes
   | SequenceEmpty x      -> x.out_shape <- shapes
   | _                    -> failwith "set_out_shape: unsupported op."
@@ -710,6 +724,8 @@ let attrs = function
   | MaxPool x            -> MaxPool.(x.attrs)
   | BatchNormalization x -> BatchNormalization.(x.attrs)
   | Dropout x            -> Dropout.(x.attrs)
+  | GlobalMaxPool x      -> GlobalMaxPool.(x.attrs)
+  | GlobalAveragePool x  -> GlobalAveragePool.(x.attrs)
   | LSTM x               -> LSTM.(x.attrs)
   | SequenceEmpty x      -> SequenceEmpty.(x.attrs)
   | _                    -> [||]
@@ -787,6 +803,8 @@ let set_attrs sym a =
   | MaxPool x            -> x.attrs <- a
   | BatchNormalization x -> x.attrs <- a
   | Dropout x            -> x.attrs <- a
+  | GlobalMaxPool x      -> x.attrs <- a
+  | GlobalAveragePool x  -> x.attrs <- a
   | LSTM x               -> x.attrs <- a
   | SequenceEmpty x      -> x.attrs <- a
   | _                    -> ()

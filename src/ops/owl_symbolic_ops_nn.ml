@@ -3,14 +3,12 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-(** Implemented: Conv, MaxPool, BatchNormalization, Dropout *)
+(** Implemented: Conv, MaxPool, BatchNormalization, Dropout,
+  * GlobalAveragePool, GlobalMaxPool *)
 
-(** AveragePool, ConvTranspose, GlobalAveragePool, GlobalMaxPool, InstanceNormalization, Flatten, 
-
-MaxUnpool, LpPool, MaxRoiPool,
-QLinearConv,ConvInteger,  GlobalLpPool, 
-LpNormalization, Shrink, 
-LRN, TfIdfVectorizer, StringNormalizer, MeanVarianceNormalization
+(** AveragePool, ConvTranspose, InstanceNormalization, Flatten, 
+MaxUnpool, LpPool, MaxRoiPool, QLinearConv,ConvInteger,  GlobalLpPool, 
+LpNormalization, Shrink, LRN, TfIdfVectorizer, StringNormalizer, MeanVarianceNormalization
 *)
 
 open Owl_symbolic_types
@@ -210,4 +208,38 @@ module Dropout = struct
       | None   -> [| name |]
     in
     { name; input; output; attrs; out_shape = [| None; None |]; ratio }
+end
+
+module GlobalMaxPool = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "GlobalMaxPool"
+
+  let create ?name x =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| x |] in
+    { name; input; attrs; out_shape = [| None; None |] }
+end
+
+module GlobalAveragePool = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "GlobalAveragePool"
+
+  let create ?name x =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| x |] in
+    { name; input; attrs; out_shape = [| None; None |] }
 end
