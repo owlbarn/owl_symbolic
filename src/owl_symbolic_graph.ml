@@ -7,10 +7,10 @@ open Owl_graph
 open Owl_symbolic_types
 open Owl_symbolic_symbol
 
-type symbolic_node = Owl_symbolic_symbol.t Owl_graph.node
+type symbol = Owl_symbolic_symbol.t Owl_graph.node
 
 type t =
-  { mutable sym_nodes : symbolic_node array
+  { mutable sym_nodes : symbol array
   ; mutable name : string
   ; mutable node_names : string array
   }
@@ -19,7 +19,7 @@ type t =
 
 let _debug_shape = false
 
-let make_node (sym : Owl_symbolic_symbol.t) (parents : symbolic_node array) =
+let make_node (sym : Owl_symbolic_symbol.t) (parents : symbol array) =
   let child = node sym in
   (* update the child's input and output shape *)
   if Array.length parents > 0
@@ -51,7 +51,7 @@ let make_node (sym : Owl_symbolic_symbol.t) (parents : symbolic_node array) =
 
 
 (* Create a symbolic graph; check duplicated names *)
-let make_graph (nodes : symbolic_node array) name =
+let make_graph (nodes : symbol array) name =
   let node_names = ref [||] in
   Owl_graph.iter_ancestors
     (fun n ->
@@ -153,7 +153,7 @@ let to_dot graph =
   Buffer.contents b
 
 
-let set_sym (n : symbolic_node) (s : Owl_symbolic_symbol.t) = Owl_graph.set_attr n s
+let set_sym (n : symbol) (s : Owl_symbolic_symbol.t) = Owl_graph.set_attr n s
 
 (* This helper should be built on operator/tensor *)
 let tensor_node_from_int_array ?name a =

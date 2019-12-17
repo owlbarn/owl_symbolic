@@ -3,20 +3,20 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-type symbolic_node = Owl_symbolic_symbol.t Owl_graph.node
+type symbol = Owl_symbolic_symbol.t Owl_graph.node
 
 type t =
-  { mutable sym_nodes : symbolic_node array
+  { mutable sym_nodes : symbol array
   ; mutable name : string
   ; mutable node_names : string array
   }
 
 val make_node
   :  Owl_symbolic_symbol.t
-  -> symbolic_node array
+  -> symbol array
   -> Owl_symbolic_symbol.t Owl_graph.node
 
-val make_graph : symbolic_node array -> string -> t
+val make_graph : symbol array -> string -> t
 
 (* TODO: The function in graph module is messy *)
 
@@ -24,7 +24,7 @@ val topo_iter : (Owl_symbolic_symbol.t Owl_graph.node -> unit) -> t -> unit
 
 val get_input_nodes : t -> Owl_symbolic_symbol.t Owl_graph.node array
 
-val get_output_nodes : t -> symbolic_node array
+val get_output_nodes : t -> symbol array
 
 val null_graph : t
 
@@ -42,6 +42,6 @@ val refnum : 'a Owl_graph.node -> int
 
 val to_dot : t -> string
 
-val set_sym : symbolic_node -> Owl_symbolic_symbol.t -> unit
+val set_sym : symbol -> Owl_symbolic_symbol.t -> unit
 
-val tensor_node_from_int_array : ?name:string -> int array -> symbolic_node
+val tensor_node_from_int_array : ?name:string -> int array -> symbol

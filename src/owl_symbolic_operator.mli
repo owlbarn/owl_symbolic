@@ -5,24 +5,24 @@
 
 open Owl_symbolic_graph
 
-val noop : symbolic_node
+val noop : symbol
 
-val int : ?name:string -> int -> symbolic_node
+val int : ?name:string -> int -> symbol
 
-val float : ?name:string -> float -> symbolic_node
+val float : ?name:string -> float -> symbol
 
-val complex : ?name:string -> float -> float -> symbolic_node
+val complex : ?name:string -> float -> float -> symbol
 
-val pi : ?name:string -> unit -> symbolic_node
+val pi : ?name:string -> unit -> symbol
 
-val tensor : ?name:string -> Owl_symbolic_types.tensor -> symbolic_node
+val tensor : ?name:string -> Owl_symbolic_types.tensor -> symbol
 
 val variable
   :  ?dtype:Owl_symbolic_types.number_type
   -> ?shape:int array
   -> ?init:Owl_symbolic_types.tensor
   -> string
-  -> symbolic_node
+  -> symbol
 
 val random_uniform
   :  ?dtype:Owl_symbolic_types.number_type
@@ -31,7 +31,7 @@ val random_uniform
   -> ?high:float
   -> ?name:string
   -> int array
-  -> symbolic_node
+  -> symbol
 
 val random_normal
   :  ?dtype:Owl_symbolic_types.number_type
@@ -40,67 +40,67 @@ val random_normal
   -> ?stddev:float
   -> ?name:string
   -> int array
-  -> symbolic_node
+  -> symbol
 
-val equal : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
+val equal : ?name:string -> symbol -> symbol -> symbol
 
-val sin : ?name:string -> symbolic_node -> symbolic_node
+val sin : ?name:string -> symbol -> symbol
 
-val cos : ?name:string -> symbolic_node -> symbolic_node
+val cos : ?name:string -> symbol -> symbol
 
-val tan : ?name:string -> symbolic_node -> symbolic_node
+val tan : ?name:string -> symbol -> symbol
 
-val asin : ?name:string -> symbolic_node -> symbolic_node
+val asin : ?name:string -> symbol -> symbol
 
-val acos : ?name:string -> symbolic_node -> symbolic_node
+val acos : ?name:string -> symbol -> symbol
 
-val atan : ?name:string -> symbolic_node -> symbolic_node
+val atan : ?name:string -> symbol -> symbol
 
-val sinh : ?name:string -> symbolic_node -> symbolic_node
+val sinh : ?name:string -> symbol -> symbol
 
-val cosh : ?name:string -> symbolic_node -> symbolic_node
+val cosh : ?name:string -> symbol -> symbol
 
-val tanh : ?name:string -> symbolic_node -> symbolic_node
+val tanh : ?name:string -> symbol -> symbol
 
-val asinh : ?name:string -> symbolic_node -> symbolic_node
+val asinh : ?name:string -> symbol -> symbol
 
-val acosh : ?name:string -> symbolic_node -> symbolic_node
+val acosh : ?name:string -> symbol -> symbol
 
-val atanh : ?name:string -> symbolic_node -> symbolic_node
+val atanh : ?name:string -> symbol -> symbol
 
-val sqrt : ?name:string -> symbolic_node -> symbolic_node
+val sqrt : ?name:string -> symbol -> symbol
 
-val exp : ?name:string -> symbolic_node -> symbolic_node
+val exp : ?name:string -> symbol -> symbol
 
-val log : ?name:string -> symbolic_node -> symbolic_node
+val log : ?name:string -> symbol -> symbol
 
-val sigmoid : ?name:string -> symbolic_node -> symbolic_node
+val sigmoid : ?name:string -> symbol -> symbol
 
-val abs : ?name:string -> symbolic_node -> symbolic_node
+val abs : ?name:string -> symbol -> symbol
 
-val neg : ?name:string -> symbolic_node -> symbolic_node
+val neg : ?name:string -> symbol -> symbol
 
-val floor : ?name:string -> symbolic_node -> symbolic_node
+val floor : ?name:string -> symbol -> symbol
 
-val ceil : ?name:string -> symbolic_node -> symbolic_node
+val ceil : ?name:string -> symbol -> symbol
 
-val round : ?name:string -> symbolic_node -> symbolic_node
+val round : ?name:string -> symbol -> symbol
 
-val relu : ?name:string -> symbolic_node -> symbolic_node
+val relu : ?name:string -> symbol -> symbol
 
-val add : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
+val add : ?name:string -> symbol -> symbol -> symbol
 
-val sub : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
+val sub : ?name:string -> symbol -> symbol -> symbol
 
-val mul : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
+val mul : ?name:string -> symbol -> symbol -> symbol
 
-val div : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
+val div : ?name:string -> symbol -> symbol -> symbol
 
-val pow : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
+val pow : ?name:string -> symbol -> symbol -> symbol
 
-val modular : ?name:string -> ?fmod:int -> symbolic_node -> symbolic_node -> symbolic_node
+val modular : ?name:string -> ?fmod:int -> symbol -> symbol -> symbol
 
-val matmul : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
+val matmul : ?name:string -> symbol -> symbol -> symbol
 
 val gemm
   :  ?name:string
@@ -108,124 +108,64 @@ val gemm
   -> ?beta:float
   -> ?transA:bool
   -> ?transB:bool
-  -> ?c:symbolic_node
-  -> symbolic_node
-  -> symbolic_node
-  -> symbolic_node
+  -> ?c:symbol
+  -> symbol
+  -> symbol
+  -> symbol
 
-val max : ?name:string -> symbolic_node array -> symbolic_node
+val max : ?name:string -> symbol array -> symbol
 
-val min : ?name:string -> symbolic_node array -> symbolic_node
+val min : ?name:string -> symbol array -> symbol
 
-val sum : ?name:string -> symbolic_node array -> symbolic_node
+val sum : ?name:string -> symbol array -> symbol
 
-val and_ : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
+val and_ : ?name:string -> symbol -> symbol -> symbol
 
-val or_ : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
+val or_ : ?name:string -> symbol -> symbol -> symbol
 
-val not_ : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
+val not_ : ?name:string -> symbol -> symbol -> symbol
 
-val xor : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
+val xor : ?name:string -> symbol -> symbol -> symbol
 
-val reduce_sum
-  :  ?keepdims:bool
-  -> ?name:string
-  -> symbolic_node
-  -> int array
-  -> symbolic_node
+val reduce_sum : ?keepdims:bool -> ?name:string -> symbol -> int array -> symbol
 
-val reduce_max
-  :  ?keepdims:bool
-  -> ?name:string
-  -> symbolic_node
-  -> int array
-  -> symbolic_node
+val reduce_max : ?keepdims:bool -> ?name:string -> symbol -> int array -> symbol
 
-val reduce_min
-  :  ?keepdims:bool
-  -> ?name:string
-  -> symbolic_node
-  -> int array
-  -> symbolic_node
+val reduce_min : ?keepdims:bool -> ?name:string -> symbol -> int array -> symbol
 
-val reduce_mean
-  :  ?keepdims:bool
-  -> ?name:string
-  -> symbolic_node
-  -> int array
-  -> symbolic_node
+val reduce_mean : ?keepdims:bool -> ?name:string -> symbol -> int array -> symbol
 
-val reduce_sum_square
-  :  ?keepdims:bool
-  -> ?name:string
-  -> symbolic_node
-  -> int array
-  -> symbolic_node
+val reduce_sum_square : ?keepdims:bool -> ?name:string -> symbol -> int array -> symbol
 
-val reduce_prod
-  :  ?keepdims:bool
-  -> ?name:string
-  -> symbolic_node
-  -> int array
-  -> symbolic_node
+val reduce_prod : ?keepdims:bool -> ?name:string -> symbol -> int array -> symbol
 
-val reduce_logsum
-  :  ?keepdims:bool
-  -> ?name:string
-  -> symbolic_node
-  -> int array
-  -> symbolic_node
+val reduce_logsum : ?keepdims:bool -> ?name:string -> symbol -> int array -> symbol
 
-val reduce_logsumexp
-  :  ?keepdims:bool
-  -> ?name:string
-  -> symbolic_node
-  -> int array
-  -> symbolic_node
+val reduce_logsumexp : ?keepdims:bool -> ?name:string -> symbol -> int array -> symbol
 
-val reduce_l1
-  :  ?keepdims:bool
-  -> ?name:string
-  -> symbolic_node
-  -> int array
-  -> symbolic_node
+val reduce_l1 : ?keepdims:bool -> ?name:string -> symbol -> int array -> symbol
 
-val reduce_l2
-  :  ?keepdims:bool
-  -> ?name:string
-  -> symbolic_node
-  -> int array
-  -> symbolic_node
+val reduce_l2 : ?keepdims:bool -> ?name:string -> symbol -> int array -> symbol
 
-val reshape : ?name:string -> symbolic_node -> symbolic_node -> symbolic_node
+val reshape : ?name:string -> symbol -> symbol -> symbol
 
-val split : ?name:string -> ?axis:int -> symbolic_node -> int array -> symbolic_node array
+val split : ?name:string -> ?axis:int -> symbol -> int array -> symbol array
 
-val concat : ?name:string -> ?axis:int -> symbolic_node array -> symbolic_node
+val concat : ?name:string -> ?axis:int -> symbol array -> symbol
 
-val cast
-  :  ?name:string
-  -> symbolic_node
-  -> Owl_symbolic_types.number_type
-  -> symbolic_node
+val cast : ?name:string -> symbol -> Owl_symbolic_types.number_type -> symbol
 
-val pad
-  :  ?name:string
-  -> ?mode:string
-  -> ?v:symbolic_node
-  -> symbolic_node
-  -> int array
-  -> symbolic_node
+val pad : ?name:string -> ?mode:string -> ?v:symbol -> symbol -> int array -> symbol
 
-val squeeze : ?name:string -> ?axes:int array -> symbolic_node -> symbolic_node
+val squeeze : ?name:string -> ?axes:int array -> symbol -> symbol
 
-val tile : ?name:string -> symbolic_node -> int array -> symbolic_node
+val tile : ?name:string -> symbol -> int array -> symbol
 
-val shape : ?name:string -> symbolic_node -> symbolic_node
+val shape : ?name:string -> symbol -> symbol
 
-val size : ?name:string -> symbolic_node -> symbolic_node
+val size : ?name:string -> symbol -> symbol
 
-val transpose : ?name:string -> ?perm:int array -> symbolic_node -> symbolic_node
+val transpose : ?name:string -> ?perm:int array -> symbol -> symbol
 
 val slice
   :  ?name:string
@@ -233,21 +173,16 @@ val slice
   -> ?steps:int array
   -> int array
   -> int array
-  -> symbolic_node
-  -> symbolic_node
+  -> symbol
+  -> symbol
 
-val space_to_depth : ?name:string -> int -> symbolic_node -> symbolic_node
+val space_to_depth : ?name:string -> int -> symbol -> symbol
 
-val is_nan : ?name:string -> symbolic_node -> symbolic_node
+val is_nan : ?name:string -> symbol -> symbol
 
-val non_zero : ?name:string -> symbolic_node -> symbolic_node
+val non_zero : ?name:string -> symbol -> symbol
 
-val where
-  :  ?name:string
-  -> symbolic_node
-  -> symbolic_node
-  -> symbolic_node
-  -> symbolic_node
+val where : ?name:string -> symbol -> symbol -> symbol -> symbol
 
 val conv
   :  ?name:string
@@ -255,39 +190,31 @@ val conv
   -> ?padding:Owl_symbolic_types.pad
   -> ?strides:int array
   -> ?dilations:int array
-  -> ?bias:symbolic_node
-  -> symbolic_node
-  -> symbolic_node
-  -> symbolic_node
+  -> ?bias:symbol
+  -> symbol
+  -> symbol
+  -> symbol
 
 val maxpool
   :  ?name:string
   -> ?strides:int array
   -> ?dilations:int array
   -> ?padding:Owl_symbolic_types.pad
-  -> symbolic_node
+  -> symbol
   -> int array
-  -> symbolic_node * symbolic_node
+  -> symbol * symbol
 
 val batch_norm
   :  ?name:string
   -> ?eps:float
   -> ?momentum:float
-  -> symbolic_node
-  -> symbolic_node
-  -> symbolic_node
-  -> symbolic_node
-  -> symbolic_node
-  -> symbolic_node * symbolic_node * symbolic_node * symbolic_node * symbolic_node
+  -> symbol
+  -> symbol
+  -> symbol
+  -> symbol
+  -> symbol
+  -> symbol * symbol * symbol * symbol * symbol
 
-val dropout
-  :  ?name:string
-  -> ?ratio:float
-  -> symbolic_node
-  -> symbolic_node * symbolic_node
+val dropout : ?name:string -> ?ratio:float -> symbol -> symbol * symbol
 
-val seq_empty
-  :  ?name:string
-  -> ?dtype:Owl_symbolic_types.number_type
-  -> unit
-  -> symbolic_node
+val seq_empty : ?name:string -> ?dtype:Owl_symbolic_types.number_type -> unit -> symbol

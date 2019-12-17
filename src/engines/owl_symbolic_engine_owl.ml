@@ -111,7 +111,7 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
   let build_symbol node symdict =
     let cnode_attr = Owl_graph.attr node in
     let name = Owl_graph.name node in
-    let (sym_inputs : Owl_symbolic_graph.symbolic_node array) =
+    let (sym_inputs : Owl_symbolic_graph.symbol array) =
       Array.map
         (fun n ->
           let n = Owl_graph.name n in
