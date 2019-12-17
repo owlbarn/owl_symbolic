@@ -66,7 +66,10 @@ type t =
   | Or of Or.t
   | Not of Not.t
   | Xor of Xor.t
+  | Greater of Greater.t
+  | Less of Less.t
   | Equal of Equal.t
+  | EqualTo of EqualTo.t
   (* Reduction *)
   | ReduceSum of ReduceSum.t
   | ReduceMax of ReduceMax.t
@@ -150,7 +153,13 @@ let name = function
   | Min x                -> Min.(x.name)
   | Sum x                -> Sum.(x.name)
   | And x                -> And.(x.name)
+  | Or x                 -> Or.(x.name)
+  | Not x                -> Not.(x.name)
+  | Xor x                -> Xor.(x.name)
+  | Greater x            -> Greater.(x.name)
+  | Less x               -> Less.(x.name)
   | Equal x              -> Equal.(x.name)
+  | EqualTo x            -> EqualTo.(x.name)
   | ReduceSum x          -> ReduceSum.(x.name)
   | ReduceMax x          -> ReduceMax.(x.name)
   | ReduceMin x          -> ReduceMin.(x.name)
@@ -228,7 +237,13 @@ let op_type = function
   | Min _                -> Min.op_type
   | Sum _                -> Sum.op_type
   | And _                -> And.op_type
+  | Or _                 -> Or.op_type
+  | Not _                -> Not.op_type
+  | Xor _                -> Xor.op_type
+  | Greater _            -> Greater.op_type
+  | Less _               -> Less.op_type
   | Equal _              -> Equal.op_type
+  | EqualTo _            -> EqualTo.op_type
   | ReduceSum _          -> ReduceSum.op_type
   | ReduceMax _          -> ReduceMax.op_type
   | ReduceMin _          -> ReduceMin.op_type
@@ -306,7 +321,13 @@ let input = function
   | Min x                -> Min.(x.input)
   | Sum x                -> Sum.(x.input)
   | And x                -> And.(x.input)
+  | Or x                 -> Or.(x.input)
+  | Not x                -> Not.(x.input)
+  | Xor x                -> Xor.(x.input)
+  | Greater x            -> Greater.(x.input)
+  | Less x               -> Less.(x.input)
   | Equal x              -> Equal.(x.input)
+  | EqualTo x            -> EqualTo.(x.input)
   | ReduceSum x          -> ReduceSum.(x.input)
   | ReduceMax x          -> ReduceMax.(x.input)
   | ReduceMin x          -> ReduceMin.(x.input)
@@ -374,7 +395,13 @@ let set_input sym inputs =
   | Min x                -> x.input <- inputs
   | Sum x                -> x.input <- inputs
   | And x                -> x.input <- inputs
+  | Or x                 -> x.input <- inputs
+  | Not x                -> x.input <- inputs
+  | Xor x                -> x.input <- inputs
+  | Greater x            -> x.input <- inputs
+  | Less x               -> x.input <- inputs
   | Equal x              -> x.input <- inputs
+  | EqualTo x            -> x.input <- inputs
   | ReduceSum x          -> x.input <- inputs
   | ReduceMax x          -> x.input <- inputs
   | ReduceMin x          -> x.input <- inputs
@@ -450,8 +477,14 @@ let out_shape = function
   | Max x                -> Max.(x.out_shape)
   | Min x                -> Min.(x.out_shape)
   | Sum x                -> Sum.(x.out_shape)
+  | Or x                 -> Or.(x.out_shape)
+  | Not x                -> Not.(x.out_shape)
+  | Xor x                -> Xor.(x.out_shape)
+  | Greater x            -> Greater.(x.out_shape)
+  | Less x               -> Less.(x.out_shape)
   | And x                -> And.(x.out_shape)
   | Equal x              -> Equal.(x.out_shape)
+  | EqualTo x            -> EqualTo.(x.out_shape)
   | ReduceSum x          -> ReduceSum.(x.out_shape)
   | ReduceMax x          -> ReduceMax.(x.out_shape)
   | ReduceMin x          -> ReduceMin.(x.out_shape)
@@ -523,7 +556,13 @@ let set_out_shape sym shapes =
   | Min x                -> x.out_shape <- shapes
   | Sum x                -> x.out_shape <- shapes
   | And x                -> x.out_shape <- shapes
+  | Or x                 -> x.out_shape <- shapes
+  | Not x                -> x.out_shape <- shapes
+  | Xor x                -> x.out_shape <- shapes
+  | Greater x            -> x.out_shape <- shapes
+  | Less x               -> x.out_shape <- shapes
   | Equal x              -> x.out_shape <- shapes
+  | EqualTo x            -> x.out_shape <- shapes
   | ReduceSum x          -> x.out_shape <- shapes
   | ReduceMax x          -> x.out_shape <- shapes
   | ReduceMin x          -> x.out_shape <- shapes
@@ -589,7 +628,13 @@ let attrs = function
   | Min x                -> Min.(x.attrs)
   | Sum x                -> Sum.(x.attrs)
   | And x                -> And.(x.attrs)
+  | Or x                 -> Or.(x.attrs)
+  | Not x                -> Not.(x.attrs)
+  | Xor x                -> Xor.(x.attrs)
+  | Greater x            -> Greater.(x.attrs)
+  | Less x               -> Less.(x.attrs)
   | Equal x              -> Equal.(x.attrs)
+  | EqualTo x            -> EqualTo.(x.attrs)
   | ReduceSum x          -> ReduceSum.(x.attrs)
   | ReduceMax x          -> ReduceMax.(x.attrs)
   | ReduceMin x          -> ReduceMin.(x.attrs)
@@ -654,7 +699,13 @@ let set_attrs sym a =
   | Min x                -> x.attrs <- a
   | Sum x                -> x.attrs <- a
   | And x                -> x.attrs <- a
+  | Or x                 -> x.attrs <- a
+  | Not x                -> x.attrs <- a
+  | Xor x                -> x.attrs <- a
+  | Greater x            -> x.attrs <- a
+  | Less x               -> x.attrs <- a
   | Equal x              -> x.attrs <- a
+  | EqualTo x            -> x.attrs <- a
   | ReduceSum x          -> x.attrs <- a
   | ReduceMax x          -> x.attrs <- a
   | ReduceMin x          -> x.attrs <- a

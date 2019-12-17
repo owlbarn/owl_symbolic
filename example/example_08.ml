@@ -39,7 +39,7 @@ let make_expr2 () =
   let _ = Owl_io.write_file "example_08.dot" s in
   Sys.command "dot -Tpdf example_08.dot -o example_08.pdf" |> ignore; *)
   LaTeX_Engine.of_symbolic expr2 |> print_endline;
-  let z = equal expr1.sym_nodes.(0) expr2.sym_nodes.(0) in
+  let z = equal_to expr1.sym_nodes.(0) expr2.sym_nodes.(0) in
   SymGraph.make_graph [| z |] "sym_graph"
 
 
@@ -51,7 +51,7 @@ let make_expr3 () =
   let expr2 = Owl_symbolic_cas_canonical.canonical_form expr1 in
   LaTeX_Engine.of_symbolic expr2 |> print_endline;
   LaTeX_Engine.of_symbolic expr2 |> print_endline;
-  let z = equal expr1.sym_nodes.(0) expr2.sym_nodes.(0) in
+  let z = equal_to expr1.sym_nodes.(0) expr2.sym_nodes.(0) in
   SymGraph.make_graph [| z |] "sym_graph"
 
 

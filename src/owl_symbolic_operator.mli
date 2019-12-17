@@ -42,8 +42,6 @@ val random_normal
   -> int array
   -> symbol
 
-val equal : ?name:string -> symbol -> symbol -> symbol
-
 val sin : ?name:string -> symbol -> symbol
 
 val cos : ?name:string -> symbol -> symbol
@@ -126,6 +124,14 @@ val or_ : ?name:string -> symbol -> symbol -> symbol
 val not_ : ?name:string -> symbol -> symbol -> symbol
 
 val xor : ?name:string -> symbol -> symbol -> symbol
+
+val greater : ?name:string -> symbol -> symbol -> symbol
+
+val less : ?name:string -> symbol -> symbol -> symbol
+
+val equal : ?name:string -> symbol -> symbol -> symbol
+
+val equal_to : ?name:string -> symbol -> symbol -> symbol
 
 val reduce_sum : ?keepdims:bool -> ?name:string -> symbol -> int array -> symbol
 

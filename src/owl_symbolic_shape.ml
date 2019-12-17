@@ -405,6 +405,13 @@ let infer_shape input_shapes sym =
   | Max _                -> infer_shape_31 input_shapes
   | Min _                -> infer_shape_31 input_shapes
   | Sum _                -> infer_shape_31 input_shapes
+  | And _                -> infer_shape_03 input_shapes
+  | Or _                 -> infer_shape_03 input_shapes
+  | Not _                -> infer_shape_03 input_shapes
+  | Xor _                -> infer_shape_03 input_shapes
+  | Greater _            -> infer_shape_03 input_shapes
+  | Less _               -> infer_shape_03 input_shapes
+  | Equal _              -> infer_shape_03 input_shapes
   | ReduceSum x          -> infer_shape_10 input_shapes x.axes x.keepdims
   | ReduceMax x          -> infer_shape_10 input_shapes x.axes x.keepdims
   | ReduceMin x          -> infer_shape_10 input_shapes x.axes x.keepdims
@@ -439,9 +446,5 @@ let infer_shape input_shapes sym =
   | Dropout _            ->
     let t = infer_shape_01 input_shapes in
     [| t.(0); t.(0) |]
-  | And _                -> infer_shape_03 input_shapes
-  | Or _                 -> infer_shape_03 input_shapes
-  | Not _                -> infer_shape_03 input_shapes
-  | Xor _                -> infer_shape_03 input_shapes
   | SequenceEmpty _      -> [||]
   | _                    -> [| None |]

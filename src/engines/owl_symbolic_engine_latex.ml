@@ -38,7 +38,7 @@ let rec to_latex sym_node =
   | Floor _    -> to_latex_floor sym_node
   | Ceil _     -> to_latex_ceil sym_node
   | Sqrt _     -> to_latex_sqrt sym_node
-  | Equal _    -> to_latex_equal sym_node
+  | EqualTo _  -> to_latex_equalto sym_node
   | _          -> failwith (Printf.sprintf "Not implemented: %s" (op_type sym))
 
 
@@ -257,7 +257,7 @@ and to_latex_ceil node =
 (* TODO: but do we really need a class for each symbol, e.g \doteq, \approx... ? 
  * Perhaps set them as parameters.
  *)
-and to_latex_equal node =
+and to_latex_equalto node =
   let parents = Owl_graph.parents node in
   let lhs = to_latex parents.(0) in
   let rhs = to_latex parents.(1) in

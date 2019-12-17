@@ -57,15 +57,6 @@ let random_normal ?dtype ?seed ?mean ?stddev ?name shape =
   make_node (Owl_symbolic_symbol.RandomNormal s) [||]
 
 
-(** Logical *)
-
-let equal ?name lhs rhs =
-  let lhs_name = Owl_symbolic_graph.name lhs in
-  let rhs_name = Owl_symbolic_graph.name rhs in
-  let s = Owl_symbolic_ops_logical.Equal.create ?name lhs_name rhs_name in
-  make_node (Owl_symbolic_symbol.Equal s) [| lhs; rhs |]
-
-
 (** Math *)
 
 let sin ?name x =
@@ -356,22 +347,51 @@ let and_ ?name x y =
 let or_ ?name x y =
   let xn = Owl_symbolic_graph.name x in
   let yn = Owl_symbolic_graph.name y in
-  let s = Owl_symbolic_ops_logical.And.create ?name xn yn in
-  make_node (Owl_symbolic_symbol.And s) [| x; y |]
+  let s = Owl_symbolic_ops_logical.Or.create ?name xn yn in
+  make_node (Owl_symbolic_symbol.Or s) [| x; y |]
 
 
 let not_ ?name x y =
   let xn = Owl_symbolic_graph.name x in
   let yn = Owl_symbolic_graph.name y in
-  let s = Owl_symbolic_ops_logical.And.create ?name xn yn in
-  make_node (Owl_symbolic_symbol.And s) [| x; y |]
+  let s = Owl_symbolic_ops_logical.Not.create ?name xn yn in
+  make_node (Owl_symbolic_symbol.Not s) [| x; y |]
 
 
 let xor ?name x y =
   let xn = Owl_symbolic_graph.name x in
   let yn = Owl_symbolic_graph.name y in
-  let s = Owl_symbolic_ops_logical.And.create ?name xn yn in
-  make_node (Owl_symbolic_symbol.And s) [| x; y |]
+  let s = Owl_symbolic_ops_logical.Xor.create ?name xn yn in
+  make_node (Owl_symbolic_symbol.Xor s) [| x; y |]
+
+
+let greater ?name x y =
+  let xn = Owl_symbolic_graph.name x in
+  let yn = Owl_symbolic_graph.name y in
+  let s = Owl_symbolic_ops_logical.Greater.create ?name xn yn in
+  make_node (Owl_symbolic_symbol.Greater s) [| x; y |]
+
+
+let less ?name x y =
+  let xn = Owl_symbolic_graph.name x in
+  let yn = Owl_symbolic_graph.name y in
+  let s = Owl_symbolic_ops_logical.Less.create ?name xn yn in
+  make_node (Owl_symbolic_symbol.Less s) [| x; y |]
+
+
+let equal ?name x y =
+  let xn = Owl_symbolic_graph.name x in
+  let yn = Owl_symbolic_graph.name y in
+  let s = Owl_symbolic_ops_logical.Equal.create ?name xn yn in
+  make_node (Owl_symbolic_symbol.Equal s) [| x; y |]
+
+
+(* TODO: the rules for this op are unclear *)
+let equal_to ?name lhs rhs =
+  let lhs_name = Owl_symbolic_graph.name lhs in
+  let rhs_name = Owl_symbolic_graph.name rhs in
+  let s = Owl_symbolic_ops_logical.EqualTo.create ?name lhs_name rhs_name in
+  make_node (Owl_symbolic_symbol.EqualTo s) [| lhs; rhs |]
 
 
 (** Tensor *)

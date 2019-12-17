@@ -347,6 +347,15 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Or _                 -> type_check_pattern02 ptypes [| SNT_Bool |] name
         | Not _                -> type_check_pattern02 ptypes [| SNT_Bool |] name
         | Xor _                -> type_check_pattern02 ptypes [| SNT_Bool |] name
+        | Greater _            ->
+          type_check_pattern02 ptypes _types_constraint04 name |> ignore;
+          [| SNT_Bool |]
+        | Less _               ->
+          type_check_pattern02 ptypes _types_constraint04 name |> ignore;
+          [| SNT_Bool |]
+        | Equal _              ->
+          type_check_pattern02 ptypes _types_constraint04 name |> ignore;
+          [| SNT_Bool |]
         | ReduceSum _          -> type_check_pattern01 ptypes.(0) _types_constraint02 name
         | ReduceMax _          -> type_check_pattern01 ptypes.(0) _types_constraint02 name
         | ReduceMin _          -> type_check_pattern01 ptypes.(0) _types_constraint02 name
