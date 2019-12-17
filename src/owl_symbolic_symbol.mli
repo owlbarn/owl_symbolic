@@ -85,6 +85,7 @@ type t =
   | IsNaN of Owl_symbolic_ops_tensor.IsNaN.t
   | NonZero of Owl_symbolic_ops_tensor.NonZero.t
   | Where of Owl_symbolic_ops_tensor.Where.t
+  | ScatterElements of Owl_symbolic_ops_tensor.ScatterElements.t
   | Conv of Owl_symbolic_ops_nn.Conv.t
   | MaxPool of Owl_symbolic_ops_nn.MaxPool.t
   | BatchNormalization of Owl_symbolic_ops_nn.BatchNormalization.t

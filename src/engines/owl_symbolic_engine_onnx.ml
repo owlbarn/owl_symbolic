@@ -417,6 +417,9 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Where _              ->
           type_check_pattern01 ptypes.(0) [| SNT_Bool |] name |> ignore;
           type_check_pattern02 [| ptypes.(1); ptypes.(2) |] _types_constraint03 name
+        | ScatterElements _    ->
+          type_check_pattern01 ptypes.(1) [| SNT_Int32; SNT_Int64 |] name |> ignore;
+          type_check_pattern02 [| ptypes.(0); ptypes.(2) |] _types_constraint03 name
         | Conv _               -> type_check_pattern02 ptypes _types_constraint00 name
         | MaxPool _            ->
           let t1 = type_check_pattern01 ptypes.(0) _types_constraint00 name in
@@ -695,6 +698,14 @@ let build_onnx_attrs_spacetodepth blocksize =
   [ attr_block ]
 
 
+let build_onnx_attrs_scatter_elements axis =
+  let name_axis = Some "axis" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Int in
+  let i = Some (Int64.of_int axis) in
+  let attr_axis = PT.default_attribute_proto ~name:name_axis ~type_ ~i () in
+  [ attr_axis ]
+
+
 let build_onnx_attrs_conv (x : Owl_symbolic_ops_nn.Conv.t) =
   (* create "auto_pad" attribute *)
   let name_pad = Some "auto_pad" in
@@ -801,6 +812,7 @@ let build_onnx_attrs sym =
     | S.Squeeze x         -> build_onnx_attrs_squeeze x
     | S.Transpose x       -> build_onnx_attrs_transpose x
     | S.SpaceToDepth x    -> build_onnx_attrs_spacetodepth x.blocksize
+    | S.ScatterElements x -> build_onnx_attrs_scatter_elements x.axis
     | S.Conv x            -> build_onnx_attrs_conv x
     | S.MaxPool x         -> build_onnx_attrs_maxpool x
     | S.SequenceEmpty x   -> build_onnx_attrs_seq_empty x

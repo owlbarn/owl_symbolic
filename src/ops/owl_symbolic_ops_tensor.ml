@@ -5,11 +5,12 @@
 
 (** Implemented: Reshape, Concat, Split, Identity, Pad, Cast, Squeeze, Tile 
   * Shape, Size, Transpose, Slice, SpaceToDepth, IsNaN, NonZero, Where
+  * ScatterElements
   *)
 
-(** IsInf, ScatterND, ScatterElements, Gather, GatherElements, GatherND, 
+(** IsInf, ScatterND, GatherElements, GatherND, 
   * UnSqueeze,DepthToSpace, Resize, Compress, Unique, OneHot,ReverseSequence,
-  * Scatter(deprecated), Upsample(deprecated),
+  * Gather, Scatter(deprecated), Upsample(deprecated),
   *)
 
 open Owl_symbolic_types
@@ -318,4 +319,22 @@ module Where = struct
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| cond_name; x_name; y_name |] in
     { name; input; attrs; out_shape = [| None |] }
+end
+
+module ScatterElements = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable axis : int
+    }
+
+  let op_type = "ScatterElements"
+
+  let create ?name ?(axis = 0) data_name indices_name updates_name =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| data_name; indices_name; updates_name |] in
+    { name; input; attrs; out_shape = [| None |]; axis }
 end

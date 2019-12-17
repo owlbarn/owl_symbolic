@@ -192,6 +192,8 @@ val non_zero : ?name:string -> symbol -> symbol
 
 val where : ?name:string -> symbol -> symbol -> symbol -> symbol
 
+val scatter_elem : ?name:string -> ?axis:int -> symbol -> symbol -> symbol -> symbol
+
 val conv
   :  ?name:string
   -> ?dim:int

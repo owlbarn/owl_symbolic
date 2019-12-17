@@ -331,7 +331,7 @@ let infer_shape_batch_normalization input_shapes =
   | _, _, _, _, _ -> [| None; None; None; None; None |]
 
 
-let infer_shape_squeeze (input_shapes : int array option array array) axes =
+let infer_shape_squeeze input_shapes axes =
   let input_shape = input_shapes.(0).(0) in
   match input_shape, axes with
   | Some shp, Some ax ->
@@ -350,6 +350,19 @@ let infer_shape_squeeze (input_shapes : int array option array array) axes =
     let new_shp = Owl_utils_array.filter (fun s -> s <> 1) shp in
     [| Some new_shp |]
   | _, _              -> [| None |]
+
+
+let infer_shape_scatter_elements
+    (input_shapes : int array option array array)
+    (_x : Owl_symbolic_ops_tensor.ScatterElements.t)
+  =
+  assert (Array.length input_shapes = 3);
+  match input_shapes.(0).(0), input_shapes.(1).(0), input_shapes.(2).(0) with
+  | Some data_shp, Some indices_shp, Some updates_shp ->
+    assert (Array.(length data_shp = length indices_shp));
+    assert (data_shp = updates_shp);
+    [| Some data_shp |]
+  | _, _, _ -> [| None |]
 
 
 (** Main entry *)
@@ -441,6 +454,7 @@ let infer_shape input_shapes sym =
   | IsNaN _              -> infer_shape_01 input_shapes
   | NonZero _            -> [| None |]
   | Where _              -> infer_shape_34 input_shapes
+  | ScatterElements x    -> infer_shape_scatter_elements input_shapes x
   | Conv x               -> infer_shape_conv input_shapes x
   | MaxPool x            -> infer_shape_maxpool input_shapes x
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes

@@ -99,6 +99,7 @@ type t =
   | IsNaN of IsNaN.t
   | NonZero of NonZero.t
   | Where of Where.t
+  | ScatterElements of ScatterElements.t
   (* NN *)
   | Conv of Conv.t
   | MaxPool of MaxPool.t
@@ -184,6 +185,7 @@ let name = function
   | IsNaN x              -> IsNaN.(x.name)
   | NonZero x            -> NonZero.(x.name)
   | Where x              -> Where.(x.name)
+  | ScatterElements x    -> ScatterElements.(x.name)
   | Conv x               -> Conv.(x.name)
   | MaxPool x            -> MaxPool.(x.name)
   | BatchNormalization x -> BatchNormalization.(x.name)
@@ -269,6 +271,7 @@ let op_type = function
   | IsNaN _              -> IsNaN.op_type
   | NonZero _            -> NonZero.op_type
   | Where _              -> Where.op_type
+  | ScatterElements _    -> ScatterElements.op_type
   | Conv _               -> Conv.op_type
   | MaxPool _            -> MaxPool.op_type
   | BatchNormalization _ -> BatchNormalization.op_type
@@ -354,6 +357,7 @@ let input = function
   | IsNaN x              -> IsNaN.(x.input)
   | NonZero x            -> NonZero.(x.input)
   | Where x              -> Where.(x.input)
+  | ScatterElements x    -> ScatterElements.(x.input)
   | Conv x               -> Conv.(x.input)
   | MaxPool x            -> MaxPool.(x.input)
   | BatchNormalization x -> BatchNormalization.(x.input)
@@ -429,6 +433,7 @@ let set_input sym inputs =
   | IsNaN x              -> x.input <- inputs
   | NonZero x            -> x.input <- inputs
   | Where x              -> x.input <- inputs
+  | ScatterElements x    -> x.input <- inputs
   | Conv x               -> x.input <- inputs
   | MaxPool x            -> x.input <- inputs
   | BatchNormalization x -> x.input <- inputs
@@ -513,6 +518,7 @@ let out_shape = function
   | IsNaN x              -> IsNaN.(x.out_shape)
   | NonZero x            -> NonZero.(x.out_shape)
   | Where x              -> Where.(x.out_shape)
+  | ScatterElements x    -> ScatterElements.(x.out_shape)
   | Conv x               -> Conv.(x.out_shape)
   | MaxPool x            -> MaxPool.(x.out_shape)
   | BatchNormalization x -> BatchNormalization.(x.out_shape)
@@ -592,6 +598,7 @@ let set_out_shape sym shapes =
   | IsNaN x              -> x.out_shape <- shapes
   | NonZero x            -> x.out_shape <- shapes
   | Where x              -> x.out_shape <- shapes
+  | ScatterElements x    -> x.out_shape <- shapes
   | Conv x               -> x.out_shape <- shapes
   | MaxPool x            -> x.out_shape <- shapes
   | BatchNormalization x -> x.out_shape <- shapes
@@ -665,6 +672,7 @@ let attrs = function
   | IsNaN x              -> IsNaN.(x.attrs)
   | NonZero x            -> NonZero.(x.attrs)
   | Where x              -> Where.(x.attrs)
+  | ScatterElements x    -> ScatterElements.(x.attrs)
   | Conv x               -> Conv.(x.attrs)
   | MaxPool x            -> MaxPool.(x.attrs)
   | BatchNormalization x -> BatchNormalization.(x.attrs)
@@ -737,6 +745,7 @@ let set_attrs sym a =
   | IsNaN x              -> x.attrs <- a
   | NonZero x            -> x.attrs <- a
   | Where x              -> x.attrs <- a
+  | ScatterElements x    -> x.attrs <- a
   | Conv x               -> x.attrs <- a
   | MaxPool x            -> x.attrs <- a
   | BatchNormalization x -> x.attrs <- a
