@@ -222,6 +222,17 @@ val maxpool
   -> int array
   -> symbol * symbol
 
+val avgpool
+  :  ?name:string
+  -> ?strides:int array
+  -> ?dilations:int array
+  -> ?padding:Owl_symbolic_types.pad
+  -> ?ceil_mode:bool
+  -> ?count_include_pad:bool
+  -> symbol
+  -> int array
+  -> symbol
+
 val batch_norm
   :  ?name:string
   -> ?eps:float

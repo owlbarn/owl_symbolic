@@ -92,6 +92,7 @@ type t =
   | GatherND of Owl_symbolic_ops_tensor.GatherND.t
   | Conv of Owl_symbolic_ops_nn.Conv.t
   | MaxPool of Owl_symbolic_ops_nn.MaxPool.t
+  | AveragePool of Owl_symbolic_ops_nn.AveragePool.t
   | BatchNormalization of Owl_symbolic_ops_nn.BatchNormalization.t
   | Dropout of Owl_symbolic_ops_nn.Dropout.t
   | GlobalMaxPool of Owl_symbolic_ops_nn.GlobalMaxPool.t

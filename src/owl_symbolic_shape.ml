@@ -300,24 +300,27 @@ let infer_shape_conv input_shapes (x : Owl_symbolic_ops_nn.Conv.t) =
   else failwith "Owl_symbolic_shape: illegal conv dimensions."
 
 
-let infer_shape_maxpool input_shapes (x : Owl_symbolic_ops_nn.MaxPool.t) =
-  let l = Array.length x.kernel_shp in
-  match input_shapes.(0).(0) with
-  | Some i ->
-    let ndim = Array.length i - 2 in
-    assert (ndim = l);
-    let padding = if x.auto_pad = "VALID" then Owl_types.VALID else Owl_types.SAME in
-    let dim =
+(** TODO: currently the pads value is not used *)
+let infer_shape_pool ~typ input_shapes kernel_shp strides auto_pad _pads =
+  let l = Array.length kernel_shp in
+  let shp =
+    match input_shapes.(0).(0) with
+    | Some i ->
+      let ndim = Array.length i - 2 in
+      assert (ndim = l);
+      let padding = if auto_pad = "VALID" then Owl_types.VALID else Owl_types.SAME in
       if ndim = 1
-      then infer_shape_15 input_shapes padding x.kernel_shp x.strides
+      then infer_shape_15 input_shapes padding kernel_shp strides
       else if ndim = 2
-      then infer_shape_21 input_shapes padding x.kernel_shp x.strides
+      then infer_shape_21 input_shapes padding kernel_shp strides
       else if ndim = 3
-      then infer_shape_17 input_shapes padding x.kernel_shp x.strides
-      else failwith "Owl_symbolic_shape: illegal maxpool dimensions."
-    in
-    [| dim.(0); dim.(0) |]
-  | None   -> [| None; None |]
+      then infer_shape_17 input_shapes padding kernel_shp strides
+      else failwith "Owl_symbolic_shape: illegal pooling dimensions."
+    | None   -> [| None |]
+  in
+  match typ with
+  | `max -> [| shp.(0); shp.(0) |]
+  | `avg -> shp
 
 
 let infer_shape_batch_normalization input_shapes =
@@ -514,7 +517,10 @@ let infer_shape input_shapes sym =
   | GatherElements _     -> infer_shape_gather_elements input_shapes
   | GatherND _           -> [| None |]
   | Conv x               -> infer_shape_conv input_shapes x
-  | MaxPool x            -> infer_shape_maxpool input_shapes x
+  | MaxPool x            ->
+    infer_shape_pool ~typ:`max input_shapes x.kernel_shp x.strides x.auto_pad x.pads
+  | AveragePool x        ->
+    infer_shape_pool ~typ:`avg input_shapes x.kernel_shp x.strides x.auto_pad x.pads
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes
   | Dropout _            ->
     let t = infer_shape_01 input_shapes in

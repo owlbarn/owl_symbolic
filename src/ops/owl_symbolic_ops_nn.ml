@@ -149,6 +149,74 @@ module MaxPool = struct
     }
 end
 
+module AveragePool = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable auto_pad : string
+    ; mutable ceil_mode : bool
+    ; mutable count_include_pad : bool
+    ; mutable dilations : int array
+    ; mutable kernel_shp : int array
+    ; mutable pads : int array option
+    ; mutable strides : int array
+    }
+
+  let op_type = "AveragePool"
+
+  let create
+      ?(padding = VALID)
+      ?strides
+      ?dilations
+      ?name
+      ?(ceil_mode = false)
+      ?(count_include_pad = false)
+      input_name
+      kernel_shp
+    =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| input_name |] in
+    let dim = Array.length kernel_shp in
+    let dilations =
+      match dilations with
+      | Some d ->
+        assert (Array.length d = dim);
+        d
+      | None   -> Array.make dim 1
+    in
+    let strides =
+      match strides with
+      | Some s ->
+        assert (Array.length s = dim);
+        s
+      | None   -> Array.make dim 1
+    in
+    let auto_pad, pads =
+      match padding with
+      | SAME_UPPER -> "SAME_UPPER", None
+      | SAME_LOWER -> "SAME_LOWRE", None
+      | VALID      -> "VALID", None
+      | PAD p      ->
+        assert (Array.length p = dim);
+        "NOTSET", Some p
+    in
+    { name
+    ; input
+    ; attrs
+    ; out_shape = [| None; None |]
+    ; auto_pad
+    ; pads
+    ; ceil_mode
+    ; count_include_pad
+    ; dilations
+    ; kernel_shp
+    ; strides
+    }
+end
+
 module BatchNormalization = struct
   type t =
     { mutable name : string

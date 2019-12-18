@@ -437,6 +437,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           let t1 = type_check_pattern01 ptypes.(0) _types_constraint00 name in
           let t2 = SNT_Int64 in
           [| t1.(0); t2 |]
+        | AveragePool _        -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | BatchNormalization _ ->
           let t = type_check_pattern02 ptypes _types_constraint00 name in
           Array.make 5 t.(0)
@@ -750,11 +751,20 @@ let build_onnx_attrs_conv (x : Owl_symbolic_ops_nn.Conv.t) =
 
 
 let build_onnx_attrs_maxpool (x : Owl_symbolic_ops_nn.MaxPool.t) =
-  (* create "auto_pad" attribute *)
-  let name_pad = Some "auto_pad" in
-  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.String in
-  let s = Some (x.auto_pad |> Bytes.of_string) in
-  let attr_pad = PT.default_attribute_proto ~name:name_pad ~type_ ~s () in
+  (* create "auto_pad" or "pads" attribute *)
+  let attr_pad =
+    match x.pads with
+    | Some pad ->
+      let name_pad = Some "pads" in
+      let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
+      let ints = Array.map Int64.of_int pad |> Array.to_list in
+      PT.default_attribute_proto ~name:name_pad ~type_ ~ints ()
+    | None     ->
+      let name_pad = Some "auto_pad" in
+      let (type_ : PT.attribute_proto_attribute_type option) = Some PT.String in
+      let s = Some (x.auto_pad |> Bytes.of_string) in
+      PT.default_attribute_proto ~name:name_pad ~type_ ~s ()
+  in
   (* create "ceil_mode" attribute *)
   let name_ceil = Some "ceil_mode" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Int in
@@ -775,13 +785,51 @@ let build_onnx_attrs_maxpool (x : Owl_symbolic_ops_nn.MaxPool.t) =
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
   let ints = Array.map Int64.of_int x.strides |> Array.to_list in
   let attr_strides = PT.default_attribute_proto ~name:name_strides ~type_ ~ints () in
-  (* TODO: pads *)
   (* create "storage_order" attribute *)
   let name_order = Some "storage_order" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Int in
   let i = Some (Int64.of_int x.storage_order) in
   let attr_order = PT.default_attribute_proto ~name:name_order ~type_ ~i () in
   [ attr_pad; attr_ceil; attr_dil; attr_kernel; attr_strides; attr_order ]
+
+
+let build_onnx_attrs_avgpool (x : Owl_symbolic_ops_nn.AveragePool.t) =
+  (* create "auto_pad" or "pads" attribute *)
+  let attr_pad =
+    match x.pads with
+    | Some pad ->
+      let name_pad = Some "pads" in
+      let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
+      let ints = Array.map Int64.of_int pad |> Array.to_list in
+      PT.default_attribute_proto ~name:name_pad ~type_ ~ints ()
+    | None     ->
+      let name_pad = Some "auto_pad" in
+      let (type_ : PT.attribute_proto_attribute_type option) = Some PT.String in
+      let s = Some (x.auto_pad |> Bytes.of_string) in
+      PT.default_attribute_proto ~name:name_pad ~type_ ~s ()
+  in
+  (* create "ceil_mode" attribute *)
+  let name_ceil = Some "ceil_mode" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Int in
+  let i = Some (Int64.of_int (if x.ceil_mode then 1 else 0)) in
+  let attr_ceil = PT.default_attribute_proto ~name:name_ceil ~type_ ~i () in
+  (* create "count_include_pad" attribute *)
+  let name_count = Some "count_include_pad" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Int in
+  let i = Some (Int64.of_int (if x.count_include_pad then 1 else 0)) in
+  let attr_count = PT.default_attribute_proto ~name:name_count ~type_ ~i () in
+  (* create "kernel_shape"  attribute *)
+  let name_kernel = Some "kernel_shape" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
+  let ints = Array.map Int64.of_int x.kernel_shp |> Array.to_list in
+  let attr_kernel = PT.default_attribute_proto ~name:name_kernel ~type_ ~ints () in
+  (* create "strides"  attribute *)
+  let name_strides = Some "strides" in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Ints in
+  let ints = Array.map Int64.of_int x.strides |> Array.to_list in
+  let attr_strides = PT.default_attribute_proto ~name:name_strides ~type_ ~ints () in
+  (* create "strides"  attribute *)
+  [ attr_pad; attr_ceil; attr_count; attr_kernel; attr_strides ]
 
 
 let build_onnx_attrs_dropout (x : Owl_symbolic_ops_nn.Dropout.t) =
@@ -887,6 +935,7 @@ let build_onnx_attrs sym =
     | S.ScatterElements x -> build_onnx_attrs_scatter_elements x.axis
     | S.Conv x            -> build_onnx_attrs_conv x
     | S.MaxPool x         -> build_onnx_attrs_maxpool x
+    | S.AveragePool x     -> build_onnx_attrs_avgpool x
     | S.SequenceEmpty x   -> build_onnx_attrs_seq_empty x
     | S.Dropout x         -> build_onnx_attrs_dropout x
     | S.LSTM x            -> build_onnx_attrs_lstm x

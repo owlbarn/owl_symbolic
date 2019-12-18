@@ -639,6 +639,31 @@ let maxpool ?name ?strides ?dilations ?padding input kernel_shp =
   out_1, out_2
 
 
+let avgpool
+    ?name
+    ?strides
+    ?dilations
+    ?padding
+    ?ceil_mode
+    ?count_include_pad
+    input
+    kernel_shp
+  =
+  let input_name = Owl_symbolic_graph.name input in
+  let s =
+    Owl_symbolic_ops_nn.AveragePool.create
+      ?name
+      ?strides
+      ?dilations
+      ?padding
+      ?ceil_mode
+      ?count_include_pad
+      input_name
+      kernel_shp
+  in
+  make_node (Owl_symbolic_symbol.AveragePool s) [| input |]
+
+
 let batch_norm ?name ?eps ?momentum x scale bias mean var =
   (* build multiple outputs of split *)
   let n = Owl_symbolic_utils.node_name ?name "BatchNormalization" in

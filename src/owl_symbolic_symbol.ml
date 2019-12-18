@@ -108,6 +108,7 @@ type t =
   (* NN *)
   | Conv of Conv.t
   | MaxPool of MaxPool.t
+  | AveragePool of AveragePool.t
   | BatchNormalization of BatchNormalization.t
   | Dropout of Dropout.t
   | GlobalMaxPool of GlobalMaxPool.t
@@ -201,6 +202,7 @@ let name = function
   | GatherND x           -> GatherND.(x.name)
   | Conv x               -> Conv.(x.name)
   | MaxPool x            -> MaxPool.(x.name)
+  | AveragePool x        -> AveragePool.(x.name)
   | BatchNormalization x -> BatchNormalization.(x.name)
   | Dropout x            -> Dropout.(x.name)
   | GlobalMaxPool x      -> GlobalMaxPool.(x.name)
@@ -294,6 +296,7 @@ let op_type = function
   | GatherND _           -> GatherND.op_type
   | Conv _               -> Conv.op_type
   | MaxPool _            -> MaxPool.op_type
+  | AveragePool _        -> AveragePool.op_type
   | BatchNormalization _ -> BatchNormalization.op_type
   | Dropout _            -> Dropout.op_type
   | GlobalMaxPool _      -> GlobalMaxPool.op_type
@@ -387,6 +390,7 @@ let input = function
   | GatherND x           -> GatherND.(x.input)
   | Conv x               -> Conv.(x.input)
   | MaxPool x            -> MaxPool.(x.input)
+  | AveragePool x        -> AveragePool.(x.input)
   | BatchNormalization x -> BatchNormalization.(x.input)
   | Dropout x            -> Dropout.(x.input)
   | GlobalMaxPool x      -> GlobalMaxPool.(x.input)
@@ -470,6 +474,7 @@ let set_input sym inputs =
   | GatherND x           -> x.input <- inputs
   | Conv x               -> x.input <- inputs
   | MaxPool x            -> x.input <- inputs
+  | AveragePool x        -> x.input <- inputs
   | BatchNormalization x -> x.input <- inputs
   | Dropout x            -> x.input <- inputs
   | GlobalMaxPool x      -> x.input <- inputs
@@ -562,6 +567,7 @@ let out_shape = function
   | GatherND x           -> GatherND.(x.out_shape)
   | Conv x               -> Conv.(x.out_shape)
   | MaxPool x            -> MaxPool.(x.out_shape)
+  | AveragePool x        -> AveragePool.(x.out_shape)
   | BatchNormalization x -> BatchNormalization.(x.out_shape)
   | Dropout x            -> Dropout.(x.out_shape)
   | LSTM x               -> LSTM.(x.out_shape)
@@ -649,6 +655,7 @@ let set_out_shape sym shapes =
   | GatherND x           -> x.out_shape <- shapes
   | Conv x               -> x.out_shape <- shapes
   | MaxPool x            -> x.out_shape <- shapes
+  | AveragePool x        -> x.out_shape <- shapes
   | BatchNormalization x -> x.out_shape <- shapes
   | Dropout x            -> x.out_shape <- shapes
   | GlobalMaxPool x      -> x.out_shape <- shapes
@@ -731,6 +738,7 @@ let attrs = function
   | GatherND x           -> GatherND.(x.attrs)
   | Conv x               -> Conv.(x.attrs)
   | MaxPool x            -> MaxPool.(x.attrs)
+  | AveragePool x        -> AveragePool.(x.attrs)
   | BatchNormalization x -> BatchNormalization.(x.attrs)
   | Dropout x            -> Dropout.(x.attrs)
   | GlobalMaxPool x      -> GlobalMaxPool.(x.attrs)
@@ -812,6 +820,7 @@ let set_attrs sym a =
   | GatherND x           -> x.attrs <- a
   | Conv x               -> x.attrs <- a
   | MaxPool x            -> x.attrs <- a
+  | AveragePool x        -> x.attrs <- a
   | BatchNormalization x -> x.attrs <- a
   | Dropout x            -> x.attrs <- a
   | GlobalMaxPool x      -> x.attrs <- a
