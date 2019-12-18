@@ -5,9 +5,9 @@
 
 (* Implemented: Sin, Cos, Tan, Asin, Acos, Atan, Sinh, Cosh, Tanh, Asinh, 
 Acosh, Atanh, Add, Sub, Mul, Div, Neg, Abs, Floor, Ceil, Sqrt, Relu, Exp, Log,
-Pow, Round, Gemm, MatMul, Max, Min, Sum, Mod *)
+Pow, Round, Gemm, MatMul, Max, Min, Sum, Mod, Sigmoid, *)
 
-(* Sigmoid, Mean, Clip, Softmax, Sign,  Cumsum, Det
+(* Mean, Clip, Softmax, Sign, Cumsum, Det
 
 Reciprocal, LeakyRelu, ThreasholdedRelu, Selu, Elu, PRelu, HardSigmoid,
 LogSoftmax, Hardmax, Softsign, Softplus, Expand, Erf, QLinearMatMul, MatMulInteger,
@@ -315,6 +315,23 @@ module Neg = struct
     }
 
   let op_type = "Neg"
+
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |] }
+end
+
+module Sign = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "Sign"
 
   let create ?name x_name =
     let input = [| x_name |] in

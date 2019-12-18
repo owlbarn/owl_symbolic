@@ -47,6 +47,7 @@ type t =
   | Relu of Relu.t
   | Abs of Abs.t
   | Neg of Neg.t
+  | Sign of Sign.t
   | Floor of Floor.t
   | Ceil of Ceil.t
   | Round of Round.t
@@ -150,6 +151,7 @@ let name = function
   | Ceil x               -> Ceil.(x.name)
   | Round x              -> Round.(x.name)
   | Neg x                -> Neg.(x.name)
+  | Sign x               -> Sign.(x.name)
   | Rational x           -> Rational.(x.name)
   | Add x                -> Add.(x.name)
   | Sub x                -> Sub.(x.name)
@@ -238,6 +240,7 @@ let op_type = function
   | Sigmoid _            -> Sigmoid.op_type
   | Rational _           -> Rational.op_type
   | Neg _                -> Neg.op_type
+  | Sign _               -> Sign.op_type
   | Abs _                -> Abs.op_type
   | Floor _              -> Floor.op_type
   | Ceil _               -> Ceil.op_type
@@ -329,6 +332,7 @@ let input = function
   | Log x                -> Log.(x.input)
   | Sigmoid x            -> Sigmoid.(x.input)
   | Neg x                -> Neg.(x.input)
+  | Sign x               -> Sign.(x.input)
   | Abs x                -> Abs.(x.input)
   | Floor x              -> Floor.(x.input)
   | Ceil x               -> Ceil.(x.input)
@@ -410,6 +414,7 @@ let set_input sym inputs =
   | Exp x                -> x.input <- inputs
   | Log x                -> x.input <- inputs
   | Neg x                -> x.input <- inputs
+  | Sign x               -> x.input <- inputs
   | Abs x                -> x.input <- inputs
   | Floor x              -> x.input <- inputs
   | Ceil x               -> x.input <- inputs
@@ -502,6 +507,7 @@ let out_shape = function
   | Log x                -> Log.(x.out_shape)
   | Sigmoid x            -> Sigmoid.(x.out_shape)
   | Neg x                -> Neg.(x.out_shape)
+  | Sign x               -> Sign.(x.out_shape)
   | Abs x                -> Abs.(x.out_shape)
   | Floor x              -> Floor.(x.out_shape)
   | Ceil x               -> Ceil.(x.out_shape)
@@ -588,6 +594,7 @@ let set_out_shape sym shapes =
   | Log x                -> x.out_shape <- shapes
   | Sigmoid x            -> x.out_shape <- shapes
   | Neg x                -> x.out_shape <- shapes
+  | Sign x               -> x.out_shape <- shapes
   | Abs x                -> x.out_shape <- shapes
   | Floor x              -> x.out_shape <- shapes
   | Ceil x               -> x.out_shape <- shapes
@@ -673,6 +680,8 @@ let attrs = function
   | Sigmoid x            -> Sigmoid.(x.attrs)
   | Rational x           -> Rational.(x.attrs)
   | Neg x                -> Neg.(x.attrs)
+  | Abs x                -> Abs.(x.attrs)
+  | Sign x               -> Sign.(x.attrs)
   | Relu x               -> Relu.(x.attrs)
   | Add x                -> Add.(x.attrs)
   | Sub x                -> Sub.(x.attrs)
@@ -752,6 +761,8 @@ let set_attrs sym a =
   | Sigmoid x            -> x.attrs <- a
   | Rational x           -> x.attrs <- a
   | Neg x                -> x.attrs <- a
+  | Abs x                -> x.attrs <- a
+  | Sign x               -> x.attrs <- a
   | Relu x               -> x.attrs <- a
   | Add x                -> x.attrs <- a
   | Sub x                -> x.attrs <- a

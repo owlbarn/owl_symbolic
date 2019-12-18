@@ -35,6 +35,7 @@ type t =
   | Relu of Owl_symbolic_ops_math.Relu.t
   | Abs of Owl_symbolic_ops_math.Abs.t
   | Neg of Owl_symbolic_ops_math.Neg.t
+  | Sign of Owl_symbolic_ops_math.Sign.t
   | Floor of Owl_symbolic_ops_math.Floor.t
   | Ceil of Owl_symbolic_ops_math.Ceil.t
   | Round of Owl_symbolic_ops_math.Round.t

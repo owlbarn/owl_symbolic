@@ -78,6 +78,8 @@ val abs : ?name:string -> symbol -> symbol
 
 val neg : ?name:string -> symbol -> symbol
 
+val sign : ?name:string -> symbol -> symbol
+
 val floor : ?name:string -> symbol -> symbol
 
 val ceil : ?name:string -> symbol -> symbol

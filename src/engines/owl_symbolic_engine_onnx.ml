@@ -335,6 +335,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Log _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Sigmoid _            -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Neg _                -> type_check_pattern01 ptypes.(0) _types_constraint01 name
+        | Sign _               -> type_check_pattern01 ptypes.(0) _types_constraint04 name
         | Relu _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Add _                -> type_check_pattern02 ptypes _types_constraint02 name
         | Sub _                -> type_check_pattern02 ptypes _types_constraint02 name
@@ -1015,6 +1016,5 @@ let save (onnx_model : Onnx_types.model_proto) filename =
 
 (** load an onnx model from Protobuf file *)
 let load _filename = Obj.magic None
-
 
 let compile x filename = Obj.magic (x, filename)

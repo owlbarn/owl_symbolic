@@ -457,6 +457,7 @@ let infer_shape input_shapes sym =
   | Sigmoid _            -> infer_shape_01 input_shapes
   | Abs _                -> infer_shape_01 input_shapes
   | Neg _                -> infer_shape_01 input_shapes
+  | Sign _               -> infer_shape_01 input_shapes
   | Floor _              -> infer_shape_01 input_shapes
   | Ceil _               -> infer_shape_01 input_shapes
   | Round _              -> infer_shape_01 input_shapes

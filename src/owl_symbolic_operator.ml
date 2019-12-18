@@ -167,6 +167,12 @@ let neg ?name x =
   make_node (Owl_symbolic_symbol.Neg s) [| x |]
 
 
+let sign ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Sign.create ?name xn in
+  make_node (Owl_symbolic_symbol.Sign s) [| x |]
+
+
 let floor ?name x =
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_math.Floor.create ?name xn in
