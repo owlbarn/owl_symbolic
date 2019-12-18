@@ -8,6 +8,7 @@
 
 (library
  (name owl_symbolic)
+ (wrapped false)
  (public_name owl-symbolic)
  ; Note: dependency to owl is only for dev purpose
  (libraries owl-base ocaml-protoc))
