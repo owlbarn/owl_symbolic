@@ -110,6 +110,7 @@ type t =
   | MaxPool of MaxPool.t
   | AveragePool of AveragePool.t
   | BatchNormalization of BatchNormalization.t
+  | InstanceNorm of InstanceNorm.t
   | Dropout of Dropout.t
   | GlobalMaxPool of GlobalMaxPool.t
   | GlobalAveragePool of GlobalAveragePool.t
@@ -205,6 +206,7 @@ let name = function
   | MaxPool x            -> MaxPool.(x.name)
   | AveragePool x        -> AveragePool.(x.name)
   | BatchNormalization x -> BatchNormalization.(x.name)
+  | InstanceNorm x       -> InstanceNorm.(x.name)
   | Dropout x            -> Dropout.(x.name)
   | GlobalMaxPool x      -> GlobalMaxPool.(x.name)
   | GlobalAveragePool x  -> GlobalAveragePool.(x.name)
@@ -300,6 +302,7 @@ let op_type = function
   | MaxPool _            -> MaxPool.op_type
   | AveragePool _        -> AveragePool.op_type
   | BatchNormalization _ -> BatchNormalization.op_type
+  | InstanceNorm _       -> InstanceNorm.op_type
   | Dropout _            -> Dropout.op_type
   | GlobalMaxPool _      -> GlobalMaxPool.op_type
   | GlobalAveragePool _  -> GlobalAveragePool.op_type
@@ -395,6 +398,7 @@ let input = function
   | MaxPool x            -> MaxPool.(x.input)
   | AveragePool x        -> AveragePool.(x.input)
   | BatchNormalization x -> BatchNormalization.(x.input)
+  | InstanceNorm x       -> InstanceNorm.(x.input)
   | Dropout x            -> Dropout.(x.input)
   | GlobalMaxPool x      -> GlobalMaxPool.(x.input)
   | GlobalAveragePool x  -> GlobalAveragePool.(x.input)
@@ -480,6 +484,7 @@ let set_input sym inputs =
   | MaxPool x            -> x.input <- inputs
   | AveragePool x        -> x.input <- inputs
   | BatchNormalization x -> x.input <- inputs
+  | InstanceNorm x       -> x.input <- inputs
   | Dropout x            -> x.input <- inputs
   | GlobalMaxPool x      -> x.input <- inputs
   | GlobalAveragePool x  -> x.input <- inputs
@@ -574,6 +579,7 @@ let out_shape = function
   | MaxPool x            -> MaxPool.(x.out_shape)
   | AveragePool x        -> AveragePool.(x.out_shape)
   | BatchNormalization x -> BatchNormalization.(x.out_shape)
+  | InstanceNorm x       -> InstanceNorm.(x.out_shape)
   | Dropout x            -> Dropout.(x.out_shape)
   | LSTM x               -> LSTM.(x.out_shape)
   | GlobalMaxPool x      -> GlobalMaxPool.(x.out_shape)
@@ -663,6 +669,7 @@ let set_out_shape sym shapes =
   | MaxPool x            -> x.out_shape <- shapes
   | AveragePool x        -> x.out_shape <- shapes
   | BatchNormalization x -> x.out_shape <- shapes
+  | InstanceNorm x       -> x.out_shape <- shapes
   | Dropout x            -> x.out_shape <- shapes
   | GlobalMaxPool x      -> x.out_shape <- shapes
   | GlobalAveragePool x  -> x.out_shape <- shapes
@@ -747,6 +754,7 @@ let attrs = function
   | MaxPool x            -> MaxPool.(x.attrs)
   | AveragePool x        -> AveragePool.(x.attrs)
   | BatchNormalization x -> BatchNormalization.(x.attrs)
+  | InstanceNorm x       -> InstanceNorm.(x.attrs)
   | Dropout x            -> Dropout.(x.attrs)
   | GlobalMaxPool x      -> GlobalMaxPool.(x.attrs)
   | GlobalAveragePool x  -> GlobalAveragePool.(x.attrs)
@@ -830,6 +838,7 @@ let set_attrs sym a =
   | MaxPool x            -> x.attrs <- a
   | AveragePool x        -> x.attrs <- a
   | BatchNormalization x -> x.attrs <- a
+  | InstanceNorm x       -> x.attrs <- a
   | Dropout x            -> x.attrs <- a
   | GlobalMaxPool x      -> x.attrs <- a
   | GlobalAveragePool x  -> x.attrs <- a

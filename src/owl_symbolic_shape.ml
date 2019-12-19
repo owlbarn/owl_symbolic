@@ -399,6 +399,18 @@ let infer_shape_gather_elements input_shapes =
   | _, _ -> [| None |]
 
 
+let infer_shape_instance_norm input_shapes =
+  match input_shapes.(0).(0), input_shapes.(1).(0), input_shapes.(2).(0) with
+  | Some data_shp, Some scale_shp, Some b_shp ->
+    assert (Array.length data_shp >= 4);
+    assert (Array.length scale_shp = 1);
+    assert (Array.length b_shp = 1);
+    assert (scale_shp.(0) = data_shp.(1));
+    assert (b_shp.(0) = data_shp.(1));
+    [| Some data_shp |]
+  | _, _, _ -> [| None |]
+
+
 let infer_shape_flatten input_shapes axis =
   match input_shapes.(0).(0) with
   | Some shp ->
@@ -533,6 +545,7 @@ let infer_shape input_shapes sym =
   | AveragePool x        ->
     infer_shape_pool ~typ:`avg input_shapes x.kernel_shp x.strides x.auto_pad x.pads
   | BatchNormalization _ -> infer_shape_batch_normalization input_shapes
+  | InstanceNorm _       -> infer_shape_instance_norm input_shapes
   | Dropout _            ->
     let t = infer_shape_01 input_shapes in
     [| t.(0); t.(0) |]

@@ -4,10 +4,11 @@
  *)
 
 (** Implemented: Conv, MaxPool, BatchNormalization, Dropout,
-  * GlobalAveragePool, GlobalMaxPool, AveragePool, Flatten *)
+  * GlobalAveragePool, GlobalMaxPool, AveragePool, Flatten, 
+  * InstanceNormalization *)
 
-(** ConvTranspose, InstanceNormalization,
-MaxUnpool, LpPool, MaxRoiPool, QLinearConv,ConvInteger,  GlobalLpPool, 
+(** ConvTranspose, 
+MaxUnpool, LpPool, MaxRoiPool, QLinearConv, ConvInteger, GlobalLpPool, 
 LpNormalization, Shrink, LRN, TfIdfVectorizer, StringNormalizer, MeanVarianceNormalization
 *)
 
@@ -292,7 +293,7 @@ module GlobalMaxPool = struct
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| x |] in
-    { name; input; attrs; out_shape = [| None; None |] }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module GlobalAveragePool = struct
@@ -309,7 +310,7 @@ module GlobalAveragePool = struct
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| x |] in
-    { name; input; attrs; out_shape = [| None; None |] }
+    { name; input; attrs; out_shape = [| None |] }
 end
 
 module Flatten = struct
@@ -327,5 +328,23 @@ module Flatten = struct
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| x |] in
-    { name; input; attrs; out_shape = [| None; None |]; axis }
+    { name; input; attrs; out_shape = [| None |]; axis }
+end
+
+module InstanceNorm = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable eps : float
+    }
+
+  let op_type = "InstanceNormalization"
+
+  let create ?name ?(eps = 1e-5) data scale b =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| data; scale; b |] in
+    { name; input; attrs; out_shape = [| None |]; eps }
 end

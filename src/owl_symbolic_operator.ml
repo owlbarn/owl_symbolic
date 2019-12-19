@@ -707,6 +707,14 @@ let batch_norm ?name ?eps ?momentum x scale bias mean var =
   out_1, out_2, out_3, out_4, out_5
 
 
+let instance_norm ?name ?eps input scale b =
+  let i_name = Owl_symbolic_graph.name input in
+  let s_name = Owl_symbolic_graph.name scale in
+  let b_name = Owl_symbolic_graph.name b in
+  let o = Owl_symbolic_ops_nn.InstanceNorm.create ?name ?eps i_name s_name b_name in
+  make_node (Owl_symbolic_symbol.InstanceNorm o) [| input; scale; b |]
+
+
 let dropout ?name ?ratio x =
   (* build multiple outputs of split *)
   let d_name = Owl_symbolic_utils.node_name ?name "Dropout" in

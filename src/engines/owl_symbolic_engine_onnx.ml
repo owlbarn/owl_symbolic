@@ -441,6 +441,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | BatchNormalization _ ->
           let t = type_check_pattern02 ptypes _types_constraint00 name in
           Array.make 5 t.(0)
+        | InstanceNorm _       -> type_check_pattern02 ptypes _types_constraint00 name
         | Dropout _            ->
           let t = type_check_pattern01 ptypes.(0) _types_constraint00 name in
           [| t.(0); SNT_Bool |]
@@ -721,6 +722,17 @@ let build_onnx_attrs_avgpool (x : Owl_symbolic_ops_nn.AveragePool.t) =
   [ attr_pad; attr_ceil; attr_count; attr_kernel; attr_strides ]
 
 
+let build_onnx_attrs_batch_norm eps momentum =
+  let attr_eps = make_attr_flt "epsilon" (Some eps) in
+  let attr_m = make_attr_flt "momentum" (Some momentum) in
+  [ attr_eps; attr_m ]
+
+
+let build_onnx_attrs_instance_norm eps =
+  let attr_eps = make_attr_flt "epsilon" (Some eps) in
+  [ attr_eps ]
+
+
 let build_onnx_attrs_dropout (x : Owl_symbolic_ops_nn.Dropout.t) =
   let attr_ratio = make_attr_flt "ratio" (Some x.ratio) in
   [ attr_ratio ]
@@ -771,42 +783,44 @@ let build_onnx_attrs_seq_empty (x : Owl_symbolic_ops_sequence.SequenceEmpty.t) =
 let build_onnx_attrs sym =
   let onnx_attrs =
     match sym with
-    | S.Float _           -> build_onnx_attrs_float sym
-    | S.Int _             -> build_onnx_attrs_int sym
-    | S.Complex _         -> build_onnx_attrs_complex sym
-    | S.Pi _              -> build_onnx_attrs_pi sym
-    | S.Tensor _          -> build_onnx_attrs_tensor sym
-    | S.RandomUniform x   -> build_onnx_attrs_randomuniform x
-    | S.RandomNormal x    -> build_onnx_attrs_randomnormal x
-    | S.Mod x             -> build_onnx_attrs_fmod x
-    | S.Gemm x            -> build_onnx_attrs_gemm x
-    | S.BitShift x        -> build_onnx_attrs_bitshift x.direction
-    | S.ReduceSum x       -> build_onnx_attrs_reduce x.axes x.keepdims
-    | S.ReduceMax x       -> build_onnx_attrs_reduce x.axes x.keepdims
-    | S.ReduceMin x       -> build_onnx_attrs_reduce x.axes x.keepdims
-    | S.ReduceMean x      -> build_onnx_attrs_reduce x.axes x.keepdims
-    | S.ReduceSumSquare x -> build_onnx_attrs_reduce x.axes x.keepdims
-    | S.ReduceProd x      -> build_onnx_attrs_reduce x.axes x.keepdims
-    | S.ReduceLogSum x    -> build_onnx_attrs_reduce x.axes x.keepdims
-    | S.ReduceLogSumExp x -> build_onnx_attrs_reduce x.axes x.keepdims
-    | S.ReduceL1 x        -> build_onnx_attrs_reduce x.axes x.keepdims
-    | S.ReduceL2 x        -> build_onnx_attrs_reduce x.axes x.keepdims
-    | S.Split x           -> build_onnx_attrs_split x
-    | S.Concat x          -> build_onnx_attrs_concat x
-    | S.Pad x             -> build_onnx_attrs_pad x
-    | S.Cast x            -> build_onnx_attrs_cast x
-    | S.Squeeze x         -> build_onnx_attrs_squeeze x
-    | S.Transpose x       -> build_onnx_attrs_transpose x
-    | S.SpaceToDepth x    -> build_onnx_attrs_spacetodepth x.blocksize
-    | S.ScatterElements x -> build_onnx_attrs_scatter_elements x.axis
-    | S.Conv x            -> build_onnx_attrs_conv x
-    | S.MaxPool x         -> build_onnx_attrs_maxpool x
-    | S.AveragePool x     -> build_onnx_attrs_avgpool x
-    | S.Flatten x         -> build_onnx_attrs_flatten x.axis
-    | S.SequenceEmpty x   -> build_onnx_attrs_seq_empty x
-    | S.Dropout x         -> build_onnx_attrs_dropout x
-    | S.LSTM x            -> build_onnx_attrs_lstm x
-    | _                   -> []
+    | S.Float _              -> build_onnx_attrs_float sym
+    | S.Int _                -> build_onnx_attrs_int sym
+    | S.Complex _            -> build_onnx_attrs_complex sym
+    | S.Pi _                 -> build_onnx_attrs_pi sym
+    | S.Tensor _             -> build_onnx_attrs_tensor sym
+    | S.RandomUniform x      -> build_onnx_attrs_randomuniform x
+    | S.RandomNormal x       -> build_onnx_attrs_randomnormal x
+    | S.Mod x                -> build_onnx_attrs_fmod x
+    | S.Gemm x               -> build_onnx_attrs_gemm x
+    | S.BitShift x           -> build_onnx_attrs_bitshift x.direction
+    | S.ReduceSum x          -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.ReduceMax x          -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.ReduceMin x          -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.ReduceMean x         -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.ReduceSumSquare x    -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.ReduceProd x         -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.ReduceLogSum x       -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.ReduceLogSumExp x    -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.ReduceL1 x           -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.ReduceL2 x           -> build_onnx_attrs_reduce x.axes x.keepdims
+    | S.Split x              -> build_onnx_attrs_split x
+    | S.Concat x             -> build_onnx_attrs_concat x
+    | S.Pad x                -> build_onnx_attrs_pad x
+    | S.Cast x               -> build_onnx_attrs_cast x
+    | S.Squeeze x            -> build_onnx_attrs_squeeze x
+    | S.Transpose x          -> build_onnx_attrs_transpose x
+    | S.SpaceToDepth x       -> build_onnx_attrs_spacetodepth x.blocksize
+    | S.ScatterElements x    -> build_onnx_attrs_scatter_elements x.axis
+    | S.Conv x               -> build_onnx_attrs_conv x
+    | S.MaxPool x            -> build_onnx_attrs_maxpool x
+    | S.AveragePool x        -> build_onnx_attrs_avgpool x
+    | S.BatchNormalization x -> build_onnx_attrs_batch_norm x.epsilon x.momentum
+    | S.InstanceNorm x       -> build_onnx_attrs_instance_norm x.eps
+    | S.Flatten x            -> build_onnx_attrs_flatten x.axis
+    | S.SequenceEmpty x      -> build_onnx_attrs_seq_empty x
+    | S.Dropout x            -> build_onnx_attrs_dropout x
+    | S.LSTM x               -> build_onnx_attrs_lstm x
+    | _                      -> []
   in
   onnx_attrs
 

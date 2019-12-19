@@ -244,6 +244,8 @@ val batch_norm
   -> symbol
   -> symbol * symbol * symbol * symbol * symbol
 
+val instance_norm : ?name:string -> ?eps:float -> symbol -> symbol -> symbol -> symbol
+
 val lstm
   :  ?name:string
   -> ?alpha:float array
