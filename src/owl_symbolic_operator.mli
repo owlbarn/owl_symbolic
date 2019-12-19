@@ -88,6 +88,8 @@ val round : ?name:string -> symbol -> symbol
 
 val relu : ?name:string -> symbol -> symbol
 
+val softmax : ?name:string -> ?axis:int -> symbol -> symbol
+
 val add : ?name:string -> symbol -> symbol -> symbol
 
 val sub : ?name:string -> symbol -> symbol -> symbol

@@ -46,6 +46,7 @@ type t =
   | Log of Log.t
   | Sigmoid of Sigmoid.t
   | Relu of Relu.t
+  | Softmax of Softmax.t
   | Abs of Abs.t
   | Neg of Neg.t
   | Sign of Sign.t
@@ -153,6 +154,7 @@ let name = function
   | Log x                -> Log.(x.name)
   | Sigmoid x            -> Sigmoid.(x.name)
   | Relu x               -> Relu.(x.name)
+  | Softmax x            -> Softmax.(x.name)
   | Abs x                -> Abs.(x.name)
   | Floor x              -> Floor.(x.name)
   | Ceil x               -> Ceil.(x.name)
@@ -258,6 +260,7 @@ let op_type = function
   | Ceil _               -> Ceil.op_type
   | Round _              -> Round.op_type
   | Relu _               -> Relu.op_type
+  | Softmax _            -> Softmax.op_type
   | Add _                -> Add.op_type
   | Sub _                -> Sub.op_type
   | Mul _                -> Mul.op_type
@@ -355,6 +358,7 @@ let input = function
   | Ceil x               -> Ceil.(x.input)
   | Round x              -> Round.(x.input)
   | Relu x               -> Relu.(x.input)
+  | Softmax x            -> Softmax.(x.input)
   | Rational x           -> Rational.(x.input)
   | Add x                -> Add.(x.input)
   | Sub x                -> Sub.(x.input)
@@ -442,6 +446,7 @@ let set_input sym inputs =
   | Ceil x               -> x.input <- inputs
   | Round x              -> x.input <- inputs
   | Relu x               -> x.input <- inputs
+  | Softmax x            -> x.input <- inputs
   | Rational x           -> x.input <- inputs
   | Add x                -> x.input <- inputs
   | Sub x                -> x.input <- inputs
@@ -540,6 +545,7 @@ let out_shape = function
   | Ceil x               -> Ceil.(x.out_shape)
   | Round x              -> Round.(x.out_shape)
   | Relu x               -> Relu.(x.out_shape)
+  | Softmax x            -> Softmax.(x.out_shape)
   | Rational x           -> Rational.(x.out_shape)
   | Add x                -> Add.(x.out_shape)
   | Sub x                -> Sub.(x.out_shape)
@@ -632,6 +638,7 @@ let set_out_shape sym shapes =
   | Ceil x               -> x.out_shape <- shapes
   | Round x              -> x.out_shape <- shapes
   | Relu x               -> x.out_shape <- shapes
+  | Softmax x            -> x.out_shape <- shapes
   | Rational x           -> x.out_shape <- shapes
   | Add x                -> x.out_shape <- shapes
   | Sub x                -> x.out_shape <- shapes
@@ -720,6 +727,7 @@ let attrs = function
   | Abs x                -> Abs.(x.attrs)
   | Sign x               -> Sign.(x.attrs)
   | Relu x               -> Relu.(x.attrs)
+  | Softmax x            -> Softmax.(x.attrs)
   | Add x                -> Add.(x.attrs)
   | Sub x                -> Sub.(x.attrs)
   | Mul x                -> Mul.(x.attrs)
@@ -806,6 +814,7 @@ let set_attrs sym a =
   | Abs x                -> x.attrs <- a
   | Sign x               -> x.attrs <- a
   | Relu x               -> x.attrs <- a
+  | Softmax x            -> x.attrs <- a
   | Add x                -> x.attrs <- a
   | Sub x                -> x.attrs <- a
   | Mul x                -> x.attrs <- a

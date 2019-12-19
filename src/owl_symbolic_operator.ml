@@ -197,6 +197,12 @@ let relu ?name x =
   make_node (Owl_symbolic_symbol.Relu s) [| x |]
 
 
+let softmax ?name ?axis x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Softmax.create ?name ?axis xn in
+  make_node (Owl_symbolic_symbol.Softmax s) [| x |]
+
+
 let add ?name x y =
   let xn = Owl_symbolic_graph.name x in
   let yn = Owl_symbolic_graph.name y in

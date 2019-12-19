@@ -337,6 +337,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Neg _                -> type_check_pattern01 ptypes.(0) _types_constraint01 name
         | Sign _               -> type_check_pattern01 ptypes.(0) _types_constraint04 name
         | Relu _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Softmax _            -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Add _                -> type_check_pattern02 ptypes _types_constraint02 name
         | Sub _                -> type_check_pattern02 ptypes _types_constraint02 name
         | Mul _                -> type_check_pattern02 ptypes _types_constraint02 name
@@ -611,6 +612,11 @@ let build_onnx_attrs_randomnormal (x : Owl_symbolic_ops_generator.RandomNormal.t
   [ attr_dtype; attr_mean; attr_scale; attr_seed; attr_shape ]
 
 
+let build_onnx_attrs_softmax axis =
+  let attr_axis = make_attr_int "axis" axis in
+  [ attr_axis ]
+
+
 let build_onnx_attrs_fmod (x : Owl_symbolic_ops_math.Mod.t) =
   let attr_fmod = make_attr_int "fmod" x.fmod in
   [ attr_fmod ]
@@ -809,6 +815,7 @@ let build_onnx_attrs sym =
     | S.Tensor _             -> build_onnx_attrs_tensor sym
     | S.RandomUniform x      -> build_onnx_attrs_randomuniform x
     | S.RandomNormal x       -> build_onnx_attrs_randomnormal x
+    | S.Softmax x            -> build_onnx_attrs_softmax x.axis
     | S.Mod x                -> build_onnx_attrs_fmod x
     | S.Gemm x               -> build_onnx_attrs_gemm x
     | S.BitShift x           -> build_onnx_attrs_bitshift x.direction
