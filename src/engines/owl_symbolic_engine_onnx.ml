@@ -336,6 +336,20 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Sigmoid _            -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Neg _                -> type_check_pattern01 ptypes.(0) _types_constraint01 name
         | Sign _               -> type_check_pattern01 ptypes.(0) _types_constraint04 name
+        | Floor _              -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Ceil _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Round _              -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Clip _               ->
+          (* TODO: we set the min/max tensor to be float; 
+           * change dtypes to be consistent with that of input data
+           * This step could be finished somewhere else, since it really doesn't fit. s *)
+          Owl_symbolic_symbol.update_tensor_dtype
+            (Owl_graph.attr parents.(1))
+            ptypes.(0).(0);
+          Owl_symbolic_symbol.update_tensor_dtype
+            (Owl_graph.attr parents.(2))
+            ptypes.(0).(0);
+          type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Relu _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Softmax _            -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Add _                -> type_check_pattern02 ptypes _types_constraint02 name

@@ -40,6 +40,7 @@ type t =
   | Floor of Owl_symbolic_ops_math.Floor.t
   | Ceil of Owl_symbolic_ops_math.Ceil.t
   | Round of Owl_symbolic_ops_math.Round.t
+  | Clip of Owl_symbolic_ops_math.Clip.t
   | Rational of Owl_symbolic_ops_math.Rational.t
   | Add of Owl_symbolic_ops_math.Add.t
   | Sub of Owl_symbolic_ops_math.Sub.t
@@ -138,5 +139,7 @@ val complex_value : t -> float * float
 val tensor_value : t -> Owl_symbolic_types.tensor
 
 val initializer_ : t -> Owl_symbolic_types.tensor option
+
+val update_tensor_dtype : t -> Owl_symbolic_types.number_type -> unit
 
 val compare : t -> t -> int

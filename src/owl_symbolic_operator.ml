@@ -35,6 +35,18 @@ let tensor ?name t =
   make_node (Owl_symbolic_symbol.Tensor sym) [||]
 
 
+let tensor_float ?name i =
+  let t = Owl_symbolic_types.make_tensor ~dtype:SNT_Float ~flt_val:[| i |] [||] in
+  tensor ?name t
+
+
+let tensor_ints ?name ints =
+  let t =
+    Owl_symbolic_types.make_tensor ~dtype:SNT_Int64 ~int_val:ints [| Array.length ints |]
+  in
+  tensor ?name t
+
+
 (* The shape and type are decided by initial value; 
  * if initial value not given, user need to specify them. 
  * Shape value default to scalar [||], and type default to SNT_Float. *)
@@ -189,6 +201,16 @@ let round ?name x =
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_math.Round.create ?name xn in
   make_node (Owl_symbolic_symbol.Round s) [| x |]
+
+
+let clip ?name ~min ~max x =
+  let node1 = tensor_float min in
+  let node2 = tensor_float max in
+  let xn = Owl_symbolic_graph.name x in
+  let n1 = Owl_symbolic_graph.name node1 in
+  let n2 = Owl_symbolic_graph.name node2 in
+  let s = Owl_symbolic_ops_math.Clip.create ?name xn n1 n2 in
+  make_node (Owl_symbolic_symbol.Clip s) [| x; node1; node2 |]
 
 
 let relu ?name x =
@@ -470,7 +492,7 @@ let cast ?name x target =
 let pad ?name ?mode ?v x pads =
   let xn = Owl_symbolic_graph.name x in
   let pads_name = Owl_symbolic_utils.node_name "Tensor" in
-  let pads_node = Owl_symbolic_graph.tensor_node_from_int_array pads in
+  let pads_node = tensor_ints pads in
   match v with
   | Some v ->
     let vn = Owl_symbolic_graph.name v in
@@ -489,7 +511,7 @@ let squeeze ?name ?axes x =
 
 let tile ?name x repeats =
   let r_name = Owl_symbolic_utils.node_name "Tensor" in
-  let rep_node = Owl_symbolic_graph.tensor_node_from_int_array repeats in
+  let rep_node = tensor_ints repeats in
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_tensor.Tile.create ?name xn r_name repeats in
   make_node (Owl_symbolic_symbol.Tile s) [| x; rep_node |]
@@ -516,19 +538,19 @@ let transpose ?name ?perm x =
 (* TODO: the inferface may be updated to accept starts/ends etc. as input nodes *)
 (* TODO: what happen if only the second optional paramter is specified? *)
 let slice ?name ?axes ?steps starts ends x =
-  let start_node = Owl_symbolic_graph.tensor_node_from_int_array starts in
-  let end_node = Owl_symbolic_graph.tensor_node_from_int_array ends in
+  let start_node = tensor_ints starts in
+  let end_node = tensor_ints ends in
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_tensor.Slice.create ?name ?axes ?steps starts ends xn in
   match axes, steps with
   | Some ax, Some st ->
-    let ax_node = Owl_symbolic_graph.tensor_node_from_int_array ax in
-    let st_node = Owl_symbolic_graph.tensor_node_from_int_array st in
+    let ax_node = tensor_ints ax in
+    let st_node = tensor_ints st in
     make_node
       (Owl_symbolic_symbol.Slice s)
       [| x; start_node; end_node; ax_node; st_node |]
   | Some ax, None ->
-    let ax_node = Owl_symbolic_graph.tensor_node_from_int_array ax in
+    let ax_node = tensor_ints ax in
     make_node (Owl_symbolic_symbol.Slice s) [| x; start_node; end_node; ax_node |]
   (* NOTE: currently we only allow specifiying steps if the axes is specified *)
   | _, _ -> make_node (Owl_symbolic_symbol.Slice s) [| x; start_node; end_node |]

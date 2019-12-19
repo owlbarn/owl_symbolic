@@ -25,12 +25,12 @@ type number_type =
 val number_type_to_string : number_type -> string
 
 type tensor =
-  { dtype : number_type
-  ; shape : int array
-  ; str_val : string array option
-  ; flt_val : float array option
-  ; int_val : int array option
-  ; raw_val : bytes option
+  { mutable dtype : number_type
+  ; mutable shape : int array
+  ; mutable str_val : string array option
+  ; mutable flt_val : float array option
+  ; mutable int_val : int array option
+  ; mutable raw_val : bytes option
   }
 
 type pad =

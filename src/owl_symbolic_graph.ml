@@ -154,11 +154,3 @@ let to_dot graph =
 
 
 let set_sym (n : symbol) (s : Owl_symbolic_symbol.t) = Owl_graph.set_attr n s
-
-(* This helper should be built on operator/tensor *)
-let tensor_node_from_int_array ?name a =
-  let t =
-    Owl_symbolic_types.make_tensor ~dtype:SNT_Int64 ~int_val:a [| Array.length a |]
-  in
-  let sym = Owl_symbolic_ops_generator.Tensor.create ?name t in
-  make_node (Owl_symbolic_symbol.Tensor sym) [||]

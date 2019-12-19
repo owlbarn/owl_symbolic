@@ -53,6 +53,7 @@ type t =
   | Floor of Floor.t
   | Ceil of Ceil.t
   | Round of Round.t
+  | Clip of Clip.t
   | Rational of Rational.t
   | Add of Add.t
   | Sub of Sub.t
@@ -159,6 +160,7 @@ let name = function
   | Floor x              -> Floor.(x.name)
   | Ceil x               -> Ceil.(x.name)
   | Round x              -> Round.(x.name)
+  | Clip x               -> Clip.(x.name)
   | Neg x                -> Neg.(x.name)
   | Sign x               -> Sign.(x.name)
   | Rational x           -> Rational.(x.name)
@@ -259,6 +261,7 @@ let op_type = function
   | Floor _              -> Floor.op_type
   | Ceil _               -> Ceil.op_type
   | Round _              -> Round.op_type
+  | Clip _               -> Clip.op_type
   | Relu _               -> Relu.op_type
   | Softmax _            -> Softmax.op_type
   | Add _                -> Add.op_type
@@ -357,6 +360,7 @@ let input = function
   | Floor x              -> Floor.(x.input)
   | Ceil x               -> Ceil.(x.input)
   | Round x              -> Round.(x.input)
+  | Clip x               -> Clip.(x.input)
   | Relu x               -> Relu.(x.input)
   | Softmax x            -> Softmax.(x.input)
   | Rational x           -> Rational.(x.input)
@@ -445,6 +449,7 @@ let set_input sym inputs =
   | Floor x              -> x.input <- inputs
   | Ceil x               -> x.input <- inputs
   | Round x              -> x.input <- inputs
+  | Clip x               -> x.input <- inputs
   | Relu x               -> x.input <- inputs
   | Softmax x            -> x.input <- inputs
   | Rational x           -> x.input <- inputs
@@ -544,6 +549,7 @@ let out_shape = function
   | Floor x              -> Floor.(x.out_shape)
   | Ceil x               -> Ceil.(x.out_shape)
   | Round x              -> Round.(x.out_shape)
+  | Clip x               -> Clip.(x.out_shape)
   | Relu x               -> Relu.(x.out_shape)
   | Softmax x            -> Softmax.(x.out_shape)
   | Rational x           -> Rational.(x.out_shape)
@@ -637,6 +643,7 @@ let set_out_shape sym shapes =
   | Floor x              -> x.out_shape <- shapes
   | Ceil x               -> x.out_shape <- shapes
   | Round x              -> x.out_shape <- shapes
+  | Clip x               -> x.out_shape <- shapes
   | Relu x               -> x.out_shape <- shapes
   | Softmax x            -> x.out_shape <- shapes
   | Rational x           -> x.out_shape <- shapes
@@ -725,6 +732,10 @@ let attrs = function
   | Rational x           -> Rational.(x.attrs)
   | Neg x                -> Neg.(x.attrs)
   | Abs x                -> Abs.(x.attrs)
+  | Floor x              -> Floor.(x.attrs)
+  | Ceil x               -> Ceil.(x.attrs)
+  | Round x              -> Round.(x.attrs)
+  | Clip x               -> Clip.(x.attrs)
   | Sign x               -> Sign.(x.attrs)
   | Relu x               -> Relu.(x.attrs)
   | Softmax x            -> Softmax.(x.attrs)
@@ -813,6 +824,10 @@ let set_attrs sym a =
   | Neg x                -> x.attrs <- a
   | Abs x                -> x.attrs <- a
   | Sign x               -> x.attrs <- a
+  | Floor x              -> x.attrs <- a
+  | Ceil x               -> x.attrs <- a
+  | Round x              -> x.attrs <- a
+  | Clip x               -> x.attrs <- a
   | Relu x               -> x.attrs <- a
   | Softmax x            -> x.attrs <- a
   | Add x                -> x.attrs <- a
@@ -939,6 +954,15 @@ let tensor_value = function
 let initializer_ = function
   | Variable x -> Variable.(x.init)
   | _          -> failwith "owl_symbolic_symbol.initializer_"
+
+
+(* TODO: check if the value is indeed changed *)
+let update_tensor_dtype op new_typ =
+  match op with
+  | Tensor x ->
+    let t = x.value in
+    t.dtype <- new_typ
+  | _        -> failwith "owl_symbolic_symbol.update_tensor_dtype"
 
 
 let compare sx sy =
