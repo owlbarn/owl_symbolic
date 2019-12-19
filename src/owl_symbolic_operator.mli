@@ -119,6 +119,8 @@ val min : ?name:string -> symbol array -> symbol
 
 val sum : ?name:string -> symbol array -> symbol
 
+val mean : ?name:string -> symbol array -> symbol
+
 val and_ : ?name:string -> symbol -> symbol -> symbol
 
 val or_ : ?name:string -> symbol -> symbol -> symbol

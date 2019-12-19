@@ -64,6 +64,7 @@ type t =
   | Max of Max.t
   | Min of Min.t
   | Sum of Sum.t
+  | Mean of Mean.t
   (* Logical ops *)
   | And of And.t
   | Or of Or.t
@@ -170,6 +171,7 @@ let name = function
   | Max x                -> Max.(x.name)
   | Min x                -> Min.(x.name)
   | Sum x                -> Sum.(x.name)
+  | Mean x               -> Mean.(x.name)
   | And x                -> And.(x.name)
   | Or x                 -> Or.(x.name)
   | Not x                -> Not.(x.name)
@@ -267,6 +269,7 @@ let op_type = function
   | Max _                -> Max.op_type
   | Min _                -> Min.op_type
   | Sum _                -> Sum.op_type
+  | Mean _               -> Mean.op_type
   | And _                -> And.op_type
   | Or _                 -> Or.op_type
   | Not _                -> Not.op_type
@@ -364,6 +367,7 @@ let input = function
   | Max x                -> Max.(x.input)
   | Min x                -> Min.(x.input)
   | Sum x                -> Sum.(x.input)
+  | Mean x               -> Mean.(x.input)
   | And x                -> And.(x.input)
   | Or x                 -> Or.(x.input)
   | Not x                -> Not.(x.input)
@@ -451,6 +455,7 @@ let set_input sym inputs =
   | Max x                -> x.input <- inputs
   | Min x                -> x.input <- inputs
   | Sum x                -> x.input <- inputs
+  | Mean x               -> x.input <- inputs
   | And x                -> x.input <- inputs
   | Or x                 -> x.input <- inputs
   | Not x                -> x.input <- inputs
@@ -547,6 +552,7 @@ let out_shape = function
   | Max x                -> Max.(x.out_shape)
   | Min x                -> Min.(x.out_shape)
   | Sum x                -> Sum.(x.out_shape)
+  | Mean x               -> Mean.(x.out_shape)
   | Or x                 -> Or.(x.out_shape)
   | Not x                -> Not.(x.out_shape)
   | Xor x                -> Xor.(x.out_shape)
@@ -638,6 +644,7 @@ let set_out_shape sym shapes =
   | Max x                -> x.out_shape <- shapes
   | Min x                -> x.out_shape <- shapes
   | Sum x                -> x.out_shape <- shapes
+  | Mean x               -> x.out_shape <- shapes
   | And x                -> x.out_shape <- shapes
   | Or x                 -> x.out_shape <- shapes
   | Not x                -> x.out_shape <- shapes
@@ -724,6 +731,7 @@ let attrs = function
   | Max x                -> Max.(x.attrs)
   | Min x                -> Min.(x.attrs)
   | Sum x                -> Sum.(x.attrs)
+  | Mean x               -> Mean.(x.attrs)
   | And x                -> And.(x.attrs)
   | Or x                 -> Or.(x.attrs)
   | Not x                -> Not.(x.attrs)
@@ -809,6 +817,7 @@ let set_attrs sym a =
   | Max x                -> x.attrs <- a
   | Min x                -> x.attrs <- a
   | Sum x                -> x.attrs <- a
+  | Mean x               -> x.attrs <- a
   | And x                -> x.attrs <- a
   | Or x                 -> x.attrs <- a
   | Not x                -> x.attrs <- a

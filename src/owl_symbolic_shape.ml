@@ -515,6 +515,7 @@ let infer_shape input_shapes sym =
   | Max _                -> infer_shape_31 input_shapes
   | Min _                -> infer_shape_31 input_shapes
   | Sum _                -> infer_shape_31 input_shapes
+  | Mean _               -> infer_shape_31 input_shapes
   | And _                -> infer_shape_03 input_shapes
   | Or _                 -> infer_shape_03 input_shapes
   | Not _                -> infer_shape_03 input_shapes

@@ -279,6 +279,12 @@ let sum ?name xs =
   make_node (Owl_symbolic_symbol.Sum s) xs
 
 
+let mean ?name xs =
+  let xn = Array.map Owl_symbolic_graph.name xs in
+  let s = Owl_symbolic_ops_math.Mean.create ?name xn in
+  make_node (Owl_symbolic_symbol.Mean s) xs
+
+
 (** Reduction *)
 
 let reduce_sum ?keepdims ?name x axes =
