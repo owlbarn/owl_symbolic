@@ -725,6 +725,12 @@ let dropout ?name ?ratio x =
   out1, out2
 
 
+let flatten ?name ?axis data =
+  let datan = Owl_symbolic_graph.name data in
+  let s = Owl_symbolic_ops_nn.Flatten.create ?name ?axis datan in
+  make_node (Owl_symbolic_symbol.Flatten s) [| data |]
+
+
 let lstm ?name ?alpha ?beta ?clip ?activations ?direction ?input_forget hidden_size x w r =
   (* build multiple outputs of split *)
   let l_name = Owl_symbolic_utils.node_name ?name "LSTM" in

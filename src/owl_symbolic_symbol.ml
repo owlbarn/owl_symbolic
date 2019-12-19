@@ -113,6 +113,7 @@ type t =
   | Dropout of Dropout.t
   | GlobalMaxPool of GlobalMaxPool.t
   | GlobalAveragePool of GlobalAveragePool.t
+  | Flatten of Flatten.t
   (* RNN *)
   | LSTM of LSTM.t
   (* Sequence *)
@@ -207,6 +208,7 @@ let name = function
   | Dropout x            -> Dropout.(x.name)
   | GlobalMaxPool x      -> GlobalMaxPool.(x.name)
   | GlobalAveragePool x  -> GlobalAveragePool.(x.name)
+  | Flatten x            -> Flatten.(x.name)
   | LSTM x               -> LSTM.(x.name)
   | SequenceEmpty x      -> SequenceEmpty.(x.name)
   | _                    -> failwith "owl_symbolic_symbol.name"
@@ -301,6 +303,7 @@ let op_type = function
   | Dropout _            -> Dropout.op_type
   | GlobalMaxPool _      -> GlobalMaxPool.op_type
   | GlobalAveragePool _  -> GlobalAveragePool.op_type
+  | Flatten _            -> Flatten.op_type
   | LSTM _               -> LSTM.op_type
   | SequenceEmpty _      -> SequenceEmpty.op_type
   | _                    -> failwith "owl_symbolic_symbol.op_type"
@@ -395,6 +398,7 @@ let input = function
   | Dropout x            -> Dropout.(x.input)
   | GlobalMaxPool x      -> GlobalMaxPool.(x.input)
   | GlobalAveragePool x  -> GlobalAveragePool.(x.input)
+  | Flatten x            -> Flatten.(x.input)
   | LSTM x               -> LSTM.(x.input)
   | SequenceEmpty _      -> [||]
   | _                    -> failwith "owl_symbolic_symbol.input"
@@ -479,6 +483,7 @@ let set_input sym inputs =
   | Dropout x            -> x.input <- inputs
   | GlobalMaxPool x      -> x.input <- inputs
   | GlobalAveragePool x  -> x.input <- inputs
+  | Flatten x            -> x.input <- inputs
   | LSTM x               -> x.input <- inputs
   | _                    -> failwith "owl_symbolic_symbol.set_input"
 
@@ -573,6 +578,7 @@ let out_shape = function
   | LSTM x               -> LSTM.(x.out_shape)
   | GlobalMaxPool x      -> GlobalMaxPool.(x.out_shape)
   | GlobalAveragePool x  -> GlobalAveragePool.(x.out_shape)
+  | Flatten x            -> Flatten.(x.out_shape)
   | SequenceEmpty x      -> SequenceEmpty.(x.out_shape)
   | _                    -> failwith "out_shape: unsupported op."
 
@@ -660,6 +666,7 @@ let set_out_shape sym shapes =
   | Dropout x            -> x.out_shape <- shapes
   | GlobalMaxPool x      -> x.out_shape <- shapes
   | GlobalAveragePool x  -> x.out_shape <- shapes
+  | Flatten x            -> x.out_shape <- shapes
   | LSTM x               -> x.out_shape <- shapes
   | SequenceEmpty x      -> x.out_shape <- shapes
   | _                    -> failwith "set_out_shape: unsupported op."
@@ -743,6 +750,7 @@ let attrs = function
   | Dropout x            -> Dropout.(x.attrs)
   | GlobalMaxPool x      -> GlobalMaxPool.(x.attrs)
   | GlobalAveragePool x  -> GlobalAveragePool.(x.attrs)
+  | Flatten x            -> Flatten.(x.attrs)
   | LSTM x               -> LSTM.(x.attrs)
   | SequenceEmpty x      -> SequenceEmpty.(x.attrs)
   | _                    -> [||]
@@ -825,6 +833,7 @@ let set_attrs sym a =
   | Dropout x            -> x.attrs <- a
   | GlobalMaxPool x      -> x.attrs <- a
   | GlobalAveragePool x  -> x.attrs <- a
+  | Flatten x            -> x.attrs <- a
   | LSTM x               -> x.attrs <- a
   | SequenceEmpty x      -> x.attrs <- a
   | _                    -> ()

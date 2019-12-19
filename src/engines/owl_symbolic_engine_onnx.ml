@@ -446,6 +446,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           [| t.(0); SNT_Bool |]
         | GlobalAveragePool _  -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | GlobalMaxPool _      -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Flatten _            -> type_check_pattern01 ptypes.(0) _types_constraint03 name
         | LSTM _               ->
           (* TODO: the optional sequence_len has int32 type *)
           let t = type_check_pattern02 ptypes _types_constraint00 name in
@@ -725,6 +726,11 @@ let build_onnx_attrs_dropout (x : Owl_symbolic_ops_nn.Dropout.t) =
   [ attr_ratio ]
 
 
+let build_onnx_attrs_flatten axis =
+  let attr_axis = make_attr_int "axis" axis in
+  [ attr_axis ]
+
+
 let build_onnx_attrs_lstm (x : Owl_symbolic_ops_rnn.LSTM.t) =
   let attr_hidden = make_attr_int "hidden_size" x.hidden_size in
   let strings = Array.map Owl_symbolic_types.activation_to_string x.activations in
@@ -796,6 +802,7 @@ let build_onnx_attrs sym =
     | S.Conv x            -> build_onnx_attrs_conv x
     | S.MaxPool x         -> build_onnx_attrs_maxpool x
     | S.AveragePool x     -> build_onnx_attrs_avgpool x
+    | S.Flatten x         -> build_onnx_attrs_flatten x.axis
     | S.SequenceEmpty x   -> build_onnx_attrs_seq_empty x
     | S.Dropout x         -> build_onnx_attrs_dropout x
     | S.LSTM x            -> build_onnx_attrs_lstm x

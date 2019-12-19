@@ -399,6 +399,17 @@ let infer_shape_gather_elements input_shapes =
   | _, _ -> [| None |]
 
 
+let infer_shape_flatten input_shapes axis =
+  match input_shapes.(0).(0) with
+  | Some shp ->
+    let r = Array.length shp in
+    assert (axis < r && axis >= 0);
+    let a = Owl_symbolic_utils.nelt (Array.sub shp 0 (axis + 1)) in
+    let b = Owl_symbolic_utils.nelt (Array.sub shp (axis + 1) (r - axis - 1)) in
+    [| Some [| a; b |] |]
+  | None     -> [| None |]
+
+
 (* TODO: consider all the other optioanl parameters *)
 let infer_shape_lstm input_shapes =
   match input_shapes.(0).(0), input_shapes.(1).(0), input_shapes.(2).(0) with
@@ -527,6 +538,7 @@ let infer_shape input_shapes sym =
     [| t.(0); t.(0) |]
   | GlobalAveragePool _  -> infer_shape_35 input_shapes
   | GlobalMaxPool _      -> infer_shape_35 input_shapes
+  | Flatten x            -> infer_shape_flatten input_shapes x.axis
   | LSTM _               -> infer_shape_lstm input_shapes
   | SequenceEmpty _      -> [||]
   | _                    -> [| None |]

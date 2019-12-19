@@ -4,9 +4,9 @@
  *)
 
 (** Implemented: Conv, MaxPool, BatchNormalization, Dropout,
-  * GlobalAveragePool, GlobalMaxPool *)
+  * GlobalAveragePool, GlobalMaxPool, AveragePool, Flatten *)
 
-(** AveragePool, ConvTranspose, InstanceNormalization, Flatten, 
+(** ConvTranspose, InstanceNormalization,
 MaxUnpool, LpPool, MaxRoiPool, QLinearConv,ConvInteger,  GlobalLpPool, 
 LpNormalization, Shrink, LRN, TfIdfVectorizer, StringNormalizer, MeanVarianceNormalization
 *)
@@ -310,4 +310,22 @@ module GlobalAveragePool = struct
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| x |] in
     { name; input; attrs; out_shape = [| None; None |] }
+end
+
+module Flatten = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable axis : int
+    }
+
+  let op_type = "Flatten"
+
+  let create ?name ?(axis = 1) x =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| x |] in
+    { name; input; attrs; out_shape = [| None; None |]; axis }
 end

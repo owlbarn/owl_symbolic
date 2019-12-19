@@ -97,6 +97,7 @@ type t =
   | Dropout of Owl_symbolic_ops_nn.Dropout.t
   | GlobalMaxPool of Owl_symbolic_ops_nn.GlobalMaxPool.t
   | GlobalAveragePool of Owl_symbolic_ops_nn.GlobalAveragePool.t
+  | Flatten of Owl_symbolic_ops_nn.Flatten.t
   | LSTM of Owl_symbolic_ops_rnn.LSTM.t
   | SequenceEmpty of Owl_symbolic_ops_sequence.SequenceEmpty.t
 
