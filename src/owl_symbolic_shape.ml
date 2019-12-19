@@ -424,6 +424,7 @@ let infer_shape_flatten input_shapes axis =
 
 (* TODO: consider all the other optioanl parameters *)
 let infer_shape_lstm input_shapes =
+  assert (Array.length input_shapes = 3);
   match input_shapes.(0).(0), input_shapes.(1).(0), input_shapes.(2).(0) with
   | Some xshp, Some wshp, Some rshp ->
     assert (Array.length xshp = 3);
@@ -443,6 +444,21 @@ let infer_shape_lstm input_shapes =
      ; Some [| num_directions; batch_size; hidden_size |]
     |]
   | _, _, _ -> [| None; None; None |]
+
+
+let infer_shape_roialign input_shapes (x : Owl_symbolic_ops_object_detection.RoiAlign.t) =
+  assert (Array.length input_shapes = 3);
+  match input_shapes.(0).(0), input_shapes.(1).(0), input_shapes.(2).(0) with
+  | Some x_shp, Some rois_shp, Some ind_shp ->
+    assert (Array.length x_shp = 4);
+    assert (Array.length rois_shp = 2);
+    assert (Array.length ind_shp = 1);
+    let c = x_shp.(1) in
+    let num_rois = rois_shp.(0) in
+    assert (rois_shp.(1) = 4);
+    assert (ind_shp.(0) = num_rois);
+    [| Some [| num_rois; c; x.output_height; x.output_width |] |]
+  | _, _, _ -> [| None |]
 
 
 (** Main entry *)
@@ -553,5 +569,6 @@ let infer_shape input_shapes sym =
   | GlobalMaxPool _      -> infer_shape_35 input_shapes
   | Flatten x            -> infer_shape_flatten input_shapes x.axis
   | LSTM _               -> infer_shape_lstm input_shapes
+  | RoiAlign x           -> infer_shape_roialign input_shapes x
   | SequenceEmpty _      -> [||]
   | _                    -> [| None |]

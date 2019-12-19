@@ -246,6 +246,10 @@ val batch_norm
 
 val instance_norm : ?name:string -> ?eps:float -> symbol -> symbol -> symbol -> symbol
 
+val flatten : ?name:string -> ?axis:int -> symbol -> symbol
+
+val dropout : ?name:string -> ?ratio:float -> symbol -> symbol * symbol
+
 val lstm
   :  ?name:string
   -> ?alpha:float array
@@ -260,8 +264,16 @@ val lstm
   -> symbol
   -> symbol * symbol * symbol
 
-val flatten : ?name:string -> ?axis:int -> symbol -> symbol
-
-val dropout : ?name:string -> ?ratio:float -> symbol -> symbol * symbol
+val roi_align
+  :  ?name:string
+  -> ?mode:[ `avg | `max ]
+  -> ?height:int
+  -> ?width:int
+  -> ?ratio:int
+  -> ?scale:float
+  -> symbol
+  -> symbol
+  -> symbol
+  -> symbol
 
 val seq_empty : ?name:string -> ?dtype:Owl_symbolic_types.number_type -> unit -> symbol

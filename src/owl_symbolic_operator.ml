@@ -776,6 +776,25 @@ let lstm ?name ?alpha ?beta ?clip ?activations ?direction ?input_forget hidden_s
   y, yh, yc
 
 
+let roi_align ?name ?mode ?height ?width ?ratio ?scale x rois batch_indices =
+  let xn = Owl_symbolic_graph.name x in
+  let rn = Owl_symbolic_graph.name rois in
+  let bn = Owl_symbolic_graph.name batch_indices in
+  let s =
+    Owl_symbolic_ops_object_detection.RoiAlign.create
+      ?mode
+      ?height
+      ?width
+      ?ratio
+      ?scale
+      ?name
+      xn
+      rn
+      bn
+  in
+  make_node (Owl_symbolic_symbol.RoiAlign s) [| x; rois; batch_indices |]
+
+
 let seq_empty ?name ?dtype () =
   let s = Owl_symbolic_ops_sequence.SequenceEmpty.create ?name ?dtype () in
   make_node (Owl_symbolic_symbol.SequenceEmpty s) [||]

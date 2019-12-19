@@ -100,6 +100,7 @@ type t =
   | GlobalAveragePool of Owl_symbolic_ops_nn.GlobalAveragePool.t
   | Flatten of Owl_symbolic_ops_nn.Flatten.t
   | LSTM of Owl_symbolic_ops_rnn.LSTM.t
+  | RoiAlign of Owl_symbolic_ops_object_detection.RoiAlign.t
   | SequenceEmpty of Owl_symbolic_ops_sequence.SequenceEmpty.t
 
 val name : t -> string

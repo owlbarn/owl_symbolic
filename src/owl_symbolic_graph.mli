@@ -11,18 +11,15 @@ type t =
   ; mutable node_names : string array
   }
 
-val make_node
-  :  Owl_symbolic_symbol.t
-  -> symbol array
-  -> Owl_symbolic_symbol.t Owl_graph.node
+val make_node : Owl_symbolic_symbol.t -> symbol array -> symbol
 
 val make_graph : symbol array -> string -> t
 
 (* TODO: The function in graph module is messy *)
 
-val topo_iter : (Owl_symbolic_symbol.t Owl_graph.node -> unit) -> t -> unit
+val topo_iter : (symbol -> unit) -> t -> unit
 
-val get_input_nodes : t -> Owl_symbolic_symbol.t Owl_graph.node array
+val get_input_nodes : t -> symbol array
 
 val get_output_nodes : t -> symbol array
 
@@ -32,11 +29,11 @@ val iter_print : t -> unit
 
 val is_variable : string -> bool
 
-val name : Owl_symbolic_symbol.t Owl_graph.node -> string
+val name : symbol -> string
 
 val length : t -> int
 
-val shape_or_value : Owl_symbolic_symbol.t Owl_graph.node -> string
+val shape_or_value : symbol -> string
 
 val refnum : 'a Owl_graph.node -> int
 

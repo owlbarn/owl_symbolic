@@ -12,6 +12,7 @@ open Owl_symbolic_ops_nn
 open Owl_symbolic_ops_rnn
 open Owl_symbolic_ops_tensor
 open Owl_symbolic_ops_sequence
+open Owl_symbolic_ops_object_detection
 
 type t =
   | NOOP
@@ -117,6 +118,8 @@ type t =
   | Flatten of Flatten.t
   (* RNN *)
   | LSTM of LSTM.t
+  (* Object Detection *)
+  | RoiAlign of RoiAlign.t
   (* Sequence *)
   | SequenceEmpty of SequenceEmpty.t
 
@@ -212,6 +215,7 @@ let name = function
   | GlobalAveragePool x  -> GlobalAveragePool.(x.name)
   | Flatten x            -> Flatten.(x.name)
   | LSTM x               -> LSTM.(x.name)
+  | RoiAlign x           -> RoiAlign.(x.name)
   | SequenceEmpty x      -> SequenceEmpty.(x.name)
   | _                    -> failwith "owl_symbolic_symbol.name"
 
@@ -308,6 +312,7 @@ let op_type = function
   | GlobalAveragePool _  -> GlobalAveragePool.op_type
   | Flatten _            -> Flatten.op_type
   | LSTM _               -> LSTM.op_type
+  | RoiAlign _           -> RoiAlign.op_type
   | SequenceEmpty _      -> SequenceEmpty.op_type
   | _                    -> failwith "owl_symbolic_symbol.op_type"
 
@@ -404,6 +409,7 @@ let input = function
   | GlobalAveragePool x  -> GlobalAveragePool.(x.input)
   | Flatten x            -> Flatten.(x.input)
   | LSTM x               -> LSTM.(x.input)
+  | RoiAlign x           -> RoiAlign.(x.input)
   | SequenceEmpty _      -> [||]
   | _                    -> failwith "owl_symbolic_symbol.input"
 
@@ -490,6 +496,7 @@ let set_input sym inputs =
   | GlobalAveragePool x  -> x.input <- inputs
   | Flatten x            -> x.input <- inputs
   | LSTM x               -> x.input <- inputs
+  | RoiAlign x           -> x.input <- inputs
   | _                    -> failwith "owl_symbolic_symbol.set_input"
 
 
@@ -581,10 +588,11 @@ let out_shape = function
   | BatchNormalization x -> BatchNormalization.(x.out_shape)
   | InstanceNorm x       -> InstanceNorm.(x.out_shape)
   | Dropout x            -> Dropout.(x.out_shape)
-  | LSTM x               -> LSTM.(x.out_shape)
   | GlobalMaxPool x      -> GlobalMaxPool.(x.out_shape)
   | GlobalAveragePool x  -> GlobalAveragePool.(x.out_shape)
   | Flatten x            -> Flatten.(x.out_shape)
+  | LSTM x               -> LSTM.(x.out_shape)
+  | RoiAlign x           -> RoiAlign.(x.out_shape)
   | SequenceEmpty x      -> SequenceEmpty.(x.out_shape)
   | _                    -> failwith "out_shape: unsupported op."
 
@@ -675,6 +683,7 @@ let set_out_shape sym shapes =
   | GlobalAveragePool x  -> x.out_shape <- shapes
   | Flatten x            -> x.out_shape <- shapes
   | LSTM x               -> x.out_shape <- shapes
+  | RoiAlign x           -> x.out_shape <- shapes
   | SequenceEmpty x      -> x.out_shape <- shapes
   | _                    -> failwith "set_out_shape: unsupported op."
 
@@ -760,6 +769,7 @@ let attrs = function
   | GlobalAveragePool x  -> GlobalAveragePool.(x.attrs)
   | Flatten x            -> Flatten.(x.attrs)
   | LSTM x               -> LSTM.(x.attrs)
+  | RoiAlign x           -> RoiAlign.(x.attrs)
   | SequenceEmpty x      -> SequenceEmpty.(x.attrs)
   | _                    -> [||]
 
@@ -844,6 +854,7 @@ let set_attrs sym a =
   | GlobalAveragePool x  -> x.attrs <- a
   | Flatten x            -> x.attrs <- a
   | LSTM x               -> x.attrs <- a
+  | RoiAlign x           -> x.attrs <- a
   | SequenceEmpty x      -> x.attrs <- a
   | _                    -> ()
 

@@ -452,6 +452,10 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           (* TODO: the optional sequence_len has int32 type *)
           let t = type_check_pattern02 ptypes _types_constraint00 name in
           [| t.(0); t.(0); t.(0) |]
+        | RoiAlign _           ->
+          assert (Array.length ptypes = 3);
+          type_check_pattern01 ptypes.(2) [| SNT_Int64 |] name |> ignore;
+          type_check_pattern02 [| ptypes.(0); ptypes.(1) |] _types_constraint00 name
         | SequenceEmpty s      -> [| SNT_SEQ s.dtype |]
         | _                    -> [| SNT_Noop |]
       in
@@ -774,6 +778,20 @@ let build_onnx_attrs_lstm (x : Owl_symbolic_ops_rnn.LSTM.t) =
   attrs
 
 
+let build_onnx_attrs_roi_align (x : Owl_symbolic_ops_object_detection.RoiAlign.t) =
+  let s =
+    match x.mode with
+    | `avg -> "avg"
+    | `max -> "max"
+  in
+  let attr_mode = make_attr_string "mode" s in
+  let attr_height = make_attr_int "output_height" x.output_height in
+  let attr_width = make_attr_int "output_width" x.output_width in
+  let attr_ratio = make_attr_int "sampling_ratio" x.sampling_ratio in
+  let attr_scale = make_attr_flt "spatial_scale" (Some x.spatial_scale) in
+  [ attr_mode; attr_height; attr_width; attr_ratio; attr_scale ]
+
+
 let build_onnx_attrs_seq_empty (x : Owl_symbolic_ops_sequence.SequenceEmpty.t) =
   let i = map_elt_type_to_int32 x.dtype |> Int32.to_int in
   let attr_dtype = make_attr_int "dtype" i in
@@ -820,6 +838,7 @@ let build_onnx_attrs sym =
     | S.SequenceEmpty x      -> build_onnx_attrs_seq_empty x
     | S.Dropout x            -> build_onnx_attrs_dropout x
     | S.LSTM x               -> build_onnx_attrs_lstm x
+    | S.RoiAlign x           -> build_onnx_attrs_roi_align x
     | _                      -> []
   in
   onnx_attrs
