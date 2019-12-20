@@ -46,6 +46,7 @@ type t =
   | Log of Log.t
   | Sigmoid of Sigmoid.t
   | Relu of Relu.t
+  | LeakyRelu of LeakyRelu.t
   | Softmax of Softmax.t
   | Abs of Abs.t
   | Neg of Neg.t
@@ -155,6 +156,7 @@ let name = function
   | Log x                -> Log.(x.name)
   | Sigmoid x            -> Sigmoid.(x.name)
   | Relu x               -> Relu.(x.name)
+  | LeakyRelu x          -> LeakyRelu.(x.name)
   | Softmax x            -> Softmax.(x.name)
   | Abs x                -> Abs.(x.name)
   | Floor x              -> Floor.(x.name)
@@ -263,6 +265,7 @@ let op_type = function
   | Round _              -> Round.op_type
   | Clip _               -> Clip.op_type
   | Relu _               -> Relu.op_type
+  | LeakyRelu _          -> LeakyRelu.op_type
   | Softmax _            -> Softmax.op_type
   | Add _                -> Add.op_type
   | Sub _                -> Sub.op_type
@@ -362,6 +365,7 @@ let input = function
   | Round x              -> Round.(x.input)
   | Clip x               -> Clip.(x.input)
   | Relu x               -> Relu.(x.input)
+  | LeakyRelu x          -> LeakyRelu.(x.input)
   | Softmax x            -> Softmax.(x.input)
   | Rational x           -> Rational.(x.input)
   | Add x                -> Add.(x.input)
@@ -451,6 +455,7 @@ let set_input sym inputs =
   | Round x              -> x.input <- inputs
   | Clip x               -> x.input <- inputs
   | Relu x               -> x.input <- inputs
+  | LeakyRelu x          -> x.input <- inputs
   | Softmax x            -> x.input <- inputs
   | Rational x           -> x.input <- inputs
   | Add x                -> x.input <- inputs
@@ -551,6 +556,7 @@ let out_shape = function
   | Round x              -> Round.(x.out_shape)
   | Clip x               -> Clip.(x.out_shape)
   | Relu x               -> Relu.(x.out_shape)
+  | LeakyRelu x          -> LeakyRelu.(x.out_shape)
   | Softmax x            -> Softmax.(x.out_shape)
   | Rational x           -> Rational.(x.out_shape)
   | Add x                -> Add.(x.out_shape)
@@ -645,6 +651,7 @@ let set_out_shape sym shapes =
   | Round x              -> x.out_shape <- shapes
   | Clip x               -> x.out_shape <- shapes
   | Relu x               -> x.out_shape <- shapes
+  | LeakyRelu x          -> x.out_shape <- shapes
   | Softmax x            -> x.out_shape <- shapes
   | Rational x           -> x.out_shape <- shapes
   | Add x                -> x.out_shape <- shapes
@@ -738,6 +745,7 @@ let attrs = function
   | Clip x               -> Clip.(x.attrs)
   | Sign x               -> Sign.(x.attrs)
   | Relu x               -> Relu.(x.attrs)
+  | LeakyRelu x          -> LeakyRelu.(x.attrs)
   | Softmax x            -> Softmax.(x.attrs)
   | Add x                -> Add.(x.attrs)
   | Sub x                -> Sub.(x.attrs)
@@ -829,6 +837,7 @@ let set_attrs sym a =
   | Round x              -> x.attrs <- a
   | Clip x               -> x.attrs <- a
   | Relu x               -> x.attrs <- a
+  | LeakyRelu x          -> x.attrs <- a
   | Softmax x            -> x.attrs <- a
   | Add x                -> x.attrs <- a
   | Sub x                -> x.attrs <- a

@@ -505,6 +505,7 @@ let infer_shape input_shapes sym =
   | Round _              -> infer_shape_01 input_shapes
   | Clip _               -> infer_shape_01 input_shapes
   | Relu _               -> infer_shape_01 input_shapes
+  | LeakyRelu _          -> infer_shape_01 input_shapes
   | Softmax _            -> infer_shape_01 input_shapes
   | Add _                -> infer_shape_03 input_shapes
   | Sub _                -> infer_shape_03 input_shapes

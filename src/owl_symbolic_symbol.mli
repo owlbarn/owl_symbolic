@@ -33,6 +33,7 @@ type t =
   | Log of Owl_symbolic_ops_math.Log.t
   | Sigmoid of Owl_symbolic_ops_math.Sigmoid.t
   | Relu of Owl_symbolic_ops_math.Relu.t
+  | LeakyRelu of Owl_symbolic_ops_math.LeakyRelu.t
   | Softmax of Owl_symbolic_ops_math.Softmax.t
   | Abs of Owl_symbolic_ops_math.Abs.t
   | Neg of Owl_symbolic_ops_math.Neg.t

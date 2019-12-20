@@ -5,10 +5,12 @@
 
 (* Implemented: Sin, Cos, Tan, Asin, Acos, Atan, Sinh, Cosh, Tanh, Asinh, 
 Acosh, Atanh, Add, Sub, Mul, Div, Neg, Abs, Floor, Ceil, Sqrt, Relu, Exp, Log,
-Pow, Round, Gemm, MatMul, Max, Min, Sum, Mean, Mod, Sigmoid, Softmax, Clip, Sign *)
+Pow, Round, Gemm, MatMul, Max, Min, Sum, Mean, Mod, Sigmoid, Softmax, Clip, Sign
+LeakyRelu *)
 
-(*  Cumsum, Det, Reciprocal, LeakyRelu, ThreasholdedRelu, Selu, Elu, PRelu, HardSigmoid,
-LogSoftmax, Hardmax, Softsign, Softplus, Expand, Erf, QLinearMatMul, MatMulInteger,
+(* Softsign, Softplus, Elu, Erf *)
+(* Cumsum, Det, Reciprocal, ThreasholdedRelu, Selu, Elu, PRelu, HardSigmoid,
+LogSoftmax, Hardmax,  Expand, Erf, QLinearMatMul, MatMulInteger,
 *)
 
 open Owl_symbolic_types
@@ -421,6 +423,24 @@ module Relu = struct
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; input; attrs; out_shape = [| None |] }
+end
+
+module LeakyRelu = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable alpha : float
+    }
+
+  let op_type = "LeakyRelu"
+
+  let create ?name ?(alpha = 0.01) x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |]; alpha }
 end
 
 module Softmax = struct
