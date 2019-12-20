@@ -163,7 +163,7 @@ val reduce_l1 : ?keepdims:bool -> ?name:string -> symbol -> int array -> symbol
 
 val reduce_l2 : ?keepdims:bool -> ?name:string -> symbol -> int array -> symbol
 
-val reshape : ?name:string -> symbol -> symbol -> symbol
+val reshape : ?name:string -> int array -> symbol -> symbol
 
 val split : ?name:string -> ?axis:int -> symbol -> int array -> symbol array
 

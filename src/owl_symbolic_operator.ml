@@ -443,16 +443,13 @@ let equal_to ?name lhs rhs =
 
 (** Tensor *)
 
-let reshape ?name data shape =
+let reshape ?name shape data =
+  let snode = tensor_ints shape in
+  let shp_name = Owl_symbolic_graph.name snode in
   let data_name = Owl_symbolic_graph.name data in
-  let shp =
-    match Owl_graph.attr shape with
-    | Owl_symbolic_symbol.Tensor s -> s
-    | _                            -> failwith "reshape op: unmatched op type shape"
-  in
-  let o = Owl_symbolic_ops_tensor.Reshape.create ?name data_name shp in
+  let o = Owl_symbolic_ops_tensor.Reshape.create ?name shape data_name shp_name in
   let sym = Owl_symbolic_symbol.Reshape o in
-  make_node sym [| data; shape |]
+  make_node sym [| data; snode |]
 
 
 let split ?name ?axis x split =

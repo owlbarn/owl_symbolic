@@ -101,11 +101,7 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
   let build_symbol_reshape shp name sym_inputs =
     let shp = Owl_symbolic_utils.to_nchw_order shp in
     (* HACK *)
-    let t =
-      Owl_symbolic_types.make_tensor ~dtype:SNT_Int64 ~int_val:shp [| Array.length shp |]
-    in
-    let shp_node = Owl_symbolic_operator.tensor t in
-    Owl_symbolic_operator.reshape ~name sym_inputs.(0) shp_node
+    Owl_symbolic_operator.reshape ~name shp sym_inputs.(0)
 
 
   let build_symbol node symdict =
