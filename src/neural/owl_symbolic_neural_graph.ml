@@ -5,14 +5,17 @@
 
 open Owl_symbolic_types
 open Owl_symbolic_graph
-open Owl_symbolic_types
 
 let init typ shape =
+  let fan_in, fan_out = Owl_symbolic_utils.calc_fans shape in
+  let r0 = sqrt (1. /. fan_in) in
+  let r1 = sqrt (6. /. (fan_in +. fan_out)) in
   match typ with
   | Uniform (a, b)       -> Owl_symbolic_operator.random_uniform ~low:a ~high:b shape
   | Gaussian (mu, sigma) ->
     Owl_symbolic_operator.random_normal ~mean:mu ~stddev:sigma shape
-  | Standard             -> Owl_symbolic_operator.random_uniform shape
+  | Standard             -> Owl_symbolic_operator.random_uniform ~low:(-.r0) ~high:r0 shape
+  | Tanh                 -> Owl_symbolic_operator.random_uniform ~low:(-.r1) ~high:r1 shape
 
 
 let activation ?name act_typ input_node =
@@ -38,7 +41,7 @@ let dropout ?name ratio input_node =
 
 let lambda (f : symbol -> symbol) (input_node : symbol) = f input_node
 
-let fully_connected ?(init_typ = Owl_symbolic_types.Standard) outputs input_node =
+let fully_connected ?(init_typ = Standard) outputs input_node =
   let in_shape = input_node |> Owl_graph.attr |> Owl_symbolic_symbol.out_shape in
   let shp =
     match in_shape.(0) with
@@ -52,12 +55,15 @@ let fully_connected ?(init_typ = Owl_symbolic_types.Standard) outputs input_node
   let b = Owl_symbolic_operator.zeros [| 1; n |] in
   Owl_symbolic_operator.(add (matmul x w) b)
 
+
+(* Kernel : [|out_c; in_c; h; w|]; input: [|n; c; h; w|] *)
+let conv2d ?name ?(padding = SAME_UPPER) ?(init_typ = Tanh) kernel strides input_node =
+  let kernel_node = init init_typ kernel in
+  let bias = Owl_symbolic_operator.zeros [| kernel.(0) |] in
+  Owl_symbolic_operator.conv ?name ~dim:2 ~padding ~strides ~bias input_node kernel_node
+
+
 (*
-
-
-let conv2d ?name ?(padding=SAME_UPPER) ?(init_typ=Init.Tanh) 
-  kernel stride input_node = ()
-
 let linear ?name ?(init_typ=Init.Standard)
   outputs input_node = 
   let m = 0 in 

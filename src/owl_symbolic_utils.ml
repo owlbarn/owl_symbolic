@@ -144,3 +144,26 @@ let node_name ?name op_typ =
 let get_option_value msg = function
   | Some n -> n
   | None   -> failwith msg
+
+
+(* For initialisation of NN *)
+let calc_fans s =
+  let _prod x = Array.fold_left (fun p q -> p * q) 1 x in
+  let l = Array.length s in
+  let fan_in, fan_out =
+    (* for matrices *)
+    if l = 2
+    then float_of_int s.(0), float_of_int s.(1) (* for convolution kernels 1d, 2d, 3d *)
+    else if l > 2 && l < 6
+    then (
+      let s' = Array.sub s 0 (l - 2) in
+      let receptive = _prod s' in
+      let i = s.(l - 2) * receptive |> float_of_int in
+      let o = s.(l - 1) * receptive |> float_of_int in
+      i, o
+      (* for no specific assumptions *))
+    else (
+      let i_o = _prod s |> float_of_int |> Stdlib.sqrt in
+      i_o, i_o)
+  in
+  fan_in, fan_out

@@ -146,6 +146,7 @@ type nn_init =
   | Uniform of float * float
   | Gaussian of float * float
   | Standard
+  | Tanh
 
 (** Currently useless types: attrvalue *)
 

@@ -4,6 +4,8 @@
 
 (copy_files# ops/*)
 
+(copy_files# neural/*)
+
 (copy_files# cas/*)
 
 (library

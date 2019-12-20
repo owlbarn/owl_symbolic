@@ -69,6 +69,7 @@ type nn_init =
   | Uniform of float * float
   | Gaussian of float * float
   | Standard
+  | Tanh
 
 type attrvalue =
   | ATTR_Nil
