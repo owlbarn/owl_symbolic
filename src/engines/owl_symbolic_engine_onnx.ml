@@ -351,6 +351,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
             ptypes.(0).(0);
           type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Relu _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Elu _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | LeakyRelu _          -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Softmax _            -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Add _                -> type_check_pattern02 ptypes _types_constraint02 name
@@ -637,6 +638,11 @@ let build_onnx_attrs_fmod (x : Owl_symbolic_ops_math.Mod.t) =
   [ attr_fmod ]
 
 
+let build_onnx_elu alpha =
+  let attr_alpha = make_attr_flt "alpha" (Some alpha) in
+  [ attr_alpha ]
+
+
 let build_onnx_attrs_gemm (x : Owl_symbolic_ops_math.Gemm.t) =
   let attr_alpha = make_attr_flt "alpha" (Some x.alpha) in
   let attr_beta = make_attr_flt "beta" (Some x.beta) in
@@ -832,6 +838,8 @@ let build_onnx_attrs sym =
     | S.RandomNormal x       -> build_onnx_attrs_randomnormal x
     | S.Softmax x            -> build_onnx_attrs_softmax x.axis
     | S.Mod x                -> build_onnx_attrs_fmod x
+    | S.LeakyRelu x          -> build_onnx_elu x.alpha
+    | S.Elu x                -> build_onnx_elu x.alpha
     | S.Gemm x               -> build_onnx_attrs_gemm x
     | S.BitShift x           -> build_onnx_attrs_bitshift x.direction
     | S.ReduceSum x          -> build_onnx_attrs_reduce x.axes x.keepdims

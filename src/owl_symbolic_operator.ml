@@ -226,6 +226,12 @@ let relu ?name x =
   make_node (Owl_symbolic_symbol.Relu s) [| x |]
 
 
+let elu ?name ?alpha x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Elu.create ?name ?alpha xn in
+  make_node (Owl_symbolic_symbol.Elu s) [| x |]
+
+
 let leaky_relu ?name ?alpha x =
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_math.LeakyRelu.create ?name ?alpha xn in
