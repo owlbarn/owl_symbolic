@@ -142,6 +142,11 @@ let activation_to_string = function
   | Softplus        -> "Softplus"
 
 
+type nn_init =
+  | Uniform of float * float
+  | Gaussian of float * float
+  | Standard
+
 (** Currently useless types: attrvalue *)
 
 type attrvalue =

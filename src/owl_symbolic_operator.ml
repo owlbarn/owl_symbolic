@@ -47,6 +47,13 @@ let tensor_ints ?name ints =
   tensor ?name t
 
 
+let zeros ?name ?(dtype = Owl_symbolic_types.SNT_Float) shape =
+  let l = Owl_symbolic_utils.nelt shape in
+  let a = Array.make l 0. in
+  let t = Owl_symbolic_types.make_tensor ~dtype ~flt_val:a shape in
+  tensor ?name t
+
+
 (* The shape and type are decided by initial value; 
  * if initial value not given, user need to specify them. 
  * Shape value default to scalar [||], and type default to SNT_Float. *)

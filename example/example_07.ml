@@ -18,7 +18,7 @@ let dnn =
   in
   let t_relu0 = relu (t_conv0 + t_zero0) in
   let t_maxpool0, _ = maxpool t_relu0 ~padding:VALID ~strides:[| 2; 2 |] [| 2; 2 |] in
-  let t_reshape0 = reshape [| 100; 8192 |] t_maxpool0  in
+  let t_reshape0 = reshape [| 100; 8192 |] t_maxpool0 in
   let t_rand0 = random_uniform ~low:(-0.0011) ~high:0.0011 [| 8192; 512 |] in
   let t_zero1 =
     let flt_val = Array.make 512 0. in

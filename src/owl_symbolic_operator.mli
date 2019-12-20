@@ -17,6 +17,8 @@ val pi : ?name:string -> unit -> symbol
 
 val tensor : ?name:string -> Owl_symbolic_types.tensor -> symbol
 
+val zeros : ?name:string -> ?dtype:Owl_symbolic_types.number_type -> int array -> symbol
+
 val variable
   :  ?dtype:Owl_symbolic_types.number_type
   -> ?shape:int array

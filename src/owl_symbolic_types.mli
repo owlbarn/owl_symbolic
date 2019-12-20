@@ -65,6 +65,11 @@ type activation =
 
 val activation_to_string : activation -> string
 
+type nn_init =
+  | Uniform of float * float
+  | Gaussian of float * float
+  | Standard
+
 type attrvalue =
   | ATTR_Nil
   | ATTR_Int of int
