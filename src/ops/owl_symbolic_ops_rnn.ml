@@ -29,6 +29,7 @@ module LSTM = struct
    * initial_h, initial_c, P. 
    * The question is what if only one of these optional nodes is given?
    * I.e. a naming issue. 
+   * Also process the alpha and beta according to different activations.
    *)
 
   let create

@@ -19,9 +19,12 @@ let init typ shape =
 
 
 let activation ?name act_typ input_node =
-  match act_typ with
-  | Tanh -> Owl_symbolic_operator.tanh ?name input_node
-  | _    -> failwith "unimplemented yet"
+  match (act_typ : activation) with
+  | Tanh      -> Owl_symbolic_operator.tanh ?name input_node
+  | Sigmoid   -> Owl_symbolic_operator.sigmoid ?name input_node
+  | Softmax a -> Owl_symbolic_operator.softmax ?name ~axis:a input_node
+  | Relu      -> Owl_symbolic_operator.relu ?name input_node
+  | _         -> failwith "unimplemented yet"
 
 
 let input ?name shape =
@@ -61,7 +64,6 @@ let conv2d ?name ?(padding = SAME_UPPER) ?(init_typ = Tanh) kernel strides input
   let kernel_node = init init_typ kernel in
   let bias = Owl_symbolic_operator.zeros [| kernel.(0) |] in
   Owl_symbolic_operator.conv ?name ~dim:2 ~padding ~strides ~bias input_node kernel_node
-
 
 (*
 let linear ?name ?(init_typ=Init.Standard)

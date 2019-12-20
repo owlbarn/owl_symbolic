@@ -119,27 +119,29 @@ type activation =
   | Relu
   | Tanh
   | Sigmoid
-  | Affine
-  | LeakyRelu
-  | ThresholdedRelu
-  | ScaledTanh
-  | HardSigmoid
-  | Elu
+  | Affine of float * float
+  | LeakyRelu of float
+  | ThresholdedRelu of float
+  | ScaledTanh of float * float
+  | HardSigmoid of float * float
+  | Elu of float
   | Softsign
   | Softplus
+  | Softmax of int
 
 let activation_to_string = function
-  | Relu            -> "Relu"
-  | Tanh            -> "Tanh"
-  | Sigmoid         -> "Sigmoid"
-  | Affine          -> "Affine"
-  | LeakyRelu       -> "LeakyRelu"
-  | ThresholdedRelu -> "ThresholdedRelu"
-  | ScaledTanh      -> "ScaledTanh"
-  | HardSigmoid     -> "HardSigmoid"
-  | Elu             -> "Elu"
-  | Softsign        -> "Softsign"
-  | Softplus        -> "Softplus"
+  | Relu               -> "Relu"
+  | Tanh               -> "Tanh"
+  | Sigmoid            -> "Sigmoid"
+  | Affine (_, _)      -> "Affine"
+  | LeakyRelu _        -> "LeakyRelu"
+  | ThresholdedRelu _  -> "ThresholdedRelu"
+  | ScaledTanh (_, _)  -> "ScaledTanh"
+  | HardSigmoid (_, _) -> "HardSigmoid"
+  | Elu _              -> "Elu"
+  | Softsign           -> "Softsign"
+  | Softplus           -> "Softplus"
+  | Softmax _          -> "Softmax"
 
 
 type nn_init =

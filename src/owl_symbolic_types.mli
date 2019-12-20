@@ -54,14 +54,15 @@ type activation =
   | Relu
   | Tanh
   | Sigmoid
-  | Affine
-  | LeakyRelu
-  | ThresholdedRelu
-  | ScaledTanh
-  | HardSigmoid
-  | Elu
+  | Affine of float * float
+  | LeakyRelu of float
+  | ThresholdedRelu of float
+  | ScaledTanh of float * float
+  | HardSigmoid of float * float
+  | Elu of float
   | Softsign
   | Softplus
+  | Softmax of int
 
 val activation_to_string : activation -> string
 
