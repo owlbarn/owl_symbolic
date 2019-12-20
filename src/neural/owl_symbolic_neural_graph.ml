@@ -6,6 +6,9 @@
 open Owl_symbolic_types
 open Owl_symbolic_graph
 
+(** Target: avgpool2d; globalpool; concat; normalisation; padding;
+  add *)
+
 let init typ shape =
   let fan_in, fan_out = Owl_symbolic_utils.calc_fans shape in
   let r0 = sqrt (1. /. fan_in) in
@@ -65,17 +68,21 @@ let conv2d ?name ?(padding = SAME_UPPER) ?(init_typ = Tanh) kernel strides input
   let bias = Owl_symbolic_operator.zeros [| kernel.(0) |] in
   Owl_symbolic_operator.conv ?name ~dim:2 ~padding ~strides ~bias input_node kernel_node
 
-(*
-let linear ?name ?(init_typ=Init.Standard)
-  outputs input_node = 
-  let m = 0 in 
-  let n = 0 in
-  let x = Owl_symbolic_operator.reshape [|n; m|] input_node in 
-  let w = Owl_symbolic_operator.random_uniform [|m; n|] in 
-  let b = Owl_symbolic_operator.zeros [|1; n|] in
-  let y = Owl_symbolic_operator.(add (matmul x w ) b) in 
+
+let linear ?(init_typ = Standard) outputs input_node =
+  let in_shape = input_node |> Owl_graph.attr |> Owl_symbolic_symbol.out_shape in
+  let shp =
+    match in_shape.(0) with
+    | Some s -> s
+    | None   -> failwith "fully_connected: unspecified input shape"
+  in
+  let m = Array.fold_left (fun a b -> a * b) 1 (Array.sub shp 1 (Array.length shp - 1)) in
+  let n = outputs in
+  let w = init init_typ [| m; n |] in
+  let b = Owl_symbolic_operator.zeros [| 1; n |] in
+  let y = Owl_symbolic_operator.(add (matmul input_node w) b) in
   y
 
-
+(*
 let normalisation ?name ?(axis=(-1)) ?decay ?mu ?var input_node = ()
 *)
