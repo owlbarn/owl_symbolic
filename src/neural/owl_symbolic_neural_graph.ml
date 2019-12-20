@@ -33,7 +33,7 @@ let input ?name shape =
 
 
 let max_pool2d ?name ?(padding = VALID) kernel strides input_node =
-  let a, _ = Owl_symbolic_operator.maxpool ?name ~strides ~padding kernel input_node in
+  let a, _ = Owl_symbolic_operator.maxpool ?name ~strides ~padding input_node kernel in
   a
 
 
@@ -51,11 +51,11 @@ let fully_connected ?(init_typ = Standard) outputs input_node =
     | Some s -> s
     | None   -> failwith "fully_connected: unspecified input shape"
   in
-  let m = Array.fold_left (fun a b -> a * b) 1 shp in
+  let m = Array.fold_left (fun a b -> a * b) 1 (Array.sub shp 1 (Array.length shp - 1)) in
   let n = outputs in
-  let x = Owl_symbolic_operator.reshape [| n; m |] input_node in
   let w = init init_typ [| m; n |] in
   let b = Owl_symbolic_operator.zeros [| 1; n |] in
+  let x = Owl_symbolic_operator.reshape [| shp.(0); m |] input_node in
   Owl_symbolic_operator.(add (matmul x w) b)
 
 
