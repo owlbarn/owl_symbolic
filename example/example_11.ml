@@ -1,7 +1,7 @@
 open Owl_symbolic_neural_graph
 
 (* Difference with Owl model: the kernel order in conv2d; 
-   the SAME padding to SAME_UPPER; oper *)
+   the SAME padding to SAME_UPPER *)
 
 let fire_module in_shape squeeze expand nn =
   let root =

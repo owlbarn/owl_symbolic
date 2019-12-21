@@ -100,9 +100,21 @@ let concat = Owl_symbolic_operator.concat
 
 let add = Owl_symbolic_operator.add
 
-(*
-let normalisation ?name ?(axis=(-1)) ?decay ?mu ?var input_node = ()
-*)
+let normalisation ?name ?_axis ?eps ?momentum input_node =
+  let in_shape = input_node |> Owl_graph.attr |> Owl_symbolic_symbol.out_shape in
+  let shp =
+    match in_shape.(0) with
+    | Some s -> s
+    | None   -> failwith "normalisation: unspecified input shape"
+  in
+  assert (Array.length shp >= 4);
+  let c = shp.(1) in
+  let gamma = Owl_symbolic_operator.ones [| c |] in
+  let beta = Owl_symbolic_operator.zeros [| c |] in
+  let mu = Owl_symbolic_operator.zeros [| c |] in
+  let var = Owl_symbolic_operator.ones [| c |] in
+  Owl_symbolic_operator.batch_norm ?name ?eps ?momentum input_node gamma beta mu var
+
 
 let get_network ?name input_node =
   let name =
