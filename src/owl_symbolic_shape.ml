@@ -331,7 +331,7 @@ let infer_shape_batch_normalization input_shapes =
   let shp_var = input_shapes.(4).(0) in
   match shp_x, shp_scale, shp_b, shp_mean, shp_var with
   | Some x, Some scale, Some b, Some mean, Some var ->
-    let c = x.(0) in
+    let c = x.(1) in
     assert (Array.length scale = 1);
     assert (Array.length b = 1);
     assert (Array.length mean = 1);

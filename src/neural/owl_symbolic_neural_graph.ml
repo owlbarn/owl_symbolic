@@ -100,6 +100,7 @@ let concat = Owl_symbolic_operator.concat
 
 let add = Owl_symbolic_operator.add
 
+(* TODO: the correctness of this layer needs to be thoroughly checked *)
 let normalisation ?name ?_axis ?eps ?momentum input_node =
   let in_shape = input_node |> Owl_graph.attr |> Owl_symbolic_symbol.out_shape in
   let shp =
@@ -113,7 +114,10 @@ let normalisation ?name ?_axis ?eps ?momentum input_node =
   let beta = Owl_symbolic_operator.zeros [| c |] in
   let mu = Owl_symbolic_operator.zeros [| c |] in
   let var = Owl_symbolic_operator.ones [| c |] in
-  Owl_symbolic_operator.batch_norm ?name ?eps ?momentum input_node gamma beta mu var
+  let y, _, _, _, _ =
+    Owl_symbolic_operator.batch_norm ?name ?eps ?momentum input_node gamma beta mu var
+  in
+  y
 
 
 let get_network ?name input_node =

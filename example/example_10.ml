@@ -4,6 +4,7 @@ open Owl_symbolic_neural_graph
 
 let nn =
   input [| 100; 3; 32; 32 |]
+  |> normalisation
   |> conv2d [| 32; 3; 3; 3 |] [| 1; 1 |]
   |> activation Relu
   |> max_pool2d [| 2; 2 |] [| 2; 2 |] ~padding:VALID

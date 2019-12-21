@@ -21,7 +21,6 @@ val zeros : ?name:string -> ?dtype:Owl_symbolic_types.number_type -> int array -
 
 val ones : ?name:string -> ?dtype:Owl_symbolic_types.number_type -> int array -> symbol
 
-
 val variable
   :  ?dtype:Owl_symbolic_types.number_type
   -> ?shape:int array
