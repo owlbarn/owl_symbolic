@@ -83,6 +83,15 @@ let linear ?(init_typ = Standard) outputs input_node =
   let y = Owl_symbolic_operator.(add (matmul input_node w) b) in
   y
 
+
 (*
 let normalisation ?name ?(axis=(-1)) ?decay ?mu ?var input_node = ()
 *)
+
+let get_network ?name input_node =
+  let name =
+    match name with
+    | Some n -> n
+    | None   -> "sym_graph"
+  in
+  Owl_symbolic_graph.make_graph [| input_node |] name

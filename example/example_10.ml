@@ -11,10 +11,9 @@ let nn =
   |> activation Relu
   |> fully_connected 10
   |> activation (Softmax 1)
+  |> get_network
 
 
-let g = Owl_symbolic_graph.make_graph [| nn |] "sym_graph"
-
-let onnx_graph = Owl_symbolic_engine_onnx.of_symbolic g
+let onnx_graph = Owl_symbolic_engine_onnx.of_symbolic nn
 
 let _ = Owl_symbolic_engine_onnx.save onnx_graph "test.onnx"
