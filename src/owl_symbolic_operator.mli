@@ -251,6 +251,10 @@ val avgpool
   -> int array
   -> symbol
 
+val global_max_pool : ?name:string -> symbol -> symbol
+
+val global_avg_pool : ?name:string -> symbol -> symbol
+
 val batch_norm
   :  ?name:string
   -> ?eps:float

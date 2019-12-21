@@ -6,7 +6,7 @@
 open Owl_symbolic_types
 open Owl_symbolic_graph
 
-(** Target: avgpool2d; globalpool; concat; normalisation; padding;
+(** Target: concat; normalisation; padding;
   add *)
 
 let init typ shape =
@@ -38,6 +38,19 @@ let input ?name shape =
 let max_pool2d ?name ?(padding = VALID) kernel strides input_node =
   let a, _ = Owl_symbolic_operator.maxpool ?name ~strides ~padding input_node kernel in
   a
+
+
+(* TODO need to check the dimension? *)
+let avg_pool2d ?name ?(padding = VALID) kernel strides input_node =
+  Owl_symbolic_operator.avgpool ?name ~strides ~padding input_node kernel
+
+
+let global_max_pool2d ?name input_node =
+  Owl_symbolic_operator.global_max_pool ?name input_node
+
+
+let global_avg_pool2d ?name input_node =
+  Owl_symbolic_operator.global_avg_pool ?name input_node
 
 
 let dropout ?name ratio input_node =

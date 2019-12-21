@@ -801,6 +801,18 @@ let dropout ?name ?ratio x =
   out1, out2
 
 
+let global_max_pool ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_nn.GlobalMaxPool.create ?name xn in
+  make_node (Owl_symbolic_symbol.GlobalMaxPool s) [| x |]
+
+
+let global_avg_pool ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_nn.GlobalAveragePool.create ?name xn in
+  make_node (Owl_symbolic_symbol.GlobalAveragePool s) [| x |]
+
+
 let flatten ?name ?axis data =
   let datan = Owl_symbolic_graph.name data in
   let s = Owl_symbolic_ops_nn.Flatten.create ?name ?axis datan in
