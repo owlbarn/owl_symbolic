@@ -1,7 +1,8 @@
 open Owl_symbolic_neural_graph
 
-(* Difference with Owl model: the kernel order in conv2d; 
-   the SAME padding to SAME_UPPER *)
+(* Squeezenet 
+ * Difference with Owl model: the kernel order in conv2d and input; 
+ * the SAME padding to SAME_UPPER ; concat axis:1 *)
 
 let fire_module in_shape squeeze expand nn =
   let root =

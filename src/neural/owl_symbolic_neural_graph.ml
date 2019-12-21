@@ -35,21 +35,37 @@ let input ?name shape =
 
 
 let max_pool2d ?name ?(padding = VALID) kernel strides input_node =
+  assert (Array.length kernel = 2);
+  assert (Array.length strides = 2);
   let a, _ = Owl_symbolic_operator.maxpool ?name ~strides ~padding input_node kernel in
   a
 
 
 (* TODO need to check the dimension? *)
 let avg_pool2d ?name ?(padding = VALID) kernel strides input_node =
+  assert (Array.length kernel = 2);
+  assert (Array.length strides = 2);
   Owl_symbolic_operator.avgpool ?name ~strides ~padding input_node kernel
 
 
 let global_max_pool2d ?name input_node =
-  Owl_symbolic_operator.global_max_pool ?name input_node |> Owl_symbolic_operator.squeeze
+  let n = Owl_symbolic_operator.global_max_pool ?name input_node in
+  let shp = n |> Owl_graph.attr |> Owl_symbolic_symbol.out_shape in
+  match shp.(0) with
+  | Some s ->
+    assert (Array.length s > 2);
+    Owl_symbolic_operator.reshape [| s.(0); s.(1) |] n
+  | None   -> failwith "global_max_pool2d: unspecified input shape"
 
 
 let global_avg_pool2d ?name input_node =
-  Owl_symbolic_operator.global_avg_pool ?name input_node |> Owl_symbolic_operator.squeeze
+  let n = Owl_symbolic_operator.global_avg_pool ?name input_node in
+  let shp = n |> Owl_graph.attr |> Owl_symbolic_symbol.out_shape in
+  match shp.(0) with
+  | Some s ->
+    assert (Array.length s > 2);
+    Owl_symbolic_operator.reshape [| s.(0); s.(1) |] n
+  | None   -> failwith "global_max_pool2d: unspecified input shape"
 
 
 let dropout ?name ratio input_node =
@@ -76,6 +92,8 @@ let fully_connected ?(init_typ = Standard) outputs input_node =
 
 (* Kernel : [|out_c; in_c; h; w|]; input: [|n; c; h; w|] *)
 let conv2d ?name ?(padding = SAME_UPPER) ?(init_typ = Tanh) kernel strides input_node =
+  assert (Array.length kernel = 4);
+  assert (Array.length strides = 2);
   let kernel_node = init init_typ kernel in
   let bias = Owl_symbolic_operator.zeros [| kernel.(0) |] in
   Owl_symbolic_operator.conv ?name ~dim:2 ~padding ~strides ~bias input_node kernel_node

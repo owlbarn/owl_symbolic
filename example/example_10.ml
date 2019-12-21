@@ -1,6 +1,6 @@
 open Owl_symbolic_neural_graph
 
-(* open Owl_symbolic_types *)
+(* MNIST *)
 
 let nn =
   input [| 100; 3; 32; 32 |]
