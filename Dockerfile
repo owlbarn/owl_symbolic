@@ -7,11 +7,9 @@
 FROM owlbarn/owl:latest
 USER opam
 
-RUN opam install utop -y
-
 ENV OWLSYMPATH /home/opam/owl-symbolic
 COPY . ${OWLSYMPATH}
 RUN cd ${OWLSYMPATH} && opam pin .
 
 WORKDIR ${OWLSYMPATH}
-ENTRYPOINT [ "/bin/sh" ]
+ENTRYPOINT [ "/bin/bash" ]
