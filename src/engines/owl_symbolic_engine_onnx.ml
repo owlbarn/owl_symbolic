@@ -354,6 +354,8 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Elu _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | LeakyRelu _          -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Softmax _            -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Softsign _           -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Softplus _           -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Add _                -> type_check_pattern02 ptypes _types_constraint02 name
         | Sub _                -> type_check_pattern02 ptypes _types_constraint02 name
         | Mul _                -> type_check_pattern02 ptypes _types_constraint02 name

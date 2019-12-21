@@ -243,6 +243,16 @@ let softmax ?name ?axis x =
   let s = Owl_symbolic_ops_math.Softmax.create ?name ?axis xn in
   make_node (Owl_symbolic_symbol.Softmax s) [| x |]
 
+let softsign ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Softsign.create ?name xn in
+  make_node (Owl_symbolic_symbol.Softsign s) [| x |]
+
+let softplus ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Softplus.create ?name xn in
+  make_node (Owl_symbolic_symbol.Softplus s) [| x |]
+
 
 let add ?name x y =
   let xn = Owl_symbolic_graph.name x in

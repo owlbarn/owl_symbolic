@@ -508,6 +508,8 @@ let infer_shape input_shapes sym =
   | Elu _                -> infer_shape_01 input_shapes
   | LeakyRelu _          -> infer_shape_01 input_shapes
   | Softmax _            -> infer_shape_01 input_shapes
+  | Softsign _           -> infer_shape_01 input_shapes
+  | Softplus _           -> infer_shape_01 input_shapes
   | Add _                -> infer_shape_03 input_shapes
   | Sub _                -> infer_shape_03 input_shapes
   | Mul _                -> infer_shape_03 input_shapes
