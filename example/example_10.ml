@@ -13,6 +13,7 @@ let nn =
   |> activation (Softmax 1)
   |> get_network
 
-let _ = 
+
+let _ =
   let onnx_graph = Owl_symbolic_engine_onnx.of_symbolic nn in
   Owl_symbolic_engine_onnx.save onnx_graph "test.onnx"

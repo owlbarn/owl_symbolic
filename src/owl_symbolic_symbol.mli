@@ -31,11 +31,14 @@ type t =
   | Sqrt of Owl_symbolic_ops_math.Sqrt.t
   | Exp of Owl_symbolic_ops_math.Exp.t
   | Log of Owl_symbolic_ops_math.Log.t
+  | Erf of Owl_symbolic_ops_math.Erf.t
   | Sigmoid of Owl_symbolic_ops_math.Sigmoid.t
   | Relu of Owl_symbolic_ops_math.Relu.t
   | Elu of Owl_symbolic_ops_math.Elu.t
   | LeakyRelu of Owl_symbolic_ops_math.LeakyRelu.t
   | Softmax of Owl_symbolic_ops_math.Softmax.t
+  | Softsign of Owl_symbolic_ops_math.Softsign.t
+  | Softplus of Owl_symbolic_ops_math.Softplus.t
   | Abs of Owl_symbolic_ops_math.Abs.t
   | Neg of Owl_symbolic_ops_math.Neg.t
   | Sign of Owl_symbolic_ops_math.Sign.t

@@ -74,6 +74,8 @@ val exp : ?name:string -> symbol -> symbol
 
 val log : ?name:string -> symbol -> symbol
 
+val erf : ?name:string -> symbol -> symbol
+
 val sigmoid : ?name:string -> symbol -> symbol
 
 val abs : ?name:string -> symbol -> symbol
@@ -97,6 +99,10 @@ val elu : ?name:string -> ?alpha:float -> symbol -> symbol
 val leaky_relu : ?name:string -> ?alpha:float -> symbol -> symbol
 
 val softmax : ?name:string -> ?axis:int -> symbol -> symbol
+
+val softsign : ?name:string -> symbol -> symbol
+
+val softplus : ?name:string -> symbol -> symbol
 
 val add : ?name:string -> symbol -> symbol -> symbol
 

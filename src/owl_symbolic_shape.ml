@@ -496,6 +496,7 @@ let infer_shape input_shapes sym =
   | Sqrt _               -> infer_shape_01 input_shapes
   | Exp _                -> infer_shape_01 input_shapes
   | Log _                -> infer_shape_01 input_shapes
+  | Erf _                -> infer_shape_01 input_shapes
   | Sigmoid _            -> infer_shape_01 input_shapes
   | Abs _                -> infer_shape_01 input_shapes
   | Neg _                -> infer_shape_01 input_shapes
@@ -508,6 +509,8 @@ let infer_shape input_shapes sym =
   | Elu _                -> infer_shape_01 input_shapes
   | LeakyRelu _          -> infer_shape_01 input_shapes
   | Softmax _            -> infer_shape_01 input_shapes
+  | Softsign _           -> infer_shape_01 input_shapes
+  | Softplus _           -> infer_shape_01 input_shapes
   | Add _                -> infer_shape_03 input_shapes
   | Sub _                -> infer_shape_03 input_shapes
   | Mul _                -> infer_shape_03 input_shapes

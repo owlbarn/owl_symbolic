@@ -44,11 +44,14 @@ type t =
   | Sqrt of Sqrt.t
   | Exp of Exp.t
   | Log of Log.t
+  | Erf of Erf.t
   | Sigmoid of Sigmoid.t
   | Relu of Relu.t
   | Elu of Elu.t
   | LeakyRelu of LeakyRelu.t
   | Softmax of Softmax.t
+  | Softsign of Softsign.t
+  | Softplus of Softplus.t
   | Abs of Abs.t
   | Neg of Neg.t
   | Sign of Sign.t
@@ -155,11 +158,14 @@ let name = function
   | Sqrt x               -> Sqrt.(x.name)
   | Exp x                -> Exp.(x.name)
   | Log x                -> Log.(x.name)
+  | Erf x                -> Erf.(x.name)
   | Sigmoid x            -> Sigmoid.(x.name)
   | Relu x               -> Relu.(x.name)
   | Elu x                -> Elu.(x.name)
   | LeakyRelu x          -> LeakyRelu.(x.name)
   | Softmax x            -> Softmax.(x.name)
+  | Softsign x           -> Softsign.(x.name)
+  | Softplus x           -> Softplus.(x.name)
   | Abs x                -> Abs.(x.name)
   | Floor x              -> Floor.(x.name)
   | Ceil x               -> Ceil.(x.name)
@@ -270,6 +276,8 @@ let op_type = function
   | Elu _                -> Elu.op_type
   | LeakyRelu _          -> LeakyRelu.op_type
   | Softmax _            -> Softmax.op_type
+  | Softsign _           -> Softsign.op_type
+  | Softplus _           -> Softplus.op_type
   | Add _                -> Add.op_type
   | Sub _                -> Sub.op_type
   | Mul _                -> Mul.op_type
@@ -359,6 +367,7 @@ let input = function
   | Sqrt x               -> Sqrt.(x.input)
   | Exp x                -> Exp.(x.input)
   | Log x                -> Log.(x.input)
+  | Erf x                -> Erf.(x.input)
   | Sigmoid x            -> Sigmoid.(x.input)
   | Neg x                -> Neg.(x.input)
   | Sign x               -> Sign.(x.input)
@@ -371,6 +380,8 @@ let input = function
   | Elu x                -> Elu.(x.input)
   | LeakyRelu x          -> LeakyRelu.(x.input)
   | Softmax x            -> Softmax.(x.input)
+  | Softsign x           -> Softsign.(x.input)
+  | Softplus x           -> Softplus.(x.input)
   | Rational x           -> Rational.(x.input)
   | Add x                -> Add.(x.input)
   | Sub x                -> Sub.(x.input)
@@ -451,6 +462,7 @@ let set_input sym inputs =
   | Sqrt x               -> x.input <- inputs
   | Exp x                -> x.input <- inputs
   | Log x                -> x.input <- inputs
+  | Erf x                -> x.input <- inputs
   | Neg x                -> x.input <- inputs
   | Sign x               -> x.input <- inputs
   | Abs x                -> x.input <- inputs
@@ -462,6 +474,8 @@ let set_input sym inputs =
   | Elu x                -> x.input <- inputs
   | LeakyRelu x          -> x.input <- inputs
   | Softmax x            -> x.input <- inputs
+  | Softsign x           -> x.input <- inputs
+  | Softplus x           -> x.input <- inputs
   | Rational x           -> x.input <- inputs
   | Add x                -> x.input <- inputs
   | Sub x                -> x.input <- inputs
@@ -552,6 +566,7 @@ let out_shape = function
   | Sqrt x               -> Sqrt.(x.out_shape)
   | Exp x                -> Exp.(x.out_shape)
   | Log x                -> Log.(x.out_shape)
+  | Erf x                -> Erf.(x.out_shape)
   | Sigmoid x            -> Sigmoid.(x.out_shape)
   | Neg x                -> Neg.(x.out_shape)
   | Sign x               -> Sign.(x.out_shape)
@@ -564,6 +579,8 @@ let out_shape = function
   | Elu x                -> Elu.(x.out_shape)
   | LeakyRelu x          -> LeakyRelu.(x.out_shape)
   | Softmax x            -> Softmax.(x.out_shape)
+  | Softsign x           -> Softsign.(x.out_shape)
+  | Softplus x           -> Softplus.(x.out_shape)
   | Rational x           -> Rational.(x.out_shape)
   | Add x                -> Add.(x.out_shape)
   | Sub x                -> Sub.(x.out_shape)
@@ -648,6 +665,7 @@ let set_out_shape sym shapes =
   | Sqrt x               -> x.out_shape <- shapes
   | Exp x                -> x.out_shape <- shapes
   | Log x                -> x.out_shape <- shapes
+  | Erf x                -> x.out_shape <- shapes
   | Sigmoid x            -> x.out_shape <- shapes
   | Neg x                -> x.out_shape <- shapes
   | Sign x               -> x.out_shape <- shapes
@@ -660,6 +678,8 @@ let set_out_shape sym shapes =
   | Elu x                -> x.out_shape <- shapes
   | LeakyRelu x          -> x.out_shape <- shapes
   | Softmax x            -> x.out_shape <- shapes
+  | Softsign x           -> x.out_shape <- shapes
+  | Softplus x           -> x.out_shape <- shapes
   | Rational x           -> x.out_shape <- shapes
   | Add x                -> x.out_shape <- shapes
   | Sub x                -> x.out_shape <- shapes
@@ -742,6 +762,7 @@ let attrs = function
   | Sqrt x               -> Sqrt.(x.attrs)
   | Exp x                -> Exp.(x.attrs)
   | Log x                -> Log.(x.attrs)
+  | Erf x                -> Erf.(x.attrs)
   | Sigmoid x            -> Sigmoid.(x.attrs)
   | Rational x           -> Rational.(x.attrs)
   | Neg x                -> Neg.(x.attrs)
@@ -755,6 +776,8 @@ let attrs = function
   | Elu x                -> Elu.(x.attrs)
   | LeakyRelu x          -> LeakyRelu.(x.attrs)
   | Softmax x            -> Softmax.(x.attrs)
+  | Softsign x           -> Softsign.(x.attrs)
+  | Softplus x           -> Softplus.(x.attrs)
   | Add x                -> Add.(x.attrs)
   | Sub x                -> Sub.(x.attrs)
   | Mul x                -> Mul.(x.attrs)
@@ -835,6 +858,7 @@ let set_attrs sym a =
   | Sqrt x               -> x.attrs <- a
   | Exp x                -> x.attrs <- a
   | Log x                -> x.attrs <- a
+  | Erf x                -> x.attrs <- a
   | Sigmoid x            -> x.attrs <- a
   | Rational x           -> x.attrs <- a
   | Neg x                -> x.attrs <- a
@@ -848,6 +872,8 @@ let set_attrs sym a =
   | Elu x                -> x.attrs <- a
   | LeakyRelu x          -> x.attrs <- a
   | Softmax x            -> x.attrs <- a
+  | Softsign x           -> x.attrs <- a
+  | Softplus x           -> x.attrs <- a
   | Add x                -> x.attrs <- a
   | Sub x                -> x.attrs <- a
   | Mul x                -> x.attrs <- a
