@@ -6,8 +6,7 @@
 open Owl_symbolic_types
 open Owl_symbolic_graph
 
-(** Target: concat; normalisation; padding;
-  add *)
+(** Target: normalisation; padding *)
 
 let init typ shape =
   let fan_in, fan_out = Owl_symbolic_utils.calc_fans shape in
@@ -46,11 +45,11 @@ let avg_pool2d ?name ?(padding = VALID) kernel strides input_node =
 
 
 let global_max_pool2d ?name input_node =
-  Owl_symbolic_operator.global_max_pool ?name input_node
+  Owl_symbolic_operator.global_max_pool ?name input_node |> Owl_symbolic_operator.squeeze
 
 
 let global_avg_pool2d ?name input_node =
-  Owl_symbolic_operator.global_avg_pool ?name input_node
+  Owl_symbolic_operator.global_avg_pool ?name input_node |> Owl_symbolic_operator.squeeze
 
 
 let dropout ?name ratio input_node =
@@ -96,6 +95,10 @@ let linear ?(init_typ = Standard) outputs input_node =
   let y = Owl_symbolic_operator.(add (matmul input_node w) b) in
   y
 
+
+let concat = Owl_symbolic_operator.concat
+
+let add = Owl_symbolic_operator.add
 
 (*
 let normalisation ?name ?(axis=(-1)) ?decay ?mu ?var input_node = ()

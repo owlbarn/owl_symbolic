@@ -31,17 +31,17 @@ let make_node (sym : Owl_symbolic_symbol.t) (parents : symbol array) =
     in
     let (shape : int array option array) = Owl_symbolic_shape.infer_shape in_shapes sym in
     (* TODO: remove this part in product code *)
-    (* if _debug_shape = true
+    if _debug_shape = true
     then (
       let foo =
-        match shape.(0).(0) with
+        match shape.(0) with
         | Some s -> s
         | None   -> [||]
       in
       Owl_log.info
         "%s: %s\n"
         (Owl_symbolic_symbol.name sym)
-        (Owl_utils_array.to_string string_of_int foo)); *)
+        (Owl_utils_array.to_string string_of_int foo));
     Owl_symbolic_symbol.set_out_shape sym shape);
   (* Connect child with parents *)
   connect_ancestors parents [| child |];

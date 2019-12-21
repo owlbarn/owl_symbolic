@@ -103,7 +103,7 @@ let conv2d input_shape padding kernel_shape stride_shape =
       row_stride
       col_stride
   in
-  [| batches; output_cols; output_rows; out_channel |]
+  [| batches; out_channel; output_cols; output_rows |]
 
 
 let rec gcd a b =
