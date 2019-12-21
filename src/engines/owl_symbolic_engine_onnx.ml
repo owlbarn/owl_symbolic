@@ -333,6 +333,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Sqrt _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Exp _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Log _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Erf _                -> type_check_pattern01 ptypes.(0) _types_constraint04 name
         | Sigmoid _            -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Neg _                -> type_check_pattern01 ptypes.(0) _types_constraint01 name
         | Sign _               -> type_check_pattern01 ptypes.(0) _types_constraint04 name

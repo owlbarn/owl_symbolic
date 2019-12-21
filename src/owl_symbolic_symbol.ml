@@ -44,6 +44,7 @@ type t =
   | Sqrt of Sqrt.t
   | Exp of Exp.t
   | Log of Log.t
+  | Erf of Erf.t
   | Sigmoid of Sigmoid.t
   | Relu of Relu.t
   | Elu of Elu.t
@@ -157,6 +158,7 @@ let name = function
   | Sqrt x               -> Sqrt.(x.name)
   | Exp x                -> Exp.(x.name)
   | Log x                -> Log.(x.name)
+  | Erf x                -> Erf.(x.name)
   | Sigmoid x            -> Sigmoid.(x.name)
   | Relu x               -> Relu.(x.name)
   | Elu x                -> Elu.(x.name)
@@ -365,6 +367,7 @@ let input = function
   | Sqrt x               -> Sqrt.(x.input)
   | Exp x                -> Exp.(x.input)
   | Log x                -> Log.(x.input)
+  | Erf x                -> Erf.(x.input)
   | Sigmoid x            -> Sigmoid.(x.input)
   | Neg x                -> Neg.(x.input)
   | Sign x               -> Sign.(x.input)
@@ -459,6 +462,7 @@ let set_input sym inputs =
   | Sqrt x               -> x.input <- inputs
   | Exp x                -> x.input <- inputs
   | Log x                -> x.input <- inputs
+  | Erf x                -> x.input <- inputs
   | Neg x                -> x.input <- inputs
   | Sign x               -> x.input <- inputs
   | Abs x                -> x.input <- inputs
@@ -562,6 +566,7 @@ let out_shape = function
   | Sqrt x               -> Sqrt.(x.out_shape)
   | Exp x                -> Exp.(x.out_shape)
   | Log x                -> Log.(x.out_shape)
+  | Erf x                -> Erf.(x.out_shape)
   | Sigmoid x            -> Sigmoid.(x.out_shape)
   | Neg x                -> Neg.(x.out_shape)
   | Sign x               -> Sign.(x.out_shape)
@@ -660,6 +665,7 @@ let set_out_shape sym shapes =
   | Sqrt x               -> x.out_shape <- shapes
   | Exp x                -> x.out_shape <- shapes
   | Log x                -> x.out_shape <- shapes
+  | Erf x                -> x.out_shape <- shapes
   | Sigmoid x            -> x.out_shape <- shapes
   | Neg x                -> x.out_shape <- shapes
   | Sign x               -> x.out_shape <- shapes
@@ -756,6 +762,7 @@ let attrs = function
   | Sqrt x               -> Sqrt.(x.attrs)
   | Exp x                -> Exp.(x.attrs)
   | Log x                -> Log.(x.attrs)
+  | Erf x                -> Erf.(x.attrs)
   | Sigmoid x            -> Sigmoid.(x.attrs)
   | Rational x           -> Rational.(x.attrs)
   | Neg x                -> Neg.(x.attrs)
@@ -851,6 +858,7 @@ let set_attrs sym a =
   | Sqrt x               -> x.attrs <- a
   | Exp x                -> x.attrs <- a
   | Log x                -> x.attrs <- a
+  | Erf x                -> x.attrs <- a
   | Sigmoid x            -> x.attrs <- a
   | Rational x           -> x.attrs <- a
   | Neg x                -> x.attrs <- a

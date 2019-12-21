@@ -513,6 +513,23 @@ module Softplus = struct
     { name; input; attrs; out_shape = [| None |] }
 end
 
+module Erf = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "Erf"
+
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |] }
+end
+
 (** Two inputs *)
 
 module Add = struct

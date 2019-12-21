@@ -74,6 +74,8 @@ val exp : ?name:string -> symbol -> symbol
 
 val log : ?name:string -> symbol -> symbol
 
+val erf : ?name:string -> symbol -> symbol
+
 val sigmoid : ?name:string -> symbol -> symbol
 
 val abs : ?name:string -> symbol -> symbol
