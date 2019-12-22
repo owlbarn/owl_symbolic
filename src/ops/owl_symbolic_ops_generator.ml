@@ -33,14 +33,15 @@ module Float = struct
     ; mutable attrs : (string * attrvalue) array
     ; mutable value : float
     ; mutable out_shape : int array option array
+    ; mutable dtype : number_type
     }
 
   let op_type = "Float"
 
-  let create ?name value =
+  let create ?name ?(dtype = SNT_Float) value =
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; attrs; value; out_shape = [| Some [||] |] }
+    { name; attrs; value; out_shape = [| Some [||] |]; dtype }
 end
 
 module Complex = struct

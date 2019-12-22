@@ -106,6 +106,30 @@ let conv2d input_shape padding kernel_shape stride_shape =
   [| batches; out_channel; output_cols; output_rows |]
 
 
+let transpose_conv2d input_shape padding kernel_shape stride_shape =
+  let batches = input_shape.(0) in
+  let input_cols = input_shape.(2) in
+  let input_rows = input_shape.(3) in
+  let in_channel = input_shape.(1) in
+  let kernel_cols = kernel_shape.(2) in
+  let kernel_rows = kernel_shape.(3) in
+  let out_channel = kernel_shape.(1) in
+  assert (in_channel = kernel_shape.(0));
+  let col_stride = stride_shape.(0) in
+  let row_stride = stride_shape.(1) in
+  let output_cols, output_rows =
+    Owl_utils_infer_shape.calc_transpose_conv2d_output_shape
+      padding
+      input_cols
+      input_rows
+      kernel_cols
+      kernel_rows
+      row_stride
+      col_stride
+  in
+  [| batches; out_channel; output_cols; output_rows |]
+
+
 let rec gcd a b =
   match a mod b with
   | 0 -> b

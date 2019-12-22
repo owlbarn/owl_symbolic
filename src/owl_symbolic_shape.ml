@@ -97,7 +97,7 @@ let infer_shape_14 input_shapes padding stride =
   let kernel_shape = input_shapes.(1).(0) in
   match input_shape, kernel_shape with
   | Some input, Some kernel ->
-    [| Some Owl_utils_infer_shape.(transpose_conv2d input padding kernel stride) |]
+    [| Some Owl_symbolic_utils.(transpose_conv2d input padding kernel stride) |]
   | _, _                    -> [| None |]
 
 
@@ -315,6 +315,7 @@ let infer_shape_space_to_depth input_shapes block_size =
   | None   -> [| None |]
 
 
+(* TODO: update 1D and 3D case to use util function from symbolic, not base *)
 let infer_shape_conv input_shapes (x : Owl_symbolic_ops_nn.Conv.t) =
   let l = x.dim in
   let padding = if x.auto_pad = "VALID" then Owl_types.VALID else Owl_types.SAME in
@@ -326,6 +327,8 @@ let infer_shape_conv input_shapes (x : Owl_symbolic_ops_nn.Conv.t) =
   then infer_shape_13 input_shapes padding x.strides
   else failwith "Owl_symbolic_shape: illegal conv dimensions."
 
+
+(* TODO: update 1D and 3D case to use util function from symbolic, not base *)
 
 let infer_shape_conv_transpose input_shapes (x : Owl_symbolic_ops_nn.ConvTranspose.t) =
   let l = x.dim in

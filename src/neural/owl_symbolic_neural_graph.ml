@@ -29,9 +29,9 @@ let activation ?name act_typ input_node =
   | _         -> failwith "unimplemented yet"
 
 
-let input ?name shape =
+let input ?name ?dtype shape =
   let name = Owl_symbolic_utils.node_name ?name "Variable" in
-  Owl_symbolic_operator.variable ~shape name
+  Owl_symbolic_operator.variable ?dtype ~shape name
 
 
 let max_pool2d ?name ?(padding = VALID) kernel strides input_node =
@@ -99,6 +99,7 @@ let conv2d ?name ?(padding = SAME_UPPER) ?(init_typ = Tanh) kernel strides input
   Owl_symbolic_operator.conv ?name ~dim:2 ~padding ~strides ~bias input_node kernel_node
 
 
+(* Kernel : [|in_c; out_c; h; w|]; input: [|n; c; h; w|] *)
 let transpose_conv2d
     ?name
     ?(padding = SAME_UPPER)
@@ -134,10 +135,6 @@ let linear ?(init_typ = Standard) outputs input_node =
   y
 
 
-let concat = Owl_symbolic_operator.concat
-
-let add = Owl_symbolic_operator.add
-
 (* TODO: the correctness of this layer needs to be thoroughly checked *)
 let normalisation ?name ?_axis ?eps ?momentum input_node =
   let in_shape = input_node |> Owl_graph.attr |> Owl_symbolic_symbol.out_shape in
@@ -157,6 +154,14 @@ let normalisation ?name ?_axis ?eps ?momentum input_node =
   in
   y
 
+
+let concat = Owl_symbolic_operator.concat
+
+let add = Owl_symbolic_operator.add
+
+let flt = Owl_symbolic_operator.float
+
+let tanh = Owl_symbolic_operator.tanh
 
 let get_network ?name input_node =
   let name =

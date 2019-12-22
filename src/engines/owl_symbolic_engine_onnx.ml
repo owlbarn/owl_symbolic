@@ -187,7 +187,12 @@ let check_same types name =
   Array.iter (fun t -> if t <> types.(0) then flag := false) types;
   if !flag = false
   then (
-    let msg = Printf.sprintf "%s: inputs are of differnt type." name in
+    let typs =
+      Owl_utils_array.to_string
+        (fun x -> map_elt_type_to_int32 x.(0) |> Int32.to_string)
+        types
+    in
+    let msg = Printf.sprintf "%s: inputs are of differnt type: %s." name typs in
     raise (TYPE_CHECK msg))
 
 
