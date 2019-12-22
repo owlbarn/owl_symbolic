@@ -116,6 +116,7 @@ type t =
   | GatherND of GatherND.t
   (* NN *)
   | Conv of Conv.t
+  | ConvTranspose of ConvTranspose.t
   | MaxPool of MaxPool.t
   | AveragePool of AveragePool.t
   | BatchNormalization of BatchNormalization.t
@@ -222,6 +223,7 @@ let name = function
   | GatherElements x     -> GatherElements.(x.name)
   | GatherND x           -> GatherND.(x.name)
   | Conv x               -> Conv.(x.name)
+  | ConvTranspose x      -> ConvTranspose.(x.name)
   | MaxPool x            -> MaxPool.(x.name)
   | AveragePool x        -> AveragePool.(x.name)
   | BatchNormalization x -> BatchNormalization.(x.name)
@@ -326,6 +328,7 @@ let op_type = function
   | GatherElements _     -> GatherElements.op_type
   | GatherND _           -> GatherND.op_type
   | Conv _               -> Conv.op_type
+  | ConvTranspose _      -> ConvTranspose.op_type
   | MaxPool _            -> MaxPool.op_type
   | AveragePool _        -> AveragePool.op_type
   | BatchNormalization _ -> BatchNormalization.op_type
@@ -431,6 +434,7 @@ let input = function
   | GatherElements x     -> GatherElements.(x.input)
   | GatherND x           -> GatherND.(x.input)
   | Conv x               -> Conv.(x.input)
+  | ConvTranspose x      -> ConvTranspose.(x.input)
   | MaxPool x            -> MaxPool.(x.input)
   | AveragePool x        -> AveragePool.(x.input)
   | BatchNormalization x -> BatchNormalization.(x.input)
@@ -526,6 +530,7 @@ let set_input sym inputs =
   | GatherElements x     -> x.input <- inputs
   | GatherND x           -> x.input <- inputs
   | Conv x               -> x.input <- inputs
+  | ConvTranspose x      -> x.input <- inputs
   | MaxPool x            -> x.input <- inputs
   | AveragePool x        -> x.input <- inputs
   | BatchNormalization x -> x.input <- inputs
@@ -630,6 +635,7 @@ let out_shape = function
   | GatherElements x     -> GatherElements.(x.out_shape)
   | GatherND x           -> GatherND.(x.out_shape)
   | Conv x               -> Conv.(x.out_shape)
+  | ConvTranspose x      -> ConvTranspose.(x.out_shape)
   | MaxPool x            -> MaxPool.(x.out_shape)
   | AveragePool x        -> AveragePool.(x.out_shape)
   | BatchNormalization x -> BatchNormalization.(x.out_shape)
@@ -729,6 +735,7 @@ let set_out_shape sym shapes =
   | GatherElements x     -> x.out_shape <- shapes
   | GatherND x           -> x.out_shape <- shapes
   | Conv x               -> x.out_shape <- shapes
+  | ConvTranspose x      -> x.out_shape <- shapes
   | MaxPool x            -> x.out_shape <- shapes
   | AveragePool x        -> x.out_shape <- shapes
   | BatchNormalization x -> x.out_shape <- shapes
@@ -826,6 +833,7 @@ let attrs = function
   | GatherElements x     -> GatherElements.(x.attrs)
   | GatherND x           -> GatherND.(x.attrs)
   | Conv x               -> Conv.(x.attrs)
+  | ConvTranspose x      -> ConvTranspose.(x.attrs)
   | MaxPool x            -> MaxPool.(x.attrs)
   | AveragePool x        -> AveragePool.(x.attrs)
   | BatchNormalization x -> BatchNormalization.(x.attrs)
@@ -922,6 +930,7 @@ let set_attrs sym a =
   | GatherElements x     -> x.attrs <- a
   | GatherND x           -> x.attrs <- a
   | Conv x               -> x.attrs <- a
+  | ConvTranspose x      -> x.attrs <- a
   | MaxPool x            -> x.attrs <- a
   | AveragePool x        -> x.attrs <- a
   | BatchNormalization x -> x.attrs <- a

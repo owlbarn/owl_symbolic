@@ -99,6 +99,26 @@ let conv2d ?name ?(padding = SAME_UPPER) ?(init_typ = Tanh) kernel strides input
   Owl_symbolic_operator.conv ?name ~dim:2 ~padding ~strides ~bias input_node kernel_node
 
 
+let transpose_conv2d
+    ?name
+    ?(padding = SAME_UPPER)
+    ?(init_typ = Tanh)
+    kernel
+    strides
+    input_node
+  =
+  assert (Array.length kernel = 4);
+  assert (Array.length strides = 2);
+  let kernel_node = init init_typ kernel in
+  Owl_symbolic_operator.conv_transpose
+    ?name
+    ~dim:2
+    ~padding
+    ~strides
+    input_node
+    kernel_node
+
+
 let linear ?(init_typ = Standard) outputs input_node =
   let in_shape = input_node |> Owl_graph.attr |> Owl_symbolic_symbol.out_shape in
   let shp =

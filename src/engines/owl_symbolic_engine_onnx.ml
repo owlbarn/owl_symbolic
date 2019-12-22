@@ -454,6 +454,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           type_check_pattern01 ptypes.(1) [| SNT_Int64 |] name |> ignore;
           type_check_pattern01 ptypes.(0) _types_constraint03 name
         | Conv _               -> type_check_pattern02 ptypes _types_constraint00 name
+        | ConvTranspose _      -> type_check_pattern02 ptypes _types_constraint00 name
         | MaxPool _            ->
           let t1 = type_check_pattern01 ptypes.(0) _types_constraint00 name in
           let t2 = SNT_Int64 in
@@ -728,6 +729,19 @@ let build_onnx_attrs_conv (x : Owl_symbolic_ops_nn.Conv.t) =
   [ attr_pad; attr_dil; attr_group; attr_strides ]
 
 
+let build_onnx_attrs_conv_transpose (x : Owl_symbolic_ops_nn.ConvTranspose.t) =
+  let attr_pad =
+    match x.pads with
+    | Some pad -> make_attr_ints "pads" pad
+    | None     -> make_attr_string "auto_pad" x.auto_pad
+  in
+  let attr_dil = make_attr_ints "dilations" x.dilations in
+  let attr_strides = make_attr_ints "strides" x.strides in
+  let attr_group = make_attr_int "group" x.group in
+  (* TODO: kernel_shape, output_padding, output_shape *)
+  [ attr_pad; attr_dil; attr_group; attr_strides ]
+
+
 let build_onnx_attrs_maxpool (x : Owl_symbolic_ops_nn.MaxPool.t) =
   let attr_pad =
     match x.pads with
@@ -864,6 +878,7 @@ let build_onnx_attrs sym =
     | S.SpaceToDepth x       -> build_onnx_attrs_spacetodepth x.blocksize
     | S.ScatterElements x    -> build_onnx_attrs_scatter_elements x.axis
     | S.Conv x               -> build_onnx_attrs_conv x
+    | S.ConvTranspose x      -> build_onnx_attrs_conv_transpose x
     | S.MaxPool x            -> build_onnx_attrs_maxpool x
     | S.AveragePool x        -> build_onnx_attrs_avgpool x
     | S.BatchNormalization x -> build_onnx_attrs_batch_norm x.epsilon x.momentum

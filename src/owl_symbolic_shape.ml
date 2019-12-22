@@ -92,6 +92,15 @@ let infer_shape_13 input_shapes padding stride =
   | _, _                    -> [| None |]
 
 
+let infer_shape_14 input_shapes padding stride =
+  let input_shape = input_shapes.(0).(0) in
+  let kernel_shape = input_shapes.(1).(0) in
+  match input_shape, kernel_shape with
+  | Some input, Some kernel ->
+    [| Some Owl_utils_infer_shape.(transpose_conv2d input padding kernel stride) |]
+  | _, _                    -> [| None |]
+
+
 let infer_shape_15 input_shapes padding kernel stride =
   let input_shape = input_shapes.(0).(0) in
   match input_shape with
@@ -128,6 +137,24 @@ let infer_shape_21 input_shapes padding kernel stride =
   match input_shape with
   | Some input -> [| Some Owl_symbolic_utils.(pool2d input padding kernel stride) |]
   | _          -> [| None |]
+
+
+let infer_shape_24 input_shapes padding stride =
+  let input_shape = input_shapes.(0).(0) in
+  let kernel_shape = input_shapes.(1).(0) in
+  match input_shape, kernel_shape with
+  | Some input, Some kernel ->
+    [| Some Owl_utils_infer_shape.(transpose_conv1d input padding kernel stride) |]
+  | _, _                    -> [| None |]
+
+
+let infer_shape_25 input_shapes padding stride =
+  let input_shape = input_shapes.(0).(0) in
+  let kernel_shape = input_shapes.(1).(0) in
+  match input_shape, kernel_shape with
+  | Some input, Some kernel ->
+    [| Some Owl_utils_infer_shape.(transpose_conv3d input padding kernel stride) |]
+  | _, _                    -> [| None |]
 
 
 let infer_shape_31 input_shapes =
@@ -298,6 +325,18 @@ let infer_shape_conv input_shapes (x : Owl_symbolic_ops_nn.Conv.t) =
   else if l = 3
   then infer_shape_13 input_shapes padding x.strides
   else failwith "Owl_symbolic_shape: illegal conv dimensions."
+
+
+let infer_shape_conv_transpose input_shapes (x : Owl_symbolic_ops_nn.ConvTranspose.t) =
+  let l = x.dim in
+  let padding = if x.auto_pad = "VALID" then Owl_types.VALID else Owl_types.SAME in
+  if l = 1
+  then infer_shape_24 input_shapes padding x.strides
+  else if l = 2
+  then infer_shape_14 input_shapes padding x.strides
+  else if l = 3
+  then infer_shape_25 input_shapes padding x.strides
+  else failwith "Owl_symbolic_shape: illegal conv_transpose dimensions."
 
 
 (** TODO: currently the pads value is not used *)
@@ -564,6 +603,7 @@ let infer_shape input_shapes sym =
   | GatherElements _     -> infer_shape_gather_elements input_shapes
   | GatherND _           -> [| None |]
   | Conv x               -> infer_shape_conv input_shapes x
+  | ConvTranspose x      -> infer_shape_conv_transpose input_shapes x
   | MaxPool x            ->
     infer_shape_pool ~typ:`max input_shapes x.kernel_shp x.strides x.auto_pad x.pads
   | AveragePool x        ->

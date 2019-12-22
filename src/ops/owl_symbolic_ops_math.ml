@@ -8,9 +8,9 @@ Acosh, Atanh, Add, Sub, Mul, Div, Neg, Abs, Floor, Ceil, Sqrt, Relu, Exp, Log,
 Pow, Round, Gemm, MatMul, Max, Min, Sum, Mean, Mod, Sigmoid, Softmax, Clip, Sign
 LeakyRelu, Elu, Softsign, Softplus *)
 
-(*  Erf *)
-(* Cumsum, Det, Reciprocal, ThreasholdedRelu, Selu, PRelu, HardSigmoid,
-LogSoftmax, Hardmax,  Expand, QLinearMatMul, MatMulInteger,
+(*  HardSigmoid, LogSoftmax, ThreasholdedRelu, Selu, PRelu, *)
+(* Cumsum, Det, Reciprocal, 
+Hardmax, Expand, QLinearMatMul, MatMulInteger,
 *)
 
 open Owl_symbolic_types

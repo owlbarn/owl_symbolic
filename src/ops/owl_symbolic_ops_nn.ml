@@ -84,6 +84,75 @@ module Conv = struct
     }
 end
 
+module ConvTranspose = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable auto_pad : string
+    ; mutable dilations : int array
+    ; mutable pads : int array option
+    ; mutable strides : int array
+    ; mutable group : int
+    ; mutable dim : int
+    }
+
+  let op_type = "ConvTranspose"
+
+  let create
+      ?name
+      ?(dim = 2)
+      ?strides
+      ?(padding = VALID)
+      ?dilations
+      ?bias_name
+      input_name
+      kernel_name
+    =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let dilations =
+      match dilations with
+      | Some d ->
+        assert (Array.length d = dim);
+        d
+      | None   -> Array.make dim 1
+    in
+    let strides =
+      match strides with
+      | Some s ->
+        assert (Array.length s = dim);
+        s
+      | None   -> Array.make dim 1
+    in
+    let auto_pad, pads =
+      match padding with
+      | SAME_UPPER -> "SAME_UPPER", None
+      | SAME_LOWER -> "SAME_LOWRE", None
+      | VALID      -> "VALID", None
+      | PAD p      ->
+        assert (Array.length p = dim);
+        "NOTSET", Some p
+    in
+    let input =
+      match bias_name with
+      | Some b -> [| input_name; kernel_name; b |]
+      | None   -> [| input_name; kernel_name |]
+    in
+    { name
+    ; input
+    ; attrs
+    ; out_shape = [| None |]
+    ; auto_pad
+    ; dilations
+    ; pads
+    ; strides
+    ; group = 1
+    ; dim
+    }
+end
+
 module MaxPool = struct
   type t =
     { mutable name : string

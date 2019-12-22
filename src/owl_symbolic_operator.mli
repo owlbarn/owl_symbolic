@@ -233,6 +233,17 @@ val conv
   -> symbol
   -> symbol
 
+val conv_transpose
+  :  ?name:string
+  -> ?dim:int
+  -> ?padding:Owl_symbolic_types.pad
+  -> ?strides:int array
+  -> ?dilations:int array
+  -> ?bias:symbol
+  -> symbol
+  -> symbol
+  -> symbol
+
 val maxpool
   :  ?name:string
   -> ?strides:int array

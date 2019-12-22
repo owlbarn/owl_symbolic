@@ -690,6 +690,37 @@ let conv ?name ?dim ?padding ?strides ?dilations ?bias input kernel =
     make_node (Owl_symbolic_symbol.Conv s) [| input; kernel |]
 
 
+let conv_transpose ?name ?dim ?padding ?strides ?dilations ?bias input kernel =
+  let i_name = Owl_symbolic_graph.name input in
+  let k_name = Owl_symbolic_graph.name kernel in
+  match bias with
+  | Some b ->
+    let b_name = Owl_symbolic_graph.name b in
+    let s =
+      Owl_symbolic_ops_nn.ConvTranspose.create
+        ?name
+        ?padding
+        ?strides
+        ?dilations
+        ~bias_name:b_name
+        i_name
+        k_name
+    in
+    make_node (Owl_symbolic_symbol.ConvTranspose s) [| input; kernel; b |]
+  | None   ->
+    let s =
+      Owl_symbolic_ops_nn.ConvTranspose.create
+        ?name
+        ?dim
+        ?padding
+        ?strides
+        ?dilations
+        i_name
+        k_name
+    in
+    make_node (Owl_symbolic_symbol.ConvTranspose s) [| input; kernel |]
+
+
 let maxpool ?name ?strides ?dilations ?padding input kernel_shp =
   (* build multiple outputs of split *)
   let n = Owl_symbolic_utils.node_name ?name "MaxPool" in

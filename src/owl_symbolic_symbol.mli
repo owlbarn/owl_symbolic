@@ -99,6 +99,7 @@ type t =
   | GatherElements of Owl_symbolic_ops_tensor.GatherElements.t
   | GatherND of Owl_symbolic_ops_tensor.GatherND.t
   | Conv of Owl_symbolic_ops_nn.Conv.t
+  | ConvTranspose of Owl_symbolic_ops_nn.ConvTranspose.t
   | MaxPool of Owl_symbolic_ops_nn.MaxPool.t
   | AveragePool of Owl_symbolic_ops_nn.AveragePool.t
   | BatchNormalization of Owl_symbolic_ops_nn.BatchNormalization.t
