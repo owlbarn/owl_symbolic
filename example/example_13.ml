@@ -1,7 +1,7 @@
 open Owl_symbolic_neural_graph
 open Owl_symbolic_types
-(* open Owl_symbolic_infix *)
 
+(* open Owl_symbolic_infix *)
 
 (** Fast Neural Style Transfer *)
 
