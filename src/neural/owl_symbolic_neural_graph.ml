@@ -155,6 +155,10 @@ let normalisation ?name ?_axis ?eps ?momentum input_node =
   y
 
 
+let zero_padding2d ?name padding input_node =
+  Owl_symbolic_operator.pad ?name ~mode:"constant" input_node padding
+
+
 let concat = Owl_symbolic_operator.concat
 
 let add = Owl_symbolic_operator.add

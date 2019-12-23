@@ -3,109 +3,77 @@
  * Copyright (c) 2016-2019 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-val init : Owl_symbolic_types.nn_init -> int array -> Owl_symbolic_graph.symbol
+open Owl_symbolic_graph
+open Owl_symbolic_types
 
-val activation
-  :  ?name:string
-  -> Owl_symbolic_types.activation
-  -> Owl_symbolic_graph.symbol
-  -> Owl_symbolic_graph.symbol
+val init : nn_init -> int array -> symbol
 
-val input
-  :  ?name:string
-  -> ?dtype:Owl_symbolic_types.number_type
-  -> int array
-  -> Owl_symbolic_graph.symbol
+val activation : ?name:string -> activation -> symbol -> symbol
+
+val input : ?name:string -> ?dtype:number_type -> int array -> symbol
 
 val max_pool2d
   :  ?name:string
-  -> ?padding:Owl_symbolic_types.pad
+  -> ?padding:pad
   -> int array
   -> int array
-  -> Owl_symbolic_graph.symbol
-  -> Owl_symbolic_graph.symbol
+  -> symbol
+  -> symbol
 
 val avg_pool2d
   :  ?name:string
-  -> ?padding:Owl_symbolic_types.pad
+  -> ?padding:pad
   -> int array
   -> int array
-  -> Owl_symbolic_graph.symbol
-  -> Owl_symbolic_graph.symbol
+  -> symbol
+  -> symbol
 
-val global_max_pool2d
-  :  ?name:string
-  -> Owl_symbolic_graph.symbol
-  -> Owl_symbolic_graph.symbol
+val global_max_pool2d : ?name:string -> symbol -> symbol
 
-val global_avg_pool2d
-  :  ?name:string
-  -> Owl_symbolic_graph.symbol
-  -> Owl_symbolic_graph.symbol
+val global_avg_pool2d : ?name:string -> symbol -> symbol
 
-val dropout
-  :  ?name:string
-  -> float
-  -> Owl_symbolic_graph.symbol
-  -> Owl_symbolic_graph.symbol
+val dropout : ?name:string -> float -> symbol -> symbol
 
-val lambda
-  :  (Owl_symbolic_graph.symbol -> Owl_symbolic_graph.symbol)
-  -> Owl_symbolic_graph.symbol
-  -> Owl_symbolic_graph.symbol
+val lambda : (symbol -> symbol) -> symbol -> symbol
 
-val fully_connected
-  :  ?init_typ:Owl_symbolic_types.nn_init
-  -> int
-  -> Owl_symbolic_graph.symbol
-  -> Owl_symbolic_graph.symbol
+val fully_connected : ?init_typ:nn_init -> int -> symbol -> symbol
 
 val conv2d
   :  ?name:string
-  -> ?padding:Owl_symbolic_types.pad
-  -> ?init_typ:Owl_symbolic_types.nn_init
+  -> ?padding:pad
+  -> ?init_typ:nn_init
   -> int array
   -> int array
-  -> Owl_symbolic_graph.symbol
-  -> Owl_symbolic_graph.symbol
+  -> symbol
+  -> symbol
 
 val transpose_conv2d
   :  ?name:string
-  -> ?padding:Owl_symbolic_types.pad
-  -> ?init_typ:Owl_symbolic_types.nn_init
+  -> ?padding:pad
+  -> ?init_typ:nn_init
   -> int array
   -> int array
-  -> Owl_symbolic_graph.symbol
-  -> Owl_symbolic_graph.symbol
+  -> symbol
+  -> symbol
 
-val linear
-  :  ?init_typ:Owl_symbolic_types.nn_init
-  -> int
-  -> Owl_symbolic_graph.symbol
-  -> Owl_symbolic_graph.symbol
+val linear : ?init_typ:nn_init -> int -> symbol -> symbol
 
 val normalisation
   :  ?name:string
   -> ?_axis:'a
   -> ?eps:float
   -> ?momentum:float
-  -> Owl_symbolic_graph.symbol
-  -> Owl_symbolic_graph.symbol
+  -> symbol
+  -> symbol
 
-val concat
-  :  ?name:string
-  -> ?axis:int
-  -> Owl_symbolic_graph.symbol array
-  -> Owl_symbolic_graph.symbol
+val zero_padding2d : ?name:string -> int array -> symbol -> symbol
 
-val add
-  :  ?name:string
-  -> Owl_symbolic_graph.symbol
-  -> Owl_symbolic_graph.symbol
-  -> Owl_symbolic_graph.symbol
+val concat : ?name:string -> ?axis:int -> symbol array -> symbol
 
-val flt : ?name:string -> float -> Owl_symbolic_graph.symbol
+val add : ?name:string -> symbol -> symbol -> symbol
 
-val tanh : ?name:string -> Owl_symbolic_graph.symbol -> Owl_symbolic_graph.symbol
+val flt : ?name:string -> float -> symbol
 
-val get_network : ?name:string -> Owl_symbolic_graph.symbol -> Owl_symbolic_graph.t
+val tanh : ?name:string -> symbol -> symbol
+
+val get_network : ?name:string -> symbol -> t
