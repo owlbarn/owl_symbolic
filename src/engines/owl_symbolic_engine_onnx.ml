@@ -335,6 +335,16 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           type_check_pattern01 [| dt |] _types_constraint00 name
         | Sin _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Cos _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Tan _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Asin _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Acos _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Atan _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Sinh _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Cosh _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Tanh _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Asinh _              -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Acosh _              -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Atanh _              -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Sqrt _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Exp _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Log _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
