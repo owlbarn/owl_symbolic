@@ -17,14 +17,15 @@ module Int = struct
     ; mutable attrs : (string * attrvalue) array
     ; mutable value : int
     ; mutable out_shape : int array option array
+    ; mutable dtype : number_type
     }
 
   let op_type = "Int"
 
-  let create ?name value =
+  let create ?name ?(dtype = SNT_Int32) value =
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; attrs; value; out_shape = [| Some [||] |] }
+    { name; attrs; value; out_shape = [| Some [||] |]; dtype }
 end
 
 module Float = struct

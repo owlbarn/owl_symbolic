@@ -957,7 +957,7 @@ let output sym =
 
 let dtype = function
   | Float x         -> x.dtype
-  | Int _           -> SNT_Int32
+  | Int x           -> x.dtype
   | Complex _       -> SNT_Complex32
   | Pi x            -> Pi.(x.dtype)
   | Tensor x        ->

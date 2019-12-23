@@ -75,7 +75,7 @@ let dropout ?name ratio input_node =
 
 let lambda (f : symbol -> symbol) (input_node : symbol) = f input_node
 
-let fully_connected ?(init_typ = Standard) outputs input_node =
+let fully_connected ?name ?(init_typ = Standard) outputs input_node =
   let in_shape = input_node |> Owl_graph.attr |> Owl_symbolic_symbol.out_shape in
   let shp =
     match in_shape.(0) with
@@ -87,7 +87,7 @@ let fully_connected ?(init_typ = Standard) outputs input_node =
   let w = init init_typ [| m; n |] in
   let b = Owl_symbolic_operator.zeros [| 1; n |] in
   let x = Owl_symbolic_operator.reshape [| shp.(0); m |] input_node in
-  Owl_symbolic_operator.(add (matmul x w) b)
+  Owl_symbolic_operator.(add (matmul ?name x w) b)
 
 
 (* Kernel : [|out_c; in_c; h; w|]; input: [|n; c; h; w|] *)
@@ -120,7 +120,7 @@ let transpose_conv2d
     kernel_node
 
 
-let linear ?(init_typ = Standard) outputs input_node =
+let linear ?name ?(init_typ = Standard) outputs input_node =
   let in_shape = input_node |> Owl_graph.attr |> Owl_symbolic_symbol.out_shape in
   let shp =
     match in_shape.(0) with
@@ -131,7 +131,7 @@ let linear ?(init_typ = Standard) outputs input_node =
   let n = outputs in
   let w = init init_typ [| m; n |] in
   let b = Owl_symbolic_operator.zeros [| 1; n |] in
-  let y = Owl_symbolic_operator.(add (matmul input_node w) b) in
+  let y = Owl_symbolic_operator.(add (matmul ?name input_node w) b) in
   y
 
 
@@ -156,7 +156,10 @@ let normalisation ?name ?_axis ?eps ?momentum input_node =
 
 
 let zero_padding2d ?name padding input_node =
-  Owl_symbolic_operator.pad ?name ~mode:"constant" input_node padding
+  assert (Array.length padding = 4);
+  let p = Array.append [| 0; 0; 0; 0 |] padding in
+  let v = Owl_symbolic_operator.float 0. in
+  Owl_symbolic_operator.pad ?name ~mode:"constant" ~v input_node p
 
 
 let concat = Owl_symbolic_operator.concat

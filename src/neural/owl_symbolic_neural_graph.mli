@@ -36,7 +36,7 @@ val dropout : ?name:string -> float -> symbol -> symbol
 
 val lambda : (symbol -> symbol) -> symbol -> symbol
 
-val fully_connected : ?init_typ:nn_init -> int -> symbol -> symbol
+val fully_connected : ?name:string -> ?init_typ:nn_init -> int -> symbol -> symbol
 
 val conv2d
   :  ?name:string
@@ -56,7 +56,7 @@ val transpose_conv2d
   -> symbol
   -> symbol
 
-val linear : ?init_typ:nn_init -> int -> symbol -> symbol
+val linear : ?name:string -> ?init_typ:nn_init -> int -> symbol -> symbol
 
 val normalisation
   :  ?name:string
@@ -72,7 +72,7 @@ val concat : ?name:string -> ?axis:int -> symbol array -> symbol
 
 val add : ?name:string -> symbol -> symbol -> symbol
 
-val flt : ?name:string -> float -> symbol
+val flt : ?name:string -> ?dtype:number_type -> float -> symbol
 
 val tanh : ?name:string -> symbol -> symbol
 

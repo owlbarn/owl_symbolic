@@ -7,9 +7,9 @@ open Owl_symbolic_graph
 
 val noop : symbol
 
-val int : ?name:string -> int -> symbol
+val int : ?name:string -> ?dtype:Owl_symbolic_types.number_type -> int -> symbol
 
-val float : ?name:string -> float -> symbol
+val float : ?name:string -> ?dtype:Owl_symbolic_types.number_type -> float -> symbol
 
 val complex : ?name:string -> float -> float -> symbol
 

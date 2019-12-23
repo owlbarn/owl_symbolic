@@ -218,7 +218,6 @@ let infer_shape_gemm (x : Owl_symbolic_ops_math.Gemm.t) input_shapes =
   | _, _                   -> [| None |]
 
 
-(* TODO: check the impl of this function *)
 let infer_shape_pad (x : Owl_symbolic_ops_tensor.Pad.t) input_shapes =
   assert (Array.length input_shapes >= 2);
   let return_shp =
@@ -227,6 +226,9 @@ let infer_shape_pad (x : Owl_symbolic_ops_tensor.Pad.t) input_shapes =
       assert (Array.length pads_shp = 1);
       let l = Array.length data_shp in
       assert (pads_shp.(0) = 2 * l);
+      assert (Array.length x.p = 2 * l);
+      let foo = Owl_utils_array.to_string string_of_int x.p in
+      Owl_log.info "fuck2: %s" foo;
       (* we cannot do shape checking of a graph containing Pad ndoe
        if the pads value is dynamically got from nodes, not as arguments in x.p *)
       let s = Array.mapi (fun i d -> x.p.(i) + d + x.p.(i + l)) data_shp in

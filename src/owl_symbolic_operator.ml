@@ -10,13 +10,13 @@ let noop = make_node NOOP [||]
 
 (** Generator *)
 
-let int ?name value =
-  let sym = Owl_symbolic_ops_generator.Int.create ?name value in
+let int ?name ?dtype value =
+  let sym = Owl_symbolic_ops_generator.Int.create ?name ?dtype value in
   make_node (Int sym) [||]
 
 
-let float ?name value =
-  let sym = Owl_symbolic_ops_generator.Float.create ?name value in
+let float ?name ?dtype value =
+  let sym = Owl_symbolic_ops_generator.Float.create ?name ?dtype value in
   make_node (Owl_symbolic_symbol.Float sym) [||]
 
 
@@ -531,18 +531,28 @@ let cast ?name x target =
   make_node (Owl_symbolic_symbol.Cast s) [| x |]
 
 
-(* TODO: Currently we only allow statically specified pads value *)
+(* The order of paddings: [| axis0_start; axis1_start; ... axis0_end; axis1_end;...|] *)
+(* Currently we only allow statically specified pads value *)
 let pad ?name ?mode ?v x pads =
+  (* change the order of pads to ONNX order; 
+   * TODO: this step perhaps should be done in the engine. *)
+  let l = Array.length pads in
+  assert (l mod 2 = 0);
+  let step = l / 2 in
+  let p = Array.make l 0 in
+  Array.iteri
+    (fun i x -> if i mod 2 = 0 then p.(i / 2) <- x else p.((i / 2) + step) <- x)
+    pads;
   let xn = Owl_symbolic_graph.name x in
   let pads_name = Owl_symbolic_utils.node_name "Tensor" in
-  let pads_node = tensor_ints pads in
+  let pads_node = tensor_ints ~name:pads_name pads in
   match v with
   | Some v ->
     let vn = Owl_symbolic_graph.name v in
-    let s = Owl_symbolic_ops_tensor.Pad.create ?name ?mode ~value:vn xn pads_name pads in
+    let s = Owl_symbolic_ops_tensor.Pad.create ?name ?mode ~value:vn xn pads_name p in
     make_node (Owl_symbolic_symbol.Pad s) [| x; pads_node; v |]
   | None   ->
-    let s = Owl_symbolic_ops_tensor.Pad.create ?name ?mode xn pads_name pads in
+    let s = Owl_symbolic_ops_tensor.Pad.create ?name ?mode xn pads_name p in
     make_node (Owl_symbolic_symbol.Pad s) [| x; pads_node |]
 
 
@@ -802,11 +812,11 @@ let batch_norm ?name ?eps ?momentum x scale bias mean var =
     make_node (Owl_symbolic_symbol.BatchNormalization s) [| x; scale; bias; mean; var |]
   in
   (* create identity nodes *)
-  let o1 = Owl_symbolic_ops_tensor.Identity.create ~idx:0 ?name n1 in
-  let o2 = Owl_symbolic_ops_tensor.Identity.create ~idx:1 ?name n2 in
-  let o3 = Owl_symbolic_ops_tensor.Identity.create ~idx:2 ?name n3 in
-  let o4 = Owl_symbolic_ops_tensor.Identity.create ~idx:3 ?name n4 in
-  let o5 = Owl_symbolic_ops_tensor.Identity.create ~idx:4 ?name n5 in
+  let o1 = Owl_symbolic_ops_tensor.Identity.create ~idx:0 n1 in
+  let o2 = Owl_symbolic_ops_tensor.Identity.create ~idx:1 n2 in
+  let o3 = Owl_symbolic_ops_tensor.Identity.create ~idx:2 n3 in
+  let o4 = Owl_symbolic_ops_tensor.Identity.create ~idx:3 n4 in
+  let o5 = Owl_symbolic_ops_tensor.Identity.create ~idx:4 n5 in
   let out_1 = make_node (Owl_symbolic_symbol.Identity o1) [| bn_node |] in
   let out_2 = make_node (Owl_symbolic_symbol.Identity o2) [| bn_node |] in
   let out_3 = make_node (Owl_symbolic_symbol.Identity o3) [| bn_node |] in
