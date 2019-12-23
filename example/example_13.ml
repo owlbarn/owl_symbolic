@@ -1,13 +1,12 @@
 open Owl_symbolic_neural_graph
 open Owl_symbolic_types
-(* open Owl_symbolic_infix *)
-
+open Owl_symbolic_infix
 
 (** Fast Neural Style Transfer *)
 
-(* TODO: 1) the type of x in lambda; 
- * 2) in trans_conv2d the kernel order is change to inc,outc, h, w;
- * 3) the padding of conv2d_trans_layer is set to VALID instead of SAME*, which leads to error. 
+(* TODO:
+ * 1) in trans_conv2d the kernel order is change to inc,outc, h, w;
+ * 2) the padding of conv2d_trans_layer is set to VALID instead of SAME*, which leads to error. 
  * This leads of slight change of outputshape. The padding issue should be studied later. *)
 
 let conv2d_layer ?(relu = true) kernel stride nn =
@@ -42,8 +41,7 @@ let make_network batch h =
   |> conv2d_trans_layer [| 128; 64; 3; 3 |] [| 2; 2 |]
   |> conv2d_trans_layer [| 64; 32; 3; 3 |] [| 2; 2 |]
   |> conv2d_layer ~relu:false [| 3; 32; 9; 9 |] [| 1; 1 |]
-  (* TODO: the type of x? *)
-  (* |> lambda (fun x ->(((tanh x) * (flt 150.)) + (flt 127.5))) *)
+  |> lambda (fun x -> (tanh x * flt 150.) + flt 127.5)
   |> get_network
 
 
