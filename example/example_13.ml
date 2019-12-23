@@ -4,9 +4,8 @@ open Owl_symbolic_infix
 
 (** Fast Neural Style Transfer *)
 
-(* TODO:
- * 1) in trans_conv2d the kernel order is change to inc,outc, h, w;
- * 2) the padding of conv2d_trans_layer is set to VALID instead of SAME*, which leads to error. 
+(* In trans_conv2d the kernel order is change to inc,outc, h, w;
+ * TODO: the padding of conv2d_trans_layer is set to VALID instead of SAME*, which leads to error. 
  * This leads of slight change of outputshape. The padding issue should be studied later. *)
 
 let conv2d_layer ?(relu = true) kernel stride nn =
