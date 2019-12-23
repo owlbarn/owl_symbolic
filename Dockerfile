@@ -5,11 +5,12 @@
 ############################################################
 
 FROM owlbarn/owl:latest
-USER opam
+USER root
 
 ENV OWLSYMPATH /home/opam/owl-symbolic
 COPY . ${OWLSYMPATH}
 RUN cd ${OWLSYMPATH} && opam pin .
+RUN echo "#require \"owl-symbolic\";;" >> /home/opam/.ocamlinit
 
 WORKDIR ${OWLSYMPATH}
 ENTRYPOINT [ "/bin/bash" ]
