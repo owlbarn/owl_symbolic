@@ -21,6 +21,10 @@ model = onnx.load('test.onnx')
 outputs = caffe2.python.onnx.backend.run_model(model, [img])
 """
 
+### Eval option 3: ONNX.js 
+
+#TODO 
+
 ### Expected Output 
 """
 [[0.84147096 0.84147096 0.84147096]
