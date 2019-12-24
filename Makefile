@@ -34,8 +34,8 @@ uninstall:
 doc:
 	opam install -y odoc
 	dune build @doc
-	cp -r _build/default/_doc/_html/* doc
-	git add doc/*
+	cp -r _build/default/_doc/_html/* docs
+	git add docs/*
 
 .PHONY: format
 format:
