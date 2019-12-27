@@ -1,6 +1,6 @@
 opam-version: "2.0"
 maintainer: "owlbarn"
-authors: [ "Liang Wang" ]
+authors: [ "Liang Wang" "Jianxin Zhao" ]
 license: "MIT"
 homepage: "https://github.com/owlbarn/owl-symbolic"
 dev-repo: "git+https://github.com/owlbarn/owl-symbolic.git"
