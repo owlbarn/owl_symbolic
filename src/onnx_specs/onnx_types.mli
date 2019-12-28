@@ -82,9 +82,9 @@ type type_proto_tensor =
   }
 
 type type_proto_value =
-  | Tensor_type of type_proto_tensor
+  | Tensor_type   of type_proto_tensor
   | Sequence_type of type_proto_sequence
-  | Map_type of type_proto_map
+  | Map_type      of type_proto_map
 
 and type_proto =
   { value : type_proto_value

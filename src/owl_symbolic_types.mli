@@ -20,7 +20,7 @@ type number_type =
   | SNT_Uint32
   | SNT_Uint64
   | SNT_Float16
-  | SNT_SEQ of number_type
+  | SNT_SEQ       of number_type
 
 val number_type_to_string : number_type -> string
 
@@ -37,7 +37,7 @@ type pad =
   | SAME_UPPER
   | SAME_LOWER
   | VALID
-  | PAD of int array
+  | PAD        of int array
 
 val make_tensor
   :  ?dtype:number_type
@@ -54,34 +54,34 @@ type activation =
   | Relu
   | Tanh
   | Sigmoid
-  | Affine of float * float
-  | LeakyRelu of float
+  | Affine          of float * float
+  | LeakyRelu       of float
   | ThresholdedRelu of float
-  | ScaledTanh of float * float
-  | HardSigmoid of float * float
-  | Elu of float
+  | ScaledTanh      of float * float
+  | HardSigmoid     of float * float
+  | Elu             of float
   | Softsign
   | Softplus
-  | Softmax of int
+  | Softmax         of int
 
 val activation_to_string : activation -> string
 
 type nn_init =
-  | Uniform of float * float
+  | Uniform  of float * float
   | Gaussian of float * float
   | Standard
   | Tanh
 
 type attrvalue =
   | ATTR_Nil
-  | ATTR_Int of int
-  | ATTR_Bool of bool
-  | ATTR_Type of number_type
-  | ATTR_Float of float
-  | ATTR_Shape of int array
-  | ATTR_String of string
-  | ATTR_Tensor of tensor
-  | ATTR_Array of attrvalue array
+  | ATTR_Int       of int
+  | ATTR_Bool      of bool
+  | ATTR_Type      of number_type
+  | ATTR_Float     of float
+  | ATTR_Shape     of int array
+  | ATTR_String    of string
+  | ATTR_Tensor    of tensor
+  | ATTR_Array     of attrvalue array
   | ATTR_NameArray of
       { name : string
       ; attr : (string * attrvalue) array

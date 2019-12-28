@@ -21,7 +21,7 @@ type number_type =
   | SNT_Uint32
   | SNT_Uint64
   | SNT_Float16
-  | SNT_SEQ of number_type
+  | SNT_SEQ       of number_type
 
 let rec number_type_to_string = function
   | SNT_Noop      -> "SNT_Noop"
@@ -56,7 +56,7 @@ type pad =
   | SAME_UPPER
   | SAME_LOWER
   | VALID
-  | PAD of int array
+  | PAD        of int array
 
 (* One and only one of the value arguments should be used *)
 let make_tensor ?dtype ?flt_val ?int_val ?str_val ?raw_val shape =
@@ -119,15 +119,15 @@ type activation =
   | Relu
   | Tanh
   | Sigmoid
-  | Affine of float * float
-  | LeakyRelu of float
+  | Affine          of float * float
+  | LeakyRelu       of float
   | ThresholdedRelu of float
-  | ScaledTanh of float * float
-  | HardSigmoid of float * float
-  | Elu of float
+  | ScaledTanh      of float * float
+  | HardSigmoid     of float * float
+  | Elu             of float
   | Softsign
   | Softplus
-  | Softmax of int
+  | Softmax         of int
 
 let activation_to_string = function
   | Relu               -> "Relu"
@@ -145,7 +145,7 @@ let activation_to_string = function
 
 
 type nn_init =
-  | Uniform of float * float
+  | Uniform  of float * float
   | Gaussian of float * float
   | Standard
   | Tanh
@@ -154,14 +154,14 @@ type nn_init =
 
 type attrvalue =
   | ATTR_Nil
-  | ATTR_Int of int
-  | ATTR_Bool of bool
-  | ATTR_Type of number_type
-  | ATTR_Float of float
-  | ATTR_Shape of int array
-  | ATTR_String of string
-  | ATTR_Tensor of tensor
-  | ATTR_Array of attrvalue array
+  | ATTR_Int       of int
+  | ATTR_Bool      of bool
+  | ATTR_Type      of number_type
+  | ATTR_Float     of float
+  | ATTR_Shape     of int array
+  | ATTR_String    of string
+  | ATTR_Tensor    of tensor
+  | ATTR_Array     of attrvalue array
   | ATTR_NameArray of
       { name : string
       ; attr : (string * attrvalue) array
