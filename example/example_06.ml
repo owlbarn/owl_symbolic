@@ -1,4 +1,4 @@
-module G = Owl_computation_cpu_engine.Make (Owl_dense_ndarray.S)
+module G = Owl_computation_cpu_engine.Make (Owl_algodiff_primal_ops.S)
 module A = Owl_algodiff_generic.Make (G)
 include Owl_neural_generic.Make (G)
 open Graph
