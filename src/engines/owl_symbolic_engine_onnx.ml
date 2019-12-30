@@ -368,6 +368,8 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
             ptypes.(0).(0);
           type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Relu _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | ThresholdedRelu _    -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Selu _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Elu _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | LeakyRelu _          -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Softmax _            -> type_check_pattern01 ptypes.(0) _types_constraint00 name
@@ -654,6 +656,12 @@ let build_onnx_attrs_hard_sigmoid alpha beta =
   [ attr_alpha; attr_beta ]
 
 
+let build_onnx_attrs_selu alpha gamma =
+  let attr_alpha = make_attr_flt "alpha" (Some alpha) in
+  let attr_gamma = make_attr_flt "gamma" (Some gamma) in
+  [ attr_alpha; attr_gamma ]
+
+
 let build_onnx_attrs_softmax axis =
   let attr_axis = make_attr_int "axis" axis in
   [ attr_axis ]
@@ -664,7 +672,7 @@ let build_onnx_attrs_fmod (x : Owl_symbolic_ops_math.Mod.t) =
   [ attr_fmod ]
 
 
-let build_onnx_elu alpha =
+let build_onnx_attrs_alpha alpha =
   let attr_alpha = make_attr_flt "alpha" (Some alpha) in
   [ attr_alpha ]
 
@@ -878,8 +886,10 @@ let build_onnx_attrs sym =
     | S.HardSigmoid x        -> build_onnx_attrs_hard_sigmoid x.alpha x.beta
     | S.Softmax x            -> build_onnx_attrs_softmax x.axis
     | S.Mod x                -> build_onnx_attrs_fmod x
-    | S.LeakyRelu x          -> build_onnx_elu x.alpha
-    | S.Elu x                -> build_onnx_elu x.alpha
+    | S.LeakyRelu x          -> build_onnx_attrs_alpha x.alpha
+    | S.ThresholdedRelu x    -> build_onnx_attrs_alpha x.alpha
+    | S.Selu x               -> build_onnx_attrs_selu x.alpha x.gamma
+    | S.Elu x                -> build_onnx_attrs_alpha x.alpha
     | S.Gemm x               -> build_onnx_attrs_gemm x
     | S.BitShift x           -> build_onnx_attrs_bitshift x.direction
     | S.ReduceSum x          -> build_onnx_attrs_reduce x.axes x.keepdims

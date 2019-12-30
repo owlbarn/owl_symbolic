@@ -6,10 +6,9 @@
 (* Implemented: Sin, Cos, Tan, Asin, Acos, Atan, Sinh, Cosh, Tanh, Asinh, 
 Acosh, Atanh, Add, Sub, Mul, Div, Neg, Abs, Floor, Ceil, Sqrt, Relu, Exp, Log,
 Pow, Round, Gemm, MatMul, Max, Min, Sum, Mean, Mod, Sigmoid, Softmax, Clip, Sign
-LeakyRelu, Elu, Softsign, Softplus *)
+LeakyRelu, Elu, Softsign, Softplus, HardSigmoid, ThreasholdedRelu, Selu *)
 
-(* HardSigmoid, LogSoftmax, ThreasholdedRelu, Selu, PRelu, *)
-(* Cumsum, Det, Reciprocal, 
+(* LogSoftmax, PRelu, Cumsum, Det, Reciprocal, 
 Hardmax, Expand, QLinearMatMul, MatMulInteger,
 *)
 
@@ -442,6 +441,60 @@ module Relu = struct
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; input; attrs; out_shape = [| None |] }
+end
+
+module ThresholdedRelu = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable alpha : float
+    }
+
+  let op_type = "ThresholdedRelu"
+
+  let create ?name ?(alpha = 1.0) x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |]; alpha }
+end
+
+module PRelu = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "PRelu"
+
+  let create ?name x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |] }
+end
+
+module Selu = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable alpha : float
+    ; mutable gamma : float
+    }
+
+  let op_type = "Selu"
+
+  let create ?name ?(alpha = 1.67326) ?(gamma = 1.0507) x_name =
+    let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |]; alpha; gamma }
 end
 
 module Elu = struct

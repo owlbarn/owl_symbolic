@@ -247,6 +247,18 @@ let relu ?name x =
   make_node (Owl_symbolic_symbol.Relu s) [| x |]
 
 
+let thresholded_relu ?name ?alpha x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.ThresholdedRelu.create ?name ?alpha xn in
+  make_node (Owl_symbolic_symbol.ThresholdedRelu s) [| x |]
+
+
+let selu ?name ?alpha ?gamma x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Selu.create ?name ?alpha ?gamma xn in
+  make_node (Owl_symbolic_symbol.Selu s) [| x |]
+
+
 let elu ?name ?alpha x =
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_math.Elu.create ?name ?alpha xn in

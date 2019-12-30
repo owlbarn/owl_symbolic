@@ -98,6 +98,10 @@ val clip : ?name:string -> min:float -> max:float -> symbol -> symbol
 
 val relu : ?name:string -> symbol -> symbol
 
+val thresholded_relu : ?name:string -> ?alpha:float -> symbol -> symbol
+
+val selu : ?name:string -> ?alpha:float -> ?gamma:float -> symbol -> symbol
+
 val elu : ?name:string -> ?alpha:float -> symbol -> symbol
 
 val leaky_relu : ?name:string -> ?alpha:float -> symbol -> symbol

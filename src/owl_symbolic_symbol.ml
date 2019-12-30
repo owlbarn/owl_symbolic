@@ -48,6 +48,9 @@ type t =
   | Sigmoid            of Sigmoid.t
   | HardSigmoid        of HardSigmoid.t
   | Relu               of Relu.t
+  | ThresholdedRelu    of ThresholdedRelu.t
+  | PRelu              of PRelu.t
+  | Selu               of Selu.t
   | Elu                of Elu.t
   | LeakyRelu          of LeakyRelu.t
   | Softmax            of Softmax.t
@@ -164,6 +167,9 @@ let name = function
   | Sigmoid x            -> Sigmoid.(x.name)
   | HardSigmoid x        -> HardSigmoid.(x.name)
   | Relu x               -> Relu.(x.name)
+  | ThresholdedRelu x    -> ThresholdedRelu.(x.name)
+  | PRelu x              -> PRelu.(x.name)
+  | Selu x               -> Selu.(x.name)
   | Elu x                -> Elu.(x.name)
   | LeakyRelu x          -> LeakyRelu.(x.name)
   | Softmax x            -> Softmax.(x.name)
@@ -278,6 +284,9 @@ let op_type = function
   | Round _              -> Round.op_type
   | Clip _               -> Clip.op_type
   | Relu _               -> Relu.op_type
+  | ThresholdedRelu _    -> ThresholdedRelu.op_type
+  | PRelu _              -> PRelu.op_type
+  | Selu _               -> Selu.op_type
   | Elu _                -> Elu.op_type
   | LeakyRelu _          -> LeakyRelu.op_type
   | Softmax _            -> Softmax.op_type
@@ -384,6 +393,9 @@ let input = function
   | Round x              -> Round.(x.input)
   | Clip x               -> Clip.(x.input)
   | Relu x               -> Relu.(x.input)
+  | ThresholdedRelu x    -> ThresholdedRelu.(x.input)
+  | PRelu x              -> PRelu.(x.input)
+  | Selu x               -> Selu.(x.input)
   | Elu x                -> Elu.(x.input)
   | LeakyRelu x          -> LeakyRelu.(x.input)
   | Softmax x            -> Softmax.(x.input)
@@ -479,6 +491,9 @@ let set_input sym inputs =
   | Round x              -> x.input <- inputs
   | Clip x               -> x.input <- inputs
   | Relu x               -> x.input <- inputs
+  | ThresholdedRelu x    -> x.input <- inputs
+  | PRelu x              -> x.input <- inputs
+  | Selu x               -> x.input <- inputs
   | Elu x                -> x.input <- inputs
   | LeakyRelu x          -> x.input <- inputs
   | Softmax x            -> x.input <- inputs
@@ -587,6 +602,9 @@ let out_shape = function
   | Round x              -> Round.(x.out_shape)
   | Clip x               -> Clip.(x.out_shape)
   | Relu x               -> Relu.(x.out_shape)
+  | ThresholdedRelu x    -> ThresholdedRelu.(x.out_shape)
+  | PRelu x              -> PRelu.(x.out_shape)
+  | Selu x               -> Selu.(x.out_shape)
   | Elu x                -> Elu.(x.out_shape)
   | LeakyRelu x          -> LeakyRelu.(x.out_shape)
   | Softmax x            -> Softmax.(x.out_shape)
@@ -688,6 +706,9 @@ let set_out_shape sym shapes =
   | Round x              -> x.out_shape <- shapes
   | Clip x               -> x.out_shape <- shapes
   | Relu x               -> x.out_shape <- shapes
+  | ThresholdedRelu x    -> x.out_shape <- shapes
+  | PRelu x              -> x.out_shape <- shapes
+  | Selu x               -> x.out_shape <- shapes
   | Elu x                -> x.out_shape <- shapes
   | LeakyRelu x          -> x.out_shape <- shapes
   | Softmax x            -> x.out_shape <- shapes
@@ -788,6 +809,9 @@ let attrs = function
   | Clip x               -> Clip.(x.attrs)
   | Sign x               -> Sign.(x.attrs)
   | Relu x               -> Relu.(x.attrs)
+  | ThresholdedRelu x    -> ThresholdedRelu.(x.attrs)
+  | PRelu x              -> PRelu.(x.attrs)
+  | Selu x               -> Selu.(x.attrs)
   | Elu x                -> Elu.(x.attrs)
   | LeakyRelu x          -> LeakyRelu.(x.attrs)
   | Softmax x            -> Softmax.(x.attrs)
@@ -886,6 +910,9 @@ let set_attrs sym a =
   | Round x              -> x.attrs <- a
   | Clip x               -> x.attrs <- a
   | Relu x               -> x.attrs <- a
+  | ThresholdedRelu x    -> x.attrs <- a
+  | PRelu x              -> x.attrs <- a
+  | Selu x               -> x.attrs <- a
   | Elu x                -> x.attrs <- a
   | LeakyRelu x          -> x.attrs <- a
   | Softmax x            -> x.attrs <- a

@@ -35,6 +35,9 @@ type t =
   | Sigmoid            of Owl_symbolic_ops_math.Sigmoid.t
   | HardSigmoid        of Owl_symbolic_ops_math.HardSigmoid.t
   | Relu               of Owl_symbolic_ops_math.Relu.t
+  | ThresholdedRelu    of Owl_symbolic_ops_math.ThresholdedRelu.t
+  | PRelu              of Owl_symbolic_ops_math.PRelu.t
+  | Selu               of Owl_symbolic_ops_math.Selu.t
   | Elu                of Owl_symbolic_ops_math.Elu.t
   | LeakyRelu          of Owl_symbolic_ops_math.LeakyRelu.t
   | Softmax            of Owl_symbolic_ops_math.Softmax.t
