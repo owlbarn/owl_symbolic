@@ -80,6 +80,8 @@ val erf : ?name:string -> symbol -> symbol
 
 val sigmoid : ?name:string -> symbol -> symbol
 
+val hard_sigmoid : ?name:string -> ?alpha:float -> ?beta:float -> symbol -> symbol
+
 val abs : ?name:string -> symbol -> symbol
 
 val neg : ?name:string -> symbol -> symbol

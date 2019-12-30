@@ -189,6 +189,12 @@ let sigmoid ?name x =
   make_node (Owl_symbolic_symbol.Sigmoid s) [| x |]
 
 
+let hard_sigmoid ?name ?alpha ?beta x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.HardSigmoid.create ?name ?alpha ?beta xn in
+  make_node (Owl_symbolic_symbol.HardSigmoid s) [| x |]
+
+
 let abs ?name x =
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_math.Abs.create ?name xn in

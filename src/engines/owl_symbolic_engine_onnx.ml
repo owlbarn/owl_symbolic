@@ -350,6 +350,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Log _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Erf _                -> type_check_pattern01 ptypes.(0) _types_constraint04 name
         | Sigmoid _            -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | HardSigmoid _        -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Neg _                -> type_check_pattern01 ptypes.(0) _types_constraint01 name
         | Sign _               -> type_check_pattern01 ptypes.(0) _types_constraint04 name
         | Floor _              -> type_check_pattern01 ptypes.(0) _types_constraint00 name
@@ -647,6 +648,12 @@ let build_onnx_attrs_randomnormal (x : Owl_symbolic_ops_generator.RandomNormal.t
   [ attr_dtype; attr_mean; attr_scale; attr_seed; attr_shape ]
 
 
+let build_onnx_attrs_hard_sigmoid alpha beta =
+  let attr_alpha = make_attr_flt "alpha" (Some alpha) in
+  let attr_beta = make_attr_flt "beta" (Some beta) in
+  [ attr_alpha; attr_beta ]
+
+
 let build_onnx_attrs_softmax axis =
   let attr_axis = make_attr_int "axis" axis in
   [ attr_axis ]
@@ -868,6 +875,7 @@ let build_onnx_attrs sym =
     | S.Tensor _             -> build_onnx_attrs_tensor sym
     | S.RandomUniform x      -> build_onnx_attrs_randomuniform x
     | S.RandomNormal x       -> build_onnx_attrs_randomnormal x
+    | S.HardSigmoid x        -> build_onnx_attrs_hard_sigmoid x.alpha x.beta
     | S.Softmax x            -> build_onnx_attrs_softmax x.axis
     | S.Mod x                -> build_onnx_attrs_fmod x
     | S.LeakyRelu x          -> build_onnx_elu x.alpha

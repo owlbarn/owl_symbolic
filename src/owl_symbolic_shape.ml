@@ -554,6 +554,7 @@ let infer_shape input_shapes sym =
   | Log _                -> infer_shape_01 input_shapes
   | Erf _                -> infer_shape_01 input_shapes
   | Sigmoid _            -> infer_shape_01 input_shapes
+  | HardSigmoid _        -> infer_shape_01 input_shapes
   | Abs _                -> infer_shape_01 input_shapes
   | Neg _                -> infer_shape_01 input_shapes
   | Sign _               -> infer_shape_01 input_shapes

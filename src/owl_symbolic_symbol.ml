@@ -46,6 +46,7 @@ type t =
   | Log                of Log.t
   | Erf                of Erf.t
   | Sigmoid            of Sigmoid.t
+  | HardSigmoid        of HardSigmoid.t
   | Relu               of Relu.t
   | Elu                of Elu.t
   | LeakyRelu          of LeakyRelu.t
@@ -161,6 +162,7 @@ let name = function
   | Log x                -> Log.(x.name)
   | Erf x                -> Erf.(x.name)
   | Sigmoid x            -> Sigmoid.(x.name)
+  | HardSigmoid x        -> HardSigmoid.(x.name)
   | Relu x               -> Relu.(x.name)
   | Elu x                -> Elu.(x.name)
   | LeakyRelu x          -> LeakyRelu.(x.name)
@@ -266,6 +268,7 @@ let op_type = function
   | Exp _                -> Exp.op_type
   | Log _                -> Log.op_type
   | Sigmoid _            -> Sigmoid.op_type
+  | HardSigmoid _        -> HardSigmoid.op_type
   | Rational _           -> Rational.op_type
   | Neg _                -> Neg.op_type
   | Sign _               -> Sign.op_type
@@ -372,6 +375,7 @@ let input = function
   | Log x                -> Log.(x.input)
   | Erf x                -> Erf.(x.input)
   | Sigmoid x            -> Sigmoid.(x.input)
+  | HardSigmoid x        -> HardSigmoid.(x.input)
   | Neg x                -> Neg.(x.input)
   | Sign x               -> Sign.(x.input)
   | Abs x                -> Abs.(x.input)
@@ -488,6 +492,7 @@ let set_input sym inputs =
   | Pow x                -> x.input <- inputs
   | Mod x                -> x.input <- inputs
   | Sigmoid x            -> x.input <- inputs
+  | HardSigmoid x        -> x.input <- inputs
   | MatMul x             -> x.input <- inputs
   | Gemm x               -> x.input <- inputs
   | Max x                -> x.input <- inputs
@@ -573,6 +578,7 @@ let out_shape = function
   | Log x                -> Log.(x.out_shape)
   | Erf x                -> Erf.(x.out_shape)
   | Sigmoid x            -> Sigmoid.(x.out_shape)
+  | HardSigmoid x        -> HardSigmoid.(x.out_shape)
   | Neg x                -> Neg.(x.out_shape)
   | Sign x               -> Sign.(x.out_shape)
   | Abs x                -> Abs.(x.out_shape)
@@ -673,6 +679,7 @@ let set_out_shape sym shapes =
   | Log x                -> x.out_shape <- shapes
   | Erf x                -> x.out_shape <- shapes
   | Sigmoid x            -> x.out_shape <- shapes
+  | HardSigmoid x        -> x.out_shape <- shapes
   | Neg x                -> x.out_shape <- shapes
   | Sign x               -> x.out_shape <- shapes
   | Abs x                -> x.out_shape <- shapes
@@ -771,6 +778,7 @@ let attrs = function
   | Log x                -> Log.(x.attrs)
   | Erf x                -> Erf.(x.attrs)
   | Sigmoid x            -> Sigmoid.(x.attrs)
+  | HardSigmoid x        -> HardSigmoid.(x.attrs)
   | Rational x           -> Rational.(x.attrs)
   | Neg x                -> Neg.(x.attrs)
   | Abs x                -> Abs.(x.attrs)
@@ -868,6 +876,7 @@ let set_attrs sym a =
   | Log x                -> x.attrs <- a
   | Erf x                -> x.attrs <- a
   | Sigmoid x            -> x.attrs <- a
+  | HardSigmoid x        -> x.attrs <- a
   | Rational x           -> x.attrs <- a
   | Neg x                -> x.attrs <- a
   | Abs x                -> x.attrs <- a
