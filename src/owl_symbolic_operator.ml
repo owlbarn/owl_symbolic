@@ -247,6 +247,13 @@ let relu ?name x =
   make_node (Owl_symbolic_symbol.Relu s) [| x |]
 
 
+let prelu ?name x slope =
+  let xn = Owl_symbolic_graph.name x in
+  let sn = Owl_symbolic_graph.name slope in
+  let s = Owl_symbolic_ops_math.PRelu.create ?name xn sn in
+  make_node (Owl_symbolic_symbol.PRelu s) [| x; slope |]
+
+
 let thresholded_relu ?name ?alpha x =
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_math.ThresholdedRelu.create ?name ?alpha xn in

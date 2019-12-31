@@ -6,11 +6,9 @@
 (* Implemented: Sin, Cos, Tan, Asin, Acos, Atan, Sinh, Cosh, Tanh, Asinh, 
 Acosh, Atanh, Add, Sub, Mul, Div, Neg, Abs, Floor, Ceil, Sqrt, Relu, Exp, Log,
 Pow, Round, Gemm, MatMul, Max, Min, Sum, Mean, Mod, Sigmoid, Softmax, Clip, Sign
-LeakyRelu, Elu, Softsign, Softplus, HardSigmoid, ThreasholdedRelu, Selu *)
+LeakyRelu, Elu, Softsign, Softplus, HardSigmoid, ThreasholdedRelu, Selu, PRelu*)
 
-(* LogSoftmax, PRelu, Cumsum, Det, Reciprocal, 
-Hardmax, Expand, QLinearMatMul, MatMulInteger,
-*)
+(* LogSoftmax,  Cumsum, Det, Reciprocal, Hardmax, Expand, QLinearMatMul, MatMulInteger *)
 
 open Owl_symbolic_types
 
@@ -471,8 +469,8 @@ module PRelu = struct
 
   let op_type = "PRelu"
 
-  let create ?name x_name =
-    let input = [| x_name |] in
+  let create ?name x_name slope_name =
+    let input = [| x_name; slope_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; input; attrs; out_shape = [| None |] }

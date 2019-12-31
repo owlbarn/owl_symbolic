@@ -368,6 +368,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
             ptypes.(0).(0);
           type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Relu _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | PRelu _              -> type_check_pattern02 ptypes _types_constraint02 name
         | ThresholdedRelu _    -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Selu _               -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Elu _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
