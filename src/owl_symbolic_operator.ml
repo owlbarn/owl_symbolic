@@ -284,6 +284,12 @@ let softmax ?name ?axis x =
   make_node (Owl_symbolic_symbol.Softmax s) [| x |]
 
 
+let logsoftmax ?name ?axis x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.LogSoftmax.create ?name ?axis xn in
+  make_node (Owl_symbolic_symbol.LogSoftmax s) [| x |]
+
+
 let softsign ?name x =
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_math.Softsign.create ?name xn in

@@ -41,6 +41,7 @@ type t =
   | Elu                of Owl_symbolic_ops_math.Elu.t
   | LeakyRelu          of Owl_symbolic_ops_math.LeakyRelu.t
   | Softmax            of Owl_symbolic_ops_math.Softmax.t
+  | LogSoftmax         of Owl_symbolic_ops_math.LogSoftmax.t
   | Softsign           of Owl_symbolic_ops_math.Softsign.t
   | Softplus           of Owl_symbolic_ops_math.Softplus.t
   | Abs                of Owl_symbolic_ops_math.Abs.t

@@ -374,6 +374,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Elu _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | LeakyRelu _          -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Softmax _            -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | LogSoftmax _         -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Softsign _           -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Softplus _           -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Add _                -> type_check_pattern02 ptypes _types_constraint02 name
@@ -886,6 +887,7 @@ let build_onnx_attrs sym =
     | S.RandomNormal x       -> build_onnx_attrs_randomnormal x
     | S.HardSigmoid x        -> build_onnx_attrs_hard_sigmoid x.alpha x.beta
     | S.Softmax x            -> build_onnx_attrs_softmax x.axis
+    | S.LogSoftmax x         -> build_onnx_attrs_softmax x.axis
     | S.Mod x                -> build_onnx_attrs_fmod x
     | S.LeakyRelu x          -> build_onnx_attrs_alpha x.alpha
     | S.ThresholdedRelu x    -> build_onnx_attrs_alpha x.alpha

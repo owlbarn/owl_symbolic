@@ -110,6 +110,8 @@ val leaky_relu : ?name:string -> ?alpha:float -> symbol -> symbol
 
 val softmax : ?name:string -> ?axis:int -> symbol -> symbol
 
+val logsoftmax : ?name:string -> ?axis:int -> symbol -> symbol
+
 val softsign : ?name:string -> symbol -> symbol
 
 val softplus : ?name:string -> symbol -> symbol

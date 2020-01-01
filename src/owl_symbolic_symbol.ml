@@ -54,6 +54,7 @@ type t =
   | Elu                of Elu.t
   | LeakyRelu          of LeakyRelu.t
   | Softmax            of Softmax.t
+  | LogSoftmax         of LogSoftmax.t
   | Softsign           of Softsign.t
   | Softplus           of Softplus.t
   | Abs                of Abs.t
@@ -173,6 +174,7 @@ let name = function
   | Elu x                -> Elu.(x.name)
   | LeakyRelu x          -> LeakyRelu.(x.name)
   | Softmax x            -> Softmax.(x.name)
+  | LogSoftmax x         -> LogSoftmax.(x.name)
   | Softsign x           -> Softsign.(x.name)
   | Softplus x           -> Softplus.(x.name)
   | Abs x                -> Abs.(x.name)
@@ -290,6 +292,7 @@ let op_type = function
   | Elu _                -> Elu.op_type
   | LeakyRelu _          -> LeakyRelu.op_type
   | Softmax _            -> Softmax.op_type
+  | LogSoftmax _         -> LogSoftmax.op_type
   | Softsign _           -> Softsign.op_type
   | Softplus _           -> Softplus.op_type
   | Add _                -> Add.op_type
@@ -399,6 +402,7 @@ let input = function
   | Elu x                -> Elu.(x.input)
   | LeakyRelu x          -> LeakyRelu.(x.input)
   | Softmax x            -> Softmax.(x.input)
+  | LogSoftmax x         -> LogSoftmax.(x.input)
   | Softsign x           -> Softsign.(x.input)
   | Softplus x           -> Softplus.(x.input)
   | Rational x           -> Rational.(x.input)
@@ -497,6 +501,7 @@ let set_input sym inputs =
   | Elu x                -> x.input <- inputs
   | LeakyRelu x          -> x.input <- inputs
   | Softmax x            -> x.input <- inputs
+  | LogSoftmax x         -> x.input <- inputs
   | Softsign x           -> x.input <- inputs
   | Softplus x           -> x.input <- inputs
   | Rational x           -> x.input <- inputs
@@ -608,6 +613,7 @@ let out_shape = function
   | Elu x                -> Elu.(x.out_shape)
   | LeakyRelu x          -> LeakyRelu.(x.out_shape)
   | Softmax x            -> Softmax.(x.out_shape)
+  | LogSoftmax x         -> LogSoftmax.(x.out_shape)
   | Softsign x           -> Softsign.(x.out_shape)
   | Softplus x           -> Softplus.(x.out_shape)
   | Rational x           -> Rational.(x.out_shape)
@@ -712,6 +718,7 @@ let set_out_shape sym shapes =
   | Elu x                -> x.out_shape <- shapes
   | LeakyRelu x          -> x.out_shape <- shapes
   | Softmax x            -> x.out_shape <- shapes
+  | LogSoftmax x         -> x.out_shape <- shapes
   | Softsign x           -> x.out_shape <- shapes
   | Softplus x           -> x.out_shape <- shapes
   | Rational x           -> x.out_shape <- shapes
@@ -815,6 +822,7 @@ let attrs = function
   | Elu x                -> Elu.(x.attrs)
   | LeakyRelu x          -> LeakyRelu.(x.attrs)
   | Softmax x            -> Softmax.(x.attrs)
+  | LogSoftmax x         -> LogSoftmax.(x.attrs)
   | Softsign x           -> Softsign.(x.attrs)
   | Softplus x           -> Softplus.(x.attrs)
   | Add x                -> Add.(x.attrs)
@@ -916,6 +924,7 @@ let set_attrs sym a =
   | Elu x                -> x.attrs <- a
   | LeakyRelu x          -> x.attrs <- a
   | Softmax x            -> x.attrs <- a
+  | LogSoftmax x         -> x.attrs <- a
   | Softsign x           -> x.attrs <- a
   | Softplus x           -> x.attrs <- a
   | Add x                -> x.attrs <- a
