@@ -389,6 +389,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Min _                -> type_check_pattern02 ptypes _types_constraint00 name
         | Sum _                -> type_check_pattern02 ptypes _types_constraint00 name
         | Mean _               -> type_check_pattern02 ptypes _types_constraint00 name
+        | Det _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | And _                -> type_check_pattern02 ptypes [| SNT_Bool |] name
         | Or _                 -> type_check_pattern02 ptypes [| SNT_Bool |] name
         | Not _                -> type_check_pattern02 ptypes [| SNT_Bool |] name

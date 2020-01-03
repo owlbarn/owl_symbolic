@@ -302,6 +302,12 @@ let softplus ?name x =
   make_node (Owl_symbolic_symbol.Softplus s) [| x |]
 
 
+let det ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_math.Det.create ?name xn in
+  make_node (Owl_symbolic_symbol.Det s) [| x |]
+
+
 let add ?name x y =
   let xn = Owl_symbolic_graph.name x in
   let yn = Owl_symbolic_graph.name y in

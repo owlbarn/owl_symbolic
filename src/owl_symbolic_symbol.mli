@@ -64,6 +64,7 @@ type t =
   | Min                of Owl_symbolic_ops_math.Min.t
   | Sum                of Owl_symbolic_ops_math.Sum.t
   | Mean               of Owl_symbolic_ops_math.Mean.t
+  | Det                of Owl_symbolic_ops_math.Det.t
   | And                of Owl_symbolic_ops_logical.And.t
   | Or                 of Owl_symbolic_ops_logical.Or.t
   | Not                of Owl_symbolic_ops_logical.Not.t

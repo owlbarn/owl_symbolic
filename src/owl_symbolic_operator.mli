@@ -149,6 +149,8 @@ val sum : ?name:string -> symbol array -> symbol
 
 val mean : ?name:string -> symbol array -> symbol
 
+val det : ?name:string -> symbol -> symbol
+
 val and_ : ?name:string -> symbol -> symbol -> symbol
 
 val or_ : ?name:string -> symbol -> symbol -> symbol

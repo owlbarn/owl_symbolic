@@ -204,6 +204,21 @@ let infer_shape_35 input_shapes =
   | None   -> [| None |]
 
 
+let infer_shape_det input_shapes =
+  match input_shapes.(0).(0) with
+  | Some s ->
+    let dim = Array.length s in
+    assert (dim = 2 || dim = 3);
+    if dim = 2
+    then (
+      assert (s.(0) = s.(1));
+      [| Some [||] |])
+    else (
+      assert (s.(1) = s.(2));
+      [| Some [| s.(0) |] |])
+  | None   -> [| None |]
+
+
 let infer_shape_gemm (x : Owl_symbolic_ops_math.Gemm.t) input_shapes =
   let l = Array.length input_shapes in
   assert (l = 2 || l = 3);
@@ -584,6 +599,7 @@ let infer_shape input_shapes sym =
   | Min _                -> infer_shape_31 input_shapes
   | Sum _                -> infer_shape_31 input_shapes
   | Mean _               -> infer_shape_31 input_shapes
+  | Det _                -> infer_shape_det input_shapes
   | And _                -> infer_shape_03 input_shapes
   | Or _                 -> infer_shape_03 input_shapes
   | Not _                -> infer_shape_03 input_shapes
