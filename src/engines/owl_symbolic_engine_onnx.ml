@@ -390,6 +390,9 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Min _                -> type_check_pattern02 ptypes _types_constraint00 name
         | Sum _                -> type_check_pattern02 ptypes _types_constraint00 name
         | Mean _               -> type_check_pattern02 ptypes _types_constraint00 name
+        | CumSum _             ->
+          type_check_pattern02 ptypes [| SNT_Int32; SNT_Int64 |] name |> ignore;
+          type_check_pattern01 ptypes.(0) _types_constraint02 name
         | Hardmax _            -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Det _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | And _                -> type_check_pattern02 ptypes [| SNT_Bool |] name
@@ -878,6 +881,14 @@ let build_onnx_attrs_seq_empty (x : Owl_symbolic_ops_sequence.SequenceEmpty.t) =
   [ attr_dtype ]
 
 
+let build_onnx_attrs_cumsum exclusive reverse =
+  let i = if exclusive then 1 else 0 in
+  let attr_e = make_attr_int "exclusive" i in
+  let i = if reverse then 1 else 0 in
+  let attr_r = make_attr_int "reverse" i in
+  [ attr_e; attr_r ]
+
+
 let build_onnx_attrs sym =
   let onnx_attrs =
     match sym with
@@ -889,6 +900,7 @@ let build_onnx_attrs sym =
     | S.RandomUniform x      -> build_onnx_attrs_randomuniform x
     | S.RandomNormal x       -> build_onnx_attrs_randomnormal x
     | S.HardSigmoid x        -> build_onnx_attrs_hard_sigmoid x.alpha x.beta
+    | S.CumSum x             -> build_onnx_attrs_cumsum x.exclusive x.reverse
     | S.Hardmax x            -> build_onnx_attrs_axis x.axis
     | S.Softmax x            -> build_onnx_attrs_axis x.axis
     | S.LogSoftmax x         -> build_onnx_attrs_axis x.axis

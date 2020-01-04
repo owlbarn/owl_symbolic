@@ -78,6 +78,7 @@ type t =
   | Min                of Min.t
   | Sum                of Sum.t
   | Mean               of Mean.t
+  | CumSum             of CumSum.t
   | Hardmax            of Hardmax.t
   | Det                of Det.t
   (* Logical ops *)
@@ -200,6 +201,7 @@ let name = function
   | Min x                -> Min.(x.name)
   | Sum x                -> Sum.(x.name)
   | Mean x               -> Mean.(x.name)
+  | CumSum x             -> CumSum.(x.name)
   | Hardmax x            -> Hardmax.(x.name)
   | Det x                -> Det.(x.name)
   | And x                -> And.(x.name)
@@ -313,6 +315,7 @@ let op_type = function
   | Min _                -> Min.op_type
   | Sum _                -> Sum.op_type
   | Mean _               -> Mean.op_type
+  | CumSum _             -> CumSum.op_type
   | Hardmax _            -> Hardmax.op_type
   | Det _                -> Det.op_type
   | And _                -> And.op_type
@@ -427,6 +430,7 @@ let input = function
   | Min x                -> Min.(x.input)
   | Sum x                -> Sum.(x.input)
   | Mean x               -> Mean.(x.input)
+  | CumSum x             -> CumSum.(x.input)
   | Hardmax x            -> Hardmax.(x.input)
   | Det x                -> Det.(x.input)
   | And x                -> And.(x.input)
@@ -531,6 +535,7 @@ let set_input sym inputs =
   | Min x                -> x.input <- inputs
   | Sum x                -> x.input <- inputs
   | Mean x               -> x.input <- inputs
+  | CumSum x             -> x.input <- inputs
   | Hardmax x            -> x.input <- inputs
   | Det x                -> x.input <- inputs
   | And x                -> x.input <- inputs
@@ -644,6 +649,7 @@ let out_shape = function
   | Min x                -> Min.(x.out_shape)
   | Sum x                -> Sum.(x.out_shape)
   | Mean x               -> Mean.(x.out_shape)
+  | CumSum x             -> CumSum.(x.out_shape)
   | Hardmax x            -> Hardmax.(x.out_shape)
   | Det x                -> Det.(x.out_shape)
   | And x                -> And.(x.out_shape)
@@ -752,6 +758,7 @@ let set_out_shape sym shapes =
   | Min x                -> x.out_shape <- shapes
   | Sum x                -> x.out_shape <- shapes
   | Mean x               -> x.out_shape <- shapes
+  | CumSum x             -> x.out_shape <- shapes
   | Hardmax x            -> x.out_shape <- shapes
   | Det x                -> x.out_shape <- shapes
   | And x                -> x.out_shape <- shapes
@@ -858,6 +865,7 @@ let attrs = function
   | Min x                -> Min.(x.attrs)
   | Sum x                -> Sum.(x.attrs)
   | Mean x               -> Mean.(x.attrs)
+  | CumSum x             -> CumSum.(x.attrs)
   | Hardmax x            -> Hardmax.(x.attrs)
   | Det x                -> Det.(x.attrs)
   | And x                -> And.(x.attrs)
@@ -963,6 +971,7 @@ let set_attrs sym a =
   | Min x                -> x.attrs <- a
   | Sum x                -> x.attrs <- a
   | Mean x               -> x.attrs <- a
+  | CumSum x             -> x.attrs <- a
   | Hardmax x            -> x.attrs <- a
   | Det x                -> x.attrs <- a
   | And x                -> x.attrs <- a

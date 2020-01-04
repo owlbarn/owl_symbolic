@@ -151,6 +151,14 @@ val sum : ?name:string -> symbol array -> symbol
 
 val mean : ?name:string -> symbol array -> symbol
 
+val cumsum
+  :  ?name:string
+  -> ?axis:int
+  -> ?exclusive:bool
+  -> ?reverse:bool
+  -> symbol
+  -> symbol
+
 val hardmax : ?name:string -> ?axis:int -> symbol array -> symbol
 
 val det : ?name:string -> symbol -> symbol

@@ -532,7 +532,7 @@ let infer_shape_roialign input_shapes (x : Owl_symbolic_ops_object_detection.Roi
   | _, _, _ -> [| None |]
 
 
-let infer_shape_hardmax input_shapes axis =
+let infer_shape_axis input_shapes axis =
   match input_shapes.(0).(0) with
   | Some s ->
     let dim = Array.length s in
@@ -609,7 +609,8 @@ let infer_shape input_shapes sym =
   | Min _                -> infer_shape_31 input_shapes
   | Sum _                -> infer_shape_31 input_shapes
   | Mean _               -> infer_shape_31 input_shapes
-  | Hardmax x            -> infer_shape_hardmax input_shapes x.axis
+  | CumSum x             -> infer_shape_axis input_shapes x.axis
+  | Hardmax x            -> infer_shape_axis input_shapes x.axis
   | Det _                -> infer_shape_det input_shapes
   | And _                -> infer_shape_03 input_shapes
   | Or _                 -> infer_shape_03 input_shapes

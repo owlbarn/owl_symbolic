@@ -35,6 +35,11 @@ let tensor ?name t =
   make_node (Owl_symbolic_symbol.Tensor sym) [||]
 
 
+let tensor_int ?name i =
+  let t = Owl_symbolic_types.make_tensor ~dtype:SNT_Int64 ~int_val:[| i |] [||] in
+  tensor ?name t
+
+
 let tensor_float ?name i =
   let t = Owl_symbolic_types.make_tensor ~dtype:SNT_Float ~flt_val:[| i |] [||] in
   tensor ?name t
@@ -400,6 +405,19 @@ let mean ?name xs =
   let xn = Array.map Owl_symbolic_graph.name xs in
   let s = Owl_symbolic_ops_math.Mean.create ?name xn in
   make_node (Owl_symbolic_symbol.Mean s) xs
+
+
+let cumsum ?name ?axis ?exclusive ?reverse x =
+  let xn = Owl_symbolic_graph.name x in
+  let axis =
+    match axis with
+    | Some a -> a
+    | None   -> 0
+  in
+  let a = tensor_int axis in
+  let an = Owl_symbolic_graph.name a in
+  let s = Owl_symbolic_ops_math.CumSum.create ?name ~axis ?exclusive ?reverse xn an in
+  make_node (Owl_symbolic_symbol.CumSum s) [| x; a |]
 
 
 let hardmax ?name ?axis xs =

@@ -9,7 +9,7 @@ Pow, Round, Gemm, MatMul, Max, Min, Sum, Mean, Mod, Sigmoid, Softmax, Clip, Sign
 LeakyRelu, Elu, Softsign, Softplus, HardSigmoid, ThreasholdedRelu, Selu, PRelu,
 LogSoftmax, Reciprocal, Hardmax*)
 
-(* Cumsum, Expand, QLinearMatMul, MatMulInteger*)
+(* Expand, QLinearMatMul, MatMulInteger*)
 
 open Owl_symbolic_types
 
@@ -835,6 +835,26 @@ module Mean = struct
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; input; attrs; out_shape = [| None |] }
+end
+
+module CumSum = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable axis : int
+    ; mutable exclusive : bool
+    ; mutable reverse : bool
+    }
+
+  let op_type = "CumSum"
+
+  let create ?name ?(axis = 0) ?(exclusive = false) ?(reverse = false) xn an =
+    let input = [| xn; an |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |]; axis; exclusive; reverse }
 end
 
 module Hardmax = struct
