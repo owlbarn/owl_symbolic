@@ -51,6 +51,7 @@ type t =
   | Ceil               of Owl_symbolic_ops_math.Ceil.t
   | Round              of Owl_symbolic_ops_math.Round.t
   | Clip               of Owl_symbolic_ops_math.Clip.t
+  | Reciprocal         of Owl_symbolic_ops_math.Reciprocal.t
   | Rational           of Owl_symbolic_ops_math.Rational.t
   | Add                of Owl_symbolic_ops_math.Add.t
   | Sub                of Owl_symbolic_ops_math.Sub.t

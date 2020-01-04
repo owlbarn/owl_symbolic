@@ -577,6 +577,7 @@ let infer_shape input_shapes sym =
   | Ceil _               -> infer_shape_01 input_shapes
   | Round _              -> infer_shape_01 input_shapes
   | Clip _               -> infer_shape_01 input_shapes
+  | Reciprocal _         -> infer_shape_01 input_shapes
   | Relu _               -> infer_shape_01 input_shapes
   | ThresholdedRelu _    -> infer_shape_01 input_shapes
   | PRelu _              -> infer_shape_03 input_shapes

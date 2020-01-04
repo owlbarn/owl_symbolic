@@ -94,6 +94,8 @@ val ceil : ?name:string -> symbol -> symbol
 
 val round : ?name:string -> symbol -> symbol
 
+val reciprocal : ?name:string -> symbol -> symbol
+
 val clip : ?name:string -> min:float -> max:float -> symbol -> symbol
 
 val relu : ?name:string -> symbol -> symbol
