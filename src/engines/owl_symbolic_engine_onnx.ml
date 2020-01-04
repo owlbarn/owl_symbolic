@@ -390,6 +390,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Min _                -> type_check_pattern02 ptypes _types_constraint00 name
         | Sum _                -> type_check_pattern02 ptypes _types_constraint00 name
         | Mean _               -> type_check_pattern02 ptypes _types_constraint00 name
+        | Hardmax _            -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Det _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | And _                -> type_check_pattern02 ptypes [| SNT_Bool |] name
         | Or _                 -> type_check_pattern02 ptypes [| SNT_Bool |] name
@@ -666,7 +667,7 @@ let build_onnx_attrs_selu alpha gamma =
   [ attr_alpha; attr_gamma ]
 
 
-let build_onnx_attrs_softmax axis =
+let build_onnx_attrs_axis axis =
   let attr_axis = make_attr_int "axis" axis in
   [ attr_axis ]
 
@@ -888,8 +889,9 @@ let build_onnx_attrs sym =
     | S.RandomUniform x      -> build_onnx_attrs_randomuniform x
     | S.RandomNormal x       -> build_onnx_attrs_randomnormal x
     | S.HardSigmoid x        -> build_onnx_attrs_hard_sigmoid x.alpha x.beta
-    | S.Softmax x            -> build_onnx_attrs_softmax x.axis
-    | S.LogSoftmax x         -> build_onnx_attrs_softmax x.axis
+    | S.Hardmax x            -> build_onnx_attrs_axis x.axis
+    | S.Softmax x            -> build_onnx_attrs_axis x.axis
+    | S.LogSoftmax x         -> build_onnx_attrs_axis x.axis
     | S.Mod x                -> build_onnx_attrs_fmod x
     | S.LeakyRelu x          -> build_onnx_attrs_alpha x.alpha
     | S.ThresholdedRelu x    -> build_onnx_attrs_alpha x.alpha

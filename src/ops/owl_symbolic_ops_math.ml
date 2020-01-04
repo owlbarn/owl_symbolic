@@ -7,9 +7,9 @@
 Acosh, Atanh, Add, Sub, Mul, Div, Neg, Abs, Floor, Ceil, Sqrt, Relu, Exp, Log,
 Pow, Round, Gemm, MatMul, Max, Min, Sum, Mean, Mod, Sigmoid, Softmax, Clip, Sign
 LeakyRelu, Elu, Softsign, Softplus, HardSigmoid, ThreasholdedRelu, Selu, PRelu,
-LogSoftmax, *)
+LogSoftmax, Reciprocal, Hardmax*)
 
-(* Cumsum, Reciprocal, Hardmax, Expand, QLinearMatMul, MatMulInteger*)
+(* Cumsum, Expand, QLinearMatMul, MatMulInteger*)
 
 open Owl_symbolic_types
 
@@ -835,6 +835,24 @@ module Mean = struct
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; input; attrs; out_shape = [| None |] }
+end
+
+module Hardmax = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable axis : int
+    }
+
+  let op_type = "Hardmax"
+
+  let create ?name ?(axis = 1) xs =
+    let input = xs in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |]; axis }
 end
 
 module Det = struct

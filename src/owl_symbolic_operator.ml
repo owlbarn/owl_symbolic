@@ -230,10 +230,12 @@ let round ?name x =
   let s = Owl_symbolic_ops_math.Round.create ?name xn in
   make_node (Owl_symbolic_symbol.Round s) [| x |]
 
+
 let reciprocal ?name x =
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_math.Reciprocal.create ?name xn in
   make_node (Owl_symbolic_symbol.Reciprocal s) [| x |]
+
 
 let clip ?name ~min ~max x =
   let node1 = tensor_float min in
@@ -398,6 +400,12 @@ let mean ?name xs =
   let xn = Array.map Owl_symbolic_graph.name xs in
   let s = Owl_symbolic_ops_math.Mean.create ?name xn in
   make_node (Owl_symbolic_symbol.Mean s) xs
+
+
+let hardmax ?name ?axis xs =
+  let xn = Array.map Owl_symbolic_graph.name xs in
+  let s = Owl_symbolic_ops_math.Hardmax.create ?name ?axis xn in
+  make_node (Owl_symbolic_symbol.Hardmax s) xs
 
 
 (** Reduction *)
