@@ -541,6 +541,15 @@ let infer_shape_axis input_shapes axis =
   | None   -> [| None |]
 
 
+let infer_shape_ql_matmul input_shapes =
+  assert (Array.length input_shapes = 8);
+  let x_shape = input_shapes.(0).(0) in
+  let y_shape = input_shapes.(3).(0) in
+  match x_shape, y_shape with
+  | Some s0, Some s1 -> [| Some Owl_utils_infer_shape.(dot s0 s1) |]
+  | _, _             -> [| None |]
+
+
 (** Main entry *)
 
 let infer_shape input_shapes sym =
@@ -605,6 +614,7 @@ let infer_shape input_shapes sym =
   | Mod _                -> infer_shape_01 input_shapes
   | MatMul _             -> infer_shape_19 input_shapes
   | MatMulInteger _      -> infer_shape_19 input_shapes
+  | QLinearMatMul _      -> infer_shape_ql_matmul input_shapes
   | Gemm x               -> infer_shape_gemm x input_shapes
   | Max _                -> infer_shape_31 input_shapes
   | Min _                -> infer_shape_31 input_shapes

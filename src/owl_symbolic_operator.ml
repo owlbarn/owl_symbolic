@@ -397,6 +397,32 @@ let matmul_int ?name ?a_zero_point ?b_zero_point x y =
     make_node (Owl_symbolic_symbol.MatMulInteger s) [| x; y |]
 
 
+let qlinear_matmul ?name a a_scale a_zero b b_scale b_zero y_scale y_zero =
+  let an = Owl_symbolic_graph.name a in
+  let a_scalen = Owl_symbolic_graph.name a_scale in
+  let a_zeron = Owl_symbolic_graph.name a_zero in
+  let bn = Owl_symbolic_graph.name b in
+  let b_scalen = Owl_symbolic_graph.name b_scale in
+  let b_zeron = Owl_symbolic_graph.name b_zero in
+  let y_scalen = Owl_symbolic_graph.name y_scale in
+  let y_zeron = Owl_symbolic_graph.name y_zero in
+  let s =
+    Owl_symbolic_ops_math.QLinearMatMul.create
+      ?name
+      an
+      a_scalen
+      a_zeron
+      bn
+      b_scalen
+      b_zeron
+      y_scalen
+      y_zeron
+  in
+  make_node
+    (Owl_symbolic_symbol.QLinearMatMul s)
+    [| a; a_scale; a_zero; b; b_scale; b_zero; y_scale; y_zero |]
+
+
 let gemm ?name ?alpha ?beta ?transA ?transB ?c a b =
   let an = Owl_symbolic_graph.name a in
   let bn = Owl_symbolic_graph.name b in

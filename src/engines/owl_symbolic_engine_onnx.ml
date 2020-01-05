@@ -388,6 +388,16 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | MatMulInteger _      ->
           type_check_pattern02 ptypes [| SNT_Int8; SNT_Uint8 |] name |> ignore;
           [| SNT_Int32 |]
+        | QLinearMatMul _      ->
+          type_check_pattern02
+            [| ptypes.(1); ptypes.(4); ptypes.(6) |]
+            [| SNT_Float |]
+            name
+          |> ignore;
+          type_check_pattern02
+            [| ptypes.(0); ptypes.(2); ptypes.(3); ptypes.(5); ptypes.(7) |]
+            [| SNT_Int8; SNT_Uint8 |]
+            name
         | Gemm _               -> type_check_pattern02 ptypes _types_constraint02 name
         | Max _                -> type_check_pattern02 ptypes _types_constraint00 name
         | Min _                -> type_check_pattern02 ptypes _types_constraint00 name

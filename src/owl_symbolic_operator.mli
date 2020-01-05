@@ -140,6 +140,18 @@ val matmul_int
   -> symbol
   -> symbol
 
+val qlinear_matmul
+  :  ?name:string
+  -> symbol
+  -> symbol
+  -> symbol
+  -> symbol
+  -> symbol
+  -> symbol
+  -> symbol
+  -> symbol
+  -> symbol
+
 val gemm
   :  ?name:string
   -> ?alpha:float

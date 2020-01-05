@@ -7,9 +7,7 @@
 Acosh, Atanh, Add, Sub, Mul, Div, Neg, Abs, Floor, Ceil, Sqrt, Relu, Exp, Log,
 Pow, Round, Gemm, MatMul, Max, Min, Sum, Mean, Mod, Sigmoid, Softmax, Clip, Sign
 LeakyRelu, Elu, Softsign, Softplus, HardSigmoid, ThreasholdedRelu, Selu, PRelu,
-LogSoftmax, Reciprocal, Hardmax, Expand, MatMulInteger *)
-
-(* QLinearMatMul, *)
+LogSoftmax, Reciprocal, Hardmax, Expand, MatMulInteger, QLinearMatMul *)
 
 open Owl_symbolic_types
 
@@ -788,6 +786,23 @@ module MatMulInteger = struct
       | None, Some _   -> failwith "MatMulInt: only specifying b_zero is not yet supported"
       | _, _           -> [| x; y |]
     in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |] }
+end
+
+module QLinearMatMul = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "QLinearMatMul"
+
+  let create ?name a a_scale a_zero b b_scale b_zero y_scale y_zero =
+    let input = [| a; a_scale; a_zero; b; b_scale; b_zero; y_scale; y_zero |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; input; attrs; out_shape = [| None |] }

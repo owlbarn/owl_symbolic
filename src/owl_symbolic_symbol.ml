@@ -74,6 +74,7 @@ type t =
   | Mod                of Mod.t
   | MatMul             of MatMul.t
   | MatMulInteger      of MatMulInteger.t
+  | QLinearMatMul      of QLinearMatMul.t
   | Gemm               of Gemm.t
   | Max                of Max.t
   | Min                of Min.t
@@ -199,6 +200,7 @@ let name = function
   | Mod x                -> Mod.(x.name)
   | MatMul x             -> MatMul.(x.name)
   | MatMulInteger x      -> MatMulInteger.(x.name)
+  | QLinearMatMul x      -> QLinearMatMul.(x.name)
   | Gemm x               -> Gemm.(x.name)
   | Max x                -> Max.(x.name)
   | Min x                -> Min.(x.name)
@@ -315,6 +317,7 @@ let op_type = function
   | Mod _                -> Mod.op_type
   | MatMul _             -> MatMul.op_type
   | MatMulInteger _      -> MatMulInteger.op_type
+  | QLinearMatMul _      -> QLinearMatMul.op_type
   | Gemm _               -> Gemm.op_type
   | Max _                -> Max.op_type
   | Min _                -> Min.op_type
@@ -432,6 +435,7 @@ let input = function
   | Mod x                -> Mod.(x.input)
   | MatMul x             -> MatMul.(x.input)
   | MatMulInteger x      -> MatMulInteger.(x.input)
+  | QLinearMatMul x      -> QLinearMatMul.(x.input)
   | Gemm x               -> Gemm.(x.input)
   | Max x                -> Max.(x.input)
   | Min x                -> Min.(x.input)
@@ -539,6 +543,7 @@ let set_input sym inputs =
   | HardSigmoid x        -> x.input <- inputs
   | MatMul x             -> x.input <- inputs
   | MatMulInteger x      -> x.input <- inputs
+  | QLinearMatMul x      -> x.input <- inputs
   | Gemm x               -> x.input <- inputs
   | Max x                -> x.input <- inputs
   | Min x                -> x.input <- inputs
@@ -655,6 +660,7 @@ let out_shape = function
   | Mod x                -> Mod.(x.out_shape)
   | MatMul x             -> MatMul.(x.out_shape)
   | MatMulInteger x      -> MatMulInteger.(x.out_shape)
+  | QLinearMatMul x      -> QLinearMatMul.(x.out_shape)
   | Gemm x               -> Gemm.(x.out_shape)
   | Max x                -> Max.(x.out_shape)
   | Min x                -> Min.(x.out_shape)
@@ -766,6 +772,7 @@ let set_out_shape sym shapes =
   | Mod x                -> x.out_shape <- shapes
   | MatMul x             -> x.out_shape <- shapes
   | MatMulInteger x      -> x.out_shape <- shapes
+  | QLinearMatMul x      -> x.out_shape <- shapes
   | Gemm x               -> x.out_shape <- shapes
   | Max x                -> x.out_shape <- shapes
   | Min x                -> x.out_shape <- shapes
@@ -875,6 +882,7 @@ let attrs = function
   | Mod x                -> Mod.(x.attrs)
   | MatMul x             -> MatMul.(x.attrs)
   | MatMulInteger x      -> MatMulInteger.(x.attrs)
+  | QLinearMatMul x      -> QLinearMatMul.(x.attrs)
   | Gemm x               -> Gemm.(x.attrs)
   | Max x                -> Max.(x.attrs)
   | Min x                -> Min.(x.attrs)
@@ -983,6 +991,7 @@ let set_attrs sym a =
   | Mod x                -> x.attrs <- a
   | MatMul x             -> x.attrs <- a
   | MatMulInteger x      -> x.attrs <- a
+  | QLinearMatMul x      -> x.attrs <- a
   | Gemm x               -> x.attrs <- a
   | Max x                -> x.attrs <- a
   | Min x                -> x.attrs <- a
