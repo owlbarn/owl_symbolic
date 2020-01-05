@@ -81,6 +81,7 @@ type t =
   | CumSum             of CumSum.t
   | Hardmax            of Hardmax.t
   | Det                of Det.t
+  | Expand             of Expand.t
   (* Logical ops *)
   | And                of And.t
   | Or                 of Or.t
@@ -204,6 +205,7 @@ let name = function
   | CumSum x             -> CumSum.(x.name)
   | Hardmax x            -> Hardmax.(x.name)
   | Det x                -> Det.(x.name)
+  | Expand x             -> Expand.(x.name)
   | And x                -> And.(x.name)
   | Or x                 -> Or.(x.name)
   | Not x                -> Not.(x.name)
@@ -318,6 +320,7 @@ let op_type = function
   | CumSum _             -> CumSum.op_type
   | Hardmax _            -> Hardmax.op_type
   | Det _                -> Det.op_type
+  | Expand _             -> Expand.op_type
   | And _                -> And.op_type
   | Or _                 -> Or.op_type
   | Not _                -> Not.op_type
@@ -433,6 +436,7 @@ let input = function
   | CumSum x             -> CumSum.(x.input)
   | Hardmax x            -> Hardmax.(x.input)
   | Det x                -> Det.(x.input)
+  | Expand x             -> Expand.(x.input)
   | And x                -> And.(x.input)
   | Or x                 -> Or.(x.input)
   | Not x                -> Not.(x.input)
@@ -538,6 +542,7 @@ let set_input sym inputs =
   | CumSum x             -> x.input <- inputs
   | Hardmax x            -> x.input <- inputs
   | Det x                -> x.input <- inputs
+  | Expand x             -> x.input <- inputs
   | And x                -> x.input <- inputs
   | Or x                 -> x.input <- inputs
   | Not x                -> x.input <- inputs
@@ -652,6 +657,7 @@ let out_shape = function
   | CumSum x             -> CumSum.(x.out_shape)
   | Hardmax x            -> Hardmax.(x.out_shape)
   | Det x                -> Det.(x.out_shape)
+  | Expand x             -> Expand.(x.out_shape)
   | And x                -> And.(x.out_shape)
   | Or x                 -> Or.(x.out_shape)
   | Not x                -> Not.(x.out_shape)
@@ -761,6 +767,7 @@ let set_out_shape sym shapes =
   | CumSum x             -> x.out_shape <- shapes
   | Hardmax x            -> x.out_shape <- shapes
   | Det x                -> x.out_shape <- shapes
+  | Expand x             -> x.out_shape <- shapes
   | And x                -> x.out_shape <- shapes
   | Or x                 -> x.out_shape <- shapes
   | Not x                -> x.out_shape <- shapes
@@ -868,6 +875,7 @@ let attrs = function
   | CumSum x             -> CumSum.(x.attrs)
   | Hardmax x            -> Hardmax.(x.attrs)
   | Det x                -> Det.(x.attrs)
+  | Expand x             -> Expand.(x.attrs)
   | And x                -> And.(x.attrs)
   | Or x                 -> Or.(x.attrs)
   | Not x                -> Not.(x.attrs)
@@ -974,6 +982,7 @@ let set_attrs sym a =
   | CumSum x             -> x.attrs <- a
   | Hardmax x            -> x.attrs <- a
   | Det x                -> x.attrs <- a
+  | Expand x             -> x.attrs <- a
   | And x                -> x.attrs <- a
   | Or x                 -> x.attrs <- a
   | Not x                -> x.attrs <- a

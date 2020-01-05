@@ -68,6 +68,7 @@ type t =
   | CumSum             of Owl_symbolic_ops_math.CumSum.t
   | Hardmax            of Owl_symbolic_ops_math.Hardmax.t
   | Det                of Owl_symbolic_ops_math.Det.t
+  | Expand             of Owl_symbolic_ops_math.Expand.t
   | And                of Owl_symbolic_ops_logical.And.t
   | Or                 of Owl_symbolic_ops_logical.Or.t
   | Not                of Owl_symbolic_ops_logical.Not.t

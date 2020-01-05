@@ -612,6 +612,7 @@ let infer_shape input_shapes sym =
   | CumSum x             -> infer_shape_axis input_shapes x.axis
   | Hardmax x            -> infer_shape_axis input_shapes x.axis
   | Det _                -> infer_shape_det input_shapes
+  | Expand _             -> infer_shape_03 input_shapes
   | And _                -> infer_shape_03 input_shapes
   | Or _                 -> infer_shape_03 input_shapes
   | Not _                -> infer_shape_03 input_shapes

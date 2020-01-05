@@ -163,6 +163,8 @@ val hardmax : ?name:string -> ?axis:int -> symbol array -> symbol
 
 val det : ?name:string -> symbol -> symbol
 
+val expand : ?name:string -> int array -> symbol -> symbol
+
 val and_ : ?name:string -> symbol -> symbol -> symbol
 
 val or_ : ?name:string -> symbol -> symbol -> symbol

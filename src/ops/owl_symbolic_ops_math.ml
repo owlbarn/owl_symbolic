@@ -7,9 +7,9 @@
 Acosh, Atanh, Add, Sub, Mul, Div, Neg, Abs, Floor, Ceil, Sqrt, Relu, Exp, Log,
 Pow, Round, Gemm, MatMul, Max, Min, Sum, Mean, Mod, Sigmoid, Softmax, Clip, Sign
 LeakyRelu, Elu, Softsign, Softplus, HardSigmoid, ThreasholdedRelu, Selu, PRelu,
-LogSoftmax, Reciprocal, Hardmax*)
+LogSoftmax, Reciprocal, Hardmax, Expand *)
 
-(* Expand, QLinearMatMul, MatMulInteger*)
+(* QLinearMatMul, MatMulInteger*)
 
 open Owl_symbolic_types
 
@@ -904,6 +904,23 @@ module Reciprocal = struct
 
   let create ?name x_name =
     let input = [| x_name |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |] }
+end
+
+module Expand = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "Expand"
+
+  let create ?name x_name shp_name =
+    let input = [| x_name; shp_name |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; input; attrs; out_shape = [| None |] }

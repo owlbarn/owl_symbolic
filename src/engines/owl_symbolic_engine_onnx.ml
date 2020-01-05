@@ -395,6 +395,9 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           type_check_pattern01 ptypes.(0) _types_constraint02 name
         | Hardmax _            -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Det _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
+        | Expand _             ->
+          type_check_pattern01 ptypes.(1) [| SNT_Int64 |] name |> ignore;
+          type_check_pattern01 ptypes.(0) _types_constraint03 name
         | And _                -> type_check_pattern02 ptypes [| SNT_Bool |] name
         | Or _                 -> type_check_pattern02 ptypes [| SNT_Bool |] name
         | Not _                -> type_check_pattern02 ptypes [| SNT_Bool |] name

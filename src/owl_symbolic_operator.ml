@@ -319,6 +319,14 @@ let det ?name x =
   make_node (Owl_symbolic_symbol.Det s) [| x |]
 
 
+let expand ?name shape x =
+  let xn = Owl_symbolic_graph.name x in
+  let shp = tensor_ints shape in
+  let sn = Owl_symbolic_graph.name shp in
+  let s = Owl_symbolic_ops_math.Expand.create ?name xn sn in
+  make_node (Owl_symbolic_symbol.Expand s) [| x; shp |]
+
+
 let add ?name x y =
   let xn = Owl_symbolic_graph.name x in
   let yn = Owl_symbolic_graph.name y in
