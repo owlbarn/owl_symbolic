@@ -120,6 +120,7 @@ type t =
   | Slice              of Slice.t
   | SpaceToDepth       of SpaceToDepth.t
   | IsNaN              of IsNaN.t
+  | IsInf              of IsInf.t
   | NonZero            of NonZero.t
   | Where              of Where.t
   | ScatterElements    of ScatterElements.t
@@ -239,6 +240,7 @@ let name = function
   | Slice x              -> Slice.(x.name)
   | SpaceToDepth x       -> SpaceToDepth.(x.name)
   | IsNaN x              -> IsNaN.(x.name)
+  | IsInf x              -> IsInf.(x.name)
   | NonZero x            -> NonZero.(x.name)
   | Where x              -> Where.(x.name)
   | ScatterElements x    -> ScatterElements.(x.name)
@@ -356,6 +358,7 @@ let op_type = function
   | Slice _              -> Slice.op_type
   | SpaceToDepth _       -> SpaceToDepth.op_type
   | IsNaN _              -> IsNaN.op_type
+  | IsInf _              -> IsInf.op_type
   | NonZero _            -> NonZero.op_type
   | Where _              -> Where.op_type
   | ScatterElements _    -> ScatterElements.op_type
@@ -582,6 +585,7 @@ let set_input sym inputs =
   | Slice x              -> x.input <- inputs
   | SpaceToDepth x       -> x.input <- inputs
   | IsNaN x              -> x.input <- inputs
+  | IsInf x              -> x.input <- inputs
   | NonZero x            -> x.input <- inputs
   | Where x              -> x.input <- inputs
   | ScatterElements x    -> x.input <- inputs
@@ -699,6 +703,7 @@ let out_shape = function
   | Slice x              -> Slice.(x.out_shape)
   | SpaceToDepth x       -> SpaceToDepth.(x.out_shape)
   | IsNaN x              -> IsNaN.(x.out_shape)
+  | IsInf x              -> IsInf.(x.out_shape)
   | NonZero x            -> NonZero.(x.out_shape)
   | Where x              -> Where.(x.out_shape)
   | ScatterElements x    -> ScatterElements.(x.out_shape)
@@ -811,6 +816,7 @@ let set_out_shape sym shapes =
   | Slice x              -> x.out_shape <- shapes
   | SpaceToDepth x       -> x.out_shape <- shapes
   | IsNaN x              -> x.out_shape <- shapes
+  | IsInf x              -> x.out_shape <- shapes
   | NonZero x            -> x.out_shape <- shapes
   | Where x              -> x.out_shape <- shapes
   | ScatterElements x    -> x.out_shape <- shapes
@@ -921,6 +927,7 @@ let attrs = function
   | Slice x              -> Slice.(x.attrs)
   | SpaceToDepth x       -> SpaceToDepth.(x.attrs)
   | IsNaN x              -> IsNaN.(x.attrs)
+  | IsInf x              -> IsInf.(x.attrs)
   | NonZero x            -> NonZero.(x.attrs)
   | Where x              -> Where.(x.attrs)
   | ScatterElements x    -> ScatterElements.(x.attrs)
@@ -1030,6 +1037,7 @@ let set_attrs sym a =
   | Slice x              -> x.attrs <- a
   | SpaceToDepth x       -> x.attrs <- a
   | IsNaN x              -> x.attrs <- a
+  | IsInf x              -> x.attrs <- a
   | NonZero x            -> x.attrs <- a
   | Where x              -> x.attrs <- a
   | ScatterElements x    -> x.attrs <- a

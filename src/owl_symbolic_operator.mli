@@ -256,6 +256,8 @@ val space_to_depth : ?name:string -> int -> symbol -> symbol
 
 val is_nan : ?name:string -> symbol -> symbol
 
+val is_inf : ?name:string -> symbol -> symbol
+
 val non_zero : ?name:string -> symbol -> symbol
 
 val where : ?name:string -> symbol -> symbol -> symbol -> symbol

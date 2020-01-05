@@ -658,6 +658,7 @@ let infer_shape input_shapes sym =
   | Slice x              -> infer_shape_slice input_shapes x
   | SpaceToDepth x       -> infer_shape_space_to_depth input_shapes x.blocksize
   | IsNaN _              -> infer_shape_01 input_shapes
+  | IsInf _              -> infer_shape_01 input_shapes
   | NonZero _            -> [| None |]
   | Where _              -> infer_shape_34 input_shapes
   | ScatterElements _    -> infer_shape_scatter_elements input_shapes

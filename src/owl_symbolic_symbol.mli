@@ -104,6 +104,7 @@ type t =
   | Slice              of Owl_symbolic_ops_tensor.Slice.t
   | SpaceToDepth       of Owl_symbolic_ops_tensor.SpaceToDepth.t
   | IsNaN              of Owl_symbolic_ops_tensor.IsNaN.t
+  | IsInf              of Owl_symbolic_ops_tensor.IsInf.t
   | NonZero            of Owl_symbolic_ops_tensor.NonZero.t
   | Where              of Owl_symbolic_ops_tensor.Where.t
   | ScatterElements    of Owl_symbolic_ops_tensor.ScatterElements.t

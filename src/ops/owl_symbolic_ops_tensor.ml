@@ -5,11 +5,11 @@
 
 (** Implemented: Reshape, Concat, Split, Identity, Pad, Cast, Squeeze, Tile 
   * Shape, Size, Transpose, Slice, SpaceToDepth, IsNaN, NonZero, Where
-  * ScatterElements，ScatterND, GatherElements, GatherND, 
+  * ScatterElements，ScatterND, GatherElements, GatherND, IsInf
   *)
 
-(** IsInf, UnSqueeze, DepthToSpace, Resize, Compress, Unique, OneHot, ReverseSequence,
-  * Gather, Scatter(deprecated), Upsample(deprecated),
+(** UnSqueeze, DepthToSpace, Resize, Compress, Unique, OneHot, ReverseSequence,
+  * Gather(deprecated), Scatter(deprecated), Upsample(deprecated),
   *)
 
 open Owl_symbolic_types
@@ -279,6 +279,25 @@ module IsNaN = struct
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| x_name |] in
     { name; input; attrs; out_shape = [| None |] }
+end
+
+module IsInf = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable detect_neg : bool
+    ; mutable detect_pos : bool
+    }
+
+  let op_type = "IsInf"
+
+  let create ?name ?(neg = true) ?(pos = true) x_name =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| x_name |] in
+    { name; input; attrs; out_shape = [| None |]; detect_neg = neg; detect_pos = pos }
 end
 
 module NonZero = struct

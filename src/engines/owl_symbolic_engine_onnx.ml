@@ -477,6 +477,9 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | IsNaN _              ->
           type_check_pattern01 ptypes.(0) _types_constraint00 name |> ignore;
           [| SNT_Bool |]
+        | IsInf _              ->
+          type_check_pattern01 ptypes.(0) [| SNT_Float; SNT_Double |] name |> ignore;
+          [| SNT_Bool |]
         | NonZero _            ->
           type_check_pattern01 ptypes.(0) _types_constraint00 name |> ignore;
           [| SNT_Int64 |]
@@ -615,6 +618,13 @@ let make_attr_int name i =
   let name = Some name in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Int in
   let i = Some (Int64.of_int i) in
+  PT.default_attribute_proto ~name ~type_ ~i ()
+
+
+let make_attr_int_from_bool name b =
+  let name = Some name in
+  let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Int in
+  let i = Some (Int64.of_int (if b then 1 else 0)) in
   PT.default_attribute_proto ~name ~type_ ~i ()
 
 
@@ -898,11 +908,15 @@ let build_onnx_attrs_seq_empty (x : Owl_symbolic_ops_sequence.SequenceEmpty.t) =
 
 
 let build_onnx_attrs_cumsum exclusive reverse =
-  let i = if exclusive then 1 else 0 in
-  let attr_e = make_attr_int "exclusive" i in
-  let i = if reverse then 1 else 0 in
-  let attr_r = make_attr_int "reverse" i in
+  let attr_e = make_attr_int_from_bool "exclusive" exclusive in
+  let attr_r = make_attr_int_from_bool "reverse" reverse in
   [ attr_e; attr_r ]
+
+
+let build_onnx_attrs_isinf detect_neg detect_pos =
+  let attr_neg = make_attr_int_from_bool "detect_negative" detect_neg in
+  let attr_pos = make_attr_int_from_bool "detect_positive" detect_pos in
+  [ attr_neg; attr_pos ]
 
 
 let build_onnx_attrs sym =
@@ -944,6 +958,7 @@ let build_onnx_attrs sym =
     | S.Squeeze x            -> build_onnx_attrs_squeeze x
     | S.Transpose x          -> build_onnx_attrs_transpose x
     | S.SpaceToDepth x       -> build_onnx_attrs_spacetodepth x.blocksize
+    | S.IsInf x              -> build_onnx_attrs_isinf x.detect_neg x.detect_pos
     | S.ScatterElements x    -> build_onnx_attrs_scatter_elements x.axis
     | S.Conv x               -> build_onnx_attrs_conv x
     | S.ConvTranspose x      -> build_onnx_attrs_conv_transpose x

@@ -743,6 +743,12 @@ let is_nan ?name x =
   make_node (Owl_symbolic_symbol.IsNaN s) [| x |]
 
 
+let is_inf ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_tensor.IsInf.create ?name xn in
+  make_node (Owl_symbolic_symbol.IsInf s) [| x |]
+
+
 let non_zero ?name x =
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_tensor.NonZero.create ?name xn in
