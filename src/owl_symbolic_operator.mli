@@ -132,6 +132,14 @@ val modular : ?name:string -> ?fmod:int -> symbol -> symbol -> symbol
 
 val matmul : ?name:string -> symbol -> symbol -> symbol
 
+val matmul_int
+  :  ?name:string
+  -> ?a_zero_point:symbol
+  -> ?b_zero_point:symbol
+  -> symbol
+  -> symbol
+  -> symbol
+
 val gemm
   :  ?name:string
   -> ?alpha:float

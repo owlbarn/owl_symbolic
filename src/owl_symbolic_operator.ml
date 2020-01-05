@@ -35,8 +35,8 @@ let tensor ?name t =
   make_node (Owl_symbolic_symbol.Tensor sym) [||]
 
 
-let tensor_int ?name i =
-  let t = Owl_symbolic_types.make_tensor ~dtype:SNT_Int64 ~int_val:[| i |] [||] in
+let tensor_int ?name ?(dtype = Owl_symbolic_types.SNT_Int64) i =
+  let t = Owl_symbolic_types.make_tensor ~dtype ~int_val:[| i |] [||] in
   tensor ?name t
 
 
@@ -374,6 +374,27 @@ let matmul ?name x y =
   let yn = Owl_symbolic_graph.name y in
   let s = Owl_symbolic_ops_math.MatMul.create ?name xn yn in
   make_node (Owl_symbolic_symbol.MatMul s) [| x; y |]
+
+
+let matmul_int ?name ?a_zero_point ?b_zero_point x y =
+  let xn = Owl_symbolic_graph.name x in
+  let yn = Owl_symbolic_graph.name y in
+  match a_zero_point, b_zero_point with
+  | Some a, Some b ->
+    let an = Owl_symbolic_graph.name a in
+    let bn = Owl_symbolic_graph.name b in
+    let s =
+      Owl_symbolic_ops_math.MatMulInteger.create ?name ~a_zero:an ~b_zero:bn xn yn
+    in
+    make_node (Owl_symbolic_symbol.MatMulInteger s) [| x; y; a; b |]
+  | Some a, None   ->
+    let an = Owl_symbolic_graph.name a in
+    let s = Owl_symbolic_ops_math.MatMulInteger.create ?name ~a_zero:an xn yn in
+    make_node (Owl_symbolic_symbol.MatMulInteger s) [| x; y; a |]
+  | None, Some _   -> failwith "MatMulInt: only specifying b_zero is not supported"
+  | None, None     ->
+    let s = Owl_symbolic_ops_math.MatMulInteger.create ?name xn yn in
+    make_node (Owl_symbolic_symbol.MatMulInteger s) [| x; y |]
 
 
 let gemm ?name ?alpha ?beta ?transA ?transB ?c a b =

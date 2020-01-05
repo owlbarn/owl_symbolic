@@ -604,6 +604,7 @@ let infer_shape input_shapes sym =
   | Pow _                -> infer_shape_01 input_shapes
   | Mod _                -> infer_shape_01 input_shapes
   | MatMul _             -> infer_shape_19 input_shapes
+  | MatMulInteger _      -> infer_shape_19 input_shapes
   | Gemm x               -> infer_shape_gemm x input_shapes
   | Max _                -> infer_shape_31 input_shapes
   | Min _                -> infer_shape_31 input_shapes

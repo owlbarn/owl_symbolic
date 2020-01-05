@@ -7,9 +7,9 @@
 Acosh, Atanh, Add, Sub, Mul, Div, Neg, Abs, Floor, Ceil, Sqrt, Relu, Exp, Log,
 Pow, Round, Gemm, MatMul, Max, Min, Sum, Mean, Mod, Sigmoid, Softmax, Clip, Sign
 LeakyRelu, Elu, Softsign, Softplus, HardSigmoid, ThreasholdedRelu, Selu, PRelu,
-LogSoftmax, Reciprocal, Hardmax, Expand *)
+LogSoftmax, Reciprocal, Hardmax, Expand, MatMulInteger *)
 
-(* QLinearMatMul, MatMulInteger*)
+(* QLinearMatMul, *)
 
 open Owl_symbolic_types
 
@@ -764,6 +764,30 @@ module MatMul = struct
 
   let create ?name x y =
     let input = [| x; y |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |] }
+end
+
+module MatMulInteger = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "MatMulInteger"
+
+  let create ?name ?a_zero ?b_zero x y =
+    (* TODO: how to specifiy part of optional inputs? *)
+    let input =
+      match a_zero, b_zero with
+      | Some a, Some b -> [| x; y; a; b |]
+      | Some a, None   -> [| x; y; a |]
+      | None, Some _   -> failwith "MatMulInt: only specifying b_zero is not yet supported"
+      | _, _           -> [| x; y |]
+    in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; input; attrs; out_shape = [| None |] }

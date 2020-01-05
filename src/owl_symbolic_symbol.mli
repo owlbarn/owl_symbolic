@@ -60,6 +60,7 @@ type t =
   | Pow                of Owl_symbolic_ops_math.Pow.t
   | Mod                of Owl_symbolic_ops_math.Mod.t
   | MatMul             of Owl_symbolic_ops_math.MatMul.t
+  | MatMulInteger      of Owl_symbolic_ops_math.MatMulInteger.t
   | Gemm               of Owl_symbolic_ops_math.Gemm.t
   | Max                of Owl_symbolic_ops_math.Max.t
   | Min                of Owl_symbolic_ops_math.Min.t
