@@ -726,6 +726,7 @@ let infer_shape input_shapes sym =
   | GatherND _           -> [| None |]
   | Compress x           -> infer_shape_compress input_shapes x.axis
   | ReverseSeq _         -> infer_shape_revseq input_shapes
+  | Unique _             -> [| None; None; None; None |]
   | Conv x               -> infer_shape_conv input_shapes x
   | ConvTranspose x      -> infer_shape_conv_transpose input_shapes x
   | MaxPool x            ->

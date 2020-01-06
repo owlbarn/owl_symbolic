@@ -284,6 +284,13 @@ val reverse_seq
   -> symbol
   -> symbol
 
+val unique
+  :  ?name:string
+  -> ?axis:int
+  -> ?sorted:bool
+  -> symbol
+  -> symbol * symbol * symbol * symbol
+
 val conv
   :  ?name:string
   -> ?dim:int

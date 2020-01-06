@@ -6,10 +6,10 @@
 (** Implemented: Reshape, Concat, Split, Identity, Pad, Cast, Squeeze, Tile 
   * Shape, Size, Transpose, Slice, SpaceToDepth, IsNaN, NonZero, Where
   * ScatterElements，ScatterND, GatherElements, GatherND, IsInf, UnSqueeze, 
-  * DepthToSpace, Compress, ReverseSequence,
+  * DepthToSpace, Compress, ReverseSequence, Unique
   *)
 
-(** Resize, Unique, OneHot,
+(** Resize, OneHot,
   * Gather(deprecated), Scatter(deprecated), Upsample(deprecated),
   *)
 
@@ -480,4 +480,25 @@ module ReverseSeq = struct
     if not ((batch_axis, time_axis) = (1, 0) || (batch_axis, time_axis) = (0, 1))
     then failwith "reverseSequence: illegal batch or time axis";
     { name; input; attrs; out_shape = [| None |]; batch_axis; time_axis }
+end
+
+
+module Unique = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable output : string array 
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable axis : int option
+    ; mutable sorted : bool
+    }
+
+  let op_type = "Unique"
+
+  let create ?name ~output ?axis ?(sorted = true) data_name  =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| data_name |] in
+    { name; input; output; attrs; out_shape = [| None; None; None; None |]; axis; sorted}
 end

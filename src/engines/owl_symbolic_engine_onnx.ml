@@ -506,6 +506,10 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | ReverseSeq _         ->
           type_check_pattern01 ptypes.(1) [| SNT_Int64 |] name |> ignore;
           type_check_pattern01 ptypes.(0) _types_constraint03 name
+        | Unique _             ->
+          let t1 = type_check_pattern01 ptypes.(0) _types_constraint03 name in
+          let t2 = SNT_Int64 in
+          [| t1.(0); t2 |]
         | Conv _               -> type_check_pattern02 ptypes _types_constraint00 name
         | ConvTranspose _      -> type_check_pattern02 ptypes _types_constraint00 name
         | MaxPool _            ->
@@ -808,6 +812,15 @@ let build_onnx_attrs_scatter_elements axis =
   [ attr_axis ]
 
 
+let build_onnx_attrs_unique axis sorted =
+  let attr_sorted = make_attr_int_from_bool "sorted" sorted in
+  match axis with
+  | Some a ->
+    let attr_axis = make_attr_int "axis" a in
+    [ attr_axis; attr_sorted ]
+  | None   -> [ attr_sorted ]
+
+
 let build_onnx_attrs_conv (x : Owl_symbolic_ops_nn.Conv.t) =
   let attr_pad =
     match x.pads with
@@ -997,6 +1010,7 @@ let build_onnx_attrs sym =
     | S.ScatterElements x    -> build_onnx_attrs_scatter_elements x.axis
     | S.Compress x           -> build_onnx_attrs_axis_option x.axis
     | S.ReverseSeq x         -> build_onnx_attrs_revseq x.batch_axis x.time_axis
+    | S.Unique x             -> build_onnx_attrs_unique x.axis x.sorted
     | S.Conv x               -> build_onnx_attrs_conv x
     | S.ConvTranspose x      -> build_onnx_attrs_conv_transpose x
     | S.MaxPool x            -> build_onnx_attrs_maxpool x

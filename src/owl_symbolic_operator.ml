@@ -823,6 +823,33 @@ let reverse_seq ?name ?batch_axis ?time_axis data seq_len =
   make_node (Owl_symbolic_symbol.ReverseSeq s) [| data; seq_len |]
 
 
+let unique ?name ?axis ?sorted x =
+  let n = Owl_symbolic_utils.node_name ?name "Unique" in
+  let n0 = n ^ "_y" in
+  let n1 = n ^ "_indices" in
+  let n2 = n ^ "_inverse_indices" in
+  let n3 = n ^ "_counts" in
+  let xn = Owl_symbolic_graph.name x in
+  let s =
+    Owl_symbolic_ops_tensor.Unique.create
+      ~name:n
+      ~output:[| n0; n1; n2; n3 |]
+      ?axis
+      ?sorted
+      xn
+  in
+  let uniq = make_node (Owl_symbolic_symbol.Unique s) [| x |] in
+  let o0 = Owl_symbolic_ops_tensor.Identity.create ~idx:0 ?name n0 in
+  let o1 = Owl_symbolic_ops_tensor.Identity.create ~idx:1 ?name n1 in
+  let o2 = Owl_symbolic_ops_tensor.Identity.create ~idx:2 ?name n2 in
+  let o3 = Owl_symbolic_ops_tensor.Identity.create ~idx:3 ?name n3 in
+  let out_0 = make_node (Owl_symbolic_symbol.Identity o0) [| uniq |] in
+  let out_1 = make_node (Owl_symbolic_symbol.Identity o1) [| uniq |] in
+  let out_2 = make_node (Owl_symbolic_symbol.Identity o2) [| uniq |] in
+  let out_3 = make_node (Owl_symbolic_symbol.Identity o3) [| uniq |] in
+  out_0, out_1, out_2, out_3
+
+
 (** Neural Network *)
 
 let conv ?name ?dim ?padding ?strides ?dilations ?bias input kernel =

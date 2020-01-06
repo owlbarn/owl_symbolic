@@ -115,6 +115,7 @@ type t =
   | GatherND           of Owl_symbolic_ops_tensor.GatherND.t
   | Compress           of Owl_symbolic_ops_tensor.Compress.t
   | ReverseSeq         of Owl_symbolic_ops_tensor.ReverseSeq.t
+  | Unique             of Owl_symbolic_ops_tensor.Unique.t
   | Conv               of Owl_symbolic_ops_nn.Conv.t
   | ConvTranspose      of Owl_symbolic_ops_nn.ConvTranspose.t
   | MaxPool            of Owl_symbolic_ops_nn.MaxPool.t
