@@ -743,6 +743,12 @@ let space_to_depth ?name blocksize x =
   make_node (Owl_symbolic_symbol.SpaceToDepth s) [| x |]
 
 
+let depth_to_space ?name ?mode blocksize x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_tensor.DepthToSpace.create ?name ?mode blocksize xn in
+  make_node (Owl_symbolic_symbol.DepthToSpace s) [| x |]
+
+
 let is_nan ?name x =
   let xn = Owl_symbolic_graph.name x in
   let s = Owl_symbolic_ops_tensor.IsNaN.create ?name xn in

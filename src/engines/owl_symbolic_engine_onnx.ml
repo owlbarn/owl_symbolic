@@ -475,6 +475,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           |> ignore;
           type_check_pattern01 ptypes.(0) _types_constraint03 name
         | SpaceToDepth _       -> type_check_pattern01 ptypes.(0) _types_constraint03 name
+        | DepthToSpace _       -> type_check_pattern01 ptypes.(0) _types_constraint03 name
         | IsNaN _              ->
           type_check_pattern01 ptypes.(0) _types_constraint00 name |> ignore;
           [| SNT_Bool |]
@@ -782,6 +783,12 @@ let build_onnx_attrs_spacetodepth blocksize =
   [ attr_block ]
 
 
+let build_onnx_attrs_depthtospace blocksize mode =
+  let attr_block = make_attr_int "blocksize" blocksize in
+  let attr_mode = make_attr_string "mode" mode in
+  [ attr_block; attr_mode ]
+
+
 let build_onnx_attrs_scatter_elements axis =
   let attr_axis = make_attr_int "axis" axis in
   [ attr_axis ]
@@ -965,6 +972,7 @@ let build_onnx_attrs sym =
     | S.UnSqueeze x          -> build_onnx_attrs_axes x.axes
     | S.Transpose x          -> build_onnx_attrs_transpose x
     | S.SpaceToDepth x       -> build_onnx_attrs_spacetodepth x.blocksize
+    | S.DepthToSpace x       -> build_onnx_attrs_depthtospace x.blocksize x.mode
     | S.IsInf x              -> build_onnx_attrs_isinf x.detect_neg x.detect_pos
     | S.ScatterElements x    -> build_onnx_attrs_scatter_elements x.axis
     | S.Conv x               -> build_onnx_attrs_conv x

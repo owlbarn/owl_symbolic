@@ -120,6 +120,7 @@ type t =
   | Transpose          of Transpose.t
   | Slice              of Slice.t
   | SpaceToDepth       of SpaceToDepth.t
+  | DepthToSpace       of DepthToSpace.t
   | IsNaN              of IsNaN.t
   | IsInf              of IsInf.t
   | NonZero            of NonZero.t
@@ -241,6 +242,7 @@ let name = function
   | Transpose x          -> Transpose.(x.name)
   | Slice x              -> Slice.(x.name)
   | SpaceToDepth x       -> SpaceToDepth.(x.name)
+  | DepthToSpace x       -> DepthToSpace.(x.name)
   | IsNaN x              -> IsNaN.(x.name)
   | IsInf x              -> IsInf.(x.name)
   | NonZero x            -> NonZero.(x.name)
@@ -360,6 +362,7 @@ let op_type = function
   | Transpose _          -> Transpose.op_type
   | Slice _              -> Slice.op_type
   | SpaceToDepth _       -> SpaceToDepth.op_type
+  | DepthToSpace _       -> DepthToSpace.op_type
   | IsNaN _              -> IsNaN.op_type
   | IsInf _              -> IsInf.op_type
   | NonZero _            -> NonZero.op_type
@@ -480,6 +483,7 @@ let input = function
   | Transpose x          -> Transpose.(x.input)
   | Slice x              -> Slice.(x.input)
   | SpaceToDepth x       -> SpaceToDepth.(x.input)
+  | DepthToSpace x       -> DepthToSpace.(x.input)
   | IsNaN x              -> IsNaN.(x.input)
   | NonZero x            -> NonZero.(x.input)
   | Where x              -> Where.(x.input)
@@ -589,6 +593,7 @@ let set_input sym inputs =
   | Transpose x          -> x.input <- inputs
   | Slice x              -> x.input <- inputs
   | SpaceToDepth x       -> x.input <- inputs
+  | DepthToSpace x       -> x.input <- inputs
   | IsNaN x              -> x.input <- inputs
   | IsInf x              -> x.input <- inputs
   | NonZero x            -> x.input <- inputs
@@ -708,6 +713,7 @@ let out_shape = function
   | Transpose x          -> Transpose.(x.out_shape)
   | Slice x              -> Slice.(x.out_shape)
   | SpaceToDepth x       -> SpaceToDepth.(x.out_shape)
+  | DepthToSpace x       -> DepthToSpace.(x.out_shape)
   | IsNaN x              -> IsNaN.(x.out_shape)
   | IsInf x              -> IsInf.(x.out_shape)
   | NonZero x            -> NonZero.(x.out_shape)
@@ -822,6 +828,7 @@ let set_out_shape sym shapes =
   | Transpose x          -> x.out_shape <- shapes
   | Slice x              -> x.out_shape <- shapes
   | SpaceToDepth x       -> x.out_shape <- shapes
+  | DepthToSpace x       -> x.out_shape <- shapes
   | IsNaN x              -> x.out_shape <- shapes
   | IsInf x              -> x.out_shape <- shapes
   | NonZero x            -> x.out_shape <- shapes
@@ -934,6 +941,7 @@ let attrs = function
   | Transpose x          -> Transpose.(x.attrs)
   | Slice x              -> Slice.(x.attrs)
   | SpaceToDepth x       -> SpaceToDepth.(x.attrs)
+  | DepthToSpace x       -> DepthToSpace.(x.attrs)
   | IsNaN x              -> IsNaN.(x.attrs)
   | IsInf x              -> IsInf.(x.attrs)
   | NonZero x            -> NonZero.(x.attrs)
@@ -1045,6 +1053,7 @@ let set_attrs sym a =
   | Transpose x          -> x.attrs <- a
   | Slice x              -> x.attrs <- a
   | SpaceToDepth x       -> x.attrs <- a
+  | DepthToSpace x       -> x.attrs <- a
   | IsNaN x              -> x.attrs <- a
   | IsInf x              -> x.attrs <- a
   | NonZero x            -> x.attrs <- a

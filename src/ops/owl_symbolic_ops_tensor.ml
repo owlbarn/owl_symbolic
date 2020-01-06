@@ -282,6 +282,26 @@ module SpaceToDepth = struct
     { name; input; attrs; out_shape = [| None |]; blocksize }
 end
 
+module DepthToSpace = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable blocksize : int
+    ; mutable mode : string
+    }
+
+  let op_type = "DepthToSpace"
+
+  let create ?name ?(mode = "DCR") blocksize x_name =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| x_name |] in
+    if mode <> "CRD" && mode <> "DCR" then failwith "DepthToSpace: illegal mode.";
+    { name; input; attrs; out_shape = [| None |]; blocksize; mode }
+end
+
 module IsNaN = struct
   type t =
     { mutable name : string

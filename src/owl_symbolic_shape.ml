@@ -332,6 +332,21 @@ let infer_shape_space_to_depth input_shapes block_size =
   | None   -> [| None |]
 
 
+let infer_shape_depth_to_space input_shapes block_size =
+  match input_shapes.(0).(0) with
+  | Some s ->
+    assert (Array.length s = 4);
+    let shp =
+      [| s.(0)
+       ; s.(1) / (block_size * block_size)
+       ; s.(2) * block_size
+       ; s.(3) * block_size
+      |]
+    in
+    [| Some shp |]
+  | None   -> [| None |]
+
+
 (* TODO: update 1D and 3D case to use util function from symbolic, not base *)
 let infer_shape_conv input_shapes (x : Owl_symbolic_ops_nn.Conv.t) =
   let l = x.dim in
@@ -684,6 +699,7 @@ let infer_shape input_shapes sym =
   | Transpose x          -> infer_shape_transpose input_shapes x
   | Slice x              -> infer_shape_slice input_shapes x
   | SpaceToDepth x       -> infer_shape_space_to_depth input_shapes x.blocksize
+  | DepthToSpace x       -> infer_shape_depth_to_space input_shapes x.blocksize
   | IsNaN _              -> infer_shape_01 input_shapes
   | IsInf _              -> infer_shape_01 input_shapes
   | NonZero _            -> [| None |]

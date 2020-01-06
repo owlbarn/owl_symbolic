@@ -256,6 +256,8 @@ val slice
 
 val space_to_depth : ?name:string -> int -> symbol -> symbol
 
+val depth_to_space : ?name:string -> ?mode:string -> int -> symbol -> symbol
+
 val is_nan : ?name:string -> symbol -> symbol
 
 val is_inf : ?name:string -> symbol -> symbol
