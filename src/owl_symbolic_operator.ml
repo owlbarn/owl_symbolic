@@ -807,6 +807,13 @@ let gather_nd ?name data indices =
   make_node (Owl_symbolic_symbol.GatherND s) [| data; indices |]
 
 
+let compress ?name ?axis data cond =
+  let datan = Owl_symbolic_graph.name data in
+  let condn = Owl_symbolic_graph.name cond in
+  let s = Owl_symbolic_ops_tensor.Compress.create ?name ?axis datan condn in
+  make_node (Owl_symbolic_symbol.Compress s) [| data; cond |]
+
+
 (** Neural Network *)
 
 let conv ?name ?dim ?padding ?strides ?dilations ?bias input kernel =

@@ -129,6 +129,7 @@ type t =
   | ScatterND          of ScatterND.t
   | GatherElements     of GatherElements.t
   | GatherND           of GatherND.t
+  | Compress           of Compress.t
   (* NN *)
   | Conv               of Conv.t
   | ConvTranspose      of ConvTranspose.t
@@ -251,6 +252,7 @@ let name = function
   | ScatterND x          -> ScatterND.(x.name)
   | GatherElements x     -> GatherElements.(x.name)
   | GatherND x           -> GatherND.(x.name)
+  | Compress x           -> Compress.(x.name)
   | Conv x               -> Conv.(x.name)
   | ConvTranspose x      -> ConvTranspose.(x.name)
   | MaxPool x            -> MaxPool.(x.name)
@@ -371,6 +373,7 @@ let op_type = function
   | ScatterND _          -> ScatterND.op_type
   | GatherElements _     -> GatherElements.op_type
   | GatherND _           -> GatherND.op_type
+  | Compress _           -> Compress.op_type
   | Conv _               -> Conv.op_type
   | ConvTranspose _      -> ConvTranspose.op_type
   | MaxPool _            -> MaxPool.op_type
@@ -491,6 +494,7 @@ let input = function
   | ScatterND x          -> ScatterND.(x.input)
   | GatherElements x     -> GatherElements.(x.input)
   | GatherND x           -> GatherND.(x.input)
+  | Compress x           -> Compress.(x.input)
   | Conv x               -> Conv.(x.input)
   | ConvTranspose x      -> ConvTranspose.(x.input)
   | MaxPool x            -> MaxPool.(x.input)
@@ -602,6 +606,7 @@ let set_input sym inputs =
   | ScatterND x          -> x.input <- inputs
   | GatherElements x     -> x.input <- inputs
   | GatherND x           -> x.input <- inputs
+  | Compress x           -> x.input <- inputs
   | Conv x               -> x.input <- inputs
   | ConvTranspose x      -> x.input <- inputs
   | MaxPool x            -> x.input <- inputs
@@ -722,6 +727,7 @@ let out_shape = function
   | ScatterND x          -> ScatterND.(x.out_shape)
   | GatherElements x     -> GatherElements.(x.out_shape)
   | GatherND x           -> GatherND.(x.out_shape)
+  | Compress x           -> Compress.(x.out_shape)
   | Conv x               -> Conv.(x.out_shape)
   | ConvTranspose x      -> ConvTranspose.(x.out_shape)
   | MaxPool x            -> MaxPool.(x.out_shape)
@@ -837,6 +843,7 @@ let set_out_shape sym shapes =
   | ScatterND x          -> x.out_shape <- shapes
   | GatherElements x     -> x.out_shape <- shapes
   | GatherND x           -> x.out_shape <- shapes
+  | Compress x           -> x.out_shape <- shapes
   | Conv x               -> x.out_shape <- shapes
   | ConvTranspose x      -> x.out_shape <- shapes
   | MaxPool x            -> x.out_shape <- shapes
@@ -950,6 +957,7 @@ let attrs = function
   | ScatterND x          -> ScatterND.(x.attrs)
   | GatherElements x     -> GatherElements.(x.attrs)
   | GatherND x           -> GatherND.(x.attrs)
+  | Compress x           -> Compress.(x.attrs)
   | Conv x               -> Conv.(x.attrs)
   | ConvTranspose x      -> ConvTranspose.(x.attrs)
   | MaxPool x            -> MaxPool.(x.attrs)
@@ -1062,6 +1070,7 @@ let set_attrs sym a =
   | ScatterND x          -> x.attrs <- a
   | GatherElements x     -> x.attrs <- a
   | GatherND x           -> x.attrs <- a
+  | Compress x           -> x.attrs <- a
   | Conv x               -> x.attrs <- a
   | ConvTranspose x      -> x.attrs <- a
   | MaxPool x            -> x.attrs <- a

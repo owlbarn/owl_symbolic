@@ -500,6 +500,9 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | GatherND _           ->
           type_check_pattern01 ptypes.(1) [| SNT_Int64 |] name |> ignore;
           type_check_pattern01 ptypes.(0) _types_constraint03 name
+        | Compress _           ->
+          type_check_pattern01 ptypes.(1) [| SNT_Bool |] name |> ignore;
+          type_check_pattern01 ptypes.(0) _types_constraint03 name
         | Conv _               -> type_check_pattern02 ptypes _types_constraint00 name
         | ConvTranspose _      -> type_check_pattern02 ptypes _types_constraint00 name
         | MaxPool _            ->
@@ -701,6 +704,14 @@ let build_onnx_attrs_selu alpha gamma =
 let build_onnx_attrs_axis axis =
   let attr_axis = make_attr_int "axis" axis in
   [ attr_axis ]
+
+
+let build_onnx_attrs_axis_option axis =
+  match axis with
+  | Some a ->
+    let attr_axis = make_attr_int "axis" a in
+    [ attr_axis ]
+  | None   -> []
 
 
 let build_onnx_attrs_axes axes =
@@ -975,6 +986,7 @@ let build_onnx_attrs sym =
     | S.DepthToSpace x       -> build_onnx_attrs_depthtospace x.blocksize x.mode
     | S.IsInf x              -> build_onnx_attrs_isinf x.detect_neg x.detect_pos
     | S.ScatterElements x    -> build_onnx_attrs_scatter_elements x.axis
+    | S.Compress x           -> build_onnx_attrs_axis_option x.axis
     | S.Conv x               -> build_onnx_attrs_conv x
     | S.ConvTranspose x      -> build_onnx_attrs_conv_transpose x
     | S.MaxPool x            -> build_onnx_attrs_maxpool x

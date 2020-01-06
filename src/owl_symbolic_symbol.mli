@@ -113,6 +113,7 @@ type t =
   | ScatterND          of Owl_symbolic_ops_tensor.ScatterND.t
   | GatherElements     of Owl_symbolic_ops_tensor.GatherElements.t
   | GatherND           of Owl_symbolic_ops_tensor.GatherND.t
+  | Compress           of Owl_symbolic_ops_tensor.Compress.t
   | Conv               of Owl_symbolic_ops_nn.Conv.t
   | ConvTranspose      of Owl_symbolic_ops_nn.ConvTranspose.t
   | MaxPool            of Owl_symbolic_ops_nn.MaxPool.t

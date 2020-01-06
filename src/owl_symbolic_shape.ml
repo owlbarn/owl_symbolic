@@ -591,6 +591,13 @@ let infer_shape_ql_matmul input_shapes =
   | _, _             -> [| None |]
 
 
+let infer_shape_compress input_shapes axis =
+  match input_shapes.(0).(0), axis with
+  | Some s, Some _ -> [| Some s |]
+  (* when axis not specified, output shape depends on `condition` input *)
+  | _, _ -> [| None |]
+
+
 (** Main entry *)
 
 let infer_shape input_shapes sym =
@@ -708,6 +715,7 @@ let infer_shape input_shapes sym =
   | ScatterND _          -> infer_shape_scatter_nd input_shapes
   | GatherElements _     -> infer_shape_gather_elements input_shapes
   | GatherND _           -> [| None |]
+  | Compress x           -> infer_shape_compress input_shapes x.axis
   | Conv x               -> infer_shape_conv input_shapes x
   | ConvTranspose x      -> infer_shape_conv_transpose input_shapes x
   | MaxPool x            ->
