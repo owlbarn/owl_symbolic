@@ -113,6 +113,7 @@ type t =
   | Pad                of Pad.t
   | Cast               of Cast.t
   | Squeeze            of Squeeze.t
+  | UnSqueeze          of UnSqueeze.t
   | Tile               of Tile.t
   | Shape              of Shape.t
   | Size               of Size.t
@@ -233,6 +234,7 @@ let name = function
   | Pad x                -> Pad.(x.name)
   | Cast x               -> Cast.(x.name)
   | Squeeze x            -> Squeeze.(x.name)
+  | UnSqueeze x          -> UnSqueeze.(x.name)
   | Tile x               -> Tile.(x.name)
   | Shape x              -> Shape.(x.name)
   | Size x               -> Size.(x.name)
@@ -351,6 +353,7 @@ let op_type = function
   | Pad _                -> Pad.op_type
   | Cast _               -> Cast.op_type
   | Squeeze _            -> Squeeze.op_type
+  | UnSqueeze _          -> UnSqueeze.op_type
   | Tile _               -> Tile.op_type
   | Shape _              -> Shape.op_type
   | Size _               -> Size.op_type
@@ -470,6 +473,7 @@ let input = function
   | Pad x                -> Pad.(x.input)
   | Cast x               -> Cast.(x.input)
   | Squeeze x            -> Squeeze.(x.input)
+  | UnSqueeze x          -> UnSqueeze.(x.input)
   | Tile x               -> Tile.(x.input)
   | Shape x              -> Shape.(x.input)
   | Size x               -> Size.(x.input)
@@ -578,6 +582,7 @@ let set_input sym inputs =
   | Pad x                -> x.input <- inputs
   | Cast x               -> x.input <- inputs
   | Squeeze x            -> x.input <- inputs
+  | UnSqueeze x          -> x.input <- inputs
   | Tile x               -> x.input <- inputs
   | Shape x              -> x.input <- inputs
   | Size x               -> x.input <- inputs
@@ -696,6 +701,7 @@ let out_shape = function
   | Pad x                -> Pad.(x.out_shape)
   | Cast x               -> Cast.(x.out_shape)
   | Squeeze x            -> Squeeze.(x.out_shape)
+  | UnSqueeze x          -> UnSqueeze.(x.out_shape)
   | Tile x               -> Tile.(x.out_shape)
   | Shape x              -> Shape.(x.out_shape)
   | Size x               -> Size.(x.out_shape)
@@ -809,6 +815,7 @@ let set_out_shape sym shapes =
   | Pad x                -> x.out_shape <- shapes
   | Cast x               -> x.out_shape <- shapes
   | Squeeze x            -> x.out_shape <- shapes
+  | UnSqueeze x          -> x.out_shape <- shapes
   | Tile x               -> x.out_shape <- shapes
   | Shape x              -> x.out_shape <- shapes
   | Size x               -> x.out_shape <- shapes
@@ -920,6 +927,7 @@ let attrs = function
   | Pad x                -> Pad.(x.attrs)
   | Cast x               -> Cast.(x.attrs)
   | Squeeze x            -> Squeeze.(x.attrs)
+  | UnSqueeze x          -> UnSqueeze.(x.attrs)
   | Tile x               -> Tile.(x.attrs)
   | Shape x              -> Shape.(x.attrs)
   | Size x               -> Size.(x.attrs)
@@ -1030,6 +1038,7 @@ let set_attrs sym a =
   | Pad x                -> x.attrs <- a
   | Cast x               -> x.attrs <- a
   | Squeeze x            -> x.attrs <- a
+  | UnSqueeze x          -> x.attrs <- a
   | Tile x               -> x.attrs <- a
   | Shape x              -> x.attrs <- a
   | Size x               -> x.attrs <- a

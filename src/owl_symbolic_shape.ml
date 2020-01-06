@@ -436,6 +436,32 @@ let infer_shape_squeeze input_shapes axes =
   | _, _              -> [| None |]
 
 
+let infer_shape_unsqueeze input_shapes axes =
+  let input_shape = input_shapes.(0).(0) in
+  match input_shape with
+  | Some shp ->
+    let l = Array.length shp in
+    let uniq_shp = Owl_utils_array.unique shp in
+    assert (uniq_shp = shp);
+    let dim = l + Array.length axes in
+    Array.iter
+      (fun a ->
+        (* require axis to be positive to avoid potential issues *)
+        assert (a < dim && a >= 0))
+      axes;
+    let new_shp = Array.make dim 1 in
+    let c = ref 0 in
+    Array.iteri
+      (fun i _ ->
+        if not (Array.mem i axes)
+        then (
+          new_shp.(i) <- shp.(!c);
+          c := !c + 1))
+      new_shp;
+    [| Some new_shp |]
+  | _        -> [| None |]
+
+
 let infer_shape_scatter_elements input_shapes =
   assert (Array.length input_shapes = 3);
   match input_shapes.(0).(0), input_shapes.(1).(0), input_shapes.(2).(0) with
@@ -651,6 +677,7 @@ let infer_shape input_shapes sym =
   | Pad x                -> infer_shape_pad x input_shapes
   | Cast _               -> infer_shape_01 input_shapes
   | Squeeze x            -> infer_shape_squeeze input_shapes x.axes
+  | UnSqueeze x          -> infer_shape_unsqueeze input_shapes x.axes
   | Tile x               -> infer_shape_05 input_shapes x.repeats
   | Shape _              -> infer_shape_32 input_shapes
   | Size _               -> infer_shape_33 input_shapes

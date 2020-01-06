@@ -684,6 +684,12 @@ let squeeze ?name ?axes x =
   make_node (Owl_symbolic_symbol.Squeeze s) [| x |]
 
 
+let unsqueeze ?name axes x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_tensor.UnSqueeze.create ?name axes xn in
+  make_node (Owl_symbolic_symbol.UnSqueeze s) [| x |]
+
+
 let tile ?name x repeats =
   let r_name = Owl_symbolic_utils.node_name "Tensor" in
   let rep_node = tensor_ints repeats in

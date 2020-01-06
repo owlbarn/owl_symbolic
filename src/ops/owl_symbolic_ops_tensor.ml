@@ -5,10 +5,10 @@
 
 (** Implemented: Reshape, Concat, Split, Identity, Pad, Cast, Squeeze, Tile 
   * Shape, Size, Transpose, Slice, SpaceToDepth, IsNaN, NonZero, Where
-  * ScatterElements，ScatterND, GatherElements, GatherND, IsInf
+  * ScatterElements，ScatterND, GatherElements, GatherND, IsInf, UnSqueeze, 
   *)
 
-(** UnSqueeze, DepthToSpace, Resize, Compress, Unique, OneHot, ReverseSequence,
+(** DepthToSpace, Resize, Compress, Unique, OneHot, ReverseSequence,
   * Gather(deprecated), Scatter(deprecated), Upsample(deprecated),
   *)
 
@@ -149,6 +149,24 @@ module Squeeze = struct
   let op_type = "Squeeze"
 
   let create ?name ?axes data_name =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| data_name |] in
+    { name; input; attrs; out_shape = [| None |]; axes }
+end
+
+module UnSqueeze = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable axes : int array
+    }
+
+  let op_type = "UnSqueeze"
+
+  let create ?name axes data_name =
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| data_name |] in

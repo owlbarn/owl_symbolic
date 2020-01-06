@@ -97,6 +97,7 @@ type t =
   | Pad                of Owl_symbolic_ops_tensor.Pad.t
   | Cast               of Owl_symbolic_ops_tensor.Cast.t
   | Squeeze            of Owl_symbolic_ops_tensor.Squeeze.t
+  | UnSqueeze          of Owl_symbolic_ops_tensor.UnSqueeze.t
   | Tile               of Owl_symbolic_ops_tensor.Tile.t
   | Shape              of Owl_symbolic_ops_tensor.Shape.t
   | Size               of Owl_symbolic_ops_tensor.Size.t

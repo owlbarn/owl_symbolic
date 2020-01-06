@@ -235,6 +235,8 @@ val pad : ?name:string -> ?mode:string -> ?v:symbol -> symbol -> int array -> sy
 
 val squeeze : ?name:string -> ?axes:int array -> symbol -> symbol
 
+val unsqueeze : ?name:string -> int array -> symbol -> symbol
+
 val tile : ?name:string -> symbol -> int array -> symbol
 
 val shape : ?name:string -> symbol -> symbol

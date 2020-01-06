@@ -456,6 +456,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           let t = x.target in
           type_check_pattern01 [| t |] _types_constraint05 name
         | Squeeze _            -> type_check_pattern01 ptypes.(0) _types_constraint03 name
+        | UnSqueeze _          -> type_check_pattern01 ptypes.(0) _types_constraint03 name
         | Tile _               ->
           type_check_pattern01 ptypes.(1) [| SNT_Int64 |] name |> ignore;
           type_check_pattern01 ptypes.(0) _types_constraint03 name
@@ -699,6 +700,11 @@ let build_onnx_attrs_selu alpha gamma =
 let build_onnx_attrs_axis axis =
   let attr_axis = make_attr_int "axis" axis in
   [ attr_axis ]
+
+
+let build_onnx_attrs_axes axes =
+  let attr_axes = make_attr_ints "axes" axes in
+  [ attr_axes ]
 
 
 let build_onnx_attrs_fmod (x : Owl_symbolic_ops_math.Mod.t) =
@@ -956,6 +962,7 @@ let build_onnx_attrs sym =
     | S.Pad x                -> build_onnx_attrs_pad x
     | S.Cast x               -> build_onnx_attrs_cast x
     | S.Squeeze x            -> build_onnx_attrs_squeeze x
+    | S.UnSqueeze x          -> build_onnx_attrs_axes x.axes
     | S.Transpose x          -> build_onnx_attrs_transpose x
     | S.SpaceToDepth x       -> build_onnx_attrs_spacetodepth x.blocksize
     | S.IsInf x              -> build_onnx_attrs_isinf x.detect_neg x.detect_pos
