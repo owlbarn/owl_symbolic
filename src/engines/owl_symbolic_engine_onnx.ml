@@ -503,6 +503,9 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Compress _           ->
           type_check_pattern01 ptypes.(1) [| SNT_Bool |] name |> ignore;
           type_check_pattern01 ptypes.(0) _types_constraint03 name
+        | ReverseSeq _         ->
+          type_check_pattern01 ptypes.(1) [| SNT_Int64 |] name |> ignore;
+          type_check_pattern01 ptypes.(0) _types_constraint03 name
         | Conv _               -> type_check_pattern02 ptypes _types_constraint00 name
         | ConvTranspose _      -> type_check_pattern02 ptypes _types_constraint00 name
         | MaxPool _            ->
@@ -943,6 +946,12 @@ let build_onnx_attrs_isinf detect_neg detect_pos =
   [ attr_neg; attr_pos ]
 
 
+let build_onnx_attrs_revseq batch_axis time_axis =
+  let attr_batch = make_attr_int "batch_axis" batch_axis in
+  let attr_time = make_attr_int "time_axis" time_axis in
+  [ attr_batch; attr_time ]
+
+
 let build_onnx_attrs sym =
   let onnx_attrs =
     match sym with
@@ -987,6 +996,7 @@ let build_onnx_attrs sym =
     | S.IsInf x              -> build_onnx_attrs_isinf x.detect_neg x.detect_pos
     | S.ScatterElements x    -> build_onnx_attrs_scatter_elements x.axis
     | S.Compress x           -> build_onnx_attrs_axis_option x.axis
+    | S.ReverseSeq x         -> build_onnx_attrs_revseq x.batch_axis x.time_axis
     | S.Conv x               -> build_onnx_attrs_conv x
     | S.ConvTranspose x      -> build_onnx_attrs_conv_transpose x
     | S.MaxPool x            -> build_onnx_attrs_maxpool x

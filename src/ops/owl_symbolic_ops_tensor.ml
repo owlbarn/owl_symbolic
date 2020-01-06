@@ -6,10 +6,10 @@
 (** Implemented: Reshape, Concat, Split, Identity, Pad, Cast, Squeeze, Tile 
   * Shape, Size, Transpose, Slice, SpaceToDepth, IsNaN, NonZero, Where
   * ScatterElements，ScatterND, GatherElements, GatherND, IsInf, UnSqueeze, 
-  * DepthToSpace,
+  * DepthToSpace, Compress, ReverseSequence,
   *)
 
-(** Resize, Compress, Unique, OneHot, ReverseSequence,
+(** Resize, Unique, OneHot,
   * Gather(deprecated), Scatter(deprecated), Upsample(deprecated),
   *)
 
@@ -459,4 +459,25 @@ module Compress = struct
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| data_name; indices_name |] in
     { name; input; attrs; out_shape = [| None |]; axis }
+end
+
+module ReverseSeq = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable batch_axis : int
+    ; mutable time_axis : int
+    }
+
+  let op_type = "ReverseSequence"
+
+  let create ?name ?(batch_axis = 1) ?(time_axis = 0) data_name indices_name =
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| data_name; indices_name |] in
+    if not ((batch_axis, time_axis) = (1, 0) || (batch_axis, time_axis) = (0, 1))
+    then failwith "reverseSequence: illegal batch or time axis";
+    { name; input; attrs; out_shape = [| None |]; batch_axis; time_axis }
 end

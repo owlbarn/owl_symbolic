@@ -276,6 +276,14 @@ val gather_nd : ?name:string -> symbol -> symbol -> symbol
 
 val compress : ?name:string -> ?axis:int -> symbol -> symbol -> symbol
 
+val reverse_seq
+  :  ?name:string
+  -> ?batch_axis:int
+  -> ?time_axis:int
+  -> symbol
+  -> symbol
+  -> symbol
+
 val conv
   :  ?name:string
   -> ?dim:int

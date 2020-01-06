@@ -814,6 +814,15 @@ let compress ?name ?axis data cond =
   make_node (Owl_symbolic_symbol.Compress s) [| data; cond |]
 
 
+let reverse_seq ?name ?batch_axis ?time_axis data seq_len =
+  let datan = Owl_symbolic_graph.name data in
+  let seqn = Owl_symbolic_graph.name seq_len in
+  let s =
+    Owl_symbolic_ops_tensor.ReverseSeq.create ?name ?batch_axis ?time_axis datan seqn
+  in
+  make_node (Owl_symbolic_symbol.ReverseSeq s) [| data; seq_len |]
+
+
 (** Neural Network *)
 
 let conv ?name ?dim ?padding ?strides ?dilations ?bias input kernel =

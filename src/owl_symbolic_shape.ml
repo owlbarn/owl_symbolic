@@ -598,6 +598,15 @@ let infer_shape_compress input_shapes axis =
   | _, _ -> [| None |]
 
 
+let infer_shape_revseq input_shapes =
+  match input_shapes.(0).(0), input_shapes.(1).(0) with
+  | Some s1, Some s2 ->
+    assert (Array.length s1 >= 2);
+    assert (Array.length s2 = 1);
+    [| Some s1 |]
+  | _, _             -> [| None |]
+
+
 (** Main entry *)
 
 let infer_shape input_shapes sym =
@@ -716,6 +725,7 @@ let infer_shape input_shapes sym =
   | GatherElements _     -> infer_shape_gather_elements input_shapes
   | GatherND _           -> [| None |]
   | Compress x           -> infer_shape_compress input_shapes x.axis
+  | ReverseSeq _         -> infer_shape_revseq input_shapes
   | Conv x               -> infer_shape_conv input_shapes x
   | ConvTranspose x      -> infer_shape_conv_transpose input_shapes x
   | MaxPool x            ->

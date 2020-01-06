@@ -130,6 +130,7 @@ type t =
   | GatherElements     of GatherElements.t
   | GatherND           of GatherND.t
   | Compress           of Compress.t
+  | ReverseSeq         of ReverseSeq.t
   (* NN *)
   | Conv               of Conv.t
   | ConvTranspose      of ConvTranspose.t
