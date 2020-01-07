@@ -1111,3 +1111,26 @@ let roi_align ?name ?mode ?height ?width ?ratio ?scale x rois batch_indices =
 let seq_empty ?name ?dtype () =
   let s = Owl_symbolic_ops_sequence.SequenceEmpty.create ?name ?dtype () in
   make_node (Owl_symbolic_symbol.SequenceEmpty s) [||]
+
+
+let seq_at ?name pos seq =
+  let seqn = Owl_symbolic_graph.name seq in
+  let pos_node = tensor_int pos in
+  let posn = Owl_symbolic_graph.name pos_node in
+  let s = Owl_symbolic_ops_sequence.SequenceAt.create ?name pos seqn posn in
+  make_node (Owl_symbolic_symbol.SequenceAt s) [| seq; pos_node |]
+
+
+let seq_insert ?name pos seq tensor =
+  let seqn = Owl_symbolic_graph.name seq in
+  let tn = Owl_symbolic_graph.name tensor in
+  let pos_node = tensor_int pos in
+  let posn = Owl_symbolic_graph.name pos_node in
+  let s = Owl_symbolic_ops_sequence.SequenceInsert.create ?name pos seqn tn posn in
+  make_node (Owl_symbolic_symbol.SequenceInsert s) [| seq; tensor; pos_node |]
+
+
+let seq_length ?name seq =
+  let seqn = Owl_symbolic_graph.name seq in
+  let s = Owl_symbolic_ops_sequence.SequenceLength.create ?name seqn in
+  make_node (Owl_symbolic_symbol.SequenceLength s) [| seq |]

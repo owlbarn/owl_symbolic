@@ -381,3 +381,9 @@ val roi_align
   -> symbol
 
 val seq_empty : ?name:string -> ?dtype:Owl_symbolic_types.number_type -> unit -> symbol
+
+val seq_at : ?name:string -> int -> symbol -> symbol
+
+val seq_insert : ?name:string -> int -> symbol -> symbol -> symbol
+
+val seq_length : ?name:string -> symbol -> symbol

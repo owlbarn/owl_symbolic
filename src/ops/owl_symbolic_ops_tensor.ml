@@ -482,12 +482,11 @@ module ReverseSeq = struct
     { name; input; attrs; out_shape = [| None |]; batch_axis; time_axis }
 end
 
-
 module Unique = struct
   type t =
     { mutable name : string
     ; mutable input : string array
-    ; mutable output : string array 
+    ; mutable output : string array
     ; mutable attrs : (string * attrvalue) array
     ; mutable out_shape : int array option array
     ; mutable axis : int option
@@ -496,9 +495,9 @@ module Unique = struct
 
   let op_type = "Unique"
 
-  let create ?name ~output ?axis ?(sorted = true) data_name  =
+  let create ?name ~output ?axis ?(sorted = true) data_name =
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| data_name |] in
-    { name; input; output; attrs; out_shape = [| None; None; None; None |]; axis; sorted}
+    { name; input; output; attrs; out_shape = [| None; None; None; None |]; axis; sorted }
 end

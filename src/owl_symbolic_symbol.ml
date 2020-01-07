@@ -149,6 +149,9 @@ type t =
   | RoiAlign           of RoiAlign.t
   (* Sequence *)
   | SequenceEmpty      of SequenceEmpty.t
+  | SequenceAt         of SequenceAt.t
+  | SequenceInsert     of SequenceInsert.t
+  | SequenceLength     of SequenceLength.t
 
 let name = function
   | Int x                -> Int.(x.name)
@@ -270,6 +273,9 @@ let name = function
   | LSTM x               -> LSTM.(x.name)
   | RoiAlign x           -> RoiAlign.(x.name)
   | SequenceEmpty x      -> SequenceEmpty.(x.name)
+  | SequenceAt x         -> SequenceAt.(x.name)
+  | SequenceInsert x     -> SequenceInsert.(x.name)
+  | SequenceLength x     -> SequenceLength.(x.name)
   | _                    -> failwith "owl_symbolic_symbol.name"
 
 
@@ -393,6 +399,9 @@ let op_type = function
   | LSTM _               -> LSTM.op_type
   | RoiAlign _           -> RoiAlign.op_type
   | SequenceEmpty _      -> SequenceEmpty.op_type
+  | SequenceAt _         -> SequenceAt.op_type
+  | SequenceInsert x     -> SequenceInsert.(x.name)
+  | SequenceLength x     -> SequenceLength.(x.name)
   | _                    -> failwith "owl_symbolic_symbol.op_type"
 
 
@@ -516,6 +525,9 @@ let input = function
   | LSTM x               -> LSTM.(x.input)
   | RoiAlign x           -> RoiAlign.(x.input)
   | SequenceEmpty _      -> [||]
+  | SequenceAt x         -> SequenceAt.(x.input)
+  | SequenceInsert x     -> SequenceInsert.(x.input)
+  | SequenceLength x     -> SequenceLength.(x.input)
   | _                    -> failwith "owl_symbolic_symbol.input"
 
 
@@ -629,6 +641,9 @@ let set_input sym inputs =
   | Flatten x            -> x.input <- inputs
   | LSTM x               -> x.input <- inputs
   | RoiAlign x           -> x.input <- inputs
+  | SequenceAt x         -> x.input <- inputs
+  | SequenceInsert x     -> x.input <- inputs
+  | SequenceLength x     -> x.input <- inputs
   | _                    -> failwith "owl_symbolic_symbol.set_input"
 
 
@@ -753,6 +768,9 @@ let out_shape = function
   | LSTM x               -> LSTM.(x.out_shape)
   | RoiAlign x           -> RoiAlign.(x.out_shape)
   | SequenceEmpty x      -> SequenceEmpty.(x.out_shape)
+  | SequenceAt x         -> SequenceAt.(x.out_shape)
+  | SequenceInsert x     -> SequenceInsert.(x.out_shape)
+  | SequenceLength x     -> SequenceLength.(x.out_shape)
   | _                    -> failwith "out_shape: unsupported op."
 
 
@@ -871,6 +889,9 @@ let set_out_shape sym shapes =
   | LSTM x               -> x.out_shape <- shapes
   | RoiAlign x           -> x.out_shape <- shapes
   | SequenceEmpty x      -> x.out_shape <- shapes
+  | SequenceAt x         -> x.out_shape <- shapes
+  | SequenceInsert x     -> x.out_shape <- shapes
+  | SequenceLength x     -> x.out_shape <- shapes
   | _                    -> failwith "set_out_shape: unsupported op."
 
 
@@ -987,6 +1008,9 @@ let attrs = function
   | LSTM x               -> LSTM.(x.attrs)
   | RoiAlign x           -> RoiAlign.(x.attrs)
   | SequenceEmpty x      -> SequenceEmpty.(x.attrs)
+  | SequenceAt x         -> SequenceAt.(x.attrs)
+  | SequenceInsert x     -> SequenceInsert.(x.attrs)
+  | SequenceLength x     -> SequenceLength.(x.attrs)
   | _                    -> [||]
 
 
@@ -1102,6 +1126,9 @@ let set_attrs sym a =
   | LSTM x               -> x.attrs <- a
   | RoiAlign x           -> x.attrs <- a
   | SequenceEmpty x      -> x.attrs <- a
+  | SequenceAt x         -> x.attrs <- a
+  | SequenceInsert x     -> x.attrs <- a
+  | SequenceLength x     -> x.attrs <- a
   | _                    -> ()
 
 

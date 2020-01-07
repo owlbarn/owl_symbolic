@@ -607,6 +607,25 @@ let infer_shape_revseq input_shapes =
   | _, _             -> [| None |]
 
 
+let infer_shape_seq_at input_shapes pos =
+  assert (Array.length input_shapes.(0) > pos);
+  [| input_shapes.(0).(pos) |]
+
+
+let infer_shape_seq_insert (input_shapes : int array option array array) pos =
+  let l = Array.length input_shapes.(0) in
+  assert (l >= pos);
+  let new_shp = Array.make l (Some [||]) in
+  for i = 0 to pos - 1 do
+    new_shp.(i) <- input_shapes.(0).(i)
+  done;
+  for i = pos + 1 to l - 1 do
+    new_shp.(i) <- input_shapes.(0).(i)
+  done;
+  new_shp.(pos) <- input_shapes.(1).(0);
+  new_shp
+
+
 (** Main entry *)
 
 let infer_shape input_shapes sym =
@@ -726,7 +745,7 @@ let infer_shape input_shapes sym =
   | GatherND _           -> [| None |]
   | Compress x           -> infer_shape_compress input_shapes x.axis
   | ReverseSeq _         -> infer_shape_revseq input_shapes
-  | Unique _             -> [| None; None; None; None |]
+  | Unique _             -> [| None |]
   | Conv x               -> infer_shape_conv input_shapes x
   | ConvTranspose x      -> infer_shape_conv_transpose input_shapes x
   | MaxPool x            ->
@@ -743,5 +762,8 @@ let infer_shape input_shapes sym =
   | Flatten x            -> infer_shape_flatten input_shapes x.axis
   | LSTM _               -> infer_shape_lstm input_shapes
   | RoiAlign x           -> infer_shape_roialign input_shapes x
-  | SequenceEmpty _      -> [||]
+  | SequenceEmpty _      -> [||] (* how to differ empty seq to a scalar? *)
+  | SequenceAt x         -> infer_shape_seq_at input_shapes x.pos
+  | SequenceInsert x     -> infer_shape_seq_insert input_shapes x.pos
+  | SequenceLength _     -> [||]
   | _                    -> [| None |]

@@ -34,6 +34,12 @@ let map_elt_type_to_int32 typ =
   | SNT_SEQ _     -> failwith "map_elt_type_to_int32: type is sequence"
 
 
+let get_seq_dtype typ =
+  match typ with
+  | SNT_SEQ d -> d
+  | _         -> failwith "get_seq_dtype: type is not sequence"
+
+
 let map_sym_optyp_to_onnx sym_optyp =
   match sym_optyp with
   | "Int"     -> "Constant"
@@ -276,6 +282,8 @@ let _types_constraint05 =
 
 
 let _types_constraint06 = [| SNT_Uint8; SNT_Uint16; SNT_Uint32; SNT_Uint64 |]
+
+let _types_constraint03_seq = Array.map (fun d -> SNT_SEQ d) _types_constraint03
 
 let type_check_pattern00 sym = [| Owl_symbolic_symbol.dtype sym |]
 
@@ -536,6 +544,18 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           type_check_pattern01 ptypes.(2) [| SNT_Int64 |] name |> ignore;
           type_check_pattern02 [| ptypes.(0); ptypes.(1) |] _types_constraint00 name
         | SequenceEmpty s      -> [| SNT_SEQ s.dtype |]
+        | SequenceAt _         ->
+          type_check_pattern01 ptypes.(1) [| SNT_Int32; SNT_Int64 |] name |> ignore;
+          let t = type_check_pattern01 ptypes.(0) _types_constraint03_seq name in
+          [| get_seq_dtype t.(0) |]
+        | SequenceInsert _     ->
+          type_check_pattern01 ptypes.(2) [| SNT_Int32; SNT_Int64 |] name |> ignore;
+          type_check_pattern01 ptypes.(1) [| get_seq_dtype ptypes.(0).(0) |] name
+          |> ignore;
+          type_check_pattern01 ptypes.(0) _types_constraint03_seq name
+        | SequenceLength _     ->
+          type_check_pattern01 ptypes.(0) _types_constraint03_seq name |> ignore;
+          [| SNT_Int64 |]
         | _                    -> [| SNT_Noop |]
       in
       Hashtbl.add dtypes name out_type)
