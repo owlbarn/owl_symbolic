@@ -545,28 +545,28 @@ let reduce_l2 ?keepdims ?name x axes =
 
 (** Logical *)
 
-let and_ ?name x y =
+let logic_and ?name x y =
   let xn = Owl_symbolic_graph.name x in
   let yn = Owl_symbolic_graph.name y in
   let s = Owl_symbolic_ops_logical.And.create ?name xn yn in
   make_node (Owl_symbolic_symbol.And s) [| x; y |]
 
 
-let or_ ?name x y =
+let logic_or ?name x y =
   let xn = Owl_symbolic_graph.name x in
   let yn = Owl_symbolic_graph.name y in
   let s = Owl_symbolic_ops_logical.Or.create ?name xn yn in
   make_node (Owl_symbolic_symbol.Or s) [| x; y |]
 
 
-let not_ ?name x y =
+let logic_not ?name x y =
   let xn = Owl_symbolic_graph.name x in
   let yn = Owl_symbolic_graph.name y in
   let s = Owl_symbolic_ops_logical.Not.create ?name xn yn in
   make_node (Owl_symbolic_symbol.Not s) [| x; y |]
 
 
-let xor ?name x y =
+let logic_xor ?name x y =
   let xn = Owl_symbolic_graph.name x in
   let yn = Owl_symbolic_graph.name y in
   let s = Owl_symbolic_ops_logical.Xor.create ?name xn yn in

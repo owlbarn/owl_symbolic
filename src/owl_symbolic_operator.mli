@@ -185,13 +185,13 @@ val det : ?name:string -> symbol -> symbol
 
 val expand : ?name:string -> int array -> symbol -> symbol
 
-val and_ : ?name:string -> symbol -> symbol -> symbol
+val logic_and : ?name:string -> symbol -> symbol -> symbol
 
-val or_ : ?name:string -> symbol -> symbol -> symbol
+val logic_or : ?name:string -> symbol -> symbol -> symbol
 
-val not_ : ?name:string -> symbol -> symbol -> symbol
+val logic_not : ?name:string -> symbol -> symbol -> symbol
 
-val xor : ?name:string -> symbol -> symbol -> symbol
+val logic_xor : ?name:string -> symbol -> symbol -> symbol
 
 val greater : ?name:string -> symbol -> symbol -> symbol
 
