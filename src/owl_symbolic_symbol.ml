@@ -152,6 +152,7 @@ type t =
   | SequenceAt         of SequenceAt.t
   | SequenceInsert     of SequenceInsert.t
   | SequenceLength     of SequenceLength.t
+  | SequenceConstruct  of SequenceConstruct.t
 
 let name = function
   | Int x                -> Int.(x.name)
@@ -276,6 +277,7 @@ let name = function
   | SequenceAt x         -> SequenceAt.(x.name)
   | SequenceInsert x     -> SequenceInsert.(x.name)
   | SequenceLength x     -> SequenceLength.(x.name)
+  | SequenceConstruct x  -> SequenceConstruct.(x.name)
   | _                    -> failwith "owl_symbolic_symbol.name"
 
 
@@ -400,8 +402,9 @@ let op_type = function
   | RoiAlign _           -> RoiAlign.op_type
   | SequenceEmpty _      -> SequenceEmpty.op_type
   | SequenceAt _         -> SequenceAt.op_type
-  | SequenceInsert x     -> SequenceInsert.(x.name)
-  | SequenceLength x     -> SequenceLength.(x.name)
+  | SequenceInsert _     -> SequenceInsert.op_type
+  | SequenceLength _     -> SequenceLength.op_type
+  | SequenceConstruct _  -> SequenceConstruct.op_type
   | _                    -> failwith "owl_symbolic_symbol.op_type"
 
 
@@ -528,6 +531,7 @@ let input = function
   | SequenceAt x         -> SequenceAt.(x.input)
   | SequenceInsert x     -> SequenceInsert.(x.input)
   | SequenceLength x     -> SequenceLength.(x.input)
+  | SequenceConstruct x  -> SequenceConstruct.(x.input)
   | _                    -> failwith "owl_symbolic_symbol.input"
 
 
@@ -644,6 +648,7 @@ let set_input sym inputs =
   | SequenceAt x         -> x.input <- inputs
   | SequenceInsert x     -> x.input <- inputs
   | SequenceLength x     -> x.input <- inputs
+  | SequenceConstruct x  -> x.input <- inputs
   | _                    -> failwith "owl_symbolic_symbol.set_input"
 
 
@@ -771,6 +776,7 @@ let out_shape = function
   | SequenceAt x         -> SequenceAt.(x.out_shape)
   | SequenceInsert x     -> SequenceInsert.(x.out_shape)
   | SequenceLength x     -> SequenceLength.(x.out_shape)
+  | SequenceConstruct x  -> SequenceConstruct.(x.out_shape)
   | _                    -> failwith "out_shape: unsupported op."
 
 
@@ -892,6 +898,7 @@ let set_out_shape sym shapes =
   | SequenceAt x         -> x.out_shape <- shapes
   | SequenceInsert x     -> x.out_shape <- shapes
   | SequenceLength x     -> x.out_shape <- shapes
+  | SequenceConstruct x  -> x.out_shape <- shapes
   | _                    -> failwith "set_out_shape: unsupported op."
 
 
@@ -1011,6 +1018,7 @@ let attrs = function
   | SequenceAt x         -> SequenceAt.(x.attrs)
   | SequenceInsert x     -> SequenceInsert.(x.attrs)
   | SequenceLength x     -> SequenceLength.(x.attrs)
+  | SequenceConstruct x  -> SequenceConstruct.(x.attrs)
   | _                    -> [||]
 
 
@@ -1129,6 +1137,7 @@ let set_attrs sym a =
   | SequenceAt x         -> x.attrs <- a
   | SequenceInsert x     -> x.attrs <- a
   | SequenceLength x     -> x.attrs <- a
+  | SequenceConstruct x  -> x.attrs <- a
   | _                    -> ()
 
 

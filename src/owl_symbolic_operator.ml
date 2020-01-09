@@ -1134,3 +1134,9 @@ let seq_length ?name seq =
   let seqn = Owl_symbolic_graph.name seq in
   let s = Owl_symbolic_ops_sequence.SequenceLength.create ?name seqn in
   make_node (Owl_symbolic_symbol.SequenceLength s) [| seq |]
+
+
+let seq_construct ?name xs =
+  let xn = Array.map Owl_symbolic_graph.name xs in
+  let s = Owl_symbolic_ops_sequence.SequenceConstruct.create ?name xn in
+  make_node (Owl_symbolic_symbol.SequenceConstruct s) xs

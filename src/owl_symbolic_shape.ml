@@ -612,6 +612,8 @@ let infer_shape_seq_at input_shapes pos =
   [| input_shapes.(0).(pos) |]
 
 
+let infer_shape_seq_cons input_shapes = Array.map (fun x -> x.(0)) input_shapes
+
 let infer_shape_seq_insert (input_shapes : int array option array array) pos =
   let l = Array.length input_shapes.(0) in
   assert (l >= pos);
@@ -627,6 +629,13 @@ let infer_shape_seq_insert (input_shapes : int array option array array) pos =
 
 
 (** Main entry *)
+
+(* The input_shapes type is int array optin array array 
+ * `int array` for a real shape;
+ * `int array option` means this shape could be null;
+ * `int array option array` is one whole input from previous node;
+ * `int array option array array` for multiple input nodes. 
+ *)
 
 let infer_shape input_shapes sym =
   match sym with
@@ -766,4 +775,5 @@ let infer_shape input_shapes sym =
   | SequenceAt x         -> infer_shape_seq_at input_shapes x.pos
   | SequenceInsert x     -> infer_shape_seq_insert input_shapes x.pos
   | SequenceLength _     -> [||]
+  | SequenceConstruct _  -> infer_shape_seq_cons input_shapes
   | _                    -> [| None |]

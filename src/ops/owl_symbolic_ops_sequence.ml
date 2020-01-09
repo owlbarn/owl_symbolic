@@ -77,3 +77,20 @@ module SequenceLength = struct
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; input; attrs; out_shape = [| None |] }
 end
+
+module SequenceConstruct = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "SequenceConstruct"
+
+  let create ?name xn =
+    let attrs = [||] in
+    let input = xn in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |] }
+end
