@@ -134,6 +134,7 @@ type t =
   | SequenceLength     of Owl_symbolic_ops_sequence.SequenceLength.t
   | SequenceConstruct  of Owl_symbolic_ops_sequence.SequenceConstruct.t
   | SequenceErase      of Owl_symbolic_ops_sequence.SequenceErase.t
+  | SplitToSequence    of Owl_symbolic_ops_sequence.SplitToSequence.t
 
 val name : t -> string
 

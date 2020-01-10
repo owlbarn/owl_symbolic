@@ -1148,3 +1148,48 @@ let seq_construct ?name xs =
   let xn = Array.map Owl_symbolic_graph.name xs in
   let s = Owl_symbolic_ops_sequence.SequenceConstruct.create ?name xn in
   make_node (Owl_symbolic_symbol.SequenceConstruct s) xs
+
+
+let split_to_seq ?name ?axis ?keepdims ?split_scalar ?split_array x =
+  let xn = Owl_symbolic_graph.name x in
+  match split_scalar, split_array with
+  | Some s, None ->
+    let snode = tensor_int s in
+    let sname = Owl_symbolic_graph.name snode in
+    let s =
+      Owl_symbolic_ops_sequence.SplitToSequence.create
+        ?name
+        ?axis
+        ?keepdims
+        ?split_scalar
+        ?split_array
+        [| xn; sname |]
+    in
+    make_node (Owl_symbolic_symbol.SplitToSequence s) [| x; snode |]
+  | None, Some a ->
+    let snode = tensor_ints a in
+    let sname = Owl_symbolic_graph.name snode in
+    let s =
+      Owl_symbolic_ops_sequence.SplitToSequence.create
+        ?name
+        ?axis
+        ?keepdims
+        ?split_scalar
+        ?split_array
+        [| xn; sname |]
+    in
+    make_node (Owl_symbolic_symbol.SplitToSequence s) [| x; snode |]
+  | None, None   ->
+    let s =
+      Owl_symbolic_ops_sequence.SplitToSequence.create
+        ?name
+        ?axis
+        ?keepdims
+        ?split_scalar
+        ?split_array
+        [| xn |]
+    in
+    make_node (Owl_symbolic_symbol.SplitToSequence s) [| x |]
+  | _, _         ->
+    failwith
+      "split_to_seq: split_scalar and split_array should not be set at the same time."

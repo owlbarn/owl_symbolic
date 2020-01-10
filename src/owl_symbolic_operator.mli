@@ -391,3 +391,12 @@ val seq_erase : ?name:string -> int -> symbol -> symbol
 val seq_length : ?name:string -> symbol -> symbol
 
 val seq_construct : ?name:string -> symbol array -> symbol
+
+val split_to_seq
+  :  ?name:string
+  -> ?axis:int
+  -> ?keepdims:bool
+  -> ?split_scalar:int
+  -> ?split_array:int array
+  -> symbol
+  -> symbol

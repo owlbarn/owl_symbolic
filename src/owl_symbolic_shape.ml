@@ -626,6 +626,50 @@ let infer_shape_seq_erase input_shapes pos =
   Owl_utils_array.remove input_shapes.(0) pos
 
 
+let infer_shape_split_to_seq
+    (input_shapes : int array option array array)
+    (x : Owl_symbolic_ops_sequence.SplitToSequence.t)
+  =
+  match input_shapes.(0).(0) with
+  | Some shp ->
+    let l = Array.length shp in
+    assert (x.axis < l && x.axis >= ~-l);
+    let axis = if x.axis >= 0 then x.axis else l + x.axis in
+    (match x.split_scalar, x.split_array with
+    | Some n, None   ->
+      let nsplit = shp.(axis) / n in
+      let residual = shp.(axis) mod n in
+      let normal_shp = Array.copy shp in
+      normal_shp.(axis) <- n;
+      let seq_shp = Array.make nsplit (Some normal_shp) in
+      if residual <> 0
+      then (
+        let res_shp = Array.copy shp in
+        res_shp.(axis) <- residual;
+        Array.append seq_shp [| Some res_shp |])
+      else seq_shp
+    | None, Some a   ->
+      Array.map
+        (fun s ->
+          let shp' = Array.copy shp in
+          shp'.(axis) <- s;
+          Some shp')
+        a
+    | None, None     ->
+      let shp' = Array.copy shp in
+      let shp' =
+        if x.keepdims
+        then (
+          shp'.(axis) <- 1;
+          shp')
+        else Owl_utils_array.remove shp' axis
+      in
+      Array.make shp.(axis) (Some shp')
+    | Some _, Some _ ->
+      failwith "infer_shape_split_to_seq: split_scalar/array should not be set together.")
+  | None     -> [| None |]
+
+
 (** Main entry *)
 
 (* The input_shapes type is int array optin array array 
@@ -775,4 +819,5 @@ let infer_shape input_shapes sym =
   | SequenceLength _     -> [||]
   | SequenceConstruct _  -> infer_shape_seq_cons input_shapes
   | SequenceErase x      -> infer_shape_seq_erase input_shapes x.pos
+  | SplitToSequence x    -> infer_shape_split_to_seq input_shapes x
   | _                    -> [| None |]
