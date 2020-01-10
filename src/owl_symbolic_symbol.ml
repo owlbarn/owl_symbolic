@@ -153,6 +153,7 @@ type t =
   | SequenceInsert     of SequenceInsert.t
   | SequenceLength     of SequenceLength.t
   | SequenceConstruct  of SequenceConstruct.t
+  | SequenceErase      of SequenceErase.t
 
 let name = function
   | Int x                -> Int.(x.name)
@@ -278,6 +279,7 @@ let name = function
   | SequenceInsert x     -> SequenceInsert.(x.name)
   | SequenceLength x     -> SequenceLength.(x.name)
   | SequenceConstruct x  -> SequenceConstruct.(x.name)
+  | SequenceErase x      -> SequenceErase.(x.name)
   | _                    -> failwith "owl_symbolic_symbol.name"
 
 

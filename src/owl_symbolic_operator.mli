@@ -386,6 +386,8 @@ val seq_at : ?name:string -> int -> symbol -> symbol
 
 val seq_insert : ?name:string -> int -> symbol -> symbol -> symbol
 
+val seq_erase : ?name:string -> int -> symbol -> symbol
+
 val seq_length : ?name:string -> symbol -> symbol
 
 val seq_construct : ?name:string -> symbol array -> symbol

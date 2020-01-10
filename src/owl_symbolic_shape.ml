@@ -614,18 +614,16 @@ let infer_shape_seq_at input_shapes pos =
 
 let infer_shape_seq_cons input_shapes = Array.map (fun x -> x.(0)) input_shapes
 
-let infer_shape_seq_insert (input_shapes : int array option array array) pos =
+let infer_shape_seq_insert input_shapes pos =
   let l = Array.length input_shapes.(0) in
   assert (l >= pos);
-  let new_shp = Array.make l (Some [||]) in
-  for i = 0 to pos - 1 do
-    new_shp.(i) <- input_shapes.(0).(i)
-  done;
-  for i = pos + 1 to l - 1 do
-    new_shp.(i) <- input_shapes.(0).(i)
-  done;
-  new_shp.(pos) <- input_shapes.(1).(0);
-  new_shp
+  Owl_utils_array.insert input_shapes.(0) [| input_shapes.(1).(0) |] pos
+
+
+let infer_shape_seq_erase input_shapes pos =
+  let l = Array.length input_shapes.(0) in
+  assert (l >= pos);
+  Owl_utils_array.remove input_shapes.(0) pos
 
 
 (** Main entry *)
@@ -776,4 +774,5 @@ let infer_shape input_shapes sym =
   | SequenceInsert x     -> infer_shape_seq_insert input_shapes x.pos
   | SequenceLength _     -> [||]
   | SequenceConstruct _  -> infer_shape_seq_cons input_shapes
+  | SequenceErase x      -> infer_shape_seq_erase input_shapes x.pos
   | _                    -> [| None |]

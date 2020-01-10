@@ -560,6 +560,9 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           type_check_pattern02 ptypes _types_constraint03 name |> ignore;
           let t = get_seq_dtype ptypes.(0).(0) in
           [| SNT_SEQ t |]
+        | SequenceErase _      ->
+          type_check_pattern01 ptypes.(1) [| SNT_Int32; SNT_Int64 |] name |> ignore;
+          type_check_pattern01 ptypes.(0) _types_constraint03_seq name
         | _                    -> [| SNT_Noop |]
       in
       Hashtbl.add dtypes name out_type)

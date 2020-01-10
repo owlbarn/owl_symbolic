@@ -3,9 +3,9 @@
  * Copyright (c) 2016-2020 Liang Wang <liang.wang@cl.cam.ac.uk>
  *)
 
-(** Implemented: SequenceEmpty, SequenceAt, SequenceInsert, SequenceLength, *)
+(** Implemented: SequenceEmpty, SequenceAt, SequenceInsert, SequenceLength, SequenceConstruct, SequenceErease *)
 
-(** SequenceConstruct,  SequenceErease, SplitToSequence, ConcatFromSequence *)
+(** SplitToSequence, ConcatFromSequence *)
 
 open Owl_symbolic_types
 
@@ -93,4 +93,22 @@ module SequenceConstruct = struct
     let input = xn in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; input; attrs; out_shape = [| None |] }
+end
+
+module SequenceErase = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable pos : int
+    }
+
+  let op_type = "SequenceErase"
+
+  let create ?name pos xn posn =
+    let attrs = [||] in
+    let input = [| xn; posn |] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |]; pos }
 end

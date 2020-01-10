@@ -1130,6 +1130,14 @@ let seq_insert ?name pos seq tensor =
   make_node (Owl_symbolic_symbol.SequenceInsert s) [| seq; tensor; pos_node |]
 
 
+let seq_erase ?name pos seq =
+  let seqn = Owl_symbolic_graph.name seq in
+  let pos_node = tensor_int pos in
+  let posn = Owl_symbolic_graph.name pos_node in
+  let s = Owl_symbolic_ops_sequence.SequenceErase.create ?name pos seqn posn in
+  make_node (Owl_symbolic_symbol.SequenceErase s) [| seq; pos_node |]
+
+
 let seq_length ?name seq =
   let seqn = Owl_symbolic_graph.name seq in
   let s = Owl_symbolic_ops_sequence.SequenceLength.create ?name seqn in
