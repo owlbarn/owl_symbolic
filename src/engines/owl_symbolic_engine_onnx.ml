@@ -567,6 +567,9 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           let t = type_check_pattern01 ptypes.(0) _types_constraint03 name in
           type_check_pattern01 ptypes.(1) [| SNT_Int32; SNT_Int64 |] name |> ignore;
           [| SNT_SEQ t.(0) |]
+        | ConcatFromSequence _ ->
+          type_check_pattern01 ptypes.(0) _types_constraint03_seq name |> ignore;
+          [| get_seq_dtype ptypes.(0).(0) |]
         | _                    -> [| SNT_Noop |]
       in
       Hashtbl.add dtypes name out_type)
@@ -1002,6 +1005,12 @@ let build_onnx_attrs_split_to_seq axis keepdims =
   [ attr_a; attr_k ]
 
 
+let build_onnx_attrs_concat_from_seq axis new_axis =
+  let attr_a = make_attr_int "axis" axis in
+  let attr_n = make_attr_int_from_bool "new_axis" new_axis in
+  [ attr_a; attr_n ]
+
+
 let build_onnx_attrs sym =
   let onnx_attrs =
     match sym with
@@ -1060,6 +1069,7 @@ let build_onnx_attrs sym =
     | S.LSTM x               -> build_onnx_attrs_lstm x
     | S.RoiAlign x           -> build_onnx_attrs_roi_align x
     | S.SplitToSequence x    -> build_onnx_attrs_split_to_seq x.axis x.keepdims
+    | S.ConcatFromSequence x -> build_onnx_attrs_concat_from_seq x.axis x.new_axis
     | _                      -> []
   in
   onnx_attrs

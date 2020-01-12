@@ -4,9 +4,7 @@
  *)
 
 (** Implemented: SequenceEmpty, SequenceAt, SequenceInsert, SequenceLength, 
-  * SequenceConstruct, SequenceErease, SplitToSequence, *)
-
-(** ConcatFromSequence *)
+  * SequenceConstruct, SequenceErease, SplitToSequence, ConcatFromSequence *)
 
 open Owl_symbolic_types
 
@@ -148,4 +146,23 @@ module SplitToSequence = struct
     ; split_scalar = s
     ; split_array = a
     }
+end
+
+module ConcatFromSequence = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable axis : int
+    ; mutable new_axis : bool
+    }
+
+  let op_type = "ConcatFromSequence"
+
+  let create ?name ?(new_axis = false) axis xn =
+    let attrs = [||] in
+    let input = [| xn |] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |]; axis; new_axis }
 end

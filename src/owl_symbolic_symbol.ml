@@ -155,6 +155,7 @@ type t =
   | SequenceConstruct  of SequenceConstruct.t
   | SequenceErase      of SequenceErase.t
   | SplitToSequence    of SplitToSequence.t
+  | ConcatFromSequence of ConcatFromSequence.t
 
 let name = function
   | Int x                -> Int.(x.name)
@@ -282,6 +283,7 @@ let name = function
   | SequenceConstruct x  -> SequenceConstruct.(x.name)
   | SequenceErase x      -> SequenceErase.(x.name)
   | SplitToSequence x    -> SplitToSequence.(x.name)
+  | ConcatFromSequence x -> ConcatFromSequence.(x.name)
   | _                    -> failwith "owl_symbolic_symbol.name"
 
 
@@ -411,6 +413,7 @@ let op_type = function
   | SequenceConstruct _  -> SequenceConstruct.op_type
   | SequenceErase _      -> SequenceErase.op_type
   | SplitToSequence _    -> SplitToSequence.op_type
+  | ConcatFromSequence _ -> ConcatFromSequence.op_type
   | _                    -> failwith "owl_symbolic_symbol.op_type"
 
 
@@ -540,6 +543,7 @@ let input = function
   | SequenceConstruct x  -> SequenceConstruct.(x.input)
   | SequenceErase x      -> SequenceErase.(x.input)
   | SplitToSequence x    -> SplitToSequence.(x.input)
+  | ConcatFromSequence x -> ConcatFromSequence.(x.input)
   | _                    -> failwith "owl_symbolic_symbol.input"
 
 
@@ -659,6 +663,7 @@ let set_input sym inputs =
   | SequenceConstruct x  -> x.input <- inputs
   | SequenceErase x      -> x.input <- inputs
   | SplitToSequence x    -> x.input <- inputs
+  | ConcatFromSequence x -> x.input <- inputs
   | _                    -> failwith "owl_symbolic_symbol.set_input"
 
 
@@ -789,6 +794,7 @@ let out_shape = function
   | SequenceConstruct x  -> SequenceConstruct.(x.out_shape)
   | SequenceErase x      -> SequenceErase.(x.out_shape)
   | SplitToSequence x    -> SplitToSequence.(x.out_shape)
+  | ConcatFromSequence x -> ConcatFromSequence.(x.out_shape)
   | _                    -> failwith "out_shape: unsupported op."
 
 
@@ -913,6 +919,7 @@ let set_out_shape sym shapes =
   | SequenceConstruct x  -> x.out_shape <- shapes
   | SequenceErase x      -> x.out_shape <- shapes
   | SplitToSequence x    -> x.out_shape <- shapes
+  | ConcatFromSequence x -> x.out_shape <- shapes
   | _                    -> failwith "set_out_shape: unsupported op."
 
 
@@ -1035,6 +1042,7 @@ let attrs = function
   | SequenceConstruct x  -> SequenceConstruct.(x.attrs)
   | SequenceErase x      -> SequenceErase.(x.attrs)
   | SplitToSequence x    -> SplitToSequence.(x.attrs)
+  | ConcatFromSequence x -> ConcatFromSequence.(x.attrs)
   | _                    -> [||]
 
 
@@ -1156,6 +1164,7 @@ let set_attrs sym a =
   | SequenceConstruct x  -> x.attrs <- a
   | SequenceErase x      -> x.attrs <- a
   | SplitToSequence x    -> x.attrs <- a
+  | ConcatFromSequence x -> x.attrs <- a
   | _                    -> ()
 
 

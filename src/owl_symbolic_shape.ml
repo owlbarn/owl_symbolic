@@ -670,6 +670,32 @@ let infer_shape_split_to_seq
   | None     -> [| None |]
 
 
+let infer_shape_concat_from_seq input_shapes axis new_axis =
+  if not new_axis
+  then infer_shape_07 input_shapes axis
+  else (
+    let s0 = Array.map (fun s -> s.(0)) input_shapes in
+    if Array.exists
+         (function
+           | Some _ -> false
+           | None   -> true)
+         s0
+    then [| None |]
+    else (
+      let s1 =
+        Array.map
+          (function
+            | Some a -> a
+            | None   -> failwith "infer_shape_concat_from_seq")
+          s0
+      in
+      let s2 = Owl_utils_array.unique s1 in
+      assert (Array.length s2 = 1);
+      let shp = s2.(0) in
+      let new_shp = Owl_utils_array.insert shp [| Array.length s1 |] axis in
+      [| Some new_shp |]))
+
+
 (** Main entry *)
 
 (* The input_shapes type is int array optin array array 
@@ -820,4 +846,5 @@ let infer_shape input_shapes sym =
   | SequenceConstruct _  -> infer_shape_seq_cons input_shapes
   | SequenceErase x      -> infer_shape_seq_erase input_shapes x.pos
   | SplitToSequence x    -> infer_shape_split_to_seq input_shapes x
+  | ConcatFromSequence x -> infer_shape_concat_from_seq input_shapes x.axis x.new_axis
   | _                    -> [| None |]

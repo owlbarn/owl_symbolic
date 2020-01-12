@@ -1193,3 +1193,9 @@ let split_to_seq ?name ?axis ?keepdims ?split_scalar ?split_array x =
   | _, _         ->
     failwith
       "split_to_seq: split_scalar and split_array should not be set at the same time."
+
+
+let concat_from_seq ?name ?new_axis axis x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_sequence.ConcatFromSequence.create ?name ?new_axis axis xn in
+  make_node (Owl_symbolic_symbol.ConcatFromSequence s) [| x |]

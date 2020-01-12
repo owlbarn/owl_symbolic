@@ -400,3 +400,5 @@ val split_to_seq
   -> ?split_array:int array
   -> symbol
   -> symbol
+
+val concat_from_seq : ?name:string -> ?new_axis:bool -> int -> symbol -> symbol
