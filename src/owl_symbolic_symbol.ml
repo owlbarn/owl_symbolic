@@ -147,6 +147,7 @@ type t =
   | LSTM               of LSTM.t
   (* Object Detection *)
   | RoiAlign           of RoiAlign.t
+  | NonMaxSuppression  of NonMaxSuppression.t
   (* Sequence *)
   | SequenceEmpty      of SequenceEmpty.t
   | SequenceAt         of SequenceAt.t
@@ -276,6 +277,7 @@ let name = function
   | Flatten x            -> Flatten.(x.name)
   | LSTM x               -> LSTM.(x.name)
   | RoiAlign x           -> RoiAlign.(x.name)
+  | NonMaxSuppression x  -> NonMaxSuppression.(x.name)
   | SequenceEmpty x      -> SequenceEmpty.(x.name)
   | SequenceAt x         -> SequenceAt.(x.name)
   | SequenceInsert x     -> SequenceInsert.(x.name)
@@ -406,6 +408,7 @@ let op_type = function
   | Flatten _            -> Flatten.op_type
   | LSTM _               -> LSTM.op_type
   | RoiAlign _           -> RoiAlign.op_type
+  | NonMaxSuppression _  -> NonMaxSuppression.op_type
   | SequenceEmpty _      -> SequenceEmpty.op_type
   | SequenceAt _         -> SequenceAt.op_type
   | SequenceInsert _     -> SequenceInsert.op_type
@@ -536,6 +539,7 @@ let input = function
   | Flatten x            -> Flatten.(x.input)
   | LSTM x               -> LSTM.(x.input)
   | RoiAlign x           -> RoiAlign.(x.input)
+  | NonMaxSuppression x  -> NonMaxSuppression.(x.input)
   | SequenceEmpty _      -> [||]
   | SequenceAt x         -> SequenceAt.(x.input)
   | SequenceInsert x     -> SequenceInsert.(x.input)
@@ -657,6 +661,7 @@ let set_input sym inputs =
   | Flatten x            -> x.input <- inputs
   | LSTM x               -> x.input <- inputs
   | RoiAlign x           -> x.input <- inputs
+  | NonMaxSuppression x  -> x.input <- inputs
   | SequenceAt x         -> x.input <- inputs
   | SequenceInsert x     -> x.input <- inputs
   | SequenceLength x     -> x.input <- inputs
@@ -787,6 +792,7 @@ let out_shape = function
   | Flatten x            -> Flatten.(x.out_shape)
   | LSTM x               -> LSTM.(x.out_shape)
   | RoiAlign x           -> RoiAlign.(x.out_shape)
+  | NonMaxSuppression x  -> NonMaxSuppression.(x.out_shape)
   | SequenceEmpty x      -> SequenceEmpty.(x.out_shape)
   | SequenceAt x         -> SequenceAt.(x.out_shape)
   | SequenceInsert x     -> SequenceInsert.(x.out_shape)
@@ -912,6 +918,7 @@ let set_out_shape sym shapes =
   | Flatten x            -> x.out_shape <- shapes
   | LSTM x               -> x.out_shape <- shapes
   | RoiAlign x           -> x.out_shape <- shapes
+  | NonMaxSuppression x  -> x.out_shape <- shapes
   | SequenceEmpty x      -> x.out_shape <- shapes
   | SequenceAt x         -> x.out_shape <- shapes
   | SequenceInsert x     -> x.out_shape <- shapes
@@ -1035,6 +1042,7 @@ let attrs = function
   | Flatten x            -> Flatten.(x.attrs)
   | LSTM x               -> LSTM.(x.attrs)
   | RoiAlign x           -> RoiAlign.(x.attrs)
+  | NonMaxSuppression x  -> NonMaxSuppression.(x.attrs)
   | SequenceEmpty x      -> SequenceEmpty.(x.attrs)
   | SequenceAt x         -> SequenceAt.(x.attrs)
   | SequenceInsert x     -> SequenceInsert.(x.attrs)
@@ -1157,6 +1165,7 @@ let set_attrs sym a =
   | Flatten x            -> x.attrs <- a
   | LSTM x               -> x.attrs <- a
   | RoiAlign x           -> x.attrs <- a
+  | NonMaxSuppression x  -> x.attrs <- a
   | SequenceEmpty x      -> x.attrs <- a
   | SequenceAt x         -> x.attrs <- a
   | SequenceInsert x     -> x.attrs <- a

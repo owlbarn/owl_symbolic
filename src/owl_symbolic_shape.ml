@@ -696,6 +696,21 @@ let infer_shape_concat_from_seq input_shapes axis new_axis =
       [| Some new_shp |]))
 
 
+(* TODO: can the output shape be decided? *)
+let infer_shape_non_max_suppression input_shapes =
+  (* input: boxes, scores, max_output_boxes_per_class, iou_threshold, score_threshold *)
+  assert (Array.length input_shapes <= 5);
+  (match input_shapes.(0).(0), input_shapes.(1).(0) with
+  | Some s1, Some s2 ->
+    assert (Array.length s1 = 3);
+    assert (Array.length s2 = 3);
+    assert (s1.(2) = 4);
+    assert (s1.(0) = s2.(0));
+    assert (s1.(1) = s2.(2))
+  | _, _             -> ());
+  [| None |]
+
+
 (** Main entry *)
 
 (* The input_shapes type is int array optin array array 
@@ -839,6 +854,7 @@ let infer_shape input_shapes sym =
   | Flatten x            -> infer_shape_flatten input_shapes x.axis
   | LSTM _               -> infer_shape_lstm input_shapes
   | RoiAlign x           -> infer_shape_roialign input_shapes x
+  | NonMaxSuppression _  -> infer_shape_non_max_suppression input_shapes
   | SequenceEmpty _      -> [||] (* how to differ empty seq to a scalar? *)
   | SequenceAt x         -> infer_shape_seq_at input_shapes x.pos
   | SequenceInsert x     -> infer_shape_seq_insert input_shapes x.pos

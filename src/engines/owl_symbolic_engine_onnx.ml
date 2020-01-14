@@ -543,6 +543,15 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           assert (Array.length ptypes = 3);
           type_check_pattern01 ptypes.(2) [| SNT_Int64 |] name |> ignore;
           type_check_pattern02 [| ptypes.(0); ptypes.(1) |] _types_constraint00 name
+        | NonMaxSuppression _  ->
+          assert (Array.length ptypes <= 5);
+          type_check_pattern02
+            [| ptypes.(0); ptypes.(1); ptypes.(3); ptypes.(4) |]
+            [| SNT_Float |]
+            name
+          |> ignore;
+          type_check_pattern01 ptypes.(2) [| SNT_Int64 |] name |> ignore;
+          [| SNT_Int64 |]
         | SequenceEmpty s      -> [| SNT_SEQ s.dtype |]
         | SequenceAt _         ->
           type_check_pattern01 ptypes.(1) [| SNT_Int32; SNT_Int64 |] name |> ignore;
@@ -1011,6 +1020,11 @@ let build_onnx_attrs_concat_from_seq axis new_axis =
   [ attr_a; attr_n ]
 
 
+let build_onnx_attrs_non_maxx_suppression center_point_box =
+  let attr_c = make_attr_int "center_point_box" center_point_box in
+  [ attr_c ]
+
+
 let build_onnx_attrs sym =
   let onnx_attrs =
     match sym with
@@ -1068,6 +1082,7 @@ let build_onnx_attrs sym =
     | S.Dropout x            -> build_onnx_attrs_dropout x
     | S.LSTM x               -> build_onnx_attrs_lstm x
     | S.RoiAlign x           -> build_onnx_attrs_roi_align x
+    | S.NonMaxSuppression x  -> build_onnx_attrs_non_maxx_suppression x.center_point_box
     | S.SplitToSequence x    -> build_onnx_attrs_split_to_seq x.axis x.keepdims
     | S.ConcatFromSequence x -> build_onnx_attrs_concat_from_seq x.axis x.new_axis
     | _                      -> []

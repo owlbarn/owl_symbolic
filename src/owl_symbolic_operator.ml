@@ -1108,6 +1108,38 @@ let roi_align ?name ?mode ?height ?width ?ratio ?scale x rois batch_indices =
   make_node (Owl_symbolic_symbol.RoiAlign s) [| x; rois; batch_indices |]
 
 
+let non_max_suppression
+    ?name
+    ?center_point_box
+    ?(max_output_boxes_per_class = 0)
+    ?(iou_threshold = 0.)
+    ?(score_threshold = 0.)
+    boxes
+    scores
+  =
+  let max_node = tensor_int max_output_boxes_per_class in
+  let iou_node = tensor_float iou_threshold in
+  let thd_node = tensor_float score_threshold in
+  let n_box = Owl_symbolic_graph.name boxes in
+  let n_sco = Owl_symbolic_graph.name scores in
+  let n_max = Owl_symbolic_graph.name max_node in
+  let n_iou = Owl_symbolic_graph.name iou_node in
+  let n_thd = Owl_symbolic_graph.name thd_node in
+  let s =
+    Owl_symbolic_ops_object_detection.NonMaxSuppression.create
+      ?name
+      ?center_point_box
+      n_box
+      n_sco
+      n_max
+      n_iou
+      n_thd
+  in
+  make_node
+    (Owl_symbolic_symbol.NonMaxSuppression s)
+    [| boxes; scores; max_node; iou_node; thd_node |]
+
+
 let seq_empty ?name ?dtype () =
   let s = Owl_symbolic_ops_sequence.SequenceEmpty.create ?name ?dtype () in
   make_node (Owl_symbolic_symbol.SequenceEmpty s) [||]

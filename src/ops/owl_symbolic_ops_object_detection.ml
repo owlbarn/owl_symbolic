@@ -47,3 +47,31 @@ module RoiAlign = struct
     ; spatial_scale = scale
     }
 end
+
+module NonMaxSuppression = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable center_point_box : int
+    }
+
+  let op_type = "NonMaxSuppression"
+
+  let create
+      ?name
+      ?(center_point_box = 0)
+      boxes
+      scores
+      max_output_boxes_per_class
+      iou_threshold
+      score_threshold
+    =
+    let input =
+      [| boxes; scores; max_output_boxes_per_class; iou_threshold; score_threshold |]
+    in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |]; center_point_box }
+end

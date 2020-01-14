@@ -380,6 +380,16 @@ val roi_align
   -> symbol
   -> symbol
 
+val non_max_suppression
+  :  ?name:string
+  -> ?center_point_box:int
+  -> ?max_output_boxes_per_class:int
+  -> ?iou_threshold:float
+  -> ?score_threshold:float
+  -> symbol
+  -> symbol
+  -> symbol
+
 val seq_empty : ?name:string -> ?dtype:Owl_symbolic_types.number_type -> unit -> symbol
 
 val seq_at : ?name:string -> int -> symbol -> symbol
