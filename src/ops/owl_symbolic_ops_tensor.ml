@@ -6,10 +6,10 @@
 (** Implemented: Reshape, Concat, Split, Identity, Pad, Cast, Squeeze, Tile 
   * Shape, Size, Transpose, Slice, SpaceToDepth, IsNaN, NonZero, Where
   * ScatterElements，ScatterND, GatherElements, GatherND, IsInf, UnSqueeze, 
-  * DepthToSpace, Compress, ReverseSequence, Unique
+  * DepthToSpace, Compress, ReverseSequence, Unique, Resize, 
   *)
 
-(** Resize, OneHot,
+(** OneHot,
   * Gather(deprecated), Scatter(deprecated), Upsample(deprecated),
   *)
 
@@ -500,4 +500,74 @@ module Unique = struct
     let name = Owl_symbolic_utils.node_name ?name op_type in
     let input = [| data_name |] in
     { name; input; output; attrs; out_shape = [| None; None; None; None |]; axis; sorted }
+end
+
+module Resize = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable coordinate_transformation_mode : string
+    ; mutable cubic_coeff_a : float
+    ; mutable exclude_outside : int
+    ; mutable extrapolation_value : float
+    ; mutable mode : string
+    ; mutable nearest_mode : string
+    ; mutable scales : float array option
+    ; mutable sizes : int array option
+    }
+
+  let op_type = "Resize"
+
+  let create
+      ?name
+      ?(coordinate_mode = "half_pixel")
+      ?(cubic_coeff_a = -0.75)
+      ?(exclude_outside = 0)
+      ?(extrapolation_value = 0.)
+      ?(mode = "nearest")
+      ?(nearest_mode = "round_prefer_floor")
+      ?scales
+      ?(scales_name = "")
+      ?sizes_name
+      ?sizes
+      x_name
+      roi_name
+    =
+    assert (
+      Array.mem
+        coordinate_mode
+        [| "half_pixel"
+         ; "pytorch_half_pixel"
+         ; "align_corners"
+         ; "asymmetric"
+         ; "tf_half_pixel_for_nn"
+         ; "tf_crop_and_resize"
+        |]);
+    assert (Array.mem mode [| "nearest"; "linear"; "cubic" |]);
+    assert (
+      Array.mem
+        nearest_mode
+        [| "round_prefer_floor"; "round_prefer_ceil"; "floor"; "ceil" |]);
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input =
+      match sizes_name with
+      | Some s -> [| x_name; roi_name; scales_name; s |]
+      | None   -> [| x_name; roi_name; scales_name |]
+    in
+    { name
+    ; input
+    ; attrs
+    ; out_shape = [| None |]
+    ; coordinate_transformation_mode = coordinate_mode
+    ; cubic_coeff_a
+    ; exclude_outside
+    ; extrapolation_value
+    ; mode
+    ; nearest_mode
+    ; scales
+    ; sizes
+    }
 end

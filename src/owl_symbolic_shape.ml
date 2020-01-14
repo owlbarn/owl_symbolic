@@ -711,6 +711,32 @@ let infer_shape_non_max_suppression input_shapes =
   [| None |]
 
 
+let infer_shape_resize input_shapes scales sizes =
+  assert (Array.length input_shapes >= 3);
+  (match input_shapes.(1).(0) with
+  | Some s -> assert (Array.length s = 1)
+  | None   -> failwith "infer_shape_resize: roi should not be none.");
+  match input_shapes.(0).(0) with
+  | Some shp ->
+    (match scales, sizes with
+    | Some s, None ->
+      assert (Array.length s = Array.length shp);
+      let new_shp =
+        Array.map2
+          (fun a b ->
+            assert (a > 0.);
+            int_of_float (a *. float_of_int b))
+          s
+          shp
+      in
+      [| Some new_shp |]
+    | None, Some s -> [| Some s |]
+    | _, _         ->
+      failwith
+        "infer_shape_resize: one and only one of sacles and sizes should be specified")
+  | None     -> [| None |]
+
+
 (** Main entry *)
 
 (* The input_shapes type is int array optin array array 
@@ -838,6 +864,7 @@ let infer_shape input_shapes sym =
   | Compress x           -> infer_shape_compress input_shapes x.axis
   | ReverseSeq _         -> infer_shape_revseq input_shapes
   | Unique _             -> [| None |]
+  | Resize x             -> infer_shape_resize input_shapes x.scales x.sizes
   | Conv x               -> infer_shape_conv input_shapes x
   | ConvTranspose x      -> infer_shape_conv_transpose input_shapes x
   | MaxPool x            ->

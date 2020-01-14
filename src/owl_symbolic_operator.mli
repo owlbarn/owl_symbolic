@@ -291,6 +291,20 @@ val unique
   -> symbol
   -> symbol * symbol * symbol * symbol
 
+val resize
+  :  ?name:string
+  -> ?coordinate_mode:string
+  -> ?cubic_coeff_a:float
+  -> ?exclude_outside:int
+  -> ?extrapolation_value:float
+  -> ?mode:string
+  -> ?nearest_mode:string
+  -> ?scales:float array
+  -> ?sizes:int array
+  -> symbol
+  -> symbol
+  -> symbol
+
 val conv
   :  ?name:string
   -> ?dim:int

@@ -52,6 +52,13 @@ let tensor_ints ?name ints =
   tensor ?name t
 
 
+let tensor_floats ?name flts =
+  let t =
+    Owl_symbolic_types.make_tensor ~dtype:SNT_Float ~flt_val:flts [| Array.length flts |]
+  in
+  tensor ?name t
+
+
 (** TODO: replace with symbol ONE | ZERO ? *)
 
 let zeros ?name ?(dtype = Owl_symbolic_types.SNT_Float) shape =
@@ -848,6 +855,63 @@ let unique ?name ?axis ?sorted x =
   let out_2 = make_node (Owl_symbolic_symbol.Identity o2) [| uniq |] in
   let out_3 = make_node (Owl_symbolic_symbol.Identity o3) [| uniq |] in
   out_0, out_1, out_2, out_3
+
+
+(* TODO: check again. This operation chooses from two arguments; but one of them is required input in ONNX *)
+let resize
+    ?name
+    ?coordinate_mode
+    ?cubic_coeff_a
+    ?exclude_outside
+    ?extrapolation_value
+    ?mode
+    ?nearest_mode
+    ?scales
+    ?sizes
+    x
+    roi
+  =
+  let xn = Owl_symbolic_graph.name x in
+  let rn = Owl_symbolic_graph.name roi in
+  match scales, sizes with
+  | Some sc, None ->
+    let scales_node = tensor_floats sc in
+    let scales_name = Owl_symbolic_graph.name scales_node in
+    let s =
+      Owl_symbolic_ops_tensor.Resize.create
+        ?name
+        ?coordinate_mode
+        ?cubic_coeff_a
+        ?exclude_outside
+        ?extrapolation_value
+        ?mode
+        ?nearest_mode
+        ~scales:sc
+        ~scales_name
+        xn
+        rn
+    in
+    make_node (Owl_symbolic_symbol.Resize s) [| x; roi; scales_node |]
+  | None, Some si ->
+    let sizes_node = tensor_ints si in
+    let sizes_name = Owl_symbolic_graph.name sizes_node in
+    let s =
+      Owl_symbolic_ops_tensor.Resize.create
+        ?name
+        ?coordinate_mode
+        ?cubic_coeff_a
+        ?exclude_outside
+        ?extrapolation_value
+        ?mode
+        ?nearest_mode
+        ~sizes:si
+        ~sizes_name
+        xn
+        rn
+    in
+    make_node (Owl_symbolic_symbol.Resize s) [| x; roi; sizes_node |]
+  | _, _          -> failwith
+                       "resize: one and only one of scales and sizes should be specified."
 
 
 (** Neural Network *)

@@ -518,6 +518,10 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           let t1 = type_check_pattern01 ptypes.(0) _types_constraint03 name in
           let t2 = SNT_Int64 in
           [| t1.(0); t2 |]
+        | Resize _             ->
+          type_check_pattern01 ptypes.(1) _types_constraint00 name |> ignore;
+          (* TODO: check type of optional input *)
+          type_check_pattern01 ptypes.(0) _types_constraint03 name
         | Conv _               -> type_check_pattern02 ptypes _types_constraint00 name
         | ConvTranspose _      -> type_check_pattern02 ptypes _types_constraint00 name
         | MaxPool _            ->
@@ -1025,6 +1029,18 @@ let build_onnx_attrs_non_maxx_suppression center_point_box =
   [ attr_c ]
 
 
+let build_onnx_attrs_resize (x : Owl_symbolic_ops_tensor.Resize.t) =
+  let attr_c =
+    make_attr_string "coordinate_transformation_mode" x.coordinate_transformation_mode
+  in
+  let attr_a = make_attr_flt "cubic_coeff_a" (Some x.cubic_coeff_a) in
+  let attr_e = make_attr_int "exclude_outside" x.exclude_outside in
+  let attr_v = make_attr_flt "extrapolation_value" (Some x.extrapolation_value) in
+  let attr_m = make_attr_string "mode" x.mode in
+  let attr_n = make_attr_string "nearest_mode" x.nearest_mode in
+  [ attr_c; attr_a; attr_e; attr_v; attr_m; attr_n ]
+
+
 let build_onnx_attrs sym =
   let onnx_attrs =
     match sym with
@@ -1071,6 +1087,7 @@ let build_onnx_attrs sym =
     | S.Compress x           -> build_onnx_attrs_axis_option x.axis
     | S.ReverseSeq x         -> build_onnx_attrs_revseq x.batch_axis x.time_axis
     | S.Unique x             -> build_onnx_attrs_unique x.axis x.sorted
+    | S.Resize x             -> build_onnx_attrs_resize x
     | S.Conv x               -> build_onnx_attrs_conv x
     | S.ConvTranspose x      -> build_onnx_attrs_conv_transpose x
     | S.MaxPool x            -> build_onnx_attrs_maxpool x

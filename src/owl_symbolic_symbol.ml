@@ -132,6 +132,7 @@ type t =
   | Compress           of Compress.t
   | ReverseSeq         of ReverseSeq.t
   | Unique             of Unique.t
+  | Resize             of Resize.t
   (* NN *)
   | Conv               of Conv.t
   | ConvTranspose      of ConvTranspose.t
@@ -265,6 +266,7 @@ let name = function
   | Compress x           -> Compress.(x.name)
   | ReverseSeq x         -> ReverseSeq.(x.name)
   | Unique x             -> Unique.(x.name)
+  | Resize x             -> Resize.(x.name)
   | Conv x               -> Conv.(x.name)
   | ConvTranspose x      -> ConvTranspose.(x.name)
   | MaxPool x            -> MaxPool.(x.name)
@@ -396,6 +398,7 @@ let op_type = function
   | Compress _           -> Compress.op_type
   | ReverseSeq _         -> ReverseSeq.op_type
   | Unique _             -> Unique.op_type
+  | Resize _             -> Resize.op_type
   | Conv _               -> Conv.op_type
   | ConvTranspose _      -> ConvTranspose.op_type
   | MaxPool _            -> MaxPool.op_type
@@ -527,6 +530,7 @@ let input = function
   | Compress x           -> Compress.(x.input)
   | ReverseSeq x         -> ReverseSeq.(x.input)
   | Unique x             -> Unique.(x.input)
+  | Resize x             -> Resize.(x.input)
   | Conv x               -> Conv.(x.input)
   | ConvTranspose x      -> ConvTranspose.(x.input)
   | MaxPool x            -> MaxPool.(x.input)
@@ -649,6 +653,7 @@ let set_input sym inputs =
   | Compress x           -> x.input <- inputs
   | ReverseSeq x         -> x.input <- inputs
   | Unique x             -> x.input <- inputs
+  | Resize x             -> x.input <- inputs
   | Conv x               -> x.input <- inputs
   | ConvTranspose x      -> x.input <- inputs
   | MaxPool x            -> x.input <- inputs
@@ -780,6 +785,7 @@ let out_shape = function
   | Compress x           -> Compress.(x.out_shape)
   | ReverseSeq x         -> ReverseSeq.(x.out_shape)
   | Unique x             -> Unique.(x.out_shape)
+  | Resize x             -> Resize.(x.out_shape)
   | Conv x               -> Conv.(x.out_shape)
   | ConvTranspose x      -> ConvTranspose.(x.out_shape)
   | MaxPool x            -> MaxPool.(x.out_shape)
@@ -906,6 +912,7 @@ let set_out_shape sym shapes =
   | Compress x           -> x.out_shape <- shapes
   | ReverseSeq x         -> x.out_shape <- shapes
   | Unique x             -> x.out_shape <- shapes
+  | Resize x             -> x.out_shape <- shapes
   | Conv x               -> x.out_shape <- shapes
   | ConvTranspose x      -> x.out_shape <- shapes
   | MaxPool x            -> x.out_shape <- shapes
@@ -1030,6 +1037,7 @@ let attrs = function
   | Compress x           -> Compress.(x.attrs)
   | ReverseSeq x         -> ReverseSeq.(x.attrs)
   | Unique x             -> Unique.(x.attrs)
+  | Resize x             -> Resize.(x.attrs)
   | Conv x               -> Conv.(x.attrs)
   | ConvTranspose x      -> ConvTranspose.(x.attrs)
   | MaxPool x            -> MaxPool.(x.attrs)
@@ -1153,6 +1161,7 @@ let set_attrs sym a =
   | Compress x           -> x.attrs <- a
   | ReverseSeq x         -> x.attrs <- a
   | Unique x             -> x.attrs <- a
+  | Resize x             -> x.attrs <- a
   | Conv x               -> x.attrs <- a
   | ConvTranspose x      -> x.attrs <- a
   | MaxPool x            -> x.attrs <- a
