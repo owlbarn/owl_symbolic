@@ -914,6 +914,15 @@ let resize
                        "resize: one and only one of scales and sizes should be specified."
 
 
+let onehot ?name ?axis depth indices values =
+  let node_dep = tensor_int ~dtype:SNT_Int64 depth in
+  let n_ind = Owl_symbolic_graph.name indices in
+  let n_dep = Owl_symbolic_graph.name node_dep in
+  let n_val = Owl_symbolic_graph.name values in
+  let s = Owl_symbolic_ops_tensor.OneHot.create ?name ?axis depth n_ind n_dep n_val in
+  make_node (Owl_symbolic_symbol.OneHot s) [| indices; node_dep; values |]
+
+
 (** Neural Network *)
 
 let conv ?name ?dim ?padding ?strides ?dilations ?bias input kernel =

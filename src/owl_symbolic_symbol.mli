@@ -117,6 +117,7 @@ type t =
   | ReverseSeq         of Owl_symbolic_ops_tensor.ReverseSeq.t
   | Unique             of Owl_symbolic_ops_tensor.Unique.t
   | Resize             of Owl_symbolic_ops_tensor.Resize.t
+  | OneHot             of Owl_symbolic_ops_tensor.OneHot.t
   | Conv               of Owl_symbolic_ops_nn.Conv.t
   | ConvTranspose      of Owl_symbolic_ops_nn.ConvTranspose.t
   | MaxPool            of Owl_symbolic_ops_nn.MaxPool.t

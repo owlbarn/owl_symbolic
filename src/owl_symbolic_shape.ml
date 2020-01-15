@@ -738,6 +738,16 @@ let infer_shape_resize input_shapes scales sizes =
 
 
 (** Main entry *)
+let infer_shape_onehot input_shapes axis depth =
+  match input_shapes.(0).(0) with
+  | Some shp ->
+    let l = Array.length shp in
+    assert (axis >= -l && axis < l);
+    let axis = if axis >= 0 then axis else l + axis in
+    let new_shp = Owl_utils_array.insert shp [| depth |] axis in
+    [| Some new_shp |]
+  | None     -> [| None |]
+
 
 (* The input_shapes type is int array optin array array 
  * `int array` for a real shape;
@@ -865,6 +875,7 @@ let infer_shape input_shapes sym =
   | ReverseSeq _         -> infer_shape_revseq input_shapes
   | Unique _             -> [| None |]
   | Resize x             -> infer_shape_resize input_shapes x.scales x.sizes
+  | OneHot x             -> infer_shape_onehot input_shapes x.axis x.depth
   | Conv x               -> infer_shape_conv input_shapes x
   | ConvTranspose x      -> infer_shape_conv_transpose input_shapes x
   | MaxPool x            ->

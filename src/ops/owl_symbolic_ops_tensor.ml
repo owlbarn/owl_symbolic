@@ -571,3 +571,21 @@ module Resize = struct
     ; sizes
     }
 end
+
+module OneHot = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable axis : int
+    ; mutable depth : int
+    }
+
+  let op_type = "Identity"
+
+  let create ?name ?(axis = -1) depth indices_n depth_n value_n =
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let input = [| indices_n; depth_n; value_n |] in
+    { name; input; attrs = [||]; out_shape = [| None |]; axis; depth }
+end

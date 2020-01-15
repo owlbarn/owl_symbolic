@@ -305,6 +305,8 @@ val resize
   -> symbol
   -> symbol
 
+val onehot : ?name:string -> ?axis:int -> int -> symbol -> symbol -> symbol
+
 val conv
   :  ?name:string
   -> ?dim:int

@@ -522,6 +522,10 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           type_check_pattern01 ptypes.(1) _types_constraint00 name |> ignore;
           (* TODO: check type of optional input *)
           type_check_pattern01 ptypes.(0) _types_constraint03 name
+        | OneHot _             ->
+          type_check_pattern01 ptypes.(0) _types_constraint04 name |> ignore;
+          type_check_pattern01 ptypes.(1) _types_constraint04 name |> ignore;
+          type_check_pattern01 ptypes.(2) _types_constraint03 name
         | Conv _               -> type_check_pattern02 ptypes _types_constraint00 name
         | ConvTranspose _      -> type_check_pattern02 ptypes _types_constraint00 name
         | MaxPool _            ->
@@ -1088,6 +1092,7 @@ let build_onnx_attrs sym =
     | S.ReverseSeq x         -> build_onnx_attrs_revseq x.batch_axis x.time_axis
     | S.Unique x             -> build_onnx_attrs_unique x.axis x.sorted
     | S.Resize x             -> build_onnx_attrs_resize x
+    | S.OneHot x             -> build_onnx_attrs_axis x.axis
     | S.Conv x               -> build_onnx_attrs_conv x
     | S.ConvTranspose x      -> build_onnx_attrs_conv_transpose x
     | S.MaxPool x            -> build_onnx_attrs_maxpool x
