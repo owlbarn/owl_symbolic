@@ -28,6 +28,9 @@ type t =
   | One                of One.t
   | NegOne             of NegOne.t
   | Pi                 of Pi.t
+  | EyeLike            of EyeLike.t
+  | RandomUniformLike  of RandomUniformLike.t
+  | RandomNormalLike   of RandomNormalLike.t
   (* Math *)
   | Sin                of Sin.t
   | Cos                of Cos.t
@@ -168,6 +171,7 @@ let name = function
   | Variable x           -> Variable.(x.name)
   | RandomUniform x      -> RandomUniform.(x.name)
   | RandomNormal x       -> RandomNormal.(x.name)
+  | EyeLike x            -> EyeLike.(x.name)
   | Zero x               -> Zero.(x.name)
   | One x                -> One.(x.name)
   | NegOne x             -> NegOne.(x.name)
@@ -301,6 +305,7 @@ let op_type = function
   | Variable _           -> Variable.op_type
   | RandomUniform _      -> RandomUniform.op_type
   | RandomNormal _       -> RandomNormal.op_type
+  | EyeLike _            -> EyeLike.op_type
   | Zero _               -> Zero.op_type
   | One _                -> One.op_type
   | NegOne _             -> NegOne.op_type
@@ -434,6 +439,7 @@ let input = function
   | Variable _           -> [||]
   | RandomUniform _      -> [||]
   | RandomNormal _       -> [||]
+  | EyeLike x            -> EyeLike.(x.input)
   | Zero _               -> [||]
   | One _                -> [||]
   | NegOne _             -> [||]
@@ -690,6 +696,7 @@ let out_shape = function
   | Variable x           -> Variable.(x.out_shape)
   | RandomUniform x      -> RandomUniform.(x.out_shape)
   | RandomNormal x       -> RandomNormal.(x.out_shape)
+  | EyeLike x            -> EyeLike.(x.out_shape)
   | Zero x               -> Zero.(x.out_shape)
   | One x                -> One.(x.out_shape)
   | NegOne x             -> NegOne.(x.out_shape)
@@ -822,6 +829,7 @@ let set_out_shape sym shapes =
   | Variable x           -> x.out_shape <- shapes
   | RandomUniform x      -> x.out_shape <- shapes
   | RandomNormal x       -> x.out_shape <- shapes
+  | EyeLike x            -> x.out_shape <- shapes
   | Sin x                -> x.out_shape <- shapes
   | Cos x                -> x.out_shape <- shapes
   | Tan x                -> x.out_shape <- shapes
@@ -954,6 +962,7 @@ let attrs = function
   | Variable x           -> Variable.(x.attrs)
   | RandomUniform x      -> RandomUniform.(x.attrs)
   | RandomNormal x       -> RandomNormal.(x.attrs)
+  | EyeLike x            -> EyeLike.(x.attrs)
   | Zero x               -> Zero.(x.attrs)
   | One x                -> One.(x.attrs)
   | NegOne x             -> NegOne.(x.attrs)
@@ -1079,6 +1088,7 @@ let set_attrs sym a =
   | Variable x           -> x.attrs <- a
   | RandomUniform x      -> x.attrs <- a
   | RandomNormal x       -> x.attrs <- a
+  | EyeLike x            -> x.attrs <- a
   | Zero x               -> x.attrs <- a
   | One x                -> x.attrs <- a
   | NegOne x             -> x.attrs <- a
@@ -1216,7 +1226,14 @@ let dtype = function
   | Variable x      -> Variable.(x.dtype)
   | RandomUniform x -> RandomUniform.(x.dtype)
   | RandomNormal x  -> RandomNormal.(x.dtype)
+  | EyeLike x       -> EyeLike.(x.dtype)
   | _               -> failwith "owl_symboic_symobl.dtype: not var or constant op"
+
+
+let set_dtype s d =
+  match s with
+  | EyeLike x -> x.dtype <- d
+  | _         -> failwith "owl_symboic_symobl.set_dtype: unsupported symbol"
 
 
 let shape = function

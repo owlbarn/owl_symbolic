@@ -281,6 +281,22 @@ let _types_constraint05 =
   |]
 
 
+let _types_constraint06 =
+  [| SNT_Uint8
+   ; SNT_Uint16
+   ; SNT_Uint32
+   ; SNT_Uint64
+   ; SNT_Int8
+   ; SNT_Int16
+   ; SNT_Int32
+   ; SNT_Int64
+   ; SNT_Float16
+   ; SNT_Float
+   ; SNT_Double
+   ; SNT_Bool
+  |]
+
+
 let _types_constraint06 = [| SNT_Uint8; SNT_Uint16; SNT_Uint32; SNT_Uint64 |]
 
 let _types_constraint03_seq = Array.map (fun d -> SNT_SEQ d) _types_constraint03
@@ -302,6 +318,21 @@ let type_check_pattern03 target_types type_constraint0 type_constraint1 name =
   check_constraint target_types.(0).(0) type_constraint0 name;
   check_constraint target_types.(1).(0) type_constraint1 name;
   [| target_types.(0).(0) |]
+
+
+(** if input dtypes is not null, then set currently symbol to that type and then return this type;
+  * else return the pre-specified dtype. *)
+let type_check_pattern04 target_types type_constraint name sym =
+  type_check_pattern01 target_types.(0) type_constraint name |> ignore;
+  let dt = target_types.(0).(0) in
+  let t =
+    match dt with
+    | SNT_Noop -> Owl_symbolic_symbol.dtype sym
+    | _        ->
+      Owl_symbolic_symbol.set_dtype sym dt;
+      dt
+  in
+  [| t |]
 
 
 let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
@@ -341,6 +372,13 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | RandomNormal _       ->
           let dt = Owl_symbolic_symbol.dtype sym in
           type_check_pattern01 [| dt |] _types_constraint00 name
+        | EyeLike _            -> type_check_pattern04 ptypes _types_constraint06 name sym
+        | RandomUniformLike _  ->
+          let t = type_check_pattern04 ptypes _types_constraint03 name sym in
+          type_check_pattern01 t _types_constraint00 name
+        | RandomNormalLike _   ->
+          let t = type_check_pattern04 ptypes _types_constraint03 name sym in
+          type_check_pattern01 t _types_constraint00 name
         | Sin _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Cos _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Tan _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
@@ -736,6 +774,21 @@ let build_onnx_attrs_randomuniform (x : Owl_symbolic_ops_generator.RandomUniform
   [ attr_dtype; attr_high; attr_low; attr_seed; attr_shape ]
 
 
+let build_onnx_attrs_randomuniform_like
+    (x : Owl_symbolic_ops_generator.RandomUniformLike.t)
+  =
+  let attr_dtype =
+    make_attr_int "dtype" (x.dtype |> map_elt_type_to_int32 |> Int32.to_int)
+  in
+  let attr_high = make_attr_flt "high" (Some x.high) in
+  let attr_low = make_attr_flt "low" (Some x.low) in
+  match x.seed with
+  | Some _ ->
+    let attr_seed = make_attr_flt "seed" x.seed in
+    [ attr_dtype; attr_high; attr_low; attr_seed ]
+  | None   -> [ attr_dtype; attr_high; attr_low ]
+
+
 let build_onnx_attrs_randomnormal (x : Owl_symbolic_ops_generator.RandomNormal.t) =
   let attr_dtype =
     make_attr_int "dtype" (x.dtype |> map_elt_type_to_int32 |> Int32.to_int)
@@ -745,6 +798,20 @@ let build_onnx_attrs_randomnormal (x : Owl_symbolic_ops_generator.RandomNormal.t
   let attr_seed = make_attr_flt "seed" x.seed in
   let attr_shape = make_attr_ints "shape" x.shape in
   [ attr_dtype; attr_mean; attr_scale; attr_seed; attr_shape ]
+
+
+let build_onnx_attrs_randomnormal_like (x : Owl_symbolic_ops_generator.RandomNormalLike.t)
+  =
+  let attr_dtype =
+    make_attr_int "dtype" (x.dtype |> map_elt_type_to_int32 |> Int32.to_int)
+  in
+  let attr_mean = make_attr_flt "mean" (Some x.mean) in
+  let attr_scale = make_attr_flt "scale" (Some x.stddev) in
+  match x.seed with
+  | Some _ ->
+    let attr_seed = make_attr_flt "seed" x.seed in
+    [ attr_dtype; attr_mean; attr_scale; attr_seed ]
+  | None   -> [ attr_dtype; attr_mean; attr_scale ]
 
 
 let build_onnx_attrs_hard_sigmoid alpha beta =
@@ -1045,6 +1112,13 @@ let build_onnx_attrs_resize (x : Owl_symbolic_ops_tensor.Resize.t) =
   [ attr_c; attr_a; attr_e; attr_v; attr_m; attr_n ]
 
 
+let build_onnx_attrs_eyelike dtype k =
+  let dtype = map_elt_type_to_int32 dtype in
+  let attr_d = make_attr_int "dtype" (Int32.to_int dtype) in
+  let attr_k = make_attr_int "k" k in
+  [ attr_d; attr_k ]
+
+
 let build_onnx_attrs sym =
   let onnx_attrs =
     match sym with
@@ -1055,6 +1129,9 @@ let build_onnx_attrs sym =
     | S.Tensor _             -> build_onnx_attrs_tensor sym
     | S.RandomUniform x      -> build_onnx_attrs_randomuniform x
     | S.RandomNormal x       -> build_onnx_attrs_randomnormal x
+    | S.EyeLike x            -> build_onnx_attrs_eyelike x.dtype x.k
+    | S.RandomUniformLike x  -> build_onnx_attrs_randomuniform_like x
+    | S.RandomNormalLike x   -> build_onnx_attrs_randomnormal_like x
     | S.HardSigmoid x        -> build_onnx_attrs_hard_sigmoid x.alpha x.beta
     | S.CumSum x             -> build_onnx_attrs_cumsum x.exclusive x.reverse
     | S.Hardmax x            -> build_onnx_attrs_axis x.axis

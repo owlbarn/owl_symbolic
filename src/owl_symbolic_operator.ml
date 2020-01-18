@@ -97,7 +97,29 @@ let random_normal ?dtype ?seed ?mean ?stddev ?name shape =
   make_node (Owl_symbolic_symbol.RandomNormal s) [||]
 
 
+(* TODO: copy dtypes from x *)
+let eyelike ?dtype ?k x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_generator.EyeLike.create ?dtype ?k xn in
+  make_node (Owl_symbolic_symbol.EyeLike s) [| x |]
+
+
+let random_uniform_like ?dtype ?seed ?low ?high ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s =
+    Owl_symbolic_ops_generator.RandomUniformLike.create ?dtype ?seed ?low ?high ?name xn
+  in
+  make_node (Owl_symbolic_symbol.RandomUniformLike s) [| x |]
+
+
 (** Math *)
+let random_normal_like ?dtype ?seed ?mean ?stddev ?name x =
+  let xn = Owl_symbolic_graph.name x in
+  let s =
+    Owl_symbolic_ops_generator.RandomNormalLike.create ?dtype ?seed ?mean ?stddev ?name xn
+  in
+  make_node (Owl_symbolic_symbol.RandomNormalLike s) [| x |]
+
 
 let sin ?name x =
   let xn = Owl_symbolic_graph.name x in

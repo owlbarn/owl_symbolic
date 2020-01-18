@@ -46,6 +46,26 @@ val random_normal
   -> int array
   -> symbol
 
+val eyelike : ?dtype:Owl_symbolic_types.number_type -> ?k:int -> symbol -> symbol
+
+val random_uniform_like
+  :  ?dtype:Owl_symbolic_types.number_type
+  -> ?seed:float
+  -> ?low:float
+  -> ?high:float
+  -> ?name:string
+  -> symbol
+  -> symbol
+
+val random_normal_like
+  :  ?dtype:Owl_symbolic_types.number_type
+  -> ?seed:float
+  -> ?mean:float
+  -> ?stddev:float
+  -> ?name:string
+  -> symbol
+  -> symbol
+
 val sin : ?name:string -> symbol -> symbol
 
 val cos : ?name:string -> symbol -> symbol

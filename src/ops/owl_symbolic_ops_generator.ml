@@ -7,9 +7,10 @@ open Owl_symbolic_types
 
 (* TODO: rename file name to input? *)
 
-(** Implemented: Constant, RandomUniform,  RandomNormal *)
+(** Implemented: Constant, RandomUniform,  RandomNormal, EyeLike,  RandomUniformLike,
+  * RandomNormalLike, *)
 
-(*  ConstantOfShape, EyeLike, RandomUniformLike, RandomNormalLike, Multinomial, Range *)
+(*  ConstantOfShape, Multinomial, Range *)
 
 module Int = struct
   type t =
@@ -209,4 +210,65 @@ module Pi = struct
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; attrs; out_shape = [| Some [||] |]; dtype }
+end
+
+module EyeLike = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable dtype : number_type
+    ; mutable k : int
+    }
+
+  let op_type = "EyeLike"
+
+  let create ?name ?(dtype = SNT_Float) ?(k = 0) xn =
+    let attrs = [||] in
+    let input = [| xn |] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| Some [||] |]; dtype; k }
+end
+
+module RandomUniformLike = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable dtype : number_type
+    ; mutable high : float
+    ; mutable low : float
+    ; mutable seed : float option
+    }
+
+  let op_type = "RandomUniformLike"
+
+  let create ?name ?(dtype = SNT_Float) ?(high = 1.) ?(low = 0.) ?seed xn =
+    let attrs = [||] in
+    let input = [| xn |] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| Some [||] |]; dtype; high; low; seed }
+end
+
+module RandomNormalLike = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable dtype : number_type
+    ; mutable mean : float
+    ; mutable stddev : float
+    ; mutable seed : float option
+    }
+
+  let op_type = "RandomNormalLike"
+
+  let create ?name ?(dtype = SNT_Float) ?(mean = 0.) ?(stddev = 1.) ?seed xn =
+    let attrs = [||] in
+    let input = [| xn |] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| Some [||] |]; dtype; mean; stddev; seed }
 end

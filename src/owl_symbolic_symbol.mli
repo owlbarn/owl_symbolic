@@ -16,6 +16,9 @@ type t =
   | One                of Owl_symbolic_ops_generator.One.t
   | NegOne             of Owl_symbolic_ops_generator.NegOne.t
   | Pi                 of Owl_symbolic_ops_generator.Pi.t
+  | EyeLike            of Owl_symbolic_ops_generator.EyeLike.t
+  | RandomUniformLike  of Owl_symbolic_ops_generator.RandomUniformLike.t
+  | RandomNormalLike   of Owl_symbolic_ops_generator.RandomNormalLike.t
   | Sin                of Owl_symbolic_ops_math.Sin.t
   | Cos                of Owl_symbolic_ops_math.Cos.t
   | Tan                of Owl_symbolic_ops_math.Tan.t
@@ -159,6 +162,8 @@ val set_attrs : t -> (string * Owl_symbolic_types.attrvalue) array -> unit
 val output : t -> string array
 
 val dtype : t -> Owl_symbolic_types.number_type
+
+val set_dtype : t -> Owl_symbolic_types.number_type -> unit
 
 val shape : t -> int array
 

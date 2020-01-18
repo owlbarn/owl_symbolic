@@ -749,6 +749,14 @@ let infer_shape_onehot input_shapes axis depth =
   | None     -> [| None |]
 
 
+let infer_shape_eye_like input_shape =
+  match input_shape.(0).(0) with
+  | Some shp ->
+    assert (Array.length shp = 2);
+    [| Some shp |]
+  | None     -> [| None |]
+
+
 (* The input_shapes type is int array optin array array 
  * `int array` for a real shape;
  * `int array option` means this shape could be null;
@@ -774,6 +782,9 @@ let infer_shape input_shapes sym =
   | RandomNormal _       ->
     let shp = Owl_symbolic_symbol.shape sym in
     [| Some shp |]
+  | EyeLike _            -> infer_shape_eye_like input_shapes
+  | RandomUniformLike _  -> infer_shape_01 input_shapes
+  | RandomNormalLike _   -> infer_shape_01 input_shapes
   | Sin _                -> infer_shape_01 input_shapes
   | Cos _                -> infer_shape_01 input_shapes
   | Tan _                -> infer_shape_01 input_shapes
