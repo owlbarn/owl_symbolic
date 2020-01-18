@@ -795,6 +795,7 @@ let infer_shape input_shapes sym =
   | RandomNormalLike _   -> infer_shape_01 input_shapes
   | Multinomial x        -> infer_shape_multinomial input_shapes x.sample_size
   | ConstantOfShape _    -> [| None |] (* depends on content in input node *)
+  | Range _              -> [| None |]
   | Sin _                -> infer_shape_01 input_shapes
   | Cos _                -> infer_shape_01 input_shapes
   | Tan _                -> infer_shape_01 input_shapes

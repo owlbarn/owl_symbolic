@@ -33,6 +33,7 @@ type t =
   | RandomNormalLike   of RandomNormalLike.t
   | Multinomial        of Multinomial.t
   | ConstantOfShape    of ConstantOfShape.t
+  | Range              of Range.t
   (* Math *)
   | Sin                of Sin.t
   | Cos                of Cos.t
@@ -178,6 +179,7 @@ let name = function
   | RandomNormalLike x   -> RandomNormalLike.(x.name)
   | Multinomial x        -> Multinomial.(x.name)
   | ConstantOfShape x    -> ConstantOfShape.(x.name)
+  | Range x              -> Range.(x.name)
   | Zero x               -> Zero.(x.name)
   | One x                -> One.(x.name)
   | NegOne x             -> NegOne.(x.name)
@@ -316,6 +318,7 @@ let op_type = function
   | RandomNormalLike _   -> RandomNormalLike.op_type
   | Multinomial _        -> Multinomial.op_type
   | ConstantOfShape _    -> ConstantOfShape.op_type
+  | Range _              -> Range.op_type
   | Zero _               -> Zero.op_type
   | One _                -> One.op_type
   | NegOne _             -> NegOne.op_type
@@ -454,6 +457,7 @@ let input = function
   | RandomNormalLike x   -> RandomNormalLike.(x.input)
   | Multinomial x        -> Multinomial.(x.input)
   | ConstantOfShape x    -> ConstantOfShape.(x.input)
+  | Range x              -> Range.(x.input)
   | Zero _               -> [||]
   | One _                -> [||]
   | NegOne _             -> [||]
@@ -585,6 +589,7 @@ let set_input sym inputs =
   | RandomNormalLike x   -> x.input <- inputs
   | Multinomial x        -> x.input <- inputs
   | ConstantOfShape x    -> x.input <- inputs
+  | Range x              -> x.input <- inputs
   | Sin x                -> x.input <- inputs
   | Cos x                -> x.input <- inputs
   | Tan x                -> x.input <- inputs
@@ -719,6 +724,7 @@ let out_shape = function
   | RandomNormalLike x   -> RandomNormalLike.(x.out_shape)
   | Multinomial x        -> Multinomial.(x.out_shape)
   | ConstantOfShape x    -> ConstantOfShape.(x.out_shape)
+  | Range x              -> Range.(x.out_shape)
   | Zero x               -> Zero.(x.out_shape)
   | One x                -> One.(x.out_shape)
   | NegOne x             -> NegOne.(x.out_shape)
@@ -856,6 +862,7 @@ let set_out_shape sym shapes =
   | RandomNormalLike x   -> x.out_shape <- shapes
   | Multinomial x        -> x.out_shape <- shapes
   | ConstantOfShape x    -> x.out_shape <- shapes
+  | Range x              -> x.out_shape <- shapes
   | Sin x                -> x.out_shape <- shapes
   | Cos x                -> x.out_shape <- shapes
   | Tan x                -> x.out_shape <- shapes
@@ -993,6 +1000,7 @@ let attrs = function
   | RandomNormalLike x   -> RandomNormalLike.(x.attrs)
   | Multinomial x        -> Multinomial.(x.attrs)
   | ConstantOfShape x    -> ConstantOfShape.(x.attrs)
+  | Range x              -> Range.(x.attrs)
   | Zero x               -> Zero.(x.attrs)
   | One x                -> One.(x.attrs)
   | NegOne x             -> NegOne.(x.attrs)
@@ -1123,6 +1131,7 @@ let set_attrs sym a =
   | RandomNormalLike x   -> x.attrs <- a
   | Multinomial x        -> x.attrs <- a
   | ConstantOfShape x    -> x.attrs <- a
+  | Range x              -> x.attrs <- a
   | Zero x               -> x.attrs <- a
   | One x                -> x.attrs <- a
   | NegOne x             -> x.attrs <- a

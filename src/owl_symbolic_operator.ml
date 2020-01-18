@@ -134,6 +134,14 @@ let content_of_shape ?name ?value x =
   make_node (Owl_symbolic_symbol.ConstantOfShape s) [| x |]
 
 
+let range ?name start limit delta =
+  let sn = Owl_symbolic_graph.name start in
+  let ln = Owl_symbolic_graph.name limit in
+  let dn = Owl_symbolic_graph.name delta in
+  let s = Owl_symbolic_ops_generator.Range.create ?name sn ln dn in
+  make_node (Owl_symbolic_symbol.Range s) [| start; limit; delta |]
+
+
 (** Math *)
 
 let sin ?name x =

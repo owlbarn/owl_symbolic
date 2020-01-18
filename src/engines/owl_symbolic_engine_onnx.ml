@@ -281,7 +281,9 @@ let _types_constraint05 =
   |]
 
 
-let _types_constraint06 =
+let _types_constraint06 = [| SNT_Uint8; SNT_Uint16; SNT_Uint32; SNT_Uint64 |]
+
+let _types_constraint07 =
   [| SNT_Uint8
    ; SNT_Uint16
    ; SNT_Uint32
@@ -297,7 +299,7 @@ let _types_constraint06 =
   |]
 
 
-let _types_constraint06 = [| SNT_Uint8; SNT_Uint16; SNT_Uint32; SNT_Uint64 |]
+let _types_constraint08 = [| SNT_Float; SNT_Double; SNT_Int16; SNT_Int32; SNT_Int64 |]
 
 let _types_constraint03_seq = Array.map (fun d -> SNT_SEQ d) _types_constraint03
 
@@ -372,7 +374,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | RandomNormal _       ->
           let dt = Owl_symbolic_symbol.dtype sym in
           type_check_pattern01 [| dt |] _types_constraint00 name
-        | EyeLike _            -> type_check_pattern04 ptypes _types_constraint06 name sym
+        | EyeLike _            -> type_check_pattern04 ptypes _types_constraint07 name sym
         | RandomUniformLike _  ->
           let t = type_check_pattern04 ptypes _types_constraint03 name sym in
           type_check_pattern01 t _types_constraint00 name
@@ -385,6 +387,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | ConstantOfShape x    ->
           type_check_pattern01 ptypes.(0) [| SNT_Int64 |] name |> ignore;
           type_check_pattern01 [| x.value.dtype |] _types_constraint04 name
+        | Range _              -> type_check_pattern02 ptypes _types_constraint08 name
         | Sin _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Cos _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Tan _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name

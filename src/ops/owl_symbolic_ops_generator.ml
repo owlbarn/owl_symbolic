@@ -7,10 +7,8 @@ open Owl_symbolic_types
 
 (* TODO: rename file name to input? *)
 
-(** Implemented: Constant, RandomUniform,  RandomNormal, EyeLike,  RandomUniformLike,
-  * RandomNormalLike, Multinomial, ConstantOfShape*)
-
-(*  Range *)
+(** Constant, RandomUniform,  RandomNormal, EyeLike,  RandomUniformLike,
+  * RandomNormalLike, Multinomial, ConstantOfShape, Range *)
 
 module Int = struct
   type t =
@@ -254,7 +252,7 @@ module EyeLike = struct
     let attrs = [||] in
     let input = [| xn |] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = [| Some [||] |]; dtype; k }
+    { name; input; attrs; out_shape = [| None |]; dtype; k }
 end
 
 module RandomUniformLike = struct
@@ -275,7 +273,7 @@ module RandomUniformLike = struct
     let attrs = [||] in
     let input = [| xn |] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = [| Some [||] |]; dtype; high; low; seed }
+    { name; input; attrs; out_shape = [| None |]; dtype; high; low; seed }
 end
 
 module RandomNormalLike = struct
@@ -296,7 +294,7 @@ module RandomNormalLike = struct
     let attrs = [||] in
     let input = [| xn |] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = [| Some [||] |]; dtype; mean; stddev; seed }
+    { name; input; attrs; out_shape = [| None |]; dtype; mean; stddev; seed }
 end
 
 module Multinomial = struct
@@ -316,5 +314,22 @@ module Multinomial = struct
     let attrs = [||] in
     let input = [| xn |] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    { name; input; attrs; out_shape = [| Some [||] |]; dtype; sample_size; seed }
+    { name; input; attrs; out_shape = [| None |]; dtype; sample_size; seed }
+end
+
+module Range = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    }
+
+  let op_type = "Range"
+
+  let create ?name start limit delta =
+    let input = [| start; limit; delta |] in
+    let attrs = [||] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| None |] }
 end

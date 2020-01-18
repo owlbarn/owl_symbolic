@@ -80,6 +80,8 @@ val content_of_shape
   -> symbol
   -> symbol
 
+val range : ?name:string -> symbol -> symbol -> symbol -> symbol
+
 val sin : ?name:string -> symbol -> symbol
 
 val cos : ?name:string -> symbol -> symbol

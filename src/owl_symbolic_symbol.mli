@@ -21,6 +21,7 @@ type t =
   | RandomNormalLike   of Owl_symbolic_ops_generator.RandomNormalLike.t
   | Multinomial        of Owl_symbolic_ops_generator.Multinomial.t
   | ConstantOfShape    of Owl_symbolic_ops_generator.ConstantOfShape.t
+  | Range              of Owl_symbolic_ops_generator.Range.t
   | Sin                of Owl_symbolic_ops_math.Sin.t
   | Cos                of Owl_symbolic_ops_math.Cos.t
   | Tan                of Owl_symbolic_ops_math.Tan.t
