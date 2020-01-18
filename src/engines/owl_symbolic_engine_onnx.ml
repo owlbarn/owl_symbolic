@@ -382,6 +382,9 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Multinomial x        ->
           type_check_pattern01 ptypes.(0) _types_constraint00 name |> ignore;
           type_check_pattern01 [| x.dtype |] [| SNT_Int32; SNT_Int64 |] name
+        | ConstantOfShape x    ->
+          type_check_pattern01 ptypes.(0) [| SNT_Int64 |] name |> ignore;
+          type_check_pattern01 [| x.value.dtype |] _types_constraint04 name
         | Sin _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Cos _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Tan _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
@@ -679,11 +682,10 @@ let build_onnx_attrs_pi _sym =
   [ a_value ]
 
 
-let build_onnx_attrs_tensor sym =
+let build_onnx_attrs_tensor (v : Owl_symbolic_types.tensor) =
   (* create "value" attribute for Constant *)
   let name = Some "value" in
   let (type_ : PT.attribute_proto_attribute_type option) = Some PT.Tensor in
-  let v = S.tensor_value sym in
   let tensor =
     match v.dtype with
     | SNT_Float ->
@@ -1140,13 +1142,14 @@ let build_onnx_attrs sym =
     | S.Int _                -> build_onnx_attrs_int sym
     | S.Complex _            -> build_onnx_attrs_complex sym
     | S.Pi _                 -> build_onnx_attrs_pi sym
-    | S.Tensor _             -> build_onnx_attrs_tensor sym
+    | S.Tensor x             -> build_onnx_attrs_tensor x.value
     | S.RandomUniform x      -> build_onnx_attrs_randomuniform x
     | S.RandomNormal x       -> build_onnx_attrs_randomnormal x
     | S.EyeLike x            -> build_onnx_attrs_eyelike x.dtype x.k
     | S.RandomUniformLike x  -> build_onnx_attrs_randomuniform_like x
     | S.RandomNormalLike x   -> build_onnx_attrs_randomnormal_like x
     | S.Multinomial x        -> build_onnx_attrs_multinomial x.dtype x.sample_size x.seed
+    | S.ConstantOfShape x    -> build_onnx_attrs_tensor x.value
     | S.HardSigmoid x        -> build_onnx_attrs_hard_sigmoid x.alpha x.beta
     | S.CumSum x             -> build_onnx_attrs_cumsum x.exclusive x.reverse
     | S.Hardmax x            -> build_onnx_attrs_axis x.axis

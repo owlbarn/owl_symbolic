@@ -128,6 +128,12 @@ let multinomial ?name ?dtype ?seed ?sample_size x =
   make_node (Owl_symbolic_symbol.Multinomial s) [| x |]
 
 
+let content_of_shape ?name ?value x =
+  let xn = Owl_symbolic_graph.name x in
+  let s = Owl_symbolic_ops_generator.ConstantOfShape.create ?name ?value xn in
+  make_node (Owl_symbolic_symbol.ConstantOfShape s) [| x |]
+
+
 (** Math *)
 
 let sin ?name x =

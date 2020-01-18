@@ -8,9 +8,9 @@ open Owl_symbolic_types
 (* TODO: rename file name to input? *)
 
 (** Implemented: Constant, RandomUniform,  RandomNormal, EyeLike,  RandomUniformLike,
-  * RandomNormalLike, *)
+  * RandomNormalLike, Multinomial, ConstantOfShape*)
 
-(*  ConstantOfShape, Multinomial, Range *)
+(*  Range *)
 
 module Int = struct
   type t =
@@ -71,12 +71,38 @@ module Tensor = struct
     ; mutable out_shape : int array option array
     }
 
+  (* in onnx it should be constatnt *)
   let op_type = "Tensor"
 
   let create ?name value =
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; attrs; value; out_shape = [| Some value.shape |] }
+end
+
+module ConstantOfShape = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable value : tensor
+    }
+
+  let op_type = "ConstantOfShape"
+
+  let create ?name ?value xn =
+    let attrs = [||] in
+    let input = [| xn |] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    let value =
+      match value with
+      | Some v ->
+        assert (Array.length v.shape = 1);
+        v
+      | None   -> make_tensor ~dtype:SNT_Float ~flt_val:[| 1. |] [| 1 |]
+    in
+    { name; input; attrs; out_shape = [| None |]; value }
 end
 
 module Variable = struct

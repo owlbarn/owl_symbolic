@@ -74,6 +74,12 @@ val multinomial
   -> symbol
   -> symbol
 
+val content_of_shape
+  :  ?name:string
+  -> ?value:Owl_symbolic_types.tensor
+  -> symbol
+  -> symbol
+
 val sin : ?name:string -> symbol -> symbol
 
 val cos : ?name:string -> symbol -> symbol
