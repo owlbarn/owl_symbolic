@@ -272,3 +272,23 @@ module RandomNormalLike = struct
     let name = Owl_symbolic_utils.node_name ?name op_type in
     { name; input; attrs; out_shape = [| Some [||] |]; dtype; mean; stddev; seed }
 end
+
+module Multinomial = struct
+  type t =
+    { mutable name : string
+    ; mutable input : string array
+    ; mutable attrs : (string * attrvalue) array
+    ; mutable out_shape : int array option array
+    ; mutable dtype : number_type
+    ; mutable sample_size : int
+    ; mutable seed : float option
+    }
+
+  let op_type = "Multinomial"
+
+  let create ?name ?(dtype = SNT_Int32) ?(sample_size = 1) ?seed xn =
+    let attrs = [||] in
+    let input = [| xn |] in
+    let name = Owl_symbolic_utils.node_name ?name op_type in
+    { name; input; attrs; out_shape = [| Some [||] |]; dtype; sample_size; seed }
+end

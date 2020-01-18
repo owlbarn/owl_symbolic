@@ -379,6 +379,9 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | RandomNormalLike _   ->
           let t = type_check_pattern04 ptypes _types_constraint03 name sym in
           type_check_pattern01 t _types_constraint00 name
+        | Multinomial x        ->
+          type_check_pattern01 ptypes.(0) _types_constraint00 name |> ignore;
+          type_check_pattern01 [| x.dtype |] [| SNT_Int32; SNT_Int64 |] name
         | Sin _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Cos _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
         | Tan _                -> type_check_pattern01 ptypes.(0) _types_constraint00 name
@@ -1119,6 +1122,17 @@ let build_onnx_attrs_eyelike dtype k =
   [ attr_d; attr_k ]
 
 
+let build_onnx_attrs_multinomial dtype sample_size seed =
+  let dtype = map_elt_type_to_int32 dtype in
+  let attr_d = make_attr_int "dtype" (Int32.to_int dtype) in
+  let attr_s = make_attr_int "sample_size" sample_size in
+  match seed with
+  | Some _ ->
+    let attr_e = make_attr_flt "seed" seed in
+    [ attr_d; attr_s; attr_e ]
+  | None   -> [ attr_d; attr_s ]
+
+
 let build_onnx_attrs sym =
   let onnx_attrs =
     match sym with
@@ -1132,6 +1146,7 @@ let build_onnx_attrs sym =
     | S.EyeLike x            -> build_onnx_attrs_eyelike x.dtype x.k
     | S.RandomUniformLike x  -> build_onnx_attrs_randomuniform_like x
     | S.RandomNormalLike x   -> build_onnx_attrs_randomnormal_like x
+    | S.Multinomial x        -> build_onnx_attrs_multinomial x.dtype x.sample_size x.seed
     | S.HardSigmoid x        -> build_onnx_attrs_hard_sigmoid x.alpha x.beta
     | S.CumSum x             -> build_onnx_attrs_cumsum x.exclusive x.reverse
     | S.Hardmax x            -> build_onnx_attrs_axis x.axis

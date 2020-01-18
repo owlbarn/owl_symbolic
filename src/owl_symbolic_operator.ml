@@ -112,7 +112,6 @@ let random_uniform_like ?dtype ?seed ?low ?high ?name x =
   make_node (Owl_symbolic_symbol.RandomUniformLike s) [| x |]
 
 
-(** Math *)
 let random_normal_like ?dtype ?seed ?mean ?stddev ?name x =
   let xn = Owl_symbolic_graph.name x in
   let s =
@@ -120,6 +119,16 @@ let random_normal_like ?dtype ?seed ?mean ?stddev ?name x =
   in
   make_node (Owl_symbolic_symbol.RandomNormalLike s) [| x |]
 
+
+let multinomial ?name ?dtype ?seed ?sample_size x =
+  let xn = Owl_symbolic_graph.name x in
+  let s =
+    Owl_symbolic_ops_generator.Multinomial.create ?dtype ?seed ?sample_size ?name xn
+  in
+  make_node (Owl_symbolic_symbol.Multinomial s) [| x |]
+
+
+(** Math *)
 
 let sin ?name x =
   let xn = Owl_symbolic_graph.name x in

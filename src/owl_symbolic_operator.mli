@@ -66,6 +66,14 @@ val random_normal_like
   -> symbol
   -> symbol
 
+val multinomial
+  :  ?name:string
+  -> ?dtype:Owl_symbolic_types.number_type
+  -> ?seed:float
+  -> ?sample_size:int
+  -> symbol
+  -> symbol
+
 val sin : ?name:string -> symbol -> symbol
 
 val cos : ?name:string -> symbol -> symbol

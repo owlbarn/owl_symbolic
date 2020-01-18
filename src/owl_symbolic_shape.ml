@@ -757,6 +757,14 @@ let infer_shape_eye_like input_shape =
   | None     -> [| None |]
 
 
+let infer_shape_multinomial input_shapes sample_size =
+  match input_shapes.(0).(0) with
+  | Some shp ->
+    assert (Array.length shp = 2);
+    [| Some [| shp.(0); sample_size |] |]
+  | None     -> [| None |]
+
+
 (* The input_shapes type is int array optin array array 
  * `int array` for a real shape;
  * `int array option` means this shape could be null;
@@ -785,6 +793,7 @@ let infer_shape input_shapes sym =
   | EyeLike _            -> infer_shape_eye_like input_shapes
   | RandomUniformLike _  -> infer_shape_01 input_shapes
   | RandomNormalLike _   -> infer_shape_01 input_shapes
+  | Multinomial x        -> infer_shape_multinomial input_shapes x.sample_size
   | Sin _                -> infer_shape_01 input_shapes
   | Cos _                -> infer_shape_01 input_shapes
   | Tan _                -> infer_shape_01 input_shapes
