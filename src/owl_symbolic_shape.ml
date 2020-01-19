@@ -764,6 +764,12 @@ let infer_shape_multinomial input_shapes sample_size =
     [| Some [| shp.(0); sample_size |] |]
   | None     -> [| None |]
 
+let infer_shape_dynamic_quantize input_shapes = 
+  match input_shapes.(0).(0) with
+  | Some shp -> 
+    [| Some shp; Some [||]; Some [||]|]
+  | None -> [|None; None; None|]
+
 
 (* The input_shapes type is int array optin array array 
  * `int array` for a real shape;
@@ -915,6 +921,9 @@ let infer_shape input_shapes sym =
   | LSTM _               -> infer_shape_lstm input_shapes
   | RoiAlign x           -> infer_shape_roialign input_shapes x
   | NonMaxSuppression _  -> infer_shape_non_max_suppression input_shapes
+  | QuantizeLinear _     -> infer_shape_01 input_shapes
+  | DeQuantizeLinear _   -> infer_shape_01 input_shapes
+  | DynamicQuantizeLinear _ ->  infer_shape_dynamic_quantize input_shapes
   | SequenceEmpty _      -> [||] (* how to differ empty seq to a scalar? *)
   | SequenceAt x         -> infer_shape_seq_at input_shapes x.pos
   | SequenceInsert x     -> infer_shape_seq_insert input_shapes x.pos

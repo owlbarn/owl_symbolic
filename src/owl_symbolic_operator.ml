@@ -1258,6 +1258,48 @@ let non_max_suppression
     [| boxes; scores; max_node; iou_node; thd_node |]
 
 
+let quantize_linear ?name ?(y_zero_point = 0) ~y_scale x =
+  let scale_node = tensor_float y_scale in
+  let zero_node = tensor_int ~dtype:Owl_symbolic_types.SNT_Uint8 y_zero_point in
+  let x_n = Owl_symbolic_graph.name x in
+  let scale_n = Owl_symbolic_graph.name scale_node in
+  let zero_n = Owl_symbolic_graph.name zero_node in
+  let s = Owl_symbolic_ops_quantization.QuantizeLinear.create ?name x_n scale_n zero_n in
+  make_node (Owl_symbolic_symbol.QuantizeLinear s) [| x; scale_node; zero_node |]
+
+
+let dequantize_linear ?name ?(x_zero_point = 0) ~x_scale x =
+  let scale_node = tensor_float x_scale in
+  let zero_node = tensor_int ~dtype:Owl_symbolic_types.SNT_Uint8 x_zero_point in
+  let x_n = Owl_symbolic_graph.name x in
+  let scale_n = Owl_symbolic_graph.name scale_node in
+  let zero_n = Owl_symbolic_graph.name zero_node in
+  let s =
+    Owl_symbolic_ops_quantization.DeQuantizeLinear.create ?name x_n scale_n zero_n
+  in
+  make_node (Owl_symbolic_symbol.DeQuantizeLinear s) [| x; scale_node; zero_node |]
+
+let dynamic_quantize_linear ?name (x : Owl_symbolic_graph.symbol) = 
+  (* build multiple outputs of split *)
+  let d_name = Owl_symbolic_utils.node_name ?name "DynamicQuantizeLinear" in
+  let n0 = d_name ^ "_y" in
+  let n1 = d_name ^ "_y_scale" in
+  let n2 = d_name ^ "_y_zero_point" in
+  (* create symbol *)
+  let x_name = Owl_symbolic_graph.name x in
+  let output = [| n0; n1; n2 |] in
+  let s = Owl_symbolic_ops_quantization.DynamicQuantizeLinear.create ~output ~name:d_name x_name in
+  let d_node = make_node (Owl_symbolic_symbol.DynamicQuantizeLinear s) [| x |] in
+  (* create identity nodes *)
+  let o0 = Owl_symbolic_ops_tensor.Identity.create ~idx:0 ?name n0 in
+  let o1 = Owl_symbolic_ops_tensor.Identity.create ~idx:1 ?name n1 in
+  let o2 = Owl_symbolic_ops_tensor.Identity.create ~idx:2 ?name n2 in
+  let out0 = make_node (Owl_symbolic_symbol.Identity o0) [| d_node |] in
+  let out1 = make_node (Owl_symbolic_symbol.Identity o1) [| d_node |] in
+  let out2 = make_node (Owl_symbolic_symbol.Identity o2) [| d_node |] in
+  out0, out1, out2
+
+
 let seq_empty ?name ?dtype () =
   let s = Owl_symbolic_ops_sequence.SequenceEmpty.create ?name ?dtype () in
   make_node (Owl_symbolic_symbol.SequenceEmpty s) [||]

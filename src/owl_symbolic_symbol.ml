@@ -13,6 +13,7 @@ open Owl_symbolic_ops_rnn
 open Owl_symbolic_ops_tensor
 open Owl_symbolic_ops_sequence
 open Owl_symbolic_ops_object_detection
+open Owl_symbolic_ops_quantization
 
 type t =
   | NOOP
@@ -156,6 +157,10 @@ type t =
   (* Object Detection *)
   | RoiAlign           of RoiAlign.t
   | NonMaxSuppression  of NonMaxSuppression.t
+  (* Quantization *)
+  | QuantizeLinear     of QuantizeLinear.t
+  | DeQuantizeLinear   of DeQuantizeLinear.t
+  | DynamicQuantizeLinear of DynamicQuantizeLinear.t
   (* Sequence *)
   | SequenceEmpty      of SequenceEmpty.t
   | SequenceAt         of SequenceAt.t
@@ -294,6 +299,9 @@ let name = function
   | LSTM x               -> LSTM.(x.name)
   | RoiAlign x           -> RoiAlign.(x.name)
   | NonMaxSuppression x  -> NonMaxSuppression.(x.name)
+  | QuantizeLinear x     -> QuantizeLinear.(x.name)
+  | DeQuantizeLinear x   -> DeQuantizeLinear.(x.name)
+  | DynamicQuantizeLinear x -> DynamicQuantizeLinear.(x.name)
   | SequenceEmpty x      -> SequenceEmpty.(x.name)
   | SequenceAt x         -> SequenceAt.(x.name)
   | SequenceInsert x     -> SequenceInsert.(x.name)
@@ -433,6 +441,9 @@ let op_type = function
   | LSTM _               -> LSTM.op_type
   | RoiAlign _           -> RoiAlign.op_type
   | NonMaxSuppression _  -> NonMaxSuppression.op_type
+  | QuantizeLinear _     -> QuantizeLinear.op_type
+  | DeQuantizeLinear _   -> DeQuantizeLinear.op_type
+  | DynamicQuantizeLinear _ -> DynamicQuantizeLinear.op_type
   | SequenceEmpty _      -> SequenceEmpty.op_type
   | SequenceAt _         -> SequenceAt.op_type
   | SequenceInsert _     -> SequenceInsert.op_type
@@ -572,6 +583,9 @@ let input = function
   | LSTM x               -> LSTM.(x.input)
   | RoiAlign x           -> RoiAlign.(x.input)
   | NonMaxSuppression x  -> NonMaxSuppression.(x.input)
+  | QuantizeLinear x     -> QuantizeLinear.(x.input)
+  | DeQuantizeLinear x   -> DeQuantizeLinear.(x.input)
+  | DynamicQuantizeLinear x -> DynamicQuantizeLinear.(x.input)
   | SequenceEmpty _      -> [||]
   | SequenceAt x         -> SequenceAt.(x.input)
   | SequenceInsert x     -> SequenceInsert.(x.input)
@@ -701,6 +715,9 @@ let set_input sym inputs =
   | LSTM x               -> x.input <- inputs
   | RoiAlign x           -> x.input <- inputs
   | NonMaxSuppression x  -> x.input <- inputs
+  | QuantizeLinear x     -> x.input <- inputs
+  | DeQuantizeLinear x   -> x.input <- inputs
+  | DynamicQuantizeLinear x -> x.input <- inputs
   | SequenceAt x         -> x.input <- inputs
   | SequenceInsert x     -> x.input <- inputs
   | SequenceLength x     -> x.input <- inputs
@@ -840,6 +857,9 @@ let out_shape = function
   | LSTM x               -> LSTM.(x.out_shape)
   | RoiAlign x           -> RoiAlign.(x.out_shape)
   | NonMaxSuppression x  -> NonMaxSuppression.(x.out_shape)
+  | QuantizeLinear x     -> QuantizeLinear.(x.out_shape)
+  | DeQuantizeLinear x   -> DeQuantizeLinear.(x.out_shape)
+  | DynamicQuantizeLinear x -> DynamicQuantizeLinear.(x.out_shape)
   | SequenceEmpty x      -> SequenceEmpty.(x.out_shape)
   | SequenceAt x         -> SequenceAt.(x.out_shape)
   | SequenceInsert x     -> SequenceInsert.(x.out_shape)
@@ -974,6 +994,9 @@ let set_out_shape sym shapes =
   | LSTM x               -> x.out_shape <- shapes
   | RoiAlign x           -> x.out_shape <- shapes
   | NonMaxSuppression x  -> x.out_shape <- shapes
+  | QuantizeLinear x     -> x.out_shape <- shapes
+  | DeQuantizeLinear x   -> x.out_shape <- shapes
+  | DynamicQuantizeLinear x -> x.out_shape <- shapes
   | SequenceEmpty x      -> x.out_shape <- shapes
   | SequenceAt x         -> x.out_shape <- shapes
   | SequenceInsert x     -> x.out_shape <- shapes
@@ -1106,6 +1129,9 @@ let attrs = function
   | LSTM x               -> LSTM.(x.attrs)
   | RoiAlign x           -> RoiAlign.(x.attrs)
   | NonMaxSuppression x  -> NonMaxSuppression.(x.attrs)
+  | QuantizeLinear x     -> QuantizeLinear.(x.attrs)
+  | DeQuantizeLinear x   -> DeQuantizeLinear.(x.attrs)
+  | DynamicQuantizeLinear x -> DynamicQuantizeLinear.(x.attrs)
   | SequenceEmpty x      -> SequenceEmpty.(x.attrs)
   | SequenceAt x         -> SequenceAt.(x.attrs)
   | SequenceInsert x     -> SequenceInsert.(x.attrs)
@@ -1237,6 +1263,9 @@ let set_attrs sym a =
   | LSTM x               -> x.attrs <- a
   | RoiAlign x           -> x.attrs <- a
   | NonMaxSuppression x  -> x.attrs <- a
+  | QuantizeLinear x     -> x.attrs <- a
+  | DeQuantizeLinear x   -> x.attrs <- a
+  | DynamicQuantizeLinear x -> x.attrs <- a
   | SequenceEmpty x      -> x.attrs <- a
   | SequenceAt x         -> x.attrs <- a
   | SequenceInsert x     -> x.attrs <- a

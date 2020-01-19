@@ -442,6 +442,25 @@ val non_max_suppression
   -> symbol
   -> symbol
 
+val quantize_linear
+  :  ?name:string
+  -> ?y_zero_point:int
+  -> y_scale:float
+  -> symbol
+  -> symbol
+
+val dequantize_linear
+  :  ?name:string
+  -> ?x_zero_point:int
+  -> x_scale:float
+  -> symbol
+  -> symbol
+
+val dynamic_quantize_linear
+  :  ?name:string
+  -> symbol
+  -> symbol * symbol * symbol
+
 val seq_empty : ?name:string -> ?dtype:Owl_symbolic_types.number_type -> unit -> symbol
 
 val seq_at : ?name:string -> int -> symbol -> symbol

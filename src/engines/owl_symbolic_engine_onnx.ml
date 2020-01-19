@@ -607,6 +607,21 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           |> ignore;
           type_check_pattern01 ptypes.(2) [| SNT_Int64 |] name |> ignore;
           [| SNT_Int64 |]
+        | QuantizeLinear _     ->
+          type_check_pattern01 ptypes.(0) [| SNT_Float; SNT_Int32 |] name |> ignore;
+          type_check_pattern01 ptypes.(1) [| SNT_Float |] name |> ignore;
+          type_check_pattern01 ptypes.(2) [| SNT_Int8; SNT_Uint8 |] name
+        | DeQuantizeLinear _   ->
+          type_check_pattern02
+            [| ptypes.(0); ptypes.(2) |]
+            [| SNT_Int8; SNT_Uint8; SNT_Int32 |]
+            name
+          |> ignore;
+          type_check_pattern01 ptypes.(1) [| SNT_Float |] name |> ignore;
+          [| SNT_Float |]
+        | DynamicQuantizeLinear _     ->
+          type_check_pattern01 ptypes.(0) [| SNT_Float |] name |> ignore;
+          [| SNT_Int8; SNT_Float; SNT_Uint8 |] 
         | SequenceEmpty s      -> [| SNT_SEQ s.dtype |]
         | SequenceAt _         ->
           type_check_pattern01 ptypes.(1) [| SNT_Int32; SNT_Int64 |] name |> ignore;
