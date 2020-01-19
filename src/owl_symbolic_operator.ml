@@ -1279,7 +1279,8 @@ let dequantize_linear ?name ?(x_zero_point = 0) ~x_scale x =
   in
   make_node (Owl_symbolic_symbol.DeQuantizeLinear s) [| x; scale_node; zero_node |]
 
-let dynamic_quantize_linear ?name (x : Owl_symbolic_graph.symbol) = 
+
+let dynamic_quantize_linear ?name (x : Owl_symbolic_graph.symbol) =
   (* build multiple outputs of split *)
   let d_name = Owl_symbolic_utils.node_name ?name "DynamicQuantizeLinear" in
   let n0 = d_name ^ "_y" in
@@ -1288,7 +1289,9 @@ let dynamic_quantize_linear ?name (x : Owl_symbolic_graph.symbol) =
   (* create symbol *)
   let x_name = Owl_symbolic_graph.name x in
   let output = [| n0; n1; n2 |] in
-  let s = Owl_symbolic_ops_quantization.DynamicQuantizeLinear.create ~output ~name:d_name x_name in
+  let s =
+    Owl_symbolic_ops_quantization.DynamicQuantizeLinear.create ~output ~name:d_name x_name
+  in
   let d_node = make_node (Owl_symbolic_symbol.DynamicQuantizeLinear s) [| x |] in
   (* create identity nodes *)
   let o0 = Owl_symbolic_ops_tensor.Identity.create ~idx:0 ?name n0 in

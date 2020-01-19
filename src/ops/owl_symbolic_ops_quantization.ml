@@ -58,9 +58,10 @@ module DynamicQuantizeLinear = struct
     let input = [| x |] in
     let attrs = [||] in
     let name = Owl_symbolic_utils.node_name ?name op_type in
-    let output = match output with 
-    | Some o -> o 
-    | None -> [| name |] 
+    let output =
+      match output with
+      | Some o -> o
+      | None   -> [| name |]
     in
     { name; input; output; attrs; out_shape = [| None; None; None |] }
 end

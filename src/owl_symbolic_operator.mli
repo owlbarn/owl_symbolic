@@ -456,10 +456,7 @@ val dequantize_linear
   -> symbol
   -> symbol
 
-val dynamic_quantize_linear
-  :  ?name:string
-  -> symbol
-  -> symbol * symbol * symbol
+val dynamic_quantize_linear : ?name:string -> symbol -> symbol * symbol * symbol
 
 val seq_empty : ?name:string -> ?dtype:Owl_symbolic_types.number_type -> unit -> symbol
 

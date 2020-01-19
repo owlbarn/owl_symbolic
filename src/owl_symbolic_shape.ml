@@ -764,11 +764,11 @@ let infer_shape_multinomial input_shapes sample_size =
     [| Some [| shp.(0); sample_size |] |]
   | None     -> [| None |]
 
-let infer_shape_dynamic_quantize input_shapes = 
+
+let infer_shape_dynamic_quantize input_shapes =
   match input_shapes.(0).(0) with
-  | Some shp -> 
-    [| Some shp; Some [||]; Some [||]|]
-  | None -> [|None; None; None|]
+  | Some shp -> [| Some shp; Some [||]; Some [||] |]
+  | None     -> [| None; None; None |]
 
 
 (* The input_shapes type is int array optin array array 
@@ -780,156 +780,156 @@ let infer_shape_dynamic_quantize input_shapes =
 
 let infer_shape input_shapes sym =
   match sym with
-  | Int _                -> [| Some [||] |]
-  | Float _              -> [| Some [||] |]
-  | Complex _            -> [| Some [||] |]
-  | Pi _                 -> [| Some [||] |]
-  | Tensor _             ->
+  | Int _                   -> [| Some [||] |]
+  | Float _                 -> [| Some [||] |]
+  | Complex _               -> [| Some [||] |]
+  | Pi _                    -> [| Some [||] |]
+  | Tensor _                ->
     let shp = Owl_symbolic_symbol.shape sym in
     [| Some shp |]
-  | Variable _           ->
+  | Variable _              ->
     let shp = Owl_symbolic_symbol.shape sym in
     [| Some shp |]
-  | RandomUniform _      ->
+  | RandomUniform _         ->
     let shp = Owl_symbolic_symbol.shape sym in
     [| Some shp |]
-  | RandomNormal _       ->
+  | RandomNormal _          ->
     let shp = Owl_symbolic_symbol.shape sym in
     [| Some shp |]
-  | EyeLike _            -> infer_shape_eye_like input_shapes
-  | RandomUniformLike _  -> infer_shape_01 input_shapes
-  | RandomNormalLike _   -> infer_shape_01 input_shapes
-  | Multinomial x        -> infer_shape_multinomial input_shapes x.sample_size
-  | ConstantOfShape _    -> [| None |] (* depends on content in input node *)
-  | Range _              -> [| None |]
-  | Sin _                -> infer_shape_01 input_shapes
-  | Cos _                -> infer_shape_01 input_shapes
-  | Tan _                -> infer_shape_01 input_shapes
-  | Asin _               -> infer_shape_01 input_shapes
-  | Acos _               -> infer_shape_01 input_shapes
-  | Atan _               -> infer_shape_01 input_shapes
-  | Sinh _               -> infer_shape_01 input_shapes
-  | Cosh _               -> infer_shape_01 input_shapes
-  | Tanh _               -> infer_shape_01 input_shapes
-  | Asinh _              -> infer_shape_01 input_shapes
-  | Acosh _              -> infer_shape_01 input_shapes
-  | Atanh _              -> infer_shape_01 input_shapes
-  | Sqrt _               -> infer_shape_01 input_shapes
-  | Exp _                -> infer_shape_01 input_shapes
-  | Log _                -> infer_shape_01 input_shapes
-  | Erf _                -> infer_shape_01 input_shapes
-  | Sigmoid _            -> infer_shape_01 input_shapes
-  | HardSigmoid _        -> infer_shape_01 input_shapes
-  | Abs _                -> infer_shape_01 input_shapes
-  | Neg _                -> infer_shape_01 input_shapes
-  | Sign _               -> infer_shape_01 input_shapes
-  | Floor _              -> infer_shape_01 input_shapes
-  | Ceil _               -> infer_shape_01 input_shapes
-  | Round _              -> infer_shape_01 input_shapes
-  | Clip _               -> infer_shape_01 input_shapes
-  | Reciprocal _         -> infer_shape_01 input_shapes
-  | Relu _               -> infer_shape_01 input_shapes
-  | ThresholdedRelu _    -> infer_shape_01 input_shapes
-  | PRelu _              -> infer_shape_03 input_shapes
-  | Selu _               -> infer_shape_01 input_shapes
-  | Elu _                -> infer_shape_01 input_shapes
-  | LeakyRelu _          -> infer_shape_01 input_shapes
-  | Softmax _            -> infer_shape_01 input_shapes
-  | LogSoftmax _         -> infer_shape_01 input_shapes
-  | Softsign _           -> infer_shape_01 input_shapes
-  | Softplus _           -> infer_shape_01 input_shapes
-  | Add _                -> infer_shape_03 input_shapes
-  | Sub _                -> infer_shape_03 input_shapes
-  | Mul _                -> infer_shape_03 input_shapes
-  | Div _                -> infer_shape_03 input_shapes
-  | Pow _                -> infer_shape_01 input_shapes
-  | Mod _                -> infer_shape_01 input_shapes
-  | MatMul _             -> infer_shape_19 input_shapes
-  | MatMulInteger _      -> infer_shape_19 input_shapes
-  | QLinearMatMul _      -> infer_shape_ql_matmul input_shapes
-  | Gemm x               -> infer_shape_gemm x input_shapes
-  | Max _                -> infer_shape_31 input_shapes
-  | Min _                -> infer_shape_31 input_shapes
-  | Sum _                -> infer_shape_31 input_shapes
-  | Mean _               -> infer_shape_31 input_shapes
-  | CumSum x             -> infer_shape_axis input_shapes x.axis
-  | Hardmax x            -> infer_shape_axis input_shapes x.axis
-  | Det _                -> infer_shape_det input_shapes
-  | Expand _             -> infer_shape_03 input_shapes
-  | And _                -> infer_shape_03 input_shapes
-  | Or _                 -> infer_shape_03 input_shapes
-  | Not _                -> infer_shape_03 input_shapes
-  | Xor _                -> infer_shape_03 input_shapes
-  | Greater _            -> infer_shape_03 input_shapes
-  | Less _               -> infer_shape_03 input_shapes
-  | Equal _              -> infer_shape_03 input_shapes
-  | BitShift _           -> infer_shape_03 input_shapes
-  | ReduceSum x          -> infer_shape_10 input_shapes x.axes x.keepdims
-  | ReduceMax x          -> infer_shape_10 input_shapes x.axes x.keepdims
-  | ReduceMin x          -> infer_shape_10 input_shapes x.axes x.keepdims
-  | ReduceMean x         -> infer_shape_10 input_shapes x.axes x.keepdims
-  | ReduceSumSquare x    -> infer_shape_10 input_shapes x.axes x.keepdims
-  | ReduceProd x         -> infer_shape_10 input_shapes x.axes x.keepdims
-  | ReduceLogSum x       -> infer_shape_10 input_shapes x.axes x.keepdims
-  | ReduceLogSumExp x    -> infer_shape_10 input_shapes x.axes x.keepdims
-  | ReduceL1 x           -> infer_shape_10 input_shapes x.axes x.keepdims
-  | ReduceL2 x           -> infer_shape_10 input_shapes x.axes x.keepdims
-  | Reshape x            -> [| Some x.shape |]
-  | Identity x           ->
+  | EyeLike _               -> infer_shape_eye_like input_shapes
+  | RandomUniformLike _     -> infer_shape_01 input_shapes
+  | RandomNormalLike _      -> infer_shape_01 input_shapes
+  | Multinomial x           -> infer_shape_multinomial input_shapes x.sample_size
+  | ConstantOfShape _       -> [| None |] (* depends on content in input node *)
+  | Range _                 -> [| None |]
+  | Sin _                   -> infer_shape_01 input_shapes
+  | Cos _                   -> infer_shape_01 input_shapes
+  | Tan _                   -> infer_shape_01 input_shapes
+  | Asin _                  -> infer_shape_01 input_shapes
+  | Acos _                  -> infer_shape_01 input_shapes
+  | Atan _                  -> infer_shape_01 input_shapes
+  | Sinh _                  -> infer_shape_01 input_shapes
+  | Cosh _                  -> infer_shape_01 input_shapes
+  | Tanh _                  -> infer_shape_01 input_shapes
+  | Asinh _                 -> infer_shape_01 input_shapes
+  | Acosh _                 -> infer_shape_01 input_shapes
+  | Atanh _                 -> infer_shape_01 input_shapes
+  | Sqrt _                  -> infer_shape_01 input_shapes
+  | Exp _                   -> infer_shape_01 input_shapes
+  | Log _                   -> infer_shape_01 input_shapes
+  | Erf _                   -> infer_shape_01 input_shapes
+  | Sigmoid _               -> infer_shape_01 input_shapes
+  | HardSigmoid _           -> infer_shape_01 input_shapes
+  | Abs _                   -> infer_shape_01 input_shapes
+  | Neg _                   -> infer_shape_01 input_shapes
+  | Sign _                  -> infer_shape_01 input_shapes
+  | Floor _                 -> infer_shape_01 input_shapes
+  | Ceil _                  -> infer_shape_01 input_shapes
+  | Round _                 -> infer_shape_01 input_shapes
+  | Clip _                  -> infer_shape_01 input_shapes
+  | Reciprocal _            -> infer_shape_01 input_shapes
+  | Relu _                  -> infer_shape_01 input_shapes
+  | ThresholdedRelu _       -> infer_shape_01 input_shapes
+  | PRelu _                 -> infer_shape_03 input_shapes
+  | Selu _                  -> infer_shape_01 input_shapes
+  | Elu _                   -> infer_shape_01 input_shapes
+  | LeakyRelu _             -> infer_shape_01 input_shapes
+  | Softmax _               -> infer_shape_01 input_shapes
+  | LogSoftmax _            -> infer_shape_01 input_shapes
+  | Softsign _              -> infer_shape_01 input_shapes
+  | Softplus _              -> infer_shape_01 input_shapes
+  | Add _                   -> infer_shape_03 input_shapes
+  | Sub _                   -> infer_shape_03 input_shapes
+  | Mul _                   -> infer_shape_03 input_shapes
+  | Div _                   -> infer_shape_03 input_shapes
+  | Pow _                   -> infer_shape_01 input_shapes
+  | Mod _                   -> infer_shape_01 input_shapes
+  | MatMul _                -> infer_shape_19 input_shapes
+  | MatMulInteger _         -> infer_shape_19 input_shapes
+  | QLinearMatMul _         -> infer_shape_ql_matmul input_shapes
+  | Gemm x                  -> infer_shape_gemm x input_shapes
+  | Max _                   -> infer_shape_31 input_shapes
+  | Min _                   -> infer_shape_31 input_shapes
+  | Sum _                   -> infer_shape_31 input_shapes
+  | Mean _                  -> infer_shape_31 input_shapes
+  | CumSum x                -> infer_shape_axis input_shapes x.axis
+  | Hardmax x               -> infer_shape_axis input_shapes x.axis
+  | Det _                   -> infer_shape_det input_shapes
+  | Expand _                -> infer_shape_03 input_shapes
+  | And _                   -> infer_shape_03 input_shapes
+  | Or _                    -> infer_shape_03 input_shapes
+  | Not _                   -> infer_shape_03 input_shapes
+  | Xor _                   -> infer_shape_03 input_shapes
+  | Greater _               -> infer_shape_03 input_shapes
+  | Less _                  -> infer_shape_03 input_shapes
+  | Equal _                 -> infer_shape_03 input_shapes
+  | BitShift _              -> infer_shape_03 input_shapes
+  | ReduceSum x             -> infer_shape_10 input_shapes x.axes x.keepdims
+  | ReduceMax x             -> infer_shape_10 input_shapes x.axes x.keepdims
+  | ReduceMin x             -> infer_shape_10 input_shapes x.axes x.keepdims
+  | ReduceMean x            -> infer_shape_10 input_shapes x.axes x.keepdims
+  | ReduceSumSquare x       -> infer_shape_10 input_shapes x.axes x.keepdims
+  | ReduceProd x            -> infer_shape_10 input_shapes x.axes x.keepdims
+  | ReduceLogSum x          -> infer_shape_10 input_shapes x.axes x.keepdims
+  | ReduceLogSumExp x       -> infer_shape_10 input_shapes x.axes x.keepdims
+  | ReduceL1 x              -> infer_shape_10 input_shapes x.axes x.keepdims
+  | ReduceL2 x              -> infer_shape_10 input_shapes x.axes x.keepdims
+  | Reshape x               -> [| Some x.shape |]
+  | Identity x              ->
     let idx = x.idx in
     [| input_shapes.(0).(idx) |]
-  | Split x              -> infer_shape_08 input_shapes x.axis x.split
-  | Concat x             -> infer_shape_07 input_shapes x.axis
-  | Pad x                -> infer_shape_pad x input_shapes
-  | Cast _               -> infer_shape_01 input_shapes
-  | Squeeze x            -> infer_shape_squeeze input_shapes x.axes
-  | UnSqueeze x          -> infer_shape_unsqueeze input_shapes x.axes
-  | Tile x               -> infer_shape_05 input_shapes x.repeats
-  | Shape _              -> infer_shape_32 input_shapes
-  | Size _               -> infer_shape_33 input_shapes
-  | Transpose x          -> infer_shape_transpose input_shapes x
-  | Slice x              -> infer_shape_slice input_shapes x
-  | SpaceToDepth x       -> infer_shape_space_to_depth input_shapes x.blocksize
-  | DepthToSpace x       -> infer_shape_depth_to_space input_shapes x.blocksize
-  | IsNaN _              -> infer_shape_01 input_shapes
-  | IsInf _              -> infer_shape_01 input_shapes
-  | NonZero _            -> [| None |]
-  | Where _              -> infer_shape_34 input_shapes
-  | ScatterElements _    -> infer_shape_scatter_elements input_shapes
-  | ScatterND _          -> infer_shape_scatter_nd input_shapes
-  | GatherElements _     -> infer_shape_gather_elements input_shapes
-  | GatherND _           -> [| None |]
-  | Compress x           -> infer_shape_compress input_shapes x.axis
-  | ReverseSeq _         -> infer_shape_revseq input_shapes
-  | Unique _             -> [| None |]
-  | Resize x             -> infer_shape_resize input_shapes x.scales x.sizes
-  | OneHot x             -> infer_shape_onehot input_shapes x.axis x.depth
-  | Conv x               -> infer_shape_conv input_shapes x
-  | ConvTranspose x      -> infer_shape_conv_transpose input_shapes x
-  | MaxPool x            ->
+  | Split x                 -> infer_shape_08 input_shapes x.axis x.split
+  | Concat x                -> infer_shape_07 input_shapes x.axis
+  | Pad x                   -> infer_shape_pad x input_shapes
+  | Cast _                  -> infer_shape_01 input_shapes
+  | Squeeze x               -> infer_shape_squeeze input_shapes x.axes
+  | UnSqueeze x             -> infer_shape_unsqueeze input_shapes x.axes
+  | Tile x                  -> infer_shape_05 input_shapes x.repeats
+  | Shape _                 -> infer_shape_32 input_shapes
+  | Size _                  -> infer_shape_33 input_shapes
+  | Transpose x             -> infer_shape_transpose input_shapes x
+  | Slice x                 -> infer_shape_slice input_shapes x
+  | SpaceToDepth x          -> infer_shape_space_to_depth input_shapes x.blocksize
+  | DepthToSpace x          -> infer_shape_depth_to_space input_shapes x.blocksize
+  | IsNaN _                 -> infer_shape_01 input_shapes
+  | IsInf _                 -> infer_shape_01 input_shapes
+  | NonZero _               -> [| None |]
+  | Where _                 -> infer_shape_34 input_shapes
+  | ScatterElements _       -> infer_shape_scatter_elements input_shapes
+  | ScatterND _             -> infer_shape_scatter_nd input_shapes
+  | GatherElements _        -> infer_shape_gather_elements input_shapes
+  | GatherND _              -> [| None |]
+  | Compress x              -> infer_shape_compress input_shapes x.axis
+  | ReverseSeq _            -> infer_shape_revseq input_shapes
+  | Unique _                -> [| None |]
+  | Resize x                -> infer_shape_resize input_shapes x.scales x.sizes
+  | OneHot x                -> infer_shape_onehot input_shapes x.axis x.depth
+  | Conv x                  -> infer_shape_conv input_shapes x
+  | ConvTranspose x         -> infer_shape_conv_transpose input_shapes x
+  | MaxPool x               ->
     infer_shape_pool ~typ:`max input_shapes x.kernel_shp x.strides x.auto_pad x.pads
-  | AveragePool x        ->
+  | AveragePool x           ->
     infer_shape_pool ~typ:`avg input_shapes x.kernel_shp x.strides x.auto_pad x.pads
-  | BatchNormalization _ -> infer_shape_batch_normalization input_shapes
-  | InstanceNorm _       -> infer_shape_instance_norm input_shapes
-  | Dropout _            ->
+  | BatchNormalization _    -> infer_shape_batch_normalization input_shapes
+  | InstanceNorm _          -> infer_shape_instance_norm input_shapes
+  | Dropout _               ->
     let t = infer_shape_01 input_shapes in
     [| t.(0); t.(0) |]
-  | GlobalAveragePool _  -> infer_shape_35 input_shapes
-  | GlobalMaxPool _      -> infer_shape_35 input_shapes
-  | Flatten x            -> infer_shape_flatten input_shapes x.axis
-  | LSTM _               -> infer_shape_lstm input_shapes
-  | RoiAlign x           -> infer_shape_roialign input_shapes x
-  | NonMaxSuppression _  -> infer_shape_non_max_suppression input_shapes
-  | QuantizeLinear _     -> infer_shape_01 input_shapes
-  | DeQuantizeLinear _   -> infer_shape_01 input_shapes
-  | DynamicQuantizeLinear _ ->  infer_shape_dynamic_quantize input_shapes
-  | SequenceEmpty _      -> [||] (* how to differ empty seq to a scalar? *)
-  | SequenceAt x         -> infer_shape_seq_at input_shapes x.pos
-  | SequenceInsert x     -> infer_shape_seq_insert input_shapes x.pos
-  | SequenceLength _     -> [||]
-  | SequenceConstruct _  -> infer_shape_seq_cons input_shapes
-  | SequenceErase x      -> infer_shape_seq_erase input_shapes x.pos
-  | SplitToSequence x    -> infer_shape_split_to_seq input_shapes x
-  | ConcatFromSequence x -> infer_shape_concat_from_seq input_shapes x.axis x.new_axis
-  | _                    -> [| None |]
+  | GlobalAveragePool _     -> infer_shape_35 input_shapes
+  | GlobalMaxPool _         -> infer_shape_35 input_shapes
+  | Flatten x               -> infer_shape_flatten input_shapes x.axis
+  | LSTM _                  -> infer_shape_lstm input_shapes
+  | RoiAlign x              -> infer_shape_roialign input_shapes x
+  | NonMaxSuppression _     -> infer_shape_non_max_suppression input_shapes
+  | QuantizeLinear _        -> infer_shape_01 input_shapes
+  | DeQuantizeLinear _      -> infer_shape_01 input_shapes
+  | DynamicQuantizeLinear _ -> infer_shape_dynamic_quantize input_shapes
+  | SequenceEmpty _         -> [||] (* how to differ empty seq to a scalar? *)
+  | SequenceAt x            -> infer_shape_seq_at input_shapes x.pos
+  | SequenceInsert x        -> infer_shape_seq_insert input_shapes x.pos
+  | SequenceLength _        -> [||]
+  | SequenceConstruct _     -> infer_shape_seq_cons input_shapes
+  | SequenceErase x         -> infer_shape_seq_erase input_shapes x.pos
+  | SplitToSequence x       -> infer_shape_split_to_seq input_shapes x
+  | ConcatFromSequence x    -> infer_shape_concat_from_seq input_shapes x.axis x.new_axis
+  | _                       -> [| None |]
