@@ -220,17 +220,17 @@ let check_constraint t constraints name =
  *   + In the main body, I still check based on Symbolic node, not onnx nodes, this could be logically wrong.
  *)
 
-let _types_constraint00 = [| SNT_Float; SNT_Float16; SNT_Double |]
+let _tc00 = [| SNT_Float; SNT_Float16; SNT_Double |]
 
-let _types_constraint01 =
+let _tc01 =
   [| SNT_Int8; SNT_Int16; SNT_Int32; SNT_Int64; SNT_Float16; SNT_Float; SNT_Double |]
 
 
-let _types_constraint02 =
+let _tc02 =
   [| SNT_Uint32; SNT_Uint64; SNT_Int32; SNT_Int64; SNT_Float16; SNT_Float; SNT_Double |]
 
 
-let _types_constraint03 =
+let _tc03 =
   [| SNT_Uint8
    ; SNT_Uint16
    ; SNT_Uint32
@@ -249,7 +249,7 @@ let _types_constraint03 =
   |]
 
 
-let _types_constraint04 =
+let _tc04 =
   [| SNT_Uint8
    ; SNT_Uint16
    ; SNT_Uint32
@@ -264,7 +264,7 @@ let _types_constraint04 =
   |]
 
 
-let _types_constraint05 =
+let _tc05 =
   [| SNT_Uint8
    ; SNT_Uint16
    ; SNT_Uint32
@@ -281,9 +281,9 @@ let _types_constraint05 =
   |]
 
 
-let _types_constraint06 = [| SNT_Uint8; SNT_Uint16; SNT_Uint32; SNT_Uint64 |]
+let _tc06 = [| SNT_Uint8; SNT_Uint16; SNT_Uint32; SNT_Uint64 |]
 
-let _types_constraint07 =
+let _tc07 =
   [| SNT_Uint8
    ; SNT_Uint16
    ; SNT_Uint32
@@ -299,9 +299,9 @@ let _types_constraint07 =
   |]
 
 
-let _types_constraint08 = [| SNT_Float; SNT_Double; SNT_Int16; SNT_Int32; SNT_Int64 |]
+let _tc08 = [| SNT_Float; SNT_Double; SNT_Int16; SNT_Int32; SNT_Int64 |]
 
-let _types_constraint03_seq = Array.map (fun d -> SNT_SEQ d) _types_constraint03
+let _tc03_seq = Array.map (fun d -> SNT_SEQ d) _tc03
 
 let type_check_pattern00 sym = [| Owl_symbolic_symbol.dtype sym |]
 
@@ -370,120 +370,47 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | Variable _              -> type_check_pattern00 sym
         | RandomUniform _         ->
           let dt = Owl_symbolic_symbol.dtype sym in
-          type_check_pattern01 [| dt |] _types_constraint00 name
+          type_check_pattern01 [| dt |] _tc00 name
         | RandomNormal _          ->
           let dt = Owl_symbolic_symbol.dtype sym in
-          type_check_pattern01 [| dt |] _types_constraint00 name
-        | EyeLike _               -> type_check_pattern04
-                                       ptypes
-                                       _types_constraint07
-                                       name
-                                       sym
+          type_check_pattern01 [| dt |] _tc00 name
+        | EyeLike _               -> type_check_pattern04 ptypes _tc07 name sym
         | RandomUniformLike _     ->
-          let t = type_check_pattern04 ptypes _types_constraint03 name sym in
-          type_check_pattern01 t _types_constraint00 name
+          let t = type_check_pattern04 ptypes _tc03 name sym in
+          type_check_pattern01 t _tc00 name
         | RandomNormalLike _      ->
-          let t = type_check_pattern04 ptypes _types_constraint03 name sym in
-          type_check_pattern01 t _types_constraint00 name
+          let t = type_check_pattern04 ptypes _tc03 name sym in
+          type_check_pattern01 t _tc00 name
         | Multinomial x           ->
-          type_check_pattern01 ptypes.(0) _types_constraint00 name |> ignore;
+          type_check_pattern01 ptypes.(0) _tc00 name |> ignore;
           type_check_pattern01 [| x.dtype |] [| SNT_Int32; SNT_Int64 |] name
         | ConstantOfShape x       ->
           type_check_pattern01 ptypes.(0) [| SNT_Int64 |] name |> ignore;
-          type_check_pattern01 [| x.value.dtype |] _types_constraint04 name
-        | Range _                 -> type_check_pattern02 ptypes _types_constraint08 name
-        | Sin _                   -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Cos _                   -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Tan _                   -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Asin _                  -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Acos _                  -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Atan _                  -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Sinh _                  -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Cosh _                  -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Tanh _                  -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Asinh _                 -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Acosh _                 -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Atanh _                 -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Sqrt _                  -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Exp _                   -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Log _                   -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Erf _                   -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint04
-                                       name
-        | Sigmoid _               -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | HardSigmoid _           -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Neg _                   -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint01
-                                       name
-        | Sign _                  -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint04
-                                       name
-        | Floor _                 -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Ceil _                  -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Round _                 -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
+          type_check_pattern01 [| x.value.dtype |] _tc04 name
+        | Range _                 -> type_check_pattern02 ptypes _tc08 name
+        | Sin _                   -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Cos _                   -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Tan _                   -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Asin _                  -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Acos _                  -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Atan _                  -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Sinh _                  -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Cosh _                  -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Tanh _                  -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Asinh _                 -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Acosh _                 -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Atanh _                 -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Sqrt _                  -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Exp _                   -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Log _                   -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Erf _                   -> type_check_pattern01 ptypes.(0) _tc04 name
+        | Sigmoid _               -> type_check_pattern01 ptypes.(0) _tc00 name
+        | HardSigmoid _           -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Neg _                   -> type_check_pattern01 ptypes.(0) _tc01 name
+        | Sign _                  -> type_check_pattern01 ptypes.(0) _tc04 name
+        | Floor _                 -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Ceil _                  -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Round _                 -> type_check_pattern01 ptypes.(0) _tc00 name
         | Clip _                  ->
           (* TODO: we set the min/max tensor to be float; 
            * change dtypes to be consistent with that of input data
@@ -494,55 +421,25 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           Owl_symbolic_symbol.update_tensor_dtype
             (Owl_graph.attr parents.(2))
             ptypes.(0).(0);
-          type_check_pattern01 ptypes.(0) _types_constraint00 name
-        | Reciprocal _            -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Relu _                  -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | PRelu _                 -> type_check_pattern02 ptypes _types_constraint02 name
-        | ThresholdedRelu _       -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Selu _                  -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Elu _                   -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | LeakyRelu _             -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Softmax _               -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | LogSoftmax _            -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Softsign _              -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Softplus _              -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Add _                   -> type_check_pattern02 ptypes _types_constraint02 name
-        | Sub _                   -> type_check_pattern02 ptypes _types_constraint02 name
-        | Mul _                   -> type_check_pattern02 ptypes _types_constraint02 name
-        | Div _                   -> type_check_pattern02 ptypes _types_constraint02 name
-        | Pow _                   -> type_check_pattern02 ptypes _types_constraint00 name
-        | Mod _                   -> type_check_pattern02 ptypes _types_constraint04 name
-        | MatMul _                -> type_check_pattern02 ptypes _types_constraint02 name
+          type_check_pattern01 ptypes.(0) _tc00 name
+        | Reciprocal _            -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Relu _                  -> type_check_pattern01 ptypes.(0) _tc00 name
+        | PRelu _                 -> type_check_pattern02 ptypes _tc02 name
+        | ThresholdedRelu _       -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Selu _                  -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Elu _                   -> type_check_pattern01 ptypes.(0) _tc00 name
+        | LeakyRelu _             -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Softmax _               -> type_check_pattern01 ptypes.(0) _tc00 name
+        | LogSoftmax _            -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Softsign _              -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Softplus _              -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Add _                   -> type_check_pattern02 ptypes _tc02 name
+        | Sub _                   -> type_check_pattern02 ptypes _tc02 name
+        | Mul _                   -> type_check_pattern02 ptypes _tc02 name
+        | Div _                   -> type_check_pattern02 ptypes _tc02 name
+        | Pow _                   -> type_check_pattern02 ptypes _tc00 name
+        | Mod _                   -> type_check_pattern02 ptypes _tc04 name
+        | MatMul _                -> type_check_pattern02 ptypes _tc02 name
         | MatMulInteger _         ->
           type_check_pattern02 ptypes [| SNT_Int8; SNT_Uint8 |] name |> ignore;
           [| SNT_Int32 |]
@@ -556,233 +453,169 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
             [| ptypes.(0); ptypes.(2); ptypes.(3); ptypes.(5); ptypes.(7) |]
             [| SNT_Int8; SNT_Uint8 |]
             name
-        | Gemm _                  -> type_check_pattern02 ptypes _types_constraint02 name
-        | Max _                   -> type_check_pattern02 ptypes _types_constraint00 name
-        | Min _                   -> type_check_pattern02 ptypes _types_constraint00 name
-        | Sum _                   -> type_check_pattern02 ptypes _types_constraint00 name
-        | Mean _                  -> type_check_pattern02 ptypes _types_constraint00 name
+        | Gemm _                  -> type_check_pattern02 ptypes _tc02 name
+        | Max _                   -> type_check_pattern02 ptypes _tc00 name
+        | Min _                   -> type_check_pattern02 ptypes _tc00 name
+        | Sum _                   -> type_check_pattern02 ptypes _tc00 name
+        | Mean _                  -> type_check_pattern02 ptypes _tc00 name
         | CumSum _                ->
           type_check_pattern02 ptypes [| SNT_Int32; SNT_Int64 |] name |> ignore;
-          type_check_pattern01 ptypes.(0) _types_constraint02 name
-        | Hardmax _               -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Det _                   -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
+          type_check_pattern01 ptypes.(0) _tc02 name
+        | Hardmax _               -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Det _                   -> type_check_pattern01 ptypes.(0) _tc00 name
         | Expand _                ->
           type_check_pattern01 ptypes.(1) [| SNT_Int64 |] name |> ignore;
-          type_check_pattern01 ptypes.(0) _types_constraint03 name
+          type_check_pattern01 ptypes.(0) _tc03 name
         | And _                   -> type_check_pattern02 ptypes [| SNT_Bool |] name
         | Or _                    -> type_check_pattern02 ptypes [| SNT_Bool |] name
         | Not _                   -> type_check_pattern02 ptypes [| SNT_Bool |] name
         | Xor _                   -> type_check_pattern02 ptypes [| SNT_Bool |] name
         | Greater _               ->
-          type_check_pattern02 ptypes _types_constraint04 name |> ignore;
+          type_check_pattern02 ptypes _tc04 name |> ignore;
           [| SNT_Bool |]
         | Less _                  ->
-          type_check_pattern02 ptypes _types_constraint04 name |> ignore;
+          type_check_pattern02 ptypes _tc04 name |> ignore;
           [| SNT_Bool |]
         | Equal _                 ->
-          type_check_pattern02 ptypes _types_constraint04 name |> ignore;
+          type_check_pattern02 ptypes _tc04 name |> ignore;
           [| SNT_Bool |]
-        | BitShift _              -> type_check_pattern02 ptypes _types_constraint06 name
-        | ReduceSum _             -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint02
-                                       name
-        | ReduceMax _             -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint02
-                                       name
-        | ReduceMin _             -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint02
-                                       name
-        | ReduceMean _            -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint02
-                                       name
-        | ReduceSumSquare _       -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint02
-                                       name
-        | ReduceProd _            -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint02
-                                       name
-        | ReduceLogSum _          -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint02
-                                       name
-        | ReduceLogSumExp _       -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint02
-                                       name
-        | ReduceL1 _              -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint02
-                                       name
-        | ReduceL2 _              -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint02
-                                       name
-        | Reshape _               ->
-          type_check_pattern03 ptypes _types_constraint03 [| SNT_Int64 |] name
+        | BitShift _              -> type_check_pattern02 ptypes _tc06 name
+        | ReduceSum _             -> type_check_pattern01 ptypes.(0) _tc02 name
+        | ReduceMax _             -> type_check_pattern01 ptypes.(0) _tc02 name
+        | ReduceMin _             -> type_check_pattern01 ptypes.(0) _tc02 name
+        | ReduceMean _            -> type_check_pattern01 ptypes.(0) _tc02 name
+        | ReduceSumSquare _       -> type_check_pattern01 ptypes.(0) _tc02 name
+        | ReduceProd _            -> type_check_pattern01 ptypes.(0) _tc02 name
+        | ReduceLogSum _          -> type_check_pattern01 ptypes.(0) _tc02 name
+        | ReduceLogSumExp _       -> type_check_pattern01 ptypes.(0) _tc02 name
+        | ReduceL1 _              -> type_check_pattern01 ptypes.(0) _tc02 name
+        | ReduceL2 _              -> type_check_pattern01 ptypes.(0) _tc02 name
+        | Reshape _               -> type_check_pattern03 ptypes _tc03 [| SNT_Int64 |] name
         | Identity s              ->
           let idx = s.idx in
           [| ptypes.(0).(idx) |]
         | Split s                 ->
           let n = Array.length s.split in
-          let t = type_check_pattern01 ptypes.(0) _types_constraint03 name in
+          let t = type_check_pattern01 ptypes.(0) _tc03 name in
           Array.make n t.(0)
-        | Concat _                -> type_check_pattern02 ptypes _types_constraint03 name
+        | Concat _                -> type_check_pattern02 ptypes _tc03 name
         | Pad _                   ->
-          let t = type_check_pattern01 ptypes.(0) _types_constraint04 name in
+          let t = type_check_pattern01 ptypes.(0) _tc04 name in
           type_check_pattern01 ptypes.(1) [| SNT_Int64 |] name |> ignore;
           if Array.length ptypes = 3
-          then type_check_pattern01 ptypes.(2) _types_constraint04 name |> ignore;
+          then type_check_pattern01 ptypes.(2) _tc04 name |> ignore;
           t
         | Cast x                  ->
-          type_check_pattern01 ptypes.(0) _types_constraint05 name |> ignore;
+          type_check_pattern01 ptypes.(0) _tc05 name |> ignore;
           let t = x.target in
-          type_check_pattern01 [| t |] _types_constraint05 name
-        | Squeeze _               -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint03
-                                       name
-        | UnSqueeze _             -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint03
-                                       name
+          type_check_pattern01 [| t |] _tc05 name
+        | Squeeze _               -> type_check_pattern01 ptypes.(0) _tc03 name
+        | UnSqueeze _             -> type_check_pattern01 ptypes.(0) _tc03 name
         | Tile _                  ->
           type_check_pattern01 ptypes.(1) [| SNT_Int64 |] name |> ignore;
-          type_check_pattern01 ptypes.(0) _types_constraint03 name
+          type_check_pattern01 ptypes.(0) _tc03 name
         | Shape _                 ->
-          type_check_pattern01 ptypes.(0) _types_constraint03 name |> ignore;
+          type_check_pattern01 ptypes.(0) _tc03 name |> ignore;
           [| SNT_Int64 |]
         | Size _                  ->
-          type_check_pattern01 ptypes.(0) _types_constraint03 name |> ignore;
+          type_check_pattern01 ptypes.(0) _tc03 name |> ignore;
           [| SNT_Int64 |]
-        | Transpose _             -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint03
-                                       name
+        | Transpose _             -> type_check_pattern01 ptypes.(0) _tc03 name
         | Slice _                 ->
           type_check_pattern02
             (Array.sub ptypes 1 (Array.length ptypes - 1))
             [| SNT_Int32; SNT_Int64 |]
             name
           |> ignore;
-          type_check_pattern01 ptypes.(0) _types_constraint03 name
-        | SpaceToDepth _          -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint03
-                                       name
-        | DepthToSpace _          -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint03
-                                       name
+          type_check_pattern01 ptypes.(0) _tc03 name
+        | SpaceToDepth _          -> type_check_pattern01 ptypes.(0) _tc03 name
+        | DepthToSpace _          -> type_check_pattern01 ptypes.(0) _tc03 name
         | IsNaN _                 ->
-          type_check_pattern01 ptypes.(0) _types_constraint00 name |> ignore;
+          type_check_pattern01 ptypes.(0) _tc00 name |> ignore;
           [| SNT_Bool |]
         | IsInf _                 ->
           type_check_pattern01 ptypes.(0) [| SNT_Float; SNT_Double |] name |> ignore;
           [| SNT_Bool |]
         | NonZero _               ->
-          type_check_pattern01 ptypes.(0) _types_constraint00 name |> ignore;
+          type_check_pattern01 ptypes.(0) _tc00 name |> ignore;
           [| SNT_Int64 |]
         | Where _                 ->
           type_check_pattern01 ptypes.(0) [| SNT_Bool |] name |> ignore;
-          type_check_pattern02 [| ptypes.(1); ptypes.(2) |] _types_constraint03 name
+          type_check_pattern02 [| ptypes.(1); ptypes.(2) |] _tc03 name
         | ScatterElements _       ->
           type_check_pattern01 ptypes.(1) [| SNT_Int32; SNT_Int64 |] name |> ignore;
-          type_check_pattern02 [| ptypes.(0); ptypes.(2) |] _types_constraint03 name
+          type_check_pattern02 [| ptypes.(0); ptypes.(2) |] _tc03 name
         | ScatterND _             ->
           type_check_pattern01 ptypes.(1) [| SNT_Int32; SNT_Int64 |] name |> ignore;
-          type_check_pattern02 [| ptypes.(0); ptypes.(2) |] _types_constraint03 name
+          type_check_pattern02 [| ptypes.(0); ptypes.(2) |] _tc03 name
         | GatherElements _        ->
           type_check_pattern01 ptypes.(1) [| SNT_Int32; SNT_Int64 |] name |> ignore;
-          type_check_pattern01 ptypes.(0) _types_constraint03 name
+          type_check_pattern01 ptypes.(0) _tc03 name
         | GatherND _              ->
           type_check_pattern01 ptypes.(1) [| SNT_Int64 |] name |> ignore;
-          type_check_pattern01 ptypes.(0) _types_constraint03 name
+          type_check_pattern01 ptypes.(0) _tc03 name
         | Compress _              ->
           type_check_pattern01 ptypes.(1) [| SNT_Bool |] name |> ignore;
-          type_check_pattern01 ptypes.(0) _types_constraint03 name
+          type_check_pattern01 ptypes.(0) _tc03 name
         | ReverseSeq _            ->
           type_check_pattern01 ptypes.(1) [| SNT_Int64 |] name |> ignore;
-          type_check_pattern01 ptypes.(0) _types_constraint03 name
+          type_check_pattern01 ptypes.(0) _tc03 name
         | Unique _                ->
-          let t1 = type_check_pattern01 ptypes.(0) _types_constraint03 name in
+          let t1 = type_check_pattern01 ptypes.(0) _tc03 name in
           let t2 = SNT_Int64 in
           [| t1.(0); t2 |]
         | Resize _                ->
-          type_check_pattern01 ptypes.(1) _types_constraint00 name |> ignore;
+          type_check_pattern01 ptypes.(1) _tc00 name |> ignore;
           (* TODO: check type of optional input *)
-          type_check_pattern01 ptypes.(0) _types_constraint03 name
+          type_check_pattern01 ptypes.(0) _tc03 name
         | OneHot _                ->
-          type_check_pattern01 ptypes.(0) _types_constraint04 name |> ignore;
-          type_check_pattern01 ptypes.(1) _types_constraint04 name |> ignore;
-          type_check_pattern01 ptypes.(2) _types_constraint03 name
-        | Conv _                  -> type_check_pattern02 ptypes _types_constraint00 name
-        | ConvTranspose _         -> type_check_pattern02 ptypes _types_constraint00 name
+          type_check_pattern01 ptypes.(0) _tc04 name |> ignore;
+          type_check_pattern01 ptypes.(1) _tc04 name |> ignore;
+          type_check_pattern01 ptypes.(2) _tc03 name
+        | Conv _                  -> type_check_pattern02 ptypes _tc00 name
+        | ConvTranspose _         -> type_check_pattern02 ptypes _tc00 name
         | MaxPool _               ->
-          let t1 = type_check_pattern01 ptypes.(0) _types_constraint00 name in
+          let t1 = type_check_pattern01 ptypes.(0) _tc00 name in
           let t2 = SNT_Int64 in
           [| t1.(0); t2 |]
-        | AveragePool _           -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
+        | AveragePool _           -> type_check_pattern01 ptypes.(0) _tc00 name
         | BatchNormalization _    ->
-          let t = type_check_pattern02 ptypes _types_constraint00 name in
+          let t = type_check_pattern02 ptypes _tc00 name in
           Array.make 5 t.(0)
-        | InstanceNorm _          -> type_check_pattern02 ptypes _types_constraint00 name
+        | InstanceNorm _          -> type_check_pattern02 ptypes _tc00 name
         | Dropout _               ->
-          let t = type_check_pattern01 ptypes.(0) _types_constraint00 name in
+          let t = type_check_pattern01 ptypes.(0) _tc00 name in
           [| t.(0); SNT_Bool |]
-        | GlobalAveragePool _     -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | GlobalMaxPool _         -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint00
-                                       name
-        | Flatten _               -> type_check_pattern01
-                                       ptypes.(0)
-                                       _types_constraint03
-                                       name
+        | GlobalAveragePool _     -> type_check_pattern01 ptypes.(0) _tc00 name
+        | GlobalMaxPool _         -> type_check_pattern01 ptypes.(0) _tc00 name
+        | Flatten _               -> type_check_pattern01 ptypes.(0) _tc03 name
         | LSTM _                  ->
-          let t = type_check_pattern02 ptypes _types_constraint00 name in
-          (try type_check_pattern01 ptypes.(3) _types_constraint00 |> ignore with
+          let t = type_check_pattern02 ptypes _tc00 name in
+          (try type_check_pattern01 ptypes.(3) _tc00 |> ignore with
           | Invalid_argument _ -> ());
           (try type_check_pattern01 ptypes.(4) [| SNT_Int32 |] |> ignore with
           | Invalid_argument _ -> ());
-          (try type_check_pattern01 ptypes.(5) _types_constraint00 |> ignore with
+          (try type_check_pattern01 ptypes.(5) _tc00 |> ignore with
           | Invalid_argument _ -> ());
-          (try type_check_pattern01 ptypes.(6) _types_constraint00 |> ignore with
+          (try type_check_pattern01 ptypes.(6) _tc00 |> ignore with
           | Invalid_argument _ -> ());
-          (try type_check_pattern01 ptypes.(7) _types_constraint00 |> ignore with
+          (try type_check_pattern01 ptypes.(7) _tc00 |> ignore with
           | Invalid_argument _ -> ());
           [| t.(0); t.(0); t.(0) |]
         | RNN _                   ->
-          let t = type_check_pattern02 ptypes _types_constraint00 name in
-          (try type_check_pattern01 ptypes.(3) _types_constraint00 |> ignore with
+          let t = type_check_pattern02 ptypes _tc00 name in
+          (try type_check_pattern01 ptypes.(3) _tc00 |> ignore with
           | Invalid_argument _ -> ());
-          (try type_check_pattern01 ptypes.(5) _types_constraint00 |> ignore with
+          (try type_check_pattern01 ptypes.(5) _tc00 |> ignore with
           | Invalid_argument _ -> ());
           (try type_check_pattern01 ptypes.(4) [| SNT_Int32 |] |> ignore with
           | Invalid_argument _ -> ());
           [| t.(0); t.(0) |]
         | GRU _                   ->
-          let t = type_check_pattern02 ptypes _types_constraint00 name in
-          (try type_check_pattern01 ptypes.(3) _types_constraint00 |> ignore with
+          let t = type_check_pattern02 ptypes _tc00 name in
+          (try type_check_pattern01 ptypes.(3) _tc00 |> ignore with
           | Invalid_argument _ -> ());
-          (try type_check_pattern01 ptypes.(5) _types_constraint00 |> ignore with
+          (try type_check_pattern01 ptypes.(5) _tc00 |> ignore with
           | Invalid_argument _ -> ());
           (try type_check_pattern01 ptypes.(4) [| SNT_Int32 |] |> ignore with
           | Invalid_argument _ -> ());
@@ -790,7 +623,7 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | RoiAlign _              ->
           assert (Array.length ptypes = 3);
           type_check_pattern01 ptypes.(2) [| SNT_Int64 |] name |> ignore;
-          type_check_pattern02 [| ptypes.(0); ptypes.(1) |] _types_constraint00 name
+          type_check_pattern02 [| ptypes.(0); ptypes.(1) |] _tc00 name
         | NonMaxSuppression _     ->
           assert (Array.length ptypes <= 5);
           type_check_pattern02
@@ -818,29 +651,29 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
         | SequenceEmpty s         -> [| SNT_SEQ s.dtype |]
         | SequenceAt _            ->
           type_check_pattern01 ptypes.(1) [| SNT_Int32; SNT_Int64 |] name |> ignore;
-          let t = type_check_pattern01 ptypes.(0) _types_constraint03_seq name in
+          let t = type_check_pattern01 ptypes.(0) _tc03_seq name in
           [| get_seq_dtype t.(0) |]
         | SequenceInsert _        ->
           type_check_pattern01 ptypes.(2) [| SNT_Int32; SNT_Int64 |] name |> ignore;
           type_check_pattern01 ptypes.(1) [| get_seq_dtype ptypes.(0).(0) |] name
           |> ignore;
-          type_check_pattern01 ptypes.(0) _types_constraint03_seq name
+          type_check_pattern01 ptypes.(0) _tc03_seq name
         | SequenceLength _        ->
-          type_check_pattern01 ptypes.(0) _types_constraint03_seq name |> ignore;
+          type_check_pattern01 ptypes.(0) _tc03_seq name |> ignore;
           [| SNT_Int64 |]
         | SequenceConstruct _     ->
-          type_check_pattern02 ptypes _types_constraint03 name |> ignore;
+          type_check_pattern02 ptypes _tc03 name |> ignore;
           let t = get_seq_dtype ptypes.(0).(0) in
           [| SNT_SEQ t |]
         | SequenceErase _         ->
           type_check_pattern01 ptypes.(1) [| SNT_Int32; SNT_Int64 |] name |> ignore;
-          type_check_pattern01 ptypes.(0) _types_constraint03_seq name
+          type_check_pattern01 ptypes.(0) _tc03_seq name
         | SplitToSequence _       ->
-          let t = type_check_pattern01 ptypes.(0) _types_constraint03 name in
+          let t = type_check_pattern01 ptypes.(0) _tc03 name in
           type_check_pattern01 ptypes.(1) [| SNT_Int32; SNT_Int64 |] name |> ignore;
           [| SNT_SEQ t.(0) |]
         | ConcatFromSequence _    ->
-          type_check_pattern01 ptypes.(0) _types_constraint03_seq name |> ignore;
+          type_check_pattern01 ptypes.(0) _tc03_seq name |> ignore;
           [| get_seq_dtype ptypes.(0).(0) |]
         | _                       -> [| SNT_Noop |]
       in
