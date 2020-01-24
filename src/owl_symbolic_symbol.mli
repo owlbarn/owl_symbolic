@@ -136,6 +136,7 @@ type t =
   | Flatten               of Owl_symbolic_ops_nn.Flatten.t
   | LSTM                  of Owl_symbolic_ops_rnn.LSTM.t
   | RNN                   of Owl_symbolic_ops_rnn.RNN.t
+  | GRU                   of Owl_symbolic_ops_rnn.GRU.t
   | RoiAlign              of Owl_symbolic_ops_object_detection.RoiAlign.t
   | NonMaxSuppression     of Owl_symbolic_ops_object_detection.NonMaxSuppression.t
   | QuantizeLinear        of Owl_symbolic_ops_quantization.QuantizeLinear.t

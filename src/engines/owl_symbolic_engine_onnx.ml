@@ -778,6 +778,15 @@ let build_onnx_type_check (sym_graph : Owl_symbolic_graph.t) =
           (try type_check_pattern01 ptypes.(4) [| SNT_Int32 |] |> ignore with
           | Invalid_argument _ -> ());
           [| t.(0); t.(0) |]
+        | GRU _                   ->
+          let t = type_check_pattern02 ptypes _types_constraint00 name in
+          (try type_check_pattern01 ptypes.(3) _types_constraint00 |> ignore with
+          | Invalid_argument _ -> ());
+          (try type_check_pattern01 ptypes.(5) _types_constraint00 |> ignore with
+          | Invalid_argument _ -> ());
+          (try type_check_pattern01 ptypes.(4) [| SNT_Int32 |] |> ignore with
+          | Invalid_argument _ -> ());
+          [| t.(0); t.(0) |]
         | RoiAlign _              ->
           assert (Array.length ptypes = 3);
           type_check_pattern01 ptypes.(2) [| SNT_Int64 |] name |> ignore;
@@ -1282,6 +1291,37 @@ let build_onnx_attrs_rnn (x : Owl_symbolic_ops_rnn.RNN.t) =
   attrs
 
 
+let build_onnx_attrs_gru (x : Owl_symbolic_ops_rnn.GRU.t) =
+  let attr_hidden = make_attr_int "hidden_size" x.hidden_size in
+  let strings = Array.map Owl_symbolic_types.activation_to_string x.activations in
+  let attr_activation = make_attr_strings "activations" strings in
+  let attr_direction = make_attr_string "direction" x.direction in
+  let attr_linear = make_attr_int "linear_before_reset" x.linear_before_reset in
+  let attrs = [ attr_hidden; attr_activation; attr_direction; attr_linear ] in
+  let attrs =
+    match x.activation_alpha with
+    | Some a ->
+      let attr_alpha = make_attr_flts "activation_alpha" a in
+      List.append attrs [ attr_alpha ]
+    | None   -> attrs
+  in
+  let attrs =
+    match x.activation_beta with
+    | Some a ->
+      let attr_beta = make_attr_flts "activation_beta" a in
+      List.append attrs [ attr_beta ]
+    | None   -> attrs
+  in
+  let attrs =
+    match x.clip with
+    | Some c ->
+      let attr_clip = make_attr_flt "clip" (Some c) in
+      List.append attrs [ attr_clip ]
+    | None   -> attrs
+  in
+  attrs
+
+
 let build_onnx_attrs_roi_align (x : Owl_symbolic_ops_object_detection.RoiAlign.t) =
   let s =
     match x.mode with
@@ -1431,6 +1471,7 @@ let build_onnx_attrs sym =
     | S.Dropout x            -> build_onnx_attrs_dropout x
     | S.LSTM x               -> build_onnx_attrs_lstm x
     | S.RNN x                -> build_onnx_attrs_rnn x
+    | S.GRU x                -> build_onnx_attrs_gru x
     | S.RoiAlign x           -> build_onnx_attrs_roi_align x
     | S.NonMaxSuppression x  -> build_onnx_attrs_non_maxx_suppression x.center_point_box
     | S.SplitToSequence x    -> build_onnx_attrs_split_to_seq x.axis x.keepdims

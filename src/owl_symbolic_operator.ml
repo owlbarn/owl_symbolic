@@ -1276,6 +1276,77 @@ let rnn
   y, yh
 
 
+let gru
+    ?name
+    ?alpha
+    ?beta
+    ?clip
+    ?activations
+    ?direction
+    ?linear_before_reset
+    ?b
+    ?sequence_lens
+    ?initial_h
+    hidden_size
+    x
+    w
+    r
+  =
+  (* build multiple outputs of split *)
+  let l_name = Owl_symbolic_utils.node_name ?name "GRU" in
+  let n0 = l_name ^ "_y" in
+  let n1 = l_name ^ "_yh" in
+  (* create symbol *)
+  let xn = Owl_symbolic_graph.name x in
+  let wn = Owl_symbolic_graph.name w in
+  let rn = Owl_symbolic_graph.name r in
+  let get_name_func = function
+    | Some x -> Owl_symbolic_graph.name x
+    | None   -> ""
+  in
+  let bn = get_name_func b in
+  let sn = get_name_func sequence_lens in
+  let hn = get_name_func initial_h in
+  let output = [| n0; n1 |] in
+  let s =
+    Owl_symbolic_ops_rnn.GRU.create
+      ~output
+      ~name:l_name
+      ?alpha
+      ?beta
+      ?clip
+      ?activations
+      ?direction
+      ?linear_before_reset
+      hidden_size
+      xn
+      wn
+      rn
+      bn
+      sn
+      hn
+  in
+  (* TODO: a better approach *)
+  let parents =
+    match b, sequence_lens, initial_h with
+    | Some b, Some s, Some i -> [| x; w; r; b; s; i |]
+    | Some b, Some s, None   -> [| x; w; r; b; s |]
+    | Some b, None, Some i   -> [| x; w; r; b; i |]
+    | None, Some s, Some i   -> [| x; w; r; s; i |]
+    | None, None, Some i     -> [| x; w; r; i |]
+    | None, Some s, None     -> [| x; w; r; s |]
+    | Some b, None, None     -> [| x; w; r; b |]
+    | None, None, None       -> [| x; w; r |]
+  in
+  let l_node = make_node (Owl_symbolic_symbol.GRU s) parents in
+  (* create identity nodes *)
+  let o0 = Owl_symbolic_ops_tensor.Identity.create ~idx:0 ?name n0 in
+  let o1 = Owl_symbolic_ops_tensor.Identity.create ~idx:1 ?name n1 in
+  let y = make_node (Owl_symbolic_symbol.Identity o0) [| l_node |] in
+  let yh = make_node (Owl_symbolic_symbol.Identity o1) [| l_node |] in
+  y, yh
+
+
 let roi_align ?name ?mode ?height ?width ?ratio ?scale x rois batch_indices =
   let xn = Owl_symbolic_graph.name x in
   let rn = Owl_symbolic_graph.name rois in

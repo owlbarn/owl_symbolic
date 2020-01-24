@@ -155,6 +155,7 @@ type t =
   (* RNN *)
   | LSTM                  of LSTM.t
   | RNN                   of RNN.t
+  | GRU                   of GRU.t
   (* Object Detection *)
   | RoiAlign              of RoiAlign.t
   | NonMaxSuppression     of NonMaxSuppression.t
@@ -299,6 +300,7 @@ let name = function
   | Flatten x               -> Flatten.(x.name)
   | LSTM x                  -> LSTM.(x.name)
   | RNN x                   -> RNN.(x.name)
+  | GRU x                   -> GRU.(x.name)
   | RoiAlign x              -> RoiAlign.(x.name)
   | NonMaxSuppression x     -> NonMaxSuppression.(x.name)
   | QuantizeLinear x        -> QuantizeLinear.(x.name)
@@ -442,6 +444,7 @@ let op_type = function
   | Flatten _               -> Flatten.op_type
   | LSTM _                  -> LSTM.op_type
   | RNN _                   -> RNN.op_type
+  | GRU _                   -> GRU.op_type
   | RoiAlign _              -> RoiAlign.op_type
   | NonMaxSuppression _     -> NonMaxSuppression.op_type
   | QuantizeLinear _        -> QuantizeLinear.op_type
@@ -585,6 +588,7 @@ let input = function
   | Flatten x               -> Flatten.(x.input)
   | LSTM x                  -> LSTM.(x.input)
   | RNN x                   -> RNN.(x.input)
+  | GRU x                   -> GRU.(x.input)
   | RoiAlign x              -> RoiAlign.(x.input)
   | NonMaxSuppression x     -> NonMaxSuppression.(x.input)
   | QuantizeLinear x        -> QuantizeLinear.(x.input)
@@ -718,6 +722,7 @@ let set_input sym inputs =
   | Flatten x               -> x.input <- inputs
   | LSTM x                  -> x.input <- inputs
   | RNN x                   -> x.input <- inputs
+  | GRU x                   -> x.input <- inputs
   | RoiAlign x              -> x.input <- inputs
   | NonMaxSuppression x     -> x.input <- inputs
   | QuantizeLinear x        -> x.input <- inputs
@@ -861,6 +866,7 @@ let out_shape = function
   | Flatten x               -> Flatten.(x.out_shape)
   | LSTM x                  -> LSTM.(x.out_shape)
   | RNN x                   -> RNN.(x.out_shape)
+  | GRU x                   -> GRU.(x.out_shape)
   | RoiAlign x              -> RoiAlign.(x.out_shape)
   | NonMaxSuppression x     -> NonMaxSuppression.(x.out_shape)
   | QuantizeLinear x        -> QuantizeLinear.(x.out_shape)
@@ -999,6 +1005,7 @@ let set_out_shape sym shapes =
   | Flatten x               -> x.out_shape <- shapes
   | LSTM x                  -> x.out_shape <- shapes
   | RNN x                   -> x.out_shape <- shapes
+  | GRU x                   -> x.out_shape <- shapes
   | RoiAlign x              -> x.out_shape <- shapes
   | NonMaxSuppression x     -> x.out_shape <- shapes
   | QuantizeLinear x        -> x.out_shape <- shapes
@@ -1135,6 +1142,7 @@ let attrs = function
   | Flatten x               -> Flatten.(x.attrs)
   | LSTM x                  -> LSTM.(x.attrs)
   | RNN x                   -> RNN.(x.attrs)
+  | GRU x                   -> GRU.(x.attrs)
   | RoiAlign x              -> RoiAlign.(x.attrs)
   | NonMaxSuppression x     -> NonMaxSuppression.(x.attrs)
   | QuantizeLinear x        -> QuantizeLinear.(x.attrs)
@@ -1270,6 +1278,7 @@ let set_attrs sym a =
   | Flatten x               -> x.attrs <- a
   | LSTM x                  -> x.attrs <- a
   | RNN x                   -> x.attrs <- a
+  | GRU x                   -> x.attrs <- a
   | RoiAlign x              -> x.attrs <- a
   | NonMaxSuppression x     -> x.attrs <- a
   | QuantizeLinear x        -> x.attrs <- a
@@ -1294,6 +1303,7 @@ let output sym =
   | Dropout x            -> Dropout.(x.output)
   | LSTM x               -> LSTM.(x.output)
   | RNN x                -> RNN.(x.output)
+  | GRU x                -> GRU.(x.output)
   | _                    -> [| name sym |]
 
 

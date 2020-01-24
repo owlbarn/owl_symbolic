@@ -943,6 +943,7 @@ let infer_shape input_shapes sym =
   | Flatten x               -> infer_shape_flatten input_shapes x.axis
   | LSTM _                  -> infer_shape_lstm input_shapes
   | RNN _                   -> infer_shape_rnn input_shapes
+  | GRU _                   -> infer_shape_rnn input_shapes
   | RoiAlign x              -> infer_shape_roialign input_shapes x
   | NonMaxSuppression _     -> infer_shape_non_max_suppression input_shapes
   | QuantizeLinear _        -> infer_shape_01 input_shapes
