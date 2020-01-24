@@ -154,6 +154,7 @@ type t =
   | Flatten               of Flatten.t
   (* RNN *)
   | LSTM                  of LSTM.t
+  | RNN                   of RNN.t
   (* Object Detection *)
   | RoiAlign              of RoiAlign.t
   | NonMaxSuppression     of NonMaxSuppression.t
@@ -297,6 +298,7 @@ let name = function
   | GlobalAveragePool x     -> GlobalAveragePool.(x.name)
   | Flatten x               -> Flatten.(x.name)
   | LSTM x                  -> LSTM.(x.name)
+  | RNN x                   -> RNN.(x.name)
   | RoiAlign x              -> RoiAlign.(x.name)
   | NonMaxSuppression x     -> NonMaxSuppression.(x.name)
   | QuantizeLinear x        -> QuantizeLinear.(x.name)
@@ -439,6 +441,7 @@ let op_type = function
   | GlobalAveragePool _     -> GlobalAveragePool.op_type
   | Flatten _               -> Flatten.op_type
   | LSTM _                  -> LSTM.op_type
+  | RNN _                   -> RNN.op_type
   | RoiAlign _              -> RoiAlign.op_type
   | NonMaxSuppression _     -> NonMaxSuppression.op_type
   | QuantizeLinear _        -> QuantizeLinear.op_type
@@ -581,6 +584,7 @@ let input = function
   | GlobalAveragePool x     -> GlobalAveragePool.(x.input)
   | Flatten x               -> Flatten.(x.input)
   | LSTM x                  -> LSTM.(x.input)
+  | RNN x                   -> RNN.(x.input)
   | RoiAlign x              -> RoiAlign.(x.input)
   | NonMaxSuppression x     -> NonMaxSuppression.(x.input)
   | QuantizeLinear x        -> QuantizeLinear.(x.input)
@@ -713,6 +717,7 @@ let set_input sym inputs =
   | GlobalAveragePool x     -> x.input <- inputs
   | Flatten x               -> x.input <- inputs
   | LSTM x                  -> x.input <- inputs
+  | RNN x                   -> x.input <- inputs
   | RoiAlign x              -> x.input <- inputs
   | NonMaxSuppression x     -> x.input <- inputs
   | QuantizeLinear x        -> x.input <- inputs
@@ -855,6 +860,7 @@ let out_shape = function
   | GlobalAveragePool x     -> GlobalAveragePool.(x.out_shape)
   | Flatten x               -> Flatten.(x.out_shape)
   | LSTM x                  -> LSTM.(x.out_shape)
+  | RNN x                   -> RNN.(x.out_shape)
   | RoiAlign x              -> RoiAlign.(x.out_shape)
   | NonMaxSuppression x     -> NonMaxSuppression.(x.out_shape)
   | QuantizeLinear x        -> QuantizeLinear.(x.out_shape)
@@ -992,6 +998,7 @@ let set_out_shape sym shapes =
   | GlobalAveragePool x     -> x.out_shape <- shapes
   | Flatten x               -> x.out_shape <- shapes
   | LSTM x                  -> x.out_shape <- shapes
+  | RNN x                   -> x.out_shape <- shapes
   | RoiAlign x              -> x.out_shape <- shapes
   | NonMaxSuppression x     -> x.out_shape <- shapes
   | QuantizeLinear x        -> x.out_shape <- shapes
@@ -1127,6 +1134,7 @@ let attrs = function
   | GlobalAveragePool x     -> GlobalAveragePool.(x.attrs)
   | Flatten x               -> Flatten.(x.attrs)
   | LSTM x                  -> LSTM.(x.attrs)
+  | RNN x                   -> RNN.(x.attrs)
   | RoiAlign x              -> RoiAlign.(x.attrs)
   | NonMaxSuppression x     -> NonMaxSuppression.(x.attrs)
   | QuantizeLinear x        -> QuantizeLinear.(x.attrs)
@@ -1261,6 +1269,7 @@ let set_attrs sym a =
   | GlobalAveragePool x     -> x.attrs <- a
   | Flatten x               -> x.attrs <- a
   | LSTM x                  -> x.attrs <- a
+  | RNN x                   -> x.attrs <- a
   | RoiAlign x              -> x.attrs <- a
   | NonMaxSuppression x     -> x.attrs <- a
   | QuantizeLinear x        -> x.attrs <- a
@@ -1284,6 +1293,7 @@ let output sym =
   | MaxPool x            -> MaxPool.(x.output)
   | Dropout x            -> Dropout.(x.output)
   | LSTM x               -> LSTM.(x.output)
+  | RNN x                -> RNN.(x.output)
   | _                    -> [| name sym |]
 
 

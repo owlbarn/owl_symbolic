@@ -420,6 +420,22 @@ val lstm
   -> symbol
   -> symbol * symbol * symbol
 
+val rnn
+  :  ?name:string
+  -> ?alpha:float array
+  -> ?beta:float array
+  -> ?clip:float
+  -> ?activations:Owl_symbolic_types.activation array
+  -> ?direction:string
+  -> ?b:symbol
+  -> ?sequence_lens:symbol
+  -> ?initial_h:symbol
+  -> int
+  -> symbol
+  -> symbol
+  -> symbol
+  -> symbol * symbol
+
 val roi_align
   :  ?name:string
   -> ?mode:[ `avg | `max ]

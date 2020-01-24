@@ -536,7 +536,7 @@ let infer_shape_flatten input_shapes axis =
 
 (* TODO: consider all the other optioanl parameters *)
 let infer_shape_lstm input_shapes =
-  assert (Array.length input_shapes = 3);
+  assert (Array.length input_shapes >= 3);
   match input_shapes.(0).(0), input_shapes.(1).(0), input_shapes.(2).(0) with
   | Some xshp, Some wshp, Some rshp ->
     assert (Array.length xshp = 3);
@@ -553,6 +553,29 @@ let infer_shape_lstm input_shapes =
     assert (hidden_size = rshp.(2));
     [| Some [| seq_length; num_directions; batch_size; hidden_size |]
      ; Some [| num_directions; batch_size; hidden_size |]
+     ; Some [| num_directions; batch_size; hidden_size |]
+    |]
+  | _, _, _ -> [| None; None; None |]
+
+
+(* TODO: consider all the other optioanl parameters *)
+let infer_shape_rnn input_shapes =
+  assert (Array.length input_shapes >= 3);
+  match input_shapes.(0).(0), input_shapes.(1).(0), input_shapes.(2).(0) with
+  | Some xshp, Some wshp, Some rshp ->
+    assert (Array.length xshp = 3);
+    let seq_length = xshp.(0) in
+    let batch_size = xshp.(1) in
+    let input_size = xshp.(2) in
+    assert (Array.length wshp = 3);
+    let num_directions = wshp.(0) in
+    let hidden_size = wshp.(1) / 4 in
+    assert (input_size = wshp.(2));
+    assert (Array.length rshp = 3);
+    assert (num_directions = rshp.(0));
+    assert (hidden_size = rshp.(1) / 4);
+    assert (hidden_size = rshp.(2));
+    [| Some [| seq_length; num_directions; batch_size; hidden_size |]
      ; Some [| num_directions; batch_size; hidden_size |]
     |]
   | _, _, _ -> [| None; None; None |]
@@ -919,6 +942,7 @@ let infer_shape input_shapes sym =
   | GlobalMaxPool _         -> infer_shape_35 input_shapes
   | Flatten x               -> infer_shape_flatten input_shapes x.axis
   | LSTM _                  -> infer_shape_lstm input_shapes
+  | RNN _                   -> infer_shape_rnn input_shapes
   | RoiAlign x              -> infer_shape_roialign input_shapes x
   | NonMaxSuppression _     -> infer_shape_non_max_suppression input_shapes
   | QuantizeLinear _        -> infer_shape_01 input_shapes
