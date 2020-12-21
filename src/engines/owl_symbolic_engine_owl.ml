@@ -148,9 +148,9 @@ module Make (G : Owl_computation_engine_sig.Flatten_Sig) = struct
     | ScalarPow -> Owl_symbolic_operator.pow ~name sym_inputs.(0) sym_inputs.(1)
     | Dot (_, _, _, _) -> Owl_symbolic_operator.matmul ~name sym_inputs.(0) sym_inputs.(1)
     | SumReduce a -> Owl_symbolic_operator.reduce_sum ~name sym_inputs.(0) a
-    | Sum a -> Owl_symbolic_operator.reduce_sum ~name sym_inputs.(0) [| a |]
+    | Sum (_, a) -> Owl_symbolic_operator.reduce_sum ~name sym_inputs.(0) [| a |]
     | Sum' -> build_symbol_sum' cnode_attr name sym_inputs
-    | Max a -> Owl_symbolic_operator.reduce_max ~name sym_inputs.(0) [| a |]
+    | Max (_, a) -> Owl_symbolic_operator.reduce_max ~name sym_inputs.(0) [| a |]
     | Reshape shp -> build_symbol_reshape shp name sym_inputs
     | Conv2d (padding, strides) ->
       let pad =
