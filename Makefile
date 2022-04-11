@@ -1,12 +1,8 @@
 .PHONY: all
 all: build
 
-.PHONY: depend depends
-depend depends:
-	dune external-lib-deps --missing @install @runtest
-
 .PHONY: build
-build: depends
+build: 
 	dune build @install
 
 .PHONY: test
